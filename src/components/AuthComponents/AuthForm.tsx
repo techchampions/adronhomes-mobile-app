@@ -101,9 +101,15 @@ const AuthForm = ({
     { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void }
   ) => {
     try {
+      const [firstName, lastName] = values.fullName.trim().split(" ");
+
+      // If only one name is provided (i.e., no space), handle it as a single part name
+      const userFirstName = firstName || "";
+      const userLastName = lastName || "";
+
       const response = await apiClient.post("/register", {
-        first_name: values.fullName,
-        last_name: values.fullName,
+        first_name: userFirstName,
+        last_name: userLastName,
         email: values.email,
         phone_number: values.phone,
         password: values.password,
@@ -236,7 +242,7 @@ const AuthForm = ({
       }
     >
       {({ isSubmitting }) => (
-        <Form className="space-y-3 flex flex-col">
+        <Form className="space-y-3 flex flex-col px-4 md:px-20">
           <h1 className="font-medium text-3xl text-black text-center py-4">
             {isForgotPassword
               ? "Forgot Password"
@@ -320,7 +326,7 @@ const AuthForm = ({
           {/* Forgot Password Link */}
           {isLogin && (
             <div className="flex justify-between items-center">
-              <div className="flex items-center space-x-2 text-sm px-6">
+              <div className="flex items-center space-x-2 text-xs px-6">
                 <input
                   type="checkbox"
                   id="remember"
@@ -329,7 +335,7 @@ const AuthForm = ({
                 <label htmlFor="remember">Remember me</label>
               </div>
               <span
-                className="text-red-500 text-sm cursor-pointer"
+                className="text-[#FF4A1B] text-xs cursor-pointer"
                 onClick={() => setStep("forgot password")}
               >
                 Forgot password?
@@ -349,28 +355,28 @@ const AuthForm = ({
                 ? "Log In"
                 : "Sign Up"
             }
-            className="bg-adron-green text-white w-full py-2 rounded-full mt-10"
+            className={`bg-adron-green text-white w-full py-2 rounded-full mt-10`}
           />
           {/* Link to switch between forms */}
-          <p className="text-sm flex items-center text-center justify-center">
+          <p className="text-sm flex gap-1 items-center text-center justify-center">
             {isLogin ? (
               <>
                 Are you new?{" "}
                 <Button
                   label="Create an Account"
-                  className="!text-adron-green font-medium !w-fit"
+                  className="!text-adron-green font-medium !w-fit underline"
                   onClick={() => setStep("signup")}
                 />
               </>
             ) : (
-              <>
+              <div className="mb-10">
                 Already have an account?
                 <Button
                   label="Sign In"
-                  className="!text-adron-green font-medium !w-fit"
+                  className="!text-adron-green font-medium !w-fit underline"
                   onClick={() => setStep("login")}
                 />
-              </>
+              </div>
             )}
           </p>
           {/* Toast notification */}

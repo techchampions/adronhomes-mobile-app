@@ -44,7 +44,7 @@ const OnboardingScreen = () => {
     window.location.reload(); // Optional: Refresh page to clear UI state
   };
   return (
-    <div className="min-h-screen grid grid-cols-1 md:grid-cols-2">
+    <div className="min-h-screen grid grid-cols-1 md:grid-cols-2 fixed w-full">
       {/* Promo Section */}
       <div
         className="relative hidden md:block text-white h-screen"
@@ -58,8 +58,8 @@ const OnboardingScreen = () => {
       </div>
 
       {/* Signup Form Section */}
-      <div className="bg-white flex flex-col px-4 md:px-20 pt-4 md:pt-10 max-h-screen min-h-screen">
-        <div className="text-center mb-0">
+      <div className="bg-white flex flex-col max-h-[100vh] p-4 justify-between overflow-y-scroll">
+        <div className="text-center mt-5">
           <img
             src="/images/logo.svg"
             alt="Adron Logo"
@@ -68,12 +68,11 @@ const OnboardingScreen = () => {
             className="mx-auto"
           />
           <h1 className="text-3xl font-medium mt-4">Welcome to Adron Homes</h1>
-          <p className="text-xs text-gray-600 mt-1">
-            Referred by <strong>Mamoosh Dwayn</strong>
-          </p>
         </div>
         <div className="px-0 md:px-24 py-4">{stepContainer()}</div>
-        <AuthNavbar />
+        <div className="w-full">
+          <AuthNavbar />
+        </div>
       </div>
     </div>
   );

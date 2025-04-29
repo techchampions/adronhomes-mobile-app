@@ -13,9 +13,9 @@ export default function AuthNavbar() {
   ];
 
   return (
-    <header className="fixed bottom-0 z-50 w-full transition-colors duration-300">
+    <header className=" w-full transition-colors duration-300 mx-auto">
       <nav className="w-full flex justify-between items-center py-2 px-2 md:px-2">
-        <ul className="hidden md:flex space-x-6 text-sm">
+        <ul className="hidden md:flex space-x-6 text-sm justify-between w-full">
           {navLinks.map((link) => (
             <li key={link.href}>
               <a
