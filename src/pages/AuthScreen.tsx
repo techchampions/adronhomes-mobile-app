@@ -67,9 +67,7 @@ const OnboardingScreen = () => {
             height={50}
             className="mx-auto"
           />
-          <h1 className="text-3xl font-semibold mt-4">
-            Welcome to Adron Homes
-          </h1>
+          <h1 className="text-3xl font-medium mt-4">Welcome to Adron Homes</h1>
           <p className="text-xs text-gray-600 mt-1">
             Referred by <strong>Mamoosh Dwayn</strong>
           </p>
