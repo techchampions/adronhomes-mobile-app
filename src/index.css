@@ -58,6 +58,10 @@ button {
   }
 } */
 @import "tailwindcss";
+/* styles/globals.css */
+@import "swiper/css";
+@import "swiper/css/navigation";
+
 
 /* ✅ Add custom Gotham font */
 @font-face {

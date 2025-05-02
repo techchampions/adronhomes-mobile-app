@@ -20,7 +20,6 @@ const transactions: Transaction[] = [
     name: "Amade Suites & Gardens Payment",
     date: "March 18th, 20:00",
     amount: "₦170,000,000",
-    isHighlighted: true,
   },
   {
     id: 3,
@@ -33,7 +32,6 @@ const transactions: Transaction[] = [
     name: "Amade Suites & Gardens Payment",
     date: "March 18th, 20:00",
     amount: "₦170,000,000",
-    isHighlighted: true,
   },
   {
     id: 5,
@@ -55,12 +53,7 @@ const TransactionsList: React.FC = () => {
 
       <ul className="space-y-2">
         {transactions.map((t) => (
-          <li
-            key={t.id}
-            className={`p-4 rounded-3xl ${
-              t.isHighlighted ? "bg-gray-100" : ""
-            } flex justify-between items-center`}
-          >
+          <li className="p-4 rounded-3xl flex justify-between items-center even:bg-gray-100">
             <div>
               <p className="font-semibold text-gray-500 text-sm">{t.name}</p>
               <p className="text-xs text-gray-500">{t.date}</p>

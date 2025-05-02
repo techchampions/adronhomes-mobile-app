@@ -1,7 +1,9 @@
 // pages/TransactionsPage.tsx
 import React from "react";
 import ReusableList, { ListItem } from "../components/ReusableList";
-import MyList, { TransactionItem } from "../components/MyList";
+import TransactionsList, {
+  TransactionItem,
+} from "../components/DashboardTransactionComponents/TransactionsList";
 
 const transactions: TransactionItem[] = [
   {
@@ -80,20 +82,22 @@ const TransactionsPage = () => {
   };
 
   return (
-    <div className="p-6">
-      <h1 className="text-xl font-semibold mb-4">Transactions</h1>
-      <MyList data={transactions} />
-      {/* <ReusableList
-        items={transactions}
-        renderRight={(item) => (
-          <div className="flex flex-col items-end">
-            {renderStatusBadge(item.status)}
-            <span className="text-sm text-gray-700 font-medium mt-1">
-              {item.amount}
-            </span>
-          </div>
-        )}
-      /> */}
+    <div className="space-y-4">
+      <div className="grid grid-cols-3 gap-4">
+        <div className="p-4 bg-white rounded-3xl flex flex-col items-center h-fit">
+          <p className="text-gray-400 text-sm">Wallet Balance</p>
+          <p className="font-bold">₦76,000,000</p>
+        </div>
+        <div className="p-4 bg-white rounded-3xl flex flex-col items-center h-fit">
+          <p className="text-gray-400 text-sm">Total Invoice</p>
+          <p className="font-bold">₦170,000,000</p>
+        </div>
+        <div className="p-4 bg-white rounded-3xl flex flex-col items-center h-fit">
+          <p className="text-gray-400 text-sm">Amount Paid</p>
+          <p className="font-bold">₦61,000,000</p>
+        </div>
+      </div>
+      <TransactionsList data={transactions} />
     </div>
   );
 };

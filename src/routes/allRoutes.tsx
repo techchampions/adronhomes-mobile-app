@@ -11,6 +11,9 @@ import Toast from "../components/Toast";
 import { useToastStore } from "../zustand/useToastStore";
 import TransactionsPage from "../pages/TransactionScreen";
 import NotificationsPage from "../pages/NotificationScreen";
+import MyPropertyScreen from "../pages/MyPropertyScreen";
+import NewPropertyScreen from "../pages/NewPropertyScreen";
+import SavedPropertyScreen from "../pages/SavedPropertyScreen";
 
 const DashboardScreen = lazy(() => import("../pages/DashboardScreen"));
 
@@ -49,6 +52,12 @@ const AllRoutes = () => {
                 <Route path="/wallet" element={<WalletScreen />} />
                 <Route path="/transactions" element={<TransactionsPage />} />
                 <Route path="/notifications" element={<NotificationsPage />} />
+                <Route path="/my-properties" element={<MyPropertyScreen />} />
+                <Route path="/new-properties" element={<NewPropertyScreen />} />
+                <Route
+                  path="/saved-properties"
+                  element={<SavedPropertyScreen />}
+                />
               </Route>
             </Route>
 

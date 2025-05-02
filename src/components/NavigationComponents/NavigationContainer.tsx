@@ -53,7 +53,7 @@ function NavigationContainer() {
           <NavItem
             label="My Properties"
             icon={<MdAddHome className=" w-4 h-4" />}
-            path="/properties"
+            path="/my-properties"
           />
           <NavItem
             label="New Properties"
