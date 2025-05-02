@@ -1,7 +1,53 @@
 import React from "react";
+import Button from "../components/Button";
+import { useToastStore } from "../zustand/useToastStore";
+import CopyButton from "../components/CopyButton";
+import WalletHistory from "../components/DashboardWalletComponents/WalletHistoryList";
 
 const WalletScreen = () => {
-  return <div>WalletScreen</div>;
+  const { showToast } = useToastStore();
+  return (
+    <div className="flex flex-col gap-6">
+      <div className="grid grid-cols-2 grid-rows-3 gap-6">
+        <div className="row-span-2 p-6 rounded-3xl flex flex-col gap-4 justify-between items-center">
+          <p className="text-xs">My Wallet</p>
+          <p className="text-3xl font-bold">₦4,040,000</p>
+          <p className="text-xs">Wallet balance</p>
+          <Button label="Fund Wallet" className="!w-fit px-12 py-3 text-xs" />
+          <p className="text-xs bg-gray-200 px-6 py-1 rounded-full">
+            3 active plans
+          </p>
+        </div>
+        <div className="row-span-2 p-10 bg-white rounded-3xl flex flex-col gap-4 justify-between">
+          <p className="text-md font-semibold">Wallet Details</p>
+          <div className="flex justify-between items-start w-full">
+            <div className="flex flex-col">
+              <p className="text-sm">8394839302</p>
+              <p className="text-[9px] text-gray-400">Account Number</p>
+            </div>
+            <CopyButton text="8394839302" />
+          </div>
+          <div className="flex flex-col">
+            <p className="text-sm">Providus Bank</p>
+            <p className="text-[9px] text-gray-400">Bank Name</p>
+          </div>
+          <div className="flex flex-col">
+            <p className="text-sm">Bimbo Adeleke</p>
+            <p className="text-[9px] text-gray-400">Account Name</p>
+          </div>
+        </div>
+        <div className="p-4 bg-white rounded-3xl flex flex-col items-center h-fit">
+          <p className="text-gray-400 text-sm">Total Invoice</p>
+          <p className="font-bold">₦170,000,000</p>
+        </div>
+        <div className="p-4 bg-white rounded-3xl flex flex-col items-center h-fit">
+          <p className="text-gray-400 text-sm">Amount Paid</p>
+          <p className="font-bold">₦61,000,000</p>
+        </div>
+      </div>
+      <WalletHistory />
+    </div>
+  );
 };
 
 export default WalletScreen;

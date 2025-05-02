@@ -130,6 +130,7 @@ const logout = () => {
   localStorage.removeItem("onboarding-state"); // Clear persisted onboarding state
 
   window.location.reload(); // Optional: Refresh page to clear UI state
+  showToast("Logged out successfully!", "success"); // Show logout success message
 };
 
 // Login function

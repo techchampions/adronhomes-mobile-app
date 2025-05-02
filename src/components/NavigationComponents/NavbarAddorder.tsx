@@ -4,17 +4,20 @@ import Button from "../Button";
 
 const NavbarAddorder = () => {
   return (
-    <div className="flex flex-col text-black text-left justify-center py-4 px-5 space-y-2 bg-brand-300 rounded-2xl">
-      <div className="w-full text-[18px] font-brand-bold text-dark-purple">
-        Let's Start
-      </div>
-      <p className="w-full text-xs text-gray-600">
-        Creating or adding new orders couldn't be easier
+    <div className="relative flex flex-col text-white text-left justify-center py-7 px-5 space-y-2 bg-[#44691B] rounded-2xl">
+      <img
+        src="/images/referNearn-bg.png"
+        className="absolute inset-0 w-full h-full"
+        alt=""
+      />
+      <p className="w-fit mx-auto text-[18px]">
+        Refer and Earn <br />
+        <span className="text-sm font-bold">₦500,000</span>
       </p>
-      <Button
-        label="Add New Order"
-        icon={<FaPlus />}
-        className="rounded-lg flex flex-row justify-center items-center mt-[35px]"
+      <img
+        src="/images/gift.svg"
+        alt=""
+        className="absolute bottom-0 left-0 h-16 w-16"
       />
     </div>
   );

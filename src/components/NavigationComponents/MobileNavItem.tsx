@@ -19,7 +19,7 @@ const MobileNavItem: React.FC<NavItemProps> = ({
       end={true}
       className={({ isActive }) =>
         `flex flex-col items-center ${
-          isActive ? "text-brand" : " text-gray-500"
+          isActive ? "text-adron-green" : " text-gray-500"
         }`
       }
     >

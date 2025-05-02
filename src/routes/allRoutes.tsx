@@ -9,6 +9,8 @@ import HomeScreen from "../pages/HomeScreen";
 import WalletScreen from "../pages/WalletScreen";
 import Toast from "../components/Toast";
 import { useToastStore } from "../zustand/useToastStore";
+import TransactionsPage from "../pages/TransactionScreen";
+import NotificationsPage from "../pages/NotificationScreen";
 
 const DashboardScreen = lazy(() => import("../pages/DashboardScreen"));
 
@@ -45,6 +47,8 @@ const AllRoutes = () => {
               <Route element={<DashboardScreen />}>
                 <Route index element={<HomeScreen />} />
                 <Route path="/wallet" element={<WalletScreen />} />
+                <Route path="/transactions" element={<TransactionsPage />} />
+                <Route path="/notifications" element={<NotificationsPage />} />
               </Route>
             </Route>
 

@@ -66,7 +66,7 @@ const Toast = ({ duration = 5000 }) => {
   if (!show) return null;
 
   return (
-    <div className="fixed top-5 left-1/2 transform -translate-x-1/2 flex items-center w-full max-w-xs p-4 text-gray-500 bg-white rounded-lg shadow-lg transition-transform animate-slideInRight z-50">
+    <div className="fixed top-5 left-1/2 transform -translate-x-1/2 flex items-center w-full max-w-xs p-1 text-gray-500 bg-white rounded-full shadow-lg transition-transform animate-slideInRight z-50">
       <div
         className={`inline-flex items-center justify-center w-8 rounded-full p-2 ${
           type === "success"
