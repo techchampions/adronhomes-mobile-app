@@ -14,6 +14,8 @@ import NotificationsPage from "../pages/NotificationScreen";
 import MyPropertyScreen from "../pages/MyPropertyScreen";
 import NewPropertyScreen from "../pages/NewPropertyScreen";
 import SavedPropertyScreen from "../pages/SavedPropertyScreen";
+import MyProfileScreen from "../pages/MyProfileScreen";
+import SupportScreen from "../pages/SupportScreen";
 
 const DashboardScreen = lazy(() => import("../pages/DashboardScreen"));
 
@@ -58,6 +60,8 @@ const AllRoutes = () => {
                   path="/saved-properties"
                   element={<SavedPropertyScreen />}
                 />
+                <Route path="/my-profile" element={<MyProfileScreen />} />
+                <Route path="/support" element={<SupportScreen />} />
               </Route>
             </Route>
 

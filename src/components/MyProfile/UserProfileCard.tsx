@@ -1,0 +1,44 @@
+import React from "react";
+import { FaMapMarkerAlt } from "react-icons/fa";
+
+interface Props {
+  name: string;
+  email: string;
+  joinedDate: string;
+  location: string;
+  imageUrl: string;
+}
+
+const UserProfileCard: React.FC<Props> = ({
+  name,
+  email,
+  joinedDate,
+  location,
+  imageUrl,
+}) => {
+  return (
+    <div className="bg-white py-6 px-12 rounded-3xl flex flex-col md:flex-row justify-between items-center md:items-end">
+      <div className="flex items-start gap-6 py-5">
+        <img
+          src={imageUrl}
+          alt={name}
+          className="w-[140px] h-[140px] rounded-full object-cover"
+        />
+        <div className="space-y-1.5">
+          <h4 className="text-2xl font-bold">{name}</h4>
+          <p className="text-gray-600 text-sm">{email}</p>
+          <p className="text-gray-500 text-xs">Joined {joinedDate}</p>
+          <div className="flex items-center text-xs text-gray-500 mt-1">
+            <FaMapMarkerAlt className="mr-1 h-3 w-3" />
+            {location}
+          </div>
+        </div>
+      </div>
+      <button className="text-sm font-semibold text-black">
+        Account Settings
+      </button>
+    </div>
+  );
+};
+
+export default UserProfileCard;

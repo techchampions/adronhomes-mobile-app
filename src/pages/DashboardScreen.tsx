@@ -17,7 +17,7 @@ function DashboardScreen() {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 bg-adron-body overflow-y-auto mb-16 md:mb-0 py-5 pr-4 scrollbar-hide">
+      <main className="flex-1 bg-adron-body overflow-y-auto mb-16 md:mb-0 py-5 px-4 md:px-0 md:pr-4 scrollbar-hide">
         <Header />
         <Outlet />
       </main>

@@ -72,7 +72,7 @@ function NavigationContainer() {
           <NavItem
             label="My Profile"
             icon={<FaUserAlt className=" w-4 h-4" />}
-            path="/profile"
+            path="/my-profile"
           />
           <NavItem
             label="Account Settings"
