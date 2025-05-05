@@ -1,7 +1,7 @@
-import { usePathname } from "next/navigation";
+// import { usePathname } from "next/navigation";
 
 export default function AuthNavbar() {
-  const pathname = usePathname();
+  // const pathname = usePathname();
 
   const navLinks = [
     { name: "Home", href: "/" },
@@ -20,6 +20,12 @@ export default function AuthNavbar() {
             <li key={link.href}>
               <a
                 href={link.href}
+                className="transition-colors duration-300 text-gray-700 hover:text-adron-green "
+              >
+                {link.name}
+              </a>
+              {/* <a
+                href={link.href}
                 className={`transition-colors duration-300 ${
                   pathname === link.href
                     ? "text-adron-green font-semibold"
@@ -27,7 +33,7 @@ export default function AuthNavbar() {
                 }`}
               >
                 {link.name}
-              </a>
+              </a> */}
             </li>
           ))}
         </ul>

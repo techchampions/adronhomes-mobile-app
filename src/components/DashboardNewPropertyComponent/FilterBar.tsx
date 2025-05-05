@@ -9,7 +9,7 @@ import { IoPricetag } from "react-icons/io5";
 import { useState } from "react";
 import { GoHomeFill } from "react-icons/go";
 import { TbLocationFilled } from "react-icons/tb";
-import { useSearchParams } from "next/navigation";
+// import { useSearchParams } from "next/navigation";
 import {
   useGetAllPropertyLocations,
   useGetAllPropertyTypes,
@@ -18,6 +18,7 @@ import SelectField from "../SelectField";
 import InputField from "../InputField";
 import Button from "../Button";
 import Modal from "../Modal";
+import { useSearchParams } from "react-router-dom";
 
 export default function FilterBar({
   onFilter,
