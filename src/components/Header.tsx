@@ -6,8 +6,8 @@ import { Formik } from "formik";
 
 const Header = () => {
   return (
-    <div className="flex justify-between items-center bg-white rounded-3xl p-6 mb-5">
-      <div className="text-3xl">Dashboard</div>
+    <div className="flex justify-between items-center bg-white rounded-3xl p-8 mb-5">
+      <div className="text-2xl">Dashboard</div>
       <div className="">
         <Formik
           initialValues={{ search: "" }}
@@ -19,7 +19,7 @@ const Header = () => {
             name="search"
             type="text"
             placeholder="Search..."
-            className=" w-[300px] text-adron-black"
+            className="!w-[400px] text-adron-black"
           />
         </Formik>
       </div>

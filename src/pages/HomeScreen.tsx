@@ -2,8 +2,22 @@ import React from "react";
 import Button from "../components/Button";
 import PropertyPlanList from "../components/DashboardHomeComponents/PropertyList";
 import TransactionsList from "../components/DashboardHomeComponents/TransactionList";
+import { useModalStore } from "../zustand/useModalStore";
 
 const HomeScreen = () => {
+  const openModal = useModalStore((state) => state.openModal);
+  const startFundWallet = () => {
+    openModal(
+      <div className="flex flex-col">
+        <div className="flex flex-col">
+          <div className="text=2xl">Fund Wallet</div>
+          <p className="text-gray-400 text-xs w-[80%]">
+            Please enter the amount you want to fund your wallet with.
+          </p>
+        </div>
+      </div>
+    );
+  };
   return (
     <div className="flex flex-col w-full gap-6">
       <div className="w-full">
@@ -13,19 +27,23 @@ const HomeScreen = () => {
           className="h-[180px] w-full object-cover rounded-3xl"
         />
       </div>
-      <div className="grid grid-cols-3 grid-rows-3 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-3 grid-rows-2 md:grid-rows-3 gap-4">
         {/* My Wallet */}
-        <div className="col-span-2 row-span-2 bg-white rounded-3xl p-6 flex flex-col gap-4">
+        <div className="col-span-2 md:row-span-2 bg-white rounded-3xl p-6 flex flex-col gap-4">
           <div className="mt-5">
             <p className="text-gray-500 font-semibold mb-2">My Wallet</p>
             <p className="text-3xl font-bold">₦4,040,000</p>
             <p className="text-xs text-gray-400">Wallet balance</p>
           </div>
-          <Button label="Fund Wallet" className="!w-fit px-12 py-3 text-xs" />
+          <Button
+            label="Fund Wallet"
+            className="!w-fit px-12 py-3 text-xs"
+            onClick={startFundWallet}
+          />
         </div>
 
         {/* My Properties */}
-        <div className="rounded-3xl p-6 text-center bg-white flex flex-col justify-between row-span-3">
+        <div className="rounded-3xl p-6 text-center bg-white flex flex-col justify-between row-span-2 md:row-span-3 h-fit md:h-auto">
           <div>
             <p className="text-adron-black mb-2">My Properties</p>
             <p className="text-xs text-adron-gray-200 w-[60%] mx-auto">
@@ -49,18 +67,18 @@ const HomeScreen = () => {
         </div>
 
         {/* Total Invoice */}
-        <div className="bg-white rounded-3xl p-6 ">
+        <div className="bg-white rounded-3xl p-6 h-fit">
           <p className="text-gray-500 font-semibold mb-2">Total Invoice</p>
           <p className="text-xl font-bold">₦170,000,000</p>
         </div>
 
         {/* Amount Paid */}
-        <div className="bg-white rounded-3xl p-6 ">
+        <div className="bg-white rounded-3xl p-6 h-fit">
           <p className="text-gray-500 font-semibold mb-2">Amount Paid</p>
           <p className="text-xl font-bold">₦61,000,000</p>
         </div>
       </div>
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <PropertyPlanList />
         <TransactionsList />
       </div>

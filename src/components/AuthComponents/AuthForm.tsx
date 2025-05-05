@@ -275,7 +275,7 @@ const AuthForm = ({
                 Are you new?{" "}
                 <Button
                   label="Create an Account"
-                  className="!text-adron-green font-medium !w-fit underline"
+                  className="!text-adron-green bg-transparent font-medium !w-fit underline"
                   onClick={() => setStep("signup")}
                 />
               </>
@@ -284,7 +284,7 @@ const AuthForm = ({
                 Already have an account?
                 <Button
                   label="Sign In"
-                  className="!text-adron-green font-medium !w-fit underline"
+                  className="!text-adron-green bg-transparent font-medium !w-fit underline"
                   onClick={() => setStep("login")}
                 />
               </div>

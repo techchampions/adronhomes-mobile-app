@@ -16,6 +16,7 @@ import NewPropertyScreen from "../pages/NewPropertyScreen";
 import SavedPropertyScreen from "../pages/SavedPropertyScreen";
 import MyProfileScreen from "../pages/MyProfileScreen";
 import SupportScreen from "../pages/SupportScreen";
+import Modal from "../components/Modal2";
 
 const DashboardScreen = lazy(() => import("../pages/DashboardScreen"));
 
@@ -77,6 +78,7 @@ const AllRoutes = () => {
         </Suspense>
       </BrowserRouter>
       <Toast message={message} type={type} onClose={hideToast} />
+      <Modal />
     </>
   );
 };
