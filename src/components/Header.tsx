@@ -6,7 +6,7 @@ import { Formik } from "formik";
 
 const Header = () => {
   return (
-    <div className="flex justify-between items-center bg-white rounded-3xl p-8 mb-5">
+    <div className="hidden md:flex justify-between items-center bg-white rounded-3xl p-8 mb-5">
       <div className="text-2xl">Dashboard</div>
       <div className="">
         <Formik

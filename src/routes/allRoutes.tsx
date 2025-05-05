@@ -17,6 +17,7 @@ import SavedPropertyScreen from "../pages/SavedPropertyScreen";
 import MyProfileScreen from "../pages/MyProfileScreen";
 import SupportScreen from "../pages/SupportScreen";
 import Modal from "../components/Modal2";
+import ProfileSettings from "../pages/AccountSettings";
 
 const DashboardScreen = lazy(() => import("../pages/DashboardScreen"));
 
@@ -62,6 +63,7 @@ const AllRoutes = () => {
                   element={<SavedPropertyScreen />}
                 />
                 <Route path="/my-profile" element={<MyProfileScreen />} />
+                <Route path="/settings" element={<ProfileSettings />} />
                 <Route path="/support" element={<SupportScreen />} />
               </Route>
             </Route>
