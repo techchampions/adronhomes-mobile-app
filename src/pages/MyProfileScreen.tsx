@@ -4,8 +4,8 @@ import Button from "../components/Button";
 
 const MyProfileScreen = () => {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-      <div className="col-span-1 md:col-span-3">
+    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+      <div className="col-span-2 md:col-span-3">
         <UserProfileCard
           name="Mika Edmoud Miles"
           email="Simonbii99@yahoo.com"
@@ -14,7 +14,7 @@ const MyProfileScreen = () => {
           imageUrl="/mika.png"
         />
       </div>
-      <div className="p-4 bg-white rounded-3xl flex flex-col items-center h-fit">
+      <div className="p-4 bg-white rounded-3xl flex flex-col items-center h-fit col-span-2 md:col-span-1">
         <p className="text-gray-400 text-sm">total Properties</p>
         <div className=" flex w-fit mx-auto font-bold rounded-full justify-between items-center gap-2 ">
           <span>2 Houses</span>
@@ -31,8 +31,8 @@ const MyProfileScreen = () => {
         <p className="font-bold">₦61,000,000</p>
       </div>
 
-      <div className="col-span-1 md:col-span-3 flex justify-between items-center bg-white py-4 px-4 md:px-12 rounded-3xl">
-        <div className="flex flex-col w-[60%]">
+      <div className="col-span-2 md:col-span-3 flex flex-col md:flex-row justify-between gap-3 md:items-center bg-white py-4 px-4 md:px-12 rounded-3xl">
+        <div className="flex flex-col w-full md:w-[60%]">
           <h4 className=" font-bold text-md">Account Statement</h4>
           <p className="text-gray-400 text-xs">
             Request a statement of your account to track your investments and
@@ -44,8 +44,8 @@ const MyProfileScreen = () => {
           className="bg-black text-white font-bold !w-[155px] text-xs"
         />
       </div>
-      <div className="col-span-1 md:col-span-3 flex justify-between items-center bg-white py-4 px-4 md:px-12 rounded-3xl">
-        <div className="flex flex-col w-[60%]">
+      <div className="col-span-2 md:col-span-3 flex flex-col md:flex-row justify-between gap-3 md:items-center bg-white py-4 px-4 md:px-12 rounded-3xl">
+        <div className="flex flex-col w-full md:w-[60%]">
           <h4 className=" font-bold text-md">FAQs</h4>
           <p className="text-gray-400 text-xs">
             See a list of frequently asked questions from our other clients to

@@ -94,7 +94,7 @@ const ProfileSettings = () => {
 
             {/* Password Section */}
             <div className="flex items-center gap-4 bg-white rounded-3xl p-10">
-              <div className="flex items-center gap-4 w-full md:w-[75%]">
+              <div className="flex flex-col md:flex-row md:items-center gap-4 w-full md:w-[75%]">
                 <InputField
                   name="password"
                   type="password"
@@ -116,7 +116,7 @@ const ProfileSettings = () => {
             {/* Notification Toggles */}
             <div className="space-y-8 bg-white rounded-3xl p-10">
               <div className="flex items-center justify-between">
-                <div>
+                <div className="w-[80%]">
                   <p className="text-sm font-medium">
                     New Property Notification
                   </p>
@@ -147,7 +147,7 @@ const ProfileSettings = () => {
               </div>
 
               <div className="flex items-center justify-between">
-                <div>
+                <div className="w-[80%]">
                   <p className="text-sm font-medium">Promotion Notifications</p>
                   <p className="text-xs text-gray-400">
                     Turn on to get notified about our latest promotions.

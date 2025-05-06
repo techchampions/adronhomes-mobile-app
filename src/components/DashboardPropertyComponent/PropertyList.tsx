@@ -15,7 +15,7 @@ interface PropertyListProps {
 
 const PropertyList: React.FC<PropertyListProps> = ({ properties }) => {
   return (
-    <div className="w-full grid grid-cols-2 justify-between items-center gap-4">
+    <div className="w-full grid grid-cols-1 md:grid-cols-3 justify-between items-center gap-4">
       {properties.map((property) => (
         <PropertyCardProgress
           key={property.id}

@@ -31,7 +31,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
           className="w-12 h-12 rounded-lg object-cover"
         />
         <div className="w-full">
-          <h4 className="text-2xl text-adron-black leading-tight w-[60%]">
+          <h4 className="text-2xl text-adron-black leading-tight w-full">
             {title}
           </h4>
           <div className="flex items-center text-xs text-gray-400 mt-1">

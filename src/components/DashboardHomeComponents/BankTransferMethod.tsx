@@ -4,10 +4,16 @@ import { useModalStore } from "../../zustand/useModalStore";
 import SelectPaymentMethod from "./SelectPaymentMethod";
 import CopyButton from "../CopyButton";
 
-const BankTransfer = ({ goBack }: { goBack: () => void }) => {
+const BankTransfer = ({
+  goBack,
+  amount,
+}: {
+  goBack: () => void;
+  amount: number;
+}) => {
   const { closeModal, openModal } = useModalStore();
   const GoToSelectPaymentMethod = () => {
-    openModal(<SelectPaymentMethod goBack={goBack} />);
+    openModal(<SelectPaymentMethod goBack={goBack} amount={amount} />);
   };
 
   return (
@@ -25,7 +31,10 @@ const BankTransfer = ({ goBack }: { goBack: () => void }) => {
             <p className="text-sm text-white">Bank Transfer</p>
           </div>
           <p className="text-sm text-gray-500">
-            Transfer <span className="font-bold text-black">₦10,000,000</span>{" "}
+            Transfer{" "}
+            <span className="font-bold text-black">
+              ₦{amount.toLocaleString()}
+            </span>{" "}
             to the account below to complete your wallet funding.
           </p>
           <div className="flex flex-col w-full gap-4 mt-7">

@@ -1,4 +1,6 @@
 import { useRef, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 // Import Swiper styles
@@ -11,7 +13,6 @@ import {
   FaMapMarkerAlt,
   FaChevronLeft,
   FaChevronRight,
-  FaRegHeart,
   FaHeart,
 } from "react-icons/fa";
 import { GiStreetLight } from "react-icons/gi";
@@ -21,15 +22,21 @@ interface Props {
   property: {
     id: string;
     name: string;
+    street_address: string;
+    lga: string;
+    state: string;
+    country: string;
     location: string;
     price: string;
     features: string[];
-    images: string[];
+    photos: string[];
     type: string;
   };
 }
 
 export default function SwiperPropertyCard({ property }: Props) {
+  const navigate = useNavigate();
+
   const prevRef = useRef(null);
   const nextRef = useRef(null);
   const [swiper, setSwiper] = useState(null); // State to store the swiper instance
@@ -43,7 +50,7 @@ export default function SwiperPropertyCard({ property }: Props) {
   }, [swiper]); // Ensure this effect runs when the swiper instance is available
 
   const address = `${property.street_address}, ${property.lga}, ${property.state} ${property.country}`;
-  const features = property.features;
+  // const features = property.features;
 
   return (
     <div className="rounded-3xl">
@@ -92,8 +99,8 @@ export default function SwiperPropertyCard({ property }: Props) {
           {property.name}
         </h4>
         <p className="text-xs text-gray-400 flex items-center mt-1">
-          <FaMapMarkerAlt className="mr-1" />{" "}
-          {`${property.street_address}, ${property.lga}, ${property.state} ${property.country}`}
+          <FaMapMarkerAlt className="mr-1" /> {address}
+          {/* {`${property.street_address}, ${property.lga}, ${property.state} ${property.country}`} */}
         </p>
 
         <p className="text-lg font-black text-adron-black mt-4 flex justify-between">
@@ -101,23 +108,23 @@ export default function SwiperPropertyCard({ property }: Props) {
         </p>
 
         <div className="flex justify-between items-center">
-          <div className="flex items-center text-[10px] font-bold text-gray-500 gap-4">
-            <span className="flex items-center gap-1">
+          <div className="flex items-center text-[10px] font-bold text-gray-500 gap-2">
+            <span className="flex items-center gap-1 truncate">
               {/* <TfiRulerAlt2 />  */}
               <img src="/ruler.svg" width={14} height={14} alt="dumbbell" />
 
               {property.features[0]}
             </span>
-            <span className="flex items-center gap-1">
+            <span className="flex items-center gap-1 truncate">
               <GiStreetLight /> {property.features[1]}
             </span>
-            <span className="flex items-center gap-1">
+            <span className="flex items-center gap-1 truncate">
               {/* <FaDumbbell /> */}
-              <img src="/dumbbell.svg" width={24} height={24} alt="dumbbell" />
+              <img src="/dumbbell.svg" width={14} height={14} alt="dumbbell" />
               {property.features[2]}
             </span>
           </div>
-          <div className="text-gray-400 flex items-center gap-1 text-sm">
+          <div className="text-gray-400 flex items-center gap-1 text-xs">
             {property.type}
           </div>
         </div>
@@ -126,6 +133,7 @@ export default function SwiperPropertyCard({ property }: Props) {
           <Button
             label="View Property"
             className="bg-adron-green max-w-fit text-xs px-10 py-3"
+            onClick={() => navigate(`/properties/${property.id}`)}
           />
         </div>
       </div>

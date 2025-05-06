@@ -31,9 +31,9 @@ const NotificationList: React.FC<Props> = ({ data }) => {
       : [];
 
   return (
-    <div className="bg-white p-6 rounded-3xl">
+    <div className="bg-white p-2 md:p-6 rounded-3xl">
       {/* Tabs & Sort */}
-      <div className="flex justify-between items-center mb-4">
+      <div className="flex justify-between items-center mb-4 p-4 md:p-0">
         <div className="flex gap-4 text-sm font-medium">
           {tabs.map((tab) => (
             <button
@@ -72,13 +72,15 @@ const NotificationList: React.FC<Props> = ({ data }) => {
         {filteredData.map((item) => (
           <div
             key={item.id}
-            className="flex justify-between items-center p-4 even:bg-gray-100 rounded-3xl"
+            className="flex justify-between gap-4 items-center p-4 even:bg-gray-100 rounded-3xl"
           >
-            <div>
+            <div className="w-[70%]">
               <div className="text-xs">{item.title}</div>
-              <div className="text-xs text-gray-400">{item.desc}</div>
+              <div className="text-xs text-gray-400 truncate">{item.desc}</div>
             </div>
-            <div className="text-xs text-gray-400 text-end">{item.date}</div>
+            <div className="text-xs text-gray-400 text-end truncate">
+              {item.date}
+            </div>
           </div>
         ))}
       </div>

@@ -3,16 +3,21 @@ import Button from "../Button";
 import { useModalStore } from "../../zustand/useModalStore";
 import BankTransfer from "./BankTransferMethod";
 
-const SelectPaymentMethod = ({ goBack }: { goBack: () => void }) => {
+const SelectPaymentMethod = ({
+  goBack,
+  amount,
+}: {
+  goBack: () => void;
+  amount: number;
+}) => {
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<
     string | null
   >(null);
-  const closeModal = useModalStore((state) => state.closeModal);
-  const openModal = useModalStore((state) => state.openModal);
+  const { openModal } = useModalStore();
 
   const handleContinue = () => {
     if (selectedPaymentMethod == "Bank Transfer") {
-      openModal(<BankTransfer goBack={goBack} />);
+      openModal(<BankTransfer goBack={goBack} amount={amount} />);
     } else if (selectedPaymentMethod == "Paystack") {
       alert("Credit/Debit Card selected");
     }

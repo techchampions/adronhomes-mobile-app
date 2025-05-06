@@ -43,7 +43,7 @@ const TransactionsList: React.FC<Props> = ({ data }) => {
     };
     return (
       <span
-        className={`text-xs border px-3 py-1 rounded-full w-fit mx-auto font-medium ${styles[status]}`}
+        className={`hidden md:block text-xs border px-3 py-1 rounded-full w-fit mx-auto font-medium ${styles[status]}`}
       >
         {status}
       </span>
@@ -51,9 +51,9 @@ const TransactionsList: React.FC<Props> = ({ data }) => {
   };
 
   return (
-    <div className="bg-white p-6 rounded-3xl">
+    <div className="bg-white p-2 md:p-6 rounded-3xl">
       {/* Tabs & Sort */}
-      <div className="flex justify-between items-center mb-4">
+      <div className="flex justify-between items-center mb-4 p-4 md:p-0">
         <div className="flex gap-4 text-sm font-medium">
           {tabs.map((tab) => (
             <button
@@ -92,7 +92,7 @@ const TransactionsList: React.FC<Props> = ({ data }) => {
         {filteredData.map((item) => (
           <div
             key={item.id}
-            className="grid grid-cols-3 justify-between items-center p-4 even:bg-gray-100 rounded-3xl"
+            className="grid grid-cols-2 md:grid-cols-3 justify-between items-center p-4 even:bg-gray-100 rounded-3xl"
           >
             <div>
               <div className="font-medium text-sm">{item.title}</div>

@@ -1,5 +1,6 @@
 import React from "react";
 import { FaMapMarkerAlt } from "react-icons/fa";
+import { Link, useRoutes } from "react-router-dom";
 
 interface Props {
   name: string;
@@ -34,9 +35,9 @@ const UserProfileCard: React.FC<Props> = ({
           </div>
         </div>
       </div>
-      <button className="text-sm font-semibold text-black">
+      <Link to="/settings" className="text-sm font-semibold text-black">
         Account Settings
-      </button>
+      </Link>
     </div>
   );
 };

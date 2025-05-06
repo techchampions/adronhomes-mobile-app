@@ -19,7 +19,7 @@ const HomeScreen = () => {
           className="h-[180px] w-full object-cover rounded-3xl"
         />
       </div>
-      <div className="grid grid-cols-2 md:grid-cols-3 grid-rows-3 md:grid-rows-3 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-3 grid-rows-2 md:grid-rows-3 gap-4">
         {/* My Wallet */}
         <div className="col-span-2 md:row-span-2 bg-white rounded-3xl p-6 flex flex-col gap-4">
           <div className="mt-5">
@@ -57,17 +57,18 @@ const HomeScreen = () => {
             View Properties
           </a>
         </div>
+        <div className="flex flex-col md:flex-row gap-4 md:col-span-2">
+          {/* Total Invoice */}
+          <div className="bg-white rounded-3xl p-6 h-fit w-full">
+            <p className="text-gray-500 font-semibold mb-2">Total Invoice</p>
+            <p className="text-xl font-bold">₦170,000,000</p>
+          </div>
 
-        {/* Total Invoice */}
-        <div className="bg-white rounded-3xl p-6 h-fit row-span-1">
-          <p className="text-gray-500 font-semibold mb-2">Total Invoice</p>
-          <p className="text-xl font-bold">₦170,000,000</p>
-        </div>
-
-        {/* Amount Paid */}
-        <div className="bg-white rounded-3xl p-6 h-fit row-span-1">
-          <p className="text-gray-500 font-semibold mb-2">Amount Paid</p>
-          <p className="text-xl font-bold">₦61,000,000</p>
+          {/* Amount Paid */}
+          <div className="bg-white rounded-3xl p-6 h-fit w-full">
+            <p className="text-gray-500 font-semibold mb-2">Amount Paid</p>
+            <p className="text-xl font-bold">₦61,000,000</p>
+          </div>
         </div>
       </div>
 

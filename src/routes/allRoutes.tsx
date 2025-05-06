@@ -18,6 +18,8 @@ import MyProfileScreen from "../pages/MyProfileScreen";
 import SupportScreen from "../pages/SupportScreen";
 import Modal from "../components/Modal2";
 import ProfileSettings from "../pages/AccountSettings";
+import PropertyDetail from "../pages/PropertyDetail";
+import InvestmentForm from "../pages/InvestInProperty";
 
 const DashboardScreen = lazy(() => import("../pages/DashboardScreen"));
 
@@ -65,6 +67,14 @@ const AllRoutes = () => {
                 <Route path="/my-profile" element={<MyProfileScreen />} />
                 <Route path="/settings" element={<ProfileSettings />} />
                 <Route path="/support" element={<SupportScreen />} />
+                <Route
+                  path="/properties/:id"
+                  element={<PropertyDetail />}
+                />{" "}
+                <Route
+                  path="/invest-property/:id"
+                  element={<InvestmentForm />}
+                />{" "}
               </Route>
             </Route>
 
@@ -75,7 +85,7 @@ const AllRoutes = () => {
             />
 
             {/* Catch-All Redirect */}
-            <Route path="*" element={<Navigate to="/auth" />} />
+            {/* <Route path="*" element={<Navigate to="/auth" />} /> */}
           </Routes>
         </Suspense>
       </BrowserRouter>

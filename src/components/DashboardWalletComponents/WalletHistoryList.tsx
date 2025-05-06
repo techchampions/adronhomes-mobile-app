@@ -50,7 +50,7 @@ const StatusBadge = ({ status }: { status: WalletTransaction["status"] }) => {
   const isCompleted = status === "Completed";
   return (
     <span
-      className={`px-3 py-1 w-fit  mx-auto rounded-full text-xs font-medium border ${
+      className={`px-3 py-1 w-fit hidden md:block mx-auto rounded-full text-xs font-medium border ${
         isCompleted
           ? "text-green-600 border-green-300 bg-green-50"
           : "text-gray-500 border-gray-300 bg-gray-100"
@@ -63,7 +63,7 @@ const StatusBadge = ({ status }: { status: WalletTransaction["status"] }) => {
 
 const WalletHistory: React.FC = () => {
   return (
-    <div className="bg-white p-10 rounded-3xl">
+    <div className="bg-white p-4 md:p-10 rounded-3xl">
       <div className="flex items-center justify-between mb-4 px-4">
         <h4 className="text-gray-800 font-semibold text-lg">History</h4>
         <button className="text-green-600 text-sm font-medium hover:underline">
@@ -74,7 +74,7 @@ const WalletHistory: React.FC = () => {
         {walletHistory.map((tx, idx) => (
           <li
             key={tx.id}
-            className={`grid grid-cols-3 items-center justify-between px-4 py-3 rounded-3xl ${
+            className={`grid grid-cols-2 md:grid-cols-3 items-center justify-between px-4 py-3 rounded-3xl ${
               idx % 2 !== 0 ? "bg-gray-100" : ""
             }`}
           >

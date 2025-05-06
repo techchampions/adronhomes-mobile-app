@@ -83,8 +83,8 @@ const TransactionsPage = () => {
 
   return (
     <div className="space-y-4">
-      <div className="grid grid-cols-3 gap-4">
-        <div className="p-4 bg-white rounded-3xl flex flex-col items-center h-fit">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+        <div className="p-4 bg-white rounded-3xl flex flex-col col-span-2 md:col-span-1 items-center h-fit">
           <p className="text-gray-400 text-sm">Wallet Balance</p>
           <p className="font-bold">₦76,000,000</p>
         </div>
