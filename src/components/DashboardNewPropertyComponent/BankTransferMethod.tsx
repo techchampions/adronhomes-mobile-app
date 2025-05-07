@@ -13,8 +13,8 @@ const BankTransfer = ({
   goBack: () => void;
   amount: number;
 }) => {
-  const { closeModal, openModal } = useModalStore();
   const { showToast } = useToastStore();
+  const { closeModal, openModal } = useModalStore();
   const GoToSelectPaymentMethod = () => {
     openModal(<SelectPaymentMethod goBack={goBack} amount={amount} />);
   };
@@ -26,12 +26,6 @@ const BankTransfer = ({
 
   return (
     <div className="flex flex-col">
-      <div className="flex flex-col">
-        <div className="text-2xl font-bold">Fund Wallet</div>
-        <p className="text-gray-400 text-xs w-[80%]">
-          Please confirm bank details before making payment.{" "}
-        </p>
-      </div>
       <div className="flex flex-col gap-4 mt-4 min-h-[400px] justify-between">
         <div className="flex flex-col gap-2">
           <div className="w-full bg-adron-green rounded-2xl flex gap-3 items-center p-3">
@@ -43,7 +37,7 @@ const BankTransfer = ({
             <span className="font-bold text-black">
               ₦{amount.toLocaleString()}
             </span>{" "}
-            to the account below to complete your wallet funding.
+            to the account below to complete your payment.
           </p>
           <div className="flex flex-col w-full gap-4 mt-7">
             <div className="flex justify-between items-start w-full">

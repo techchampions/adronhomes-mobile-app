@@ -1,18 +1,19 @@
-import { Form, Formik, useFormik } from "formik";
+import { Form, Formik } from "formik";
 import * as Yup from "yup";
-import { useState } from "react";
 import SelectField from "../components/SelectField";
 import InputField from "../components/InputField";
-import { AiOutlineFileExclamation } from "react-icons/ai";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
-import { FaFileUpload, FaMapMarkerAlt } from "react-icons/fa";
+import { FaMapMarkerAlt } from "react-icons/fa";
 import { RiUpload2Line } from "react-icons/ri";
 import Button from "../components/Button";
 import { GiStreetLight } from "react-icons/gi";
+import { useNavigate, useParams } from "react-router-dom";
+import PaymentBreakDown from "../components/DashboardNewPropertyComponent/PaymentBreakDown";
 
 export default function InvestmentForm() {
-  const [selectedIdType, setSelectedIdType] = useState("");
-
+  const navigate = useNavigate();
+  const params = useParams();
+  const id = params?.id;
   const initialValues = {
     paymentType: "",
     paymentDuration: "",
@@ -20,6 +21,7 @@ export default function InvestmentForm() {
     startDate: "",
     endDate: "",
     govId: "",
+    govIdType: "",
     nextOfKinName: "",
     bankStatement: null,
     utilityBill: null,
@@ -33,14 +35,16 @@ export default function InvestmentForm() {
     startDate: Yup.date().required("Required"),
     endDate: Yup.date().required("Required"),
     govId: Yup.string().required("Required"),
+    govIdType: Yup.string().required("Required"),
     nextOfKinName: Yup.string().required("Required"),
     bankStatement: Yup.mixed().required("Required"),
     utilityBill: Yup.mixed().required("Required"),
     nextOfKinRelationship: Yup.string().required("Required"),
     nextOfKinPhone: Yup.string().required("Required"),
   });
-  const submit = (values) => {
-    console.log(values);
+  const submit = () => {
+    navigate(`/property-agreement/${id}`);
+    // console.log("submiting");
   };
 
   return (
@@ -136,44 +140,7 @@ export default function InvestmentForm() {
               </div>
             </div>
           </div>
-
-          <div className="bg-white p-6 rounded-3xl shadow-xl">
-            <h4 className="font-semibold mb-4">Payment Breakdown</h4>
-            <div className="space-y-4 text-sm">
-              <p className="text-black flex justify-between gap-4">
-                ₦36,000,000
-                <span className="text-xs text-gray-400 text-right">
-                  Initial Deposit
-                </span>
-              </p>
-              <p className="text-black flex justify-between gap-4">
-                ₦5,000
-                <span className="text-xs text-gray-400 text-right">
-                  Fees & Charges
-                </span>
-              </p>
-              <p className="text-black flex justify-between gap-4">
-                ₦5,000,000
-                <span className="text-xs text-gray-400 text-right">
-                  Weakly Amount
-                </span>
-              </p>
-              <p className="text-black flex justify-between gap-4">
-                ₦7,500,000
-                <span className="text-xs text-gray-400 text-right">
-                  Amount to be paid after your duration
-                </span>
-              </p>
-            </div>
-            <div className="mt-6 bg-adron-green text-white text-start px-4 md:px-6 py-2 rounded-3xl font-semibold text-lg flex flex-col">
-              ₦36,000,000 <span className="text-xs text-white/50">Total</span>
-            </div>
-            <p className="text-xs text-gray-400 mt-2 flex items-start gap-2">
-              <HiOutlineExclamationCircle className="h-10 w-10" /> The following
-              is the payment breakdown for your first payment. Please contact
-              support if you have any questions.
-            </p>
-          </div>
+          <PaymentBreakDown />{" "}
         </div>
 
         {/* Customer Verification */}
@@ -185,7 +152,7 @@ export default function InvestmentForm() {
                 Government Issued ID
               </label>
               <SelectField
-                name="govId"
+                name="govIdType"
                 options={["National ID", "Passport", "Driver's License"]}
               />
               <InputField name="govId" />
@@ -220,7 +187,12 @@ export default function InvestmentForm() {
         </div>
 
         <div className="text-right p-18">
-          <Button type="submit" label="Proceed" className="!w-fit px-10" />
+          <Button
+            type="submit"
+            label="Proceed"
+            className="!w-fit px-10"
+            onClick={submit}
+          />
         </div>
       </Form>
     </Formik>

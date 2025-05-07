@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { useModalStore } from "../../zustand/useModalStore";
+import NotificationDetail from "./NotificationDetail";
 
 export type NotificationStatus = "All" | "Read" | "Unread";
 
@@ -17,6 +19,7 @@ type Props = {
 const tabs: (NotificationStatus | "All")[] = ["All", "Read", "Unread"];
 
 const NotificationList: React.FC<Props> = ({ data }) => {
+  const { openModal } = useModalStore();
   const [activeTab, setActiveTab] = useState<(typeof tabs)[number]>("All");
 
   const isNotificationStatus = (tab: string): tab is NotificationStatus => {
@@ -72,6 +75,7 @@ const NotificationList: React.FC<Props> = ({ data }) => {
         {filteredData.map((item) => (
           <div
             key={item.id}
+            onClick={() => openModal(<NotificationDetail id={item.id} />)}
             className="flex justify-between gap-4 items-center p-4 even:bg-gray-100 rounded-3xl"
           >
             <div className="w-[70%]">

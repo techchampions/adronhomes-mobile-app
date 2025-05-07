@@ -1,48 +1,44 @@
 import React, { useState } from "react";
+import Button from "../Button";
+import InputAmount from "../PaymentComponents/InputAmount";
 import { useModalStore } from "../../zustand/useModalStore";
-import TransactionDetail from "./TransactionDetail";
 
-export type TransactionStatus = "All" | "Completed" | "Pending" | "Failed";
+export type PaymentStatus = "All" | "Paid" | "Pending" | "Missed";
 
-export type TransactionItem = {
+export type PaymentItem = {
   id: number;
   title: string;
   date: string;
-  status: TransactionStatus;
+  status: PaymentStatus;
   amount: string;
 };
 
 type Props = {
-  data: TransactionItem[];
+  data: PaymentItem[];
 };
 
-const tabs: (TransactionStatus | "All")[] = [
-  "All",
-  "Completed",
-  "Pending",
-  "Failed",
-];
+const tabs: (PaymentStatus | "All")[] = ["All", "Paid", "Pending", "Missed"];
 
-const TransactionsList: React.FC<Props> = ({ data }) => {
-  const [activeTab, setActiveTab] = useState<(typeof tabs)[number]>("All");
+const PaymentList: React.FC<Props> = ({ data }) => {
   const { openModal } = useModalStore();
+  const [activeTab, setActiveTab] = useState<(typeof tabs)[number]>("All");
 
-  const isTransactionStatus = (tab: string): tab is TransactionStatus => {
-    return ["Completed", "Pending", "Failed"].includes(tab);
+  const isPaymentStatus = (tab: string): tab is PaymentStatus => {
+    return ["Paid", "Pending", "Missed"].includes(tab);
   };
 
   const filteredData =
     activeTab === "All"
       ? data
-      : isTransactionStatus(activeTab)
+      : isPaymentStatus(activeTab)
       ? data.filter((item) => item.status === activeTab)
       : [];
 
-  const renderStatusBadge = (status: TransactionStatus) => {
-    const styles: Record<TransactionStatus, string> = {
-      Completed: "bg-green-100 text-green-600 border-green-400",
+  const renderStatusBadge = (status: PaymentStatus) => {
+    const styles: Record<PaymentStatus, string> = {
+      Paid: "bg-green-100 text-green-600 border-green-400",
       Pending: "bg-gray-100 text-gray-600 border-gray-400",
-      Failed: "bg-red-100 text-red-600 border-red-400",
+      Missed: "bg-red-100 text-red-600 border-red-400",
     };
     return (
       <span
@@ -51,6 +47,9 @@ const TransactionsList: React.FC<Props> = ({ data }) => {
         {status}
       </span>
     );
+  };
+  const makePayment = () => {
+    openModal(<InputAmount goBack={makePayment} />);
   };
 
   return (
@@ -95,8 +94,7 @@ const TransactionsList: React.FC<Props> = ({ data }) => {
         {filteredData.map((item) => (
           <div
             key={item.id}
-            onClick={() => openModal(<TransactionDetail id={item.id} />)}
-            className="grid grid-cols-2 md:grid-cols-3 justify-between items-center p-4 even:bg-gray-100 rounded-3xl"
+            className="grid grid-cols-2 md:grid-cols-4 justify-between items-center p-4 even:bg-gray-100 rounded-3xl"
           >
             <div>
               <div className="font-medium text-sm">{item.title}</div>
@@ -104,6 +102,15 @@ const TransactionsList: React.FC<Props> = ({ data }) => {
             </div>
             {renderStatusBadge(item.status)}
             <div className="text-sm font-semibold text-end">{item.amount}</div>
+            <div className="flex justify-end">
+              {item.status == "Missed" && (
+                <Button
+                  label="Make Payment"
+                  className="bg-black text-xs !w-fit px-6"
+                  onClick={makePayment}
+                />
+              )}
+            </div>
           </div>
         ))}
       </div>
@@ -118,4 +125,4 @@ const TransactionsList: React.FC<Props> = ({ data }) => {
   );
 };
 
-export default TransactionsList;
+export default PaymentList;

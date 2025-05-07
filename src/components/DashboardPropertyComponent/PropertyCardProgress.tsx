@@ -1,6 +1,7 @@
 import React from "react";
 import { FaMapMarkerAlt } from "react-icons/fa";
 import Button from "../Button";
+import { useNavigate } from "react-router-dom";
 
 type PropertyCardProps = {
   imageUrl: string;
@@ -17,10 +18,14 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
   raisedAmount,
   targetAmount,
 }) => {
+  const navigate = useNavigate();
   const progressPercent = Math.min(
     100,
     (raisedAmount / targetAmount) * 100
   ).toFixed(1);
+  const handleNavigation = () => {
+    navigate(`/my-property/${title}`);
+  };
 
   return (
     <div className="bg-white rounded-3xl p-6 w-full">
@@ -59,7 +64,11 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
 
       {/* Button */}
       <div className="mt-4">
-        <Button label="View Details" className="!w-fit px-4 text-xs" />
+        <Button
+          label="View Details"
+          className="!w-fit px-4 text-xs"
+          onClick={handleNavigation}
+        />
       </div>
     </div>
   );

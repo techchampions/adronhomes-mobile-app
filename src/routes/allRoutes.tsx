@@ -20,6 +20,10 @@ import Modal from "../components/Modal2";
 import ProfileSettings from "../pages/AccountSettings";
 import PropertyDetail from "../pages/PropertyDetail";
 import InvestmentForm from "../pages/InvestInProperty";
+import ProppertyAgreement from "../pages/ProppertyAgreement";
+import PropertyPaymentMethod from "../pages/PropertyPaymentMethod";
+import MyPropertyDetail from "../pages/MyPropertyDetail";
+import MyPropertyPaymentList from "../pages/MyPropertyPaymentList";
 
 const DashboardScreen = lazy(() => import("../pages/DashboardScreen"));
 
@@ -75,6 +79,19 @@ const AllRoutes = () => {
                   path="/invest-property/:id"
                   element={<InvestmentForm />}
                 />{" "}
+                <Route
+                  path="/property-agreement/:id"
+                  element={<ProppertyAgreement />}
+                />{" "}
+                <Route
+                  path="/property/:id/payment-method"
+                  element={<PropertyPaymentMethod />}
+                />{" "}
+                <Route path="/my-property/:id" element={<MyPropertyDetail />} />
+                <Route
+                  path="/my-property/:id/payment-list"
+                  element={<MyPropertyPaymentList />}
+                />
               </Route>
             </Route>
 
