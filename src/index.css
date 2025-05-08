@@ -58,6 +58,10 @@ button {
   }
 } */
 @import "tailwindcss";
+/* styles/globals.css */
+@import "swiper/css";
+@import "swiper/css/navigation";
+
 
 /* ✅ Add custom Gotham font */
 @font-face {
@@ -81,10 +85,37 @@ button {
   font-style: normal;
 }
 
+@font-face {
+  font-family: "Gotham-ultra";
+  src: url("/fonts/Gotham-Ultra.otf") format("opentype");
+  font-weight: 900;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Gotham-thin";
+  src: url("/fonts/Gotham-Thin.otf") format("opentype");
+  font-weight: 900;
+  font-style: normal;
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
 }
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+  /* Chrome, Safari, Opera */
+}
+
 
 @theme inline {
   --color-background: var(--background);
@@ -94,6 +125,8 @@ button {
   --color-adron-body: #f5f5f5;
   --color-adron-black: #272727;
   --color-adron-green: #79B833;
+  --color-adron-green-200: #EFFFDE;
+  --color-adron-green-300: #CCFF93;
   --color-adron-red: #D70E0E;
   --color-adron-gray-50: #f5f5f5;
   --color-adron-gray-200: #8F8F8F;
@@ -102,6 +135,9 @@ button {
   --color-adron-gray-500: #4F4F4F;
   --font-adron-title: 'Cormorant Garamond', sans-serif;
   --font-adron-text-body: Gotham;
+  --font-adron-thin: Gotham-thin;
+  --font-adron-mid: Gotham-normal;
+  --font-adron-ultra: Gotham-Ultra;
 }
 
 .font-gotham {

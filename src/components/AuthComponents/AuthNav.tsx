@@ -1,7 +1,7 @@
-import { usePathname } from "next/navigation";
+// import { usePathname } from "next/navigation";
 
 export default function AuthNavbar() {
-  const pathname = usePathname();
+  // const pathname = usePathname();
 
   const navLinks = [
     { name: "Home", href: "/" },
@@ -15,10 +15,16 @@ export default function AuthNavbar() {
   return (
     <header className=" w-full transition-colors duration-300 mx-auto">
       <nav className="w-full flex justify-between items-center py-2 px-2 md:px-2">
-        <ul className="hidden md:flex space-x-6 text-sm justify-between w-full">
+        <ul className="hidden md:flex space-x-6 text-sm justify-between w-full px-16 pb-5">
           {navLinks.map((link) => (
             <li key={link.href}>
               <a
+                href={link.href}
+                className="transition-colors duration-300 text-gray-700 hover:text-adron-green "
+              >
+                {link.name}
+              </a>
+              {/* <a
                 href={link.href}
                 className={`transition-colors duration-300 ${
                   pathname === link.href
@@ -27,7 +33,7 @@ export default function AuthNavbar() {
                 }`}
               >
                 {link.name}
-              </a>
+              </a> */}
             </li>
           ))}
         </ul>

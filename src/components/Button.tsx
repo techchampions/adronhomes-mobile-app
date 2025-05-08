@@ -24,7 +24,7 @@ const Button: React.FC<ButtonProps> = ({
       type={type}
       onClick={onClick}
       disabled={disabled || isLoading}
-      className={`w-full bg-brand py-2 rounded-full transition duration-300 text-white ${className}
+      className={`w-full bg-adron-green py-2 rounded-full transition duration-300 text-white ${className}
         ${
           disabled || isLoading
             ? "opacity-50 cursor-not-allowed"
@@ -51,7 +51,6 @@ const Button: React.FC<ButtonProps> = ({
               fill="currentColor"
             />
           </svg>
-          Loading...
         </div>
       ) : (
         <div className="flex items-center justify-center">

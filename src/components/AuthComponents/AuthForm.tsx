@@ -5,10 +5,11 @@ import { useState } from "react";
 import InputField from "../InputField";
 import Button from "../Button";
 import { useOnboardingStore } from "../../zustand/OnboardingStore";
-import { login, signup } from "../../utils/Auth";
+import Auth, { login, signup } from "../../utils/Auth";
 import Toast from "../Toast";
 import { useUserStore } from "../../zustand/UserStore";
 import apiClient from "../../utils/AxiosInstance";
+import { useToastStore } from "../../zustand/useToastStore";
 
 type AuthFormProps = {
   isLogin?: boolean;
@@ -23,20 +24,12 @@ const AuthForm = ({
   isResetPassword = false,
   isSignup = false,
 }: AuthFormProps) => {
+  const { showToast } = useToastStore();
   const { setStep } = useOnboardingStore();
-  const {
-    setToken,
-    setReferralCode,
-    setId,
-    setEmail,
-    setFirstName,
-    setLastName,
-    setPhoneNumber,
-  } = useUserStore();
   const [showPassword, setShowPassword] = useState(false);
-  const [showToast, setShowToast] = useState(false);
-  const [toastMsg, setToastMsg] = useState<string>("");
-  const [toastType, setToastType] = useState<"success" | "error">("success");
+  // const [showToast, setShowToast] = useState(false);
+  // const [toastMsg, setToastMsg] = useState<string>("");
+  // const [toastType, setToastType] = useState<"success" | "error">("success");
 
   // Password visibility toggle logic
   const togglePasswordVisibility = () => setShowPassword((prev) => !prev);
@@ -84,105 +77,23 @@ const AuthForm = ({
         }),
   });
 
-  const handleToast = (msg: string, type: "success" | "error") => {
-    setToastMsg(msg);
-    setToastType(type);
-  };
-
   // Handle SignUp
-  const handleSignup = async (
+  const handleForgotpassword = async (
     values: {
-      fullName: string;
       email: string;
-      phone: string;
-      password: string;
-      marketerReferralCode: string;
     },
     { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void }
   ) => {
     try {
-      const [firstName, lastName] = values.fullName.trim().split(" ");
-
-      // If only one name is provided (i.e., no space), handle it as a single part name
-      const userFirstName = firstName || "";
-      const userLastName = lastName || "";
-
-      const response = await apiClient.post("/register", {
-        first_name: userFirstName,
-        last_name: userLastName,
+      const response = await apiClient.post("/forget-password", {
         email: values.email,
-        phone_number: values.phone,
-        password: values.password,
-        referral_code: values.marketerReferralCode,
       });
 
       if (response.data.success) {
-        setToken(response.data.token); // Save token in store
-        // setStore({
-        //   id: response.data.user.id,
-        //   name: response.data.user.store_name,
-        //   address: "",
-        //   description: "",
-        //   logoUrl: "",
-        // });
-        setToastMsg("User registered successfully!");
+        setToastMsg("Opt sent to email successfully!");
         setToastType("success");
         setShowToast(true);
-
-        // setPlanID(response.data.user.plan_id);
-        setEmail(response.data.user.email);
-        setFirstName(response.data.user.first_name);
-        setLastName(response.data.user.last_name);
-        setReferralCode(response.data.user.referral_code);
-        setPhoneNumber(response.data.user.phone_number);
-        setId(response.data.user.id);
-        localStorage.setItem("otp", response.data.otp.otp);
-        console.log(response.data.otp.otp); // Save OTP for verification
-        setStep("verify OTP");
-      } else if (response.data.errors) {
-        const errorMessages = Object.values(response.data.errors)
-          .flat()
-          .join("\n"); // Combine errors into a readable string
-        setToastMsg(errorMessages);
-        setToastType("error");
-        setShowToast(true);
-      }
-    } catch (error: any) {
-      if (error.response && error.response.data.errors) {
-        const errorMessages = Object.values(error.response.data.errors)
-          .flat()
-          .join("\n"); // Extract and format error messages
-        setToastMsg(errorMessages);
-      } else {
-        setToastMsg("Something went wrong. Please try again.");
-      }
-      setToastType("error");
-      setShowToast(true);
-      console.error("Signup failed:", error);
-    } finally {
-      setSubmitting(false);
-    }
-  };
-  const handleLogin = async (
-    values: {
-      email: string;
-      password: string;
-    },
-    { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void }
-  ) => {
-    try {
-      const response = await apiClient.post("/login", {
-        email: values.email,
-        password: values.password,
-      });
-
-      if (response.data.success) {
-        setToken(response.data.token); // Save token in store
-        setToastMsg("User LoggedIn successfully!");
-        setToastType("success");
-        setShowToast(true);
-        // console.log(response.data.otp.otp); // Save OTP for verification
-        setStep("verify OTP");
+        setStep("reset password");
       } else if (response.data.errors) {
         const errorMessages = Object.values(response.data.errors)
           .flat()
@@ -206,7 +117,7 @@ const AuthForm = ({
       }
       setToastType("error");
       setShowToast(true);
-      console.error("Login failed:", error);
+      console.error("Password Reset Failed:", error);
     } finally {
       setSubmitting(false);
     }
@@ -218,16 +129,16 @@ const AuthForm = ({
     setSubmitting: (isSubmitting: boolean) => void
   ) => {
     if (isForgotPassword) {
-      setStep("reset password");
-      console.log("Sending reset password email to:", values.email);
+      handleForgotpassword(values, { setSubmitting });
     } else if (isResetPassword) {
       setStep("verify OTP");
       console.log("Resetting password:", values.password);
     } else if (isLogin) {
-      handleLogin(values, { setSubmitting });
+      Auth.login(values, { setSubmitting });
       console.log("Logging in with:", values);
     } else if (isSignup) {
-      handleSignup(values, { setSubmitting });
+      // handleSignup(values, { setSubmitting });
+      Auth.register(values, { setSubmitting });
       console.log("Registering with:", values);
     }
   };
@@ -364,7 +275,7 @@ const AuthForm = ({
                 Are you new?{" "}
                 <Button
                   label="Create an Account"
-                  className="!text-adron-green font-medium !w-fit underline"
+                  className="!text-adron-green bg-transparent font-medium !w-fit underline"
                   onClick={() => setStep("signup")}
                 />
               </>
@@ -373,20 +284,20 @@ const AuthForm = ({
                 Already have an account?
                 <Button
                   label="Sign In"
-                  className="!text-adron-green font-medium !w-fit underline"
+                  className="!text-adron-green bg-transparent font-medium !w-fit underline"
                   onClick={() => setStep("login")}
                 />
               </div>
             )}
           </p>
           {/* Toast notification */}
-          {showToast && (
+          {/* {showToast && (
             <Toast
               message={toastMsg}
               type={toastType}
               onClose={() => setShowToast(false)}
             />
-          )}
+          )} */}
         </Form>
       )}
     </Formik>
