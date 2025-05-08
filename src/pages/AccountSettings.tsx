@@ -4,8 +4,11 @@ import * as Yup from "yup";
 import { Switch } from "@headlessui/react"; // optional for toggle UI
 import InputField from "../components/InputField";
 import Button from "../components/Button";
+import { useModalStore } from "../zustand/useModalStore";
+import Confirmation from "../components/Confirmation";
 
 const ProfileSettings = () => {
+  const { openModal } = useModalStore();
   const initialValues = {
     fullName: "Mika Edmoud Miles",
     email: "Simonbill99@yahoo.com",
@@ -109,6 +112,7 @@ const ProfileSettings = () => {
                 <Button
                   label="Change Password"
                   className="bg-black text-sm !w-1/2"
+                  onClick={() => openModal(<Confirmation />)}
                 />
               </div>
             </div>

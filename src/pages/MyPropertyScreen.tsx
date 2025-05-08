@@ -56,7 +56,7 @@ const MyPropertyScreen = () => {
     <div className="flex flex-col gap-4">
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
         <div className="p-4 bg-white rounded-3xl flex flex-col items-center h-fit col-span-2 md:col-span-1">
-          <p className="text-gray-400 text-sm">total Properties</p>
+          <p className="text-gray-400 text-sm">Total Properties</p>
           <div className=" flex w-fit mx-auto font-bold rounded-full justify-between items-center gap-2 ">
             <span>2 Houses</span>
             <span className="">•</span>

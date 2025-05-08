@@ -96,8 +96,8 @@ const MyPropertyDetail = () => {
   };
   return (
     <div className="space-y-4">
-      <div className="flex justify-between bg-adron-green rounded-3xl overflow-hidden">
-        <div className="flex flex-col w-[60%] gap-4 p-8">
+      <div className="flex justify-between flex-col md:flex-row bg-adron-green rounded-3xl overflow-hidden">
+        <div className="flex flex-col w-full md:w-[60%] gap-4 p-8">
           {/* Progress Bar */}
           <div className="mt-5 space-y-4">
             <div className="flex justify-between items-baseline text-sm mt-2 w-fit text-white">

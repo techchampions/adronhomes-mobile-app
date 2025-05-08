@@ -1,10 +1,16 @@
 import React from "react";
 import { FaPlus } from "react-icons/fa";
 import Button from "../Button";
+import { useModalStore } from "../../zustand/useModalStore";
+import ReferAndEarn from "../ReferAndEarn";
 
 const NavbarAddorder = () => {
+  const { openModal } = useModalStore();
   return (
-    <div className="relative flex flex-col text-white text-left justify-center py-7 px-5 space-y-2 bg-[#44691B] rounded-2xl">
+    <div
+      className="relative flex flex-col text-white text-left justify-center py-7 px-5 space-y-2 bg-[#44691B] rounded-2xl"
+      onClick={() => openModal(<ReferAndEarn />)}
+    >
       <img
         src="/images/referNearn-bg.png"
         className="absolute inset-0 w-full h-full"

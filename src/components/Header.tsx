@@ -5,7 +5,7 @@ import Button from "./Button";
 import { Formik } from "formik";
 import { useNavigate } from "react-router-dom";
 
-const Header = () => {
+const Header = ({ pageTitle }) => {
   const navigate = useNavigate();
   const newProperty = () => {
     navigate("/new-properties");
@@ -15,7 +15,7 @@ const Header = () => {
   };
   return (
     <div className="hidden md:flex justify-between items-center bg-white rounded-3xl p-8 mb-5">
-      <div className="text-2xl">Dashboard</div>
+      <div className="text-2xl">{pageTitle}</div>
       <div className="">
         <Formik
           initialValues={{ search: "" }}
