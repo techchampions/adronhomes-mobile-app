@@ -5,8 +5,8 @@ import PaymentBreakDown from "../components/DashboardNewPropertyComponent/Paymen
 const PropertyPaymentMethod = () => {
   const renderPaymentMethod = () => {
     return (
-      <div className="grid grid-cols-3 py-10 bg-white rounded-3xl px-10">
-        <div className="col-span-2 p-10">
+      <div className="grid grid-col-1 md:grid-cols-3 py-10 bg-white rounded-3xl px-10 gap-12 md:gap-0 ">
+        <div className="md:col-span-2 md:p-10">
           <SelectPaymentMethod amount={3000000} goBack={renderPaymentMethod} />
         </div>
         <PaymentBreakDown />

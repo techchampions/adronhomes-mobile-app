@@ -132,7 +132,7 @@ const MyPropertyDetail = () => {
             </div>
           </div>
         </div>
-        <div className="flex relative w-[40%] bg-black/30">
+        <div className="flex relative w-full md:w-[40%] bg-[#44691B] rounded-3xl md:rounded-none p-4 md:p-2">
           <div className="w-full max-w-[472px] mx-auto overflow-hidden relative z-10">
             <div className="relative w-[50%] h-[120px] p-6 md:h-[150px] overflow-hidden">
               <img

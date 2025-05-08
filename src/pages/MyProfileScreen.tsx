@@ -1,8 +1,11 @@
 import React from "react";
 import UserProfileCard from "../components/MyProfile/UserProfileCard";
 import Button from "../components/Button";
+import { useModalStore } from "../zustand/useModalStore";
+import StatementRequest from "../components/MyProfile/StatementRequest";
 
 const MyProfileScreen = () => {
+  const { openModal } = useModalStore();
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
       <div className="col-span-2 md:col-span-3">
@@ -42,6 +45,7 @@ const MyProfileScreen = () => {
         <Button
           label="Request Statement"
           className="bg-black text-white font-bold !w-[155px] text-xs"
+          onClick={() => openModal(<StatementRequest />)}
         />
       </div>
       <div className="col-span-2 md:col-span-3 flex flex-col md:flex-row justify-between gap-3 md:items-center bg-white py-4 px-4 md:px-12 rounded-3xl">

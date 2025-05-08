@@ -15,6 +15,7 @@ import NavItem from "./NavItem";
 import NavbarAddorder from "./NavbarAddorder";
 import Auth from "../../utils/Auth";
 import Button from "../Button";
+import { Input } from "@headlessui/react";
 
 const MobileNav = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -49,13 +50,20 @@ const MobileNav = () => {
 
         {/* Side drawer menu */}
         <div className="w-64 bg-white h-full p-6 shadow-lg">
-          <div className="flex justify-end mb-6">
-            <button onClick={() => setIsMobileMenuOpen(false)}>
-              <X size={24} />
-            </button>
+          <div className="flex flex-col">
+            <div className="flex justify-between mb-6">
+              <img src="/logo.png" alt="logo" className=" w-[60%]" />
+              <button onClick={() => setIsMobileMenuOpen(false)}>
+                <X size={24} />
+              </button>
+            </div>
+            <input
+              placeholder="Search..."
+              className="px-6 bg-adron-body rounded-full py-2 text-xs"
+            />
           </div>
 
-          <div className="w-full py-1.5 bg-white rounded-2xl">
+          <div className="w-full py-1.5 h-screen overflow-y-scroll scrollbar-hide bg-white rounded-2xl">
             <nav className="space-y-2 p-2">
               <NavItem
                 label="Dashboard"
