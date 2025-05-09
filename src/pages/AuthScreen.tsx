@@ -1,4 +1,6 @@
 import AuthNavbar from "../components/AuthComponents/AuthNav";
+import Slideshow from "../components/AuthComponents/NewShildeshow";
+import FadeSlideshow from "../components/AuthComponents/Slideshow";
 import { useOnboardingStore } from "../zustand/OnboardingStore";
 import { useUserStore } from "../zustand/UserStore";
 import ForgotPassword from "./ForgotPassword";
@@ -47,14 +49,16 @@ const OnboardingScreen = () => {
     <div className="min-h-screen grid grid-cols-1 md:grid-cols-2 fixed w-full">
       {/* Promo Section */}
       <div
-        className="relative hidden md:block text-white h-screen"
+        className="relative hidden md:block text-white h-screen bg-white"
         onClick={handleReset}
       >
-        <img
+        {/* <FadeSlideshow /> */}
+        <Slideshow />
+        {/* <img
           src="/images/lemon-friday.png"
           alt="Lemon Friday Promo"
           className="w-full h-full"
-        />
+        /> */}
       </div>
 
       {/* Signup Form Section */}

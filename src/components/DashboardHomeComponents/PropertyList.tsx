@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 // types.ts
 type PropertyPlan = {
   id: number;
@@ -50,6 +51,7 @@ const plans: PropertyPlan[] = [
 ];
 
 const PropertyPlanList: React.FC = () => {
+  const navigate = useNavigate();
   return (
     <div className="bg-white p-6 rounded-3xl w-full">
       <div className="flex items-center justify-between mb-6">
@@ -62,6 +64,7 @@ const PropertyPlanList: React.FC = () => {
       <ul className="space-y-2">
         {plans.map((plan) => (
           <li
+            onClick={() => navigate(`/my-property/${plan.id}`)}
             key={plan.id}
             className={`p-4 rounded-3xl ${
               plan.isHighlighted ? "bg-gray-100" : ""

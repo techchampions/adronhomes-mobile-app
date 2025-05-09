@@ -1,4 +1,6 @@
 import React from "react";
+import { useModalStore } from "../../zustand/useModalStore";
+import TransactionDetail from "../DashboardTransactionComponents/TransactionDetail";
 // types.ts
 type Transaction = {
   id: number;
@@ -42,6 +44,7 @@ const transactions: Transaction[] = [
 ];
 
 const TransactionsList: React.FC = () => {
+  const { openModal } = useModalStore();
   return (
     <div className="bg-white p-6 rounded-3xl w-full">
       <div className="flex items-center justify-between mb-6">
@@ -53,7 +56,10 @@ const TransactionsList: React.FC = () => {
 
       <ul className="space-y-2">
         {transactions.map((t) => (
-          <li className="p-4 rounded-3xl flex justify-between items-center even:bg-gray-100">
+          <li
+            className="p-4 rounded-3xl flex justify-between items-center even:bg-gray-100"
+            onClick={() => openModal(<TransactionDetail id={t.id} />)}
+          >
             <div>
               <p className="font-semibold text-gray-500 text-sm">{t.name}</p>
               <p className="text-xs text-gray-500">{t.date}</p>
