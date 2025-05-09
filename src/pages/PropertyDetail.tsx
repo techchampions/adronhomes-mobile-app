@@ -142,7 +142,7 @@ const PropertyDetail = () => {
             <span>{address}</span>
           </p>
         </div>
-        <div className="flex justify-between gap-4">
+        <div className="flex justify-between gap-4 mt-3 md:mt-0">
           <div className="p-4 rounded-full bg-white w-fit">
             <FaHeart />
           </div>
@@ -163,9 +163,14 @@ const PropertyDetail = () => {
           <div className="relative w-full h-[300px] rounded-xl overflow-hidden mt-4">
             <Swiper
               spaceBetween={10}
-              slidesPerView={2.3}
+              slidesPerView={1.3}
               navigation={true}
               modules={[Navigation]}
+              breakpoints={{
+                320: {
+                  slidesPerView: 2.3,
+                },
+              }}
               className="w-full h-full rounded-xl"
             >
               {images.map((img, idx) => (
@@ -178,7 +183,6 @@ const PropertyDetail = () => {
                 </SwiperSlide>
               ))}
             </Swiper>
-
             {/* Custom Navigation Buttons */}
             {/* <button className="absolute left-2 top-1/2 -translate-y-1/2 z-10 bg-white/70 rounded-full p-2 shadow">
               <FaChevronLeft size={20} />
@@ -187,9 +191,8 @@ const PropertyDetail = () => {
               <FaChevronRight size={20} />
             </button> */}
           </div>
-
           <div className="flex flex-col my-5 gap-10">
-            <div className="flex justify-between items-center">
+            <div className="flex flex-col md:flex-row justify-between md:items-center">
               <div className="flex items-center text-sm justify-between font-bold text-gray-500 gap-4 md:gap-10">
                 <span className="flex items-center gap-1 truncate">
                   {/* <TfiRulerAlt2 />  */}
@@ -212,12 +215,12 @@ const PropertyDetail = () => {
                 </span>
                 <div className="flex items-center gap-1 text-sm">{type}</div>
               </div>
-              <div className=" flex items-center gap-1 text-2xl font-bold">
+              <div className=" flex items-center gap-1 text-2xl font-bold mt-3 md:mt-0">
                 {formattedPrice}
               </div>
             </div>
             <div className="flex flex-col md:flex-row gap-4">
-              <div className="flex flex-col w-[70%] gap-10">
+              <div className="flex flex-col w-full md:w-[70%] gap-10">
                 <div className="flex flex-col gap-2">
                   <h4 className="font-bold text-md">Overview</h4>
                   <p className="text-sm ml-5">
@@ -308,115 +311,103 @@ const PropertyDetail = () => {
                     </div>
                   </div>
                 </div>
-                {/* <div className="flex flex-col gap-2">
-              <h4 className="font-bold text-md">Additional Details</h4>
-              <div className="grid grid-cols-2 gap-2">
-                <div className="relative overflow-x-hidden">
-                  <table className="w-full text-sm text-left rtl:text-right text-gray-500">
-                    <tbody>
-                      <tr className="bg-white border-b border-gray-200">
-                        <th
-                          scope="row"
-                          className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap "
-                        >
-                          Legal Documentation Fees
-                        </th>
-                        <td className="px-6 py-4">
-                          {legal_documention_fee}
-                        </td>
-                      </tr>
+                <div className="flex flex-col gap-2">
+                  <h4 className="font-bold text-md">Additional Details</h4>
+                  <div className="grid grid-cols-2 gap-2">
+                    <div className="relative overflow-x-hidden">
+                      <table className="w-full text-sm text-left rtl:text-right text-gray-500">
+                        <tbody>
+                          <tr className="bg-white border-b border-gray-200">
+                            <th
+                              scope="row"
+                              className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap "
+                            >
+                              Legal Documentation Fees
+                            </th>
+                            <td className="px-6 py-4">10000000</td>
+                          </tr>
 
-                      <tr className="bg-white border-b border-gray-200">
-                        <th
-                          scope="row"
-                          className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap "
-                        >
-                          Survey plan
-                        </th>
-                        <td className="px-6 py-4">
-                          {survey_plan_fee}
-                        </td>
-                      </tr>
-                      <tr className="bg-white border-b border-gray-200">
-                        <th
-                          scope="row"
-                          className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap "
-                        >
-                          Architectural Drawing fee
-                        </th>
-                        <td className="px-6 py-4">
-                          {architectural_drawing_fee}
-                        </td>
-                      </tr>
+                          <tr className="bg-white border-b border-gray-200">
+                            <th
+                              scope="row"
+                              className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap "
+                            >
+                              Survey plan
+                            </th>
+                            <td className="px-6 py-4">1000000 </td>
+                          </tr>
+                          <tr className="bg-white border-b border-gray-200">
+                            <th
+                              scope="row"
+                              className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap "
+                            >
+                              Architectural Drawing fee
+                            </th>
+                            <td className="px-6 py-4">10000000 </td>
+                          </tr>
 
-                      <tr className="bg-white border-b border-gray-200">
-                        <th
-                          scope="row"
-                          className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap "
-                        >
-                          Structure Drawing fee
-                        </th>
-                        <td className="px-6 py-4">
-                          {structure_drawing_fee}
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
+                          <tr className="bg-white border-b border-gray-200">
+                            <th
+                              scope="row"
+                              className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap "
+                            >
+                              Structure Drawing fee
+                            </th>
+                            <td className="px-6 py-4">1000000 </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                    <div className="relative overflow-x-hidden">
+                      <table className="w-full text-sm text-left rtl:text-right text-gray-500">
+                        <tbody>
+                          <tr className="bg-white border-b border-gray-200">
+                            <th
+                              scope="row"
+                              className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
+                            >
+                              M & E Drawing
+                            </th>
+                            <td className="px-6 py-4">100000 </td>
+                          </tr>
+
+                          <tr className="bg-white border-b border-gray-200">
+                            <th
+                              scope="row"
+                              className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
+                            >
+                              Certification fee
+                            </th>
+                            <td className="px-6 py-4 line-clamp-1 truncate">
+                              1000000{" "}
+                            </td>
+                          </tr>
+                          <tr className="bg-white border-b border-gray-200">
+                            <th
+                              scope="row"
+                              className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
+                            >
+                              Total
+                            </th>
+                            <td className="px-6 py-4">10000000 </td>
+                          </tr>
+
+                          <tr className="bg-white border-b border-gray-200">
+                            <th
+                              scope="row"
+                              className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
+                            >
+                              Developmental fee
+                            </th>
+                            <td className="px-6 py-4 line-clamp-1 truncate">
+                              1000000{" "}
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
                 </div>
-                <div className="relative overflow-x-hidden">
-                  <table className="w-full text-sm text-left rtl:text-right text-gray-500">
-                    <tbody>
-                      <tr className="bg-white border-b border-gray-200">
-                        <th
-                          scope="row"
-                          className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
-                        >
-                          M & E Drawing
-                        </th>
-                        <td className="px-6 py-4">
-                          {m_e_free}
-                        </td>
-                      </tr>
-
-                      <tr className="bg-white border-b border-gray-200">
-                        <th
-                          scope="row"
-                          className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
-                        >
-                          Certification fee
-                        </th>
-                        <td className="px-6 py-4 line-clamp-1 truncate">
-                          {certification_fee}
-                        </td>
-                      </tr>
-                      <tr className="bg-white border-b border-gray-200">
-                        <th
-                          scope="row"
-                          className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
-                        >
-                          Total
-                        </th>
-                        <td className="px-6 py-4">
-                          {actual_total}
-                        </td>
-                      </tr>
-
-                      <tr className="bg-white border-b border-gray-200">
-                        <th
-                          scope="row"
-                          className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
-                        >
-                          Developmental fee
-                        </th>
-                        <td className="px-6 py-4 line-clamp-1 truncate">
-                          {developmental_fee}
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div> */}
               </div>
               {/* Interest Form  */}
               <div className="w-full md:w-[30%]">

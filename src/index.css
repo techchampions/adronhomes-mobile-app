@@ -62,6 +62,14 @@ button {
 @import "swiper/css";
 @import "swiper/css/navigation";
 
+/* globals.css */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0px 1000px transparent inset;
+  transition: background-color 5000s ease-in-out 0s;
+}
 
 /* ✅ Add custom Gotham font */
 @font-face {
@@ -140,14 +148,10 @@ button {
   --font-adron-ultra: Gotham-Ultra;
 }
 
-.font-gotham {
-  font-family: 'Gotham', sans-serif;
-}
 
 body {
   background: var(--color-adron-body);
   color: var(--foreground);
-  /* font-family: Arial, Helvetica, sans-serif; */
   font-family: var(--font-adron-text-body);
 }
 

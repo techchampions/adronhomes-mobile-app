@@ -11,22 +11,22 @@ const ProppertyAgreement = () => {
   return (
     <div>
       <div className=" ">
-        <div className="flex justify-between items-start">
-          <div className="flex gap-4">
+        <div className="flex flex-col md:flex-row justify-between items-start gap-4">
+          <div className="flex flex-col md:flex-row gap-4 w-full md:w-auto">
             <img
               src="/treasure-park-bg.png"
               className="h-[100px] w-[150px] rounded-lg "
               alt=""
             />
-            <div>
-              <h2 className="text-xl font-semibold">
+            <div className="w-full md:w-auto space-y-2 md:space-y-0">
+              <h4 className="text-xl font-semibold">
                 Treasure Parks and Gardens
-              </h2>
+              </h4>
               <p className="text-sm text-gray-500 flex items-center gap-1">
                 <FaMapMarkerAlt className="h-4 w-4" /> 34, Shimawa, Ogun State,
                 Nigeria
               </p>
-              <div className="flex items-center text-xs mt-2 justify-between font-bold text-gray-500 gap-4">
+              <div className="flex items-center text-sm md:text-xs mt-2 justify-between font-bold text-gray-500 gap-4">
                 <span className="flex items-center gap-1 truncate">
                   {/* <TfiRulerAlt2 />  */}
                   <img src="/ruler.svg" width={14} height={14} alt="dumbbell" />
@@ -54,7 +54,7 @@ const ProppertyAgreement = () => {
       </div>
       <div className="flex flex-col gap-7 mt-20">
         <h4 className="text-2xl">Property Agreement</h4>
-        <article className="w-[80%] text-sm">
+        <article className="md:w-[80%] text-sm">
           This Property Agreement ("Agreement") is made and entered into on this
           [Date], by and between: Seller: [Seller's Full Name]Address: [Seller's
           Address]Phone Number: [Seller's Phone Number]Email Address: [Seller's

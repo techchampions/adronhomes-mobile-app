@@ -52,7 +52,12 @@ const AllRoutes = () => {
           /> */}
             <Route
               path="/"
-              element={<Navigate to={isLoggedIn ? "/" : "/auth"} replace />}
+              element={
+                <Navigate
+                  to={isLoggedIn && hasCompletedOnboarding ? "/" : "/auth"}
+                  replace
+                />
+              }
             />
 
             {/* Protected Routes - Dashboard */}
@@ -98,7 +103,13 @@ const AllRoutes = () => {
             {/* Login Route */}
             <Route
               path="/auth"
-              element={isLoggedIn ? <Navigate to="/" /> : <OnboardingScreen />}
+              element={
+                isLoggedIn && hasCompletedOnboarding ? (
+                  <Navigate to="/" />
+                ) : (
+                  <OnboardingScreen />
+                )
+              }
             />
 
             {/* Catch-All Redirect */}

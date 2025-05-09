@@ -20,6 +20,21 @@ const {
 // const { showToast } = useToastStore(); // Assuming showToast is a function in your user store
 // const { setHasCompletedOnboarding, setStep } = useOnboardingStore();
 // const { setToken, setIsLoggedIn } = useUserStore(); // Assuming setToken is a function in your user store
+const handleResendOTP = async () => {
+  try {
+    const response = await apiClient.post("/resend-otp");
+
+    if (response.data.success) {
+      showToast("OTP resent successfully!", "success");
+      localStorage.setItem("otp", response.data.otp);
+      console.log(response.data.otp);
+    } else {
+      throw new Error("Failed to resend OTP");
+    }
+  } catch (error) {
+    showToast("Failed to resend OTP. Please try again.", "error");
+  }
+};
 
 const login = async (
   values: {
@@ -40,6 +55,15 @@ const login = async (
       setHasCompletedOnboarding(true); // Set onboarding state in store
       setIsLoggedIn(true); // Set logged-in state in store
       setStep("onboarding complete");
+    } else if (response.data.success && !response.data.otpVerified) {
+      showToast(
+        "User LoggedIn successfully!... please verify account",
+        "success"
+      );
+      setToken(response.data.token); // Save token in store
+      setIsLoggedIn(true); // Set logged-in state in store
+      handleResendOTP();
+      setStep("verify OTP");
     } else if (response.data.errors) {
       const errorMessages = Object.values(response.data.errors)
         .flat()
@@ -138,5 +162,6 @@ const Auth = {
   login,
   register,
   logout,
+  handleResendOTP,
 };
 export default Auth;

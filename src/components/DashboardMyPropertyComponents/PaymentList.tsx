@@ -94,7 +94,7 @@ const PaymentList: React.FC<Props> = ({ data }) => {
         {filteredData.map((item) => (
           <div
             key={item.id}
-            className="grid grid-cols-2 md:grid-cols-4 justify-between items-center p-4 even:bg-gray-100 rounded-3xl"
+            className="grid grid-cols-3 md:grid-cols-4 justify-between items-center p-4 even:bg-gray-100 rounded-3xl"
           >
             <div>
               <div className="font-medium text-sm">{item.title}</div>
@@ -106,7 +106,7 @@ const PaymentList: React.FC<Props> = ({ data }) => {
               {item.status == "Missed" && (
                 <Button
                   label="Make Payment"
-                  className="bg-black text-xs !w-fit px-6"
+                  className="bg-black text-[9px] md:text-xs !w-fit px-4 md:px-6"
                   onClick={makePayment}
                 />
               )}

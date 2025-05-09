@@ -2,21 +2,21 @@ import { useState, useRef, useEffect, ChangeEvent, KeyboardEvent } from "react";
 import apiClient from "../utils/AxiosInstance";
 import Button from "../components/Button";
 import { useOnboardingStore } from "../zustand/OnboardingStore";
-import Toast from "../components/Toast";
+import { useToastStore } from "../zustand/useToastStore";
+import { useUserStore } from "../zustand/UserStore";
 
 interface OTPProps {
   length?: number;
 }
 
 const OTPScreen: React.FC<OTPProps> = ({ length = 4 }) => {
-  const { setStep } = useOnboardingStore();
+  const { showToast } = useToastStore();
+  const { isLoggedIn } = useUserStore();
+  const { setStep, setHasCompletedOnboarding } = useOnboardingStore();
   const [otp, setOtp] = useState<string[]>(new Array(length).fill(""));
   const [timer, setTimer] = useState<number>(59);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [isDisabled, setIsDisabled] = useState<boolean>(true);
-  const [showToast, setShowToast] = useState(false);
-  const [toastMsg, setToastMsg] = useState("");
-  const [toastType, setToastType] = useState<"success" | "error">("success");
 
   const inputRefs = useRef<(HTMLInputElement | null)[]>(
     new Array(length).fill(null)
@@ -71,22 +71,20 @@ const OTPScreen: React.FC<OTPProps> = ({ length = 4 }) => {
         setIsSubmitting(true);
 
         if (response.data.success) {
-          setToastMsg("OTP verified successfully!");
-          setToastType("success");
-          setShowToast(true);
+          showToast("OTP verified successfully!", "success");
+          if (isLoggedIn) {
+            setStep("onboarding complete");
+            setHasCompletedOnboarding(true);
+          }
           setStep("signup completed");
         }
       } catch (error) {
-        setToastMsg("OTP verification failed. Please try again.");
-        setToastType("error");
-        setShowToast(true);
+        showToast("OTP verification failed. Please try again.", "error");
         console.error("OTP verification failed:", error);
       }
       setIsSubmitting(false);
     } else {
-      setToastMsg("Invalid OTP!");
-      setToastType("error");
-      setShowToast(true);
+      showToast("Invalid OTP!", "error");
     }
   };
 
@@ -95,9 +93,7 @@ const OTPScreen: React.FC<OTPProps> = ({ length = 4 }) => {
       const response = await apiClient.post("/resend-otp");
 
       if (response.data.success) {
-        setToastMsg("OTP resent successfully!");
-        setToastType("success");
-        setShowToast(true);
+        showToast("OTP resent successfully!", "success");
         setTimer(59);
         localStorage.setItem("otp", response.data.otp);
         console.log(response.data.otp);
@@ -105,9 +101,7 @@ const OTPScreen: React.FC<OTPProps> = ({ length = 4 }) => {
         throw new Error("Failed to resend OTP");
       }
     } catch (error) {
-      setToastMsg("Failed to resend OTP. Please try again.");
-      setToastType("error");
-      setShowToast(true);
+      showToast("Failed to resend OTP. Please try again.", "error");
     }
   };
 
@@ -175,14 +169,6 @@ const OTPScreen: React.FC<OTPProps> = ({ length = 4 }) => {
           {timer > 0 ? `Resend in ${timer}s` : "Resend code"}
         </button>
       </p>
-
-      {showToast && (
-        <Toast
-          message={toastMsg}
-          type={toastType}
-          onClose={() => setShowToast(false)}
-        />
-      )}
     </div>
   );
 };

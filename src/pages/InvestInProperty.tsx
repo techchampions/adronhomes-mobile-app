@@ -56,22 +56,22 @@ export default function InvestmentForm() {
       <Form className="space-y-10">
         {/* Property Summary */}
         <div className=" ">
-          <div className="flex justify-between items-start">
-            <div className="flex gap-4">
+          <div className="flex flex-col md:flex-row justify-between items-start gap-4">
+            <div className="flex flex-col md:flex-row gap-4 w-full md:w-auto">
               <img
                 src="/treasure-park-bg.png"
                 className="h-[100px] w-[150px] rounded-lg "
                 alt=""
               />
-              <div>
-                <h2 className="text-xl font-semibold">
+              <div className="w-full md:w-auto space-y-2 md:space-y-0">
+                <h4 className="text-xl font-semibold">
                   Treasure Parks and Gardens
-                </h2>
+                </h4>
                 <p className="text-sm text-gray-500 flex items-center gap-1">
                   <FaMapMarkerAlt className="h-4 w-4" /> 34, Shimawa, Ogun
                   State, Nigeria
                 </p>
-                <div className="flex items-center text-xs mt-2 justify-between font-bold text-gray-500 gap-4">
+                <div className="flex items-center text-sm md:text-xs mt-2 justify-between font-bold text-gray-500 gap-4">
                   <span className="flex items-center gap-1 truncate">
                     {/* <TfiRulerAlt2 />  */}
                     <img
@@ -105,7 +105,7 @@ export default function InvestmentForm() {
 
         {/* Investment Section */}
         <div className="grid grid-cols-1 bg-white md:grid-cols-3 p-8 gap-8 rounded-3xl">
-          <div className="col-span-2 p-6 space-y-4">
+          <div className="md:col-span-2 p-6 space-y-4">
             <div className="grid grid-cols-1 gap-4 md:gap-6">
               <div>
                 <label className="block text-sm mb-2">Payment Type</label>
@@ -186,7 +186,7 @@ export default function InvestmentForm() {
           </div>
         </div>
 
-        <div className="text-right p-18">
+        <div className="text-right md:p-18">
           <Button
             type="submit"
             label="Proceed"

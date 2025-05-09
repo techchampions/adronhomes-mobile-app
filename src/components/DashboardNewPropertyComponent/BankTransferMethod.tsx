@@ -21,7 +21,7 @@ const BankTransfer = ({
   const handlePaymentSuccess = () => {
     closeModal();
     showToast("Payment Recieved Successfully", "success");
-    openModal(<PaymentSuccessfull />);
+    openModal(<PaymentSuccessfull text={"Payment received successfully."} />);
   };
 
   return (
