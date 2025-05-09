@@ -2,7 +2,6 @@ import { useQuery } from "@tanstack/react-query";
 import {
   fetchAboutPageData,
   fetchContactPageData,
-  fetchHomePageData,
   fetchJobsPageData,
   fetchPropertiesPageData,
   fetchVirtualTourPageData,
@@ -11,7 +10,6 @@ import {
   getJobByID,
   getPropertyByID,
 } from "./api";
-import { HomepageResponse } from "./types/homepageTypes";
 import { AboutPageResponse } from "./types/aboutPageTypes";
 import { ContactPageResponse } from "./types/contactPageTypes";
 import { VirtualTourResponse } from "./types/virtualTourPageTypes";
@@ -20,12 +18,15 @@ import { GetPropertyByIdResponse } from "./types/GetPropertyByIdResponse";
 import { GetJobByIdResponse, JobsApiResponse } from "./types/jobListTypes";
 import { PropertyLocationResponse } from "./types/PropertyLocationTypes";
 import { PropertiesTypeResponse } from "./types/propertyTypes";
+import { GetUserResponse } from "./types/UserProfileTypes";
+import { useUserStore } from "../zustand/UserStore";
 
 // Query hook for homepage data with
-export const useHomepage = () => {
-  return useQuery<HomepageResponse>({
-    queryKey: ["home-page"],
-    queryFn: fetchHomePageData,
+export const useGetUser = () => {
+  const { getUser } = useUserStore();
+  return useQuery<GetUserResponse>({
+    queryKey: ["user-profile"],
+    queryFn: getUser,
   });
 };
 

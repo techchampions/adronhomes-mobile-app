@@ -28,7 +28,7 @@ import MyPropertyPaymentList from "../pages/MyPropertyPaymentList";
 const DashboardScreen = lazy(() => import("../pages/DashboardScreen"));
 
 const AllRoutes = () => {
-  const { show, message, type, hideToast } = useToastStore();
+  const { message, type, hideToast } = useToastStore();
   const { hasCompletedOnboarding } = useOnboardingStore();
   const { isLoggedIn } = useUserStore();
 
@@ -37,19 +37,6 @@ const AllRoutes = () => {
       <BrowserRouter>
         <Suspense fallback={<Loader className="h-[100px] w-[100px]" />}>
           <Routes>
-            {/* Onboarding Logic */}
-            {/* <Route
-            path="/"
-            element={
-              !hasCompletedOnboarding ? (
-                <OnboardingScreen />
-              ) : isLoggedIn ? (
-                <Navigate to="/" replace />
-              ) : (
-                <Navigate to="/auth" replace />
-              )
-            }
-          /> */}
             <Route
               path="/"
               element={

@@ -5,11 +5,7 @@ import { useState } from "react";
 import InputField from "../InputField";
 import Button from "../Button";
 import { useOnboardingStore } from "../../zustand/OnboardingStore";
-import Auth, { login, signup } from "../../utils/Auth";
-import Toast from "../Toast";
-import { useUserStore } from "../../zustand/UserStore";
-import apiClient from "../../utils/AxiosInstance";
-import { useToastStore } from "../../zustand/useToastStore";
+import Auth from "../../utils/Auth";
 
 type AuthFormProps = {
   isLogin?: boolean;
@@ -24,12 +20,8 @@ const AuthForm = ({
   isResetPassword = false,
   isSignup = false,
 }: AuthFormProps) => {
-  const { showToast } = useToastStore();
   const { setStep } = useOnboardingStore();
   const [showPassword, setShowPassword] = useState(false);
-  // const [showToast, setShowToast] = useState(false);
-  // const [toastMsg, setToastMsg] = useState<string>("");
-  // const [toastType, setToastType] = useState<"success" | "error">("success");
 
   // Password visibility toggle logic
   const togglePasswordVisibility = () => setShowPassword((prev) => !prev);
@@ -40,6 +32,7 @@ const AuthForm = ({
     phone: "",
     password: "",
     confirmPassword: "",
+    OTP: "",
     marketerReferralCode: "",
   };
 
@@ -51,6 +44,7 @@ const AuthForm = ({
         }
       : isResetPassword
       ? {
+          OTP: Yup.number().required("Required"),
           password: Yup.string().required("Required"),
           confirmPassword: Yup.string()
             .oneOf([Yup.ref("password"), null], "Passwords must match")
@@ -77,61 +71,15 @@ const AuthForm = ({
         }),
   });
 
-  // Handle SignUp
-  const handleForgotpassword = async (
-    values: {
-      email: string;
-    },
-    { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void }
-  ) => {
-    try {
-      const response = await apiClient.post("/forget-password", {
-        email: values.email,
-      });
-
-      if (response.data.success) {
-        setToastMsg("Opt sent to email successfully!");
-        setToastType("success");
-        setShowToast(true);
-        setStep("reset password");
-      } else if (response.data.errors) {
-        const errorMessages = Object.values(response.data.errors)
-          .flat()
-          .join("\n"); // Combine errors into a readable string
-        setToastMsg(errorMessages);
-        setToastType("error");
-        setShowToast(true);
-      } else if (response.data.message) {
-        setToastMsg(response.data.message);
-        setToastType("error");
-        setShowToast(true);
-      }
-    } catch (error: any) {
-      if (error.response && error.response.data.errors) {
-        const errorMessages = Object.values(error.response.data.errors)
-          .flat()
-          .join("\n"); // Extract and format error messages
-        setToastMsg(errorMessages);
-      } else {
-        setToastMsg("Something went wrong. Please try again.");
-      }
-      setToastType("error");
-      setShowToast(true);
-      console.error("Password Reset Failed:", error);
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
   // Handle form submission based on state
   const handleSubmit = (
     values: typeof initialValues,
     setSubmitting: (isSubmitting: boolean) => void
   ) => {
     if (isForgotPassword) {
-      handleForgotpassword(values, { setSubmitting });
+      Auth.handleForgotpassword(values, { setSubmitting });
     } else if (isResetPassword) {
-      setStep("verify OTP");
+      Auth.handleResetPassword(values, { setSubmitting });
       console.log("Resetting password:", values.password);
     } else if (isLogin) {
       Auth.login(values, { setSubmitting });
@@ -167,12 +115,14 @@ const AuthForm = ({
           {!isLogin && !isForgotPassword && !isResetPassword && (
             <InputField name="fullName" placeholder="Full Name" />
           )}
-          <InputField
-            name="email"
-            type="email"
-            placeholder="Email Address"
-            className="input"
-          />
+          {!isResetPassword && (
+            <InputField
+              name="email"
+              type="email"
+              placeholder="Email Address"
+              className="input"
+            />
+          )}
           {!isLogin && !isForgotPassword && !isResetPassword && (
             <InputField
               name="phone"
@@ -180,6 +130,9 @@ const AuthForm = ({
               placeholder="Phone Number"
               className="input"
             />
+          )}
+          {isResetPassword && (
+            <InputField name="OTP" type="number" placeholder="OTP code" />
           )}
           {/* Password and Confirm Password Fields */}
           {(isLogin || isResetPassword || isSignup) && (

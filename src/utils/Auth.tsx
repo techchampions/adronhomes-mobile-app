@@ -6,20 +6,8 @@ import { useToastStore } from "../zustand/useToastStore";
 
 const { showToast } = useToastStore.getState();
 const { setHasCompletedOnboarding, setStep } = useOnboardingStore.getState();
-const {
-  setToken,
-  setIsLoggedIn,
-  setEmail,
-  setFirstName,
-  setLastName,
-  setReferralCode,
-  setPhoneNumber,
-  setId,
-} = useUserStore.getState();
+const { setToken, setIsLoggedIn, getUser } = useUserStore.getState();
 
-// const { showToast } = useToastStore(); // Assuming showToast is a function in your user store
-// const { setHasCompletedOnboarding, setStep } = useOnboardingStore();
-// const { setToken, setIsLoggedIn } = useUserStore(); // Assuming setToken is a function in your user store
 const handleResendOTP = async () => {
   try {
     const response = await apiClient.post("/resend-otp");
@@ -52,6 +40,7 @@ const login = async (
     if (response.data.success && response.data.otpVerified) {
       showToast("User LoggedIn successfully!", "success");
       setToken(response.data.token); // Save token in store
+      await getUser();
       setHasCompletedOnboarding(true); // Set onboarding state in store
       setIsLoggedIn(true); // Set logged-in state in store
       setStep("onboarding complete");
@@ -62,6 +51,7 @@ const login = async (
       );
       setToken(response.data.token); // Save token in store
       setIsLoggedIn(true); // Set logged-in state in store
+      await getUser();
       handleResendOTP();
       setStep("verify OTP");
     } else if (response.data.errors) {
@@ -116,12 +106,13 @@ const register = async (
     if (response.data.success) {
       setToken(response.data.token); // Save token in store
       showToast("User registered successfully!", "success");
-      setEmail(response.data.user.email);
-      setFirstName(response.data.user.first_name);
-      setLastName(response.data.user.last_name);
-      setReferralCode(response.data.user.referral_code);
-      setPhoneNumber(response.data.user.phone_number);
-      setId(response.data.user.id);
+      await getUser();
+      // setEmail(response.data.user.email);
+      // setFirstName(response.data.user.first_name);
+      // setLastName(response.data.user.last_name);
+      // setReferralCode(response.data.user.referral_code);
+      // setPhoneNumber(response.data.user.phone_number);
+      // setId(response.data.user.id);
       localStorage.setItem("otp", response.data.otp.otp);
       console.log(response.data.otp.otp); // Save OTP for verification
       setStep("verify OTP");
@@ -157,11 +148,90 @@ const logout = () => {
   showToast("Logged out successfully!", "success"); // Show logout success message
 };
 
+const handleResetPassword = async (
+  values: {
+    OTP: number;
+    password: string;
+    confirmPassword: string;
+  },
+  { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void }
+) => {
+  try {
+    const response = await apiClient.post("/change-password", {
+      otp: values.OTP,
+      password: values.password,
+      password_confirmation: values.confirmPassword,
+    });
+
+    if (response.data.success) {
+      showToast("Password changed successfully", "success");
+      setStep("login");
+    } else if (response.data.errors) {
+      const errorMessages = Object.values(response.data.errors)
+        .flat()
+        .join("\n"); // Combine errors into a readable string
+      showToast(errorMessages, "error");
+    } else if (response.data.message) {
+      showToast(response.data.message, "error");
+    }
+  } catch (error: any) {
+    if (error.response && error.response.data.errors) {
+      const errorMessages = Object.values(error.response.data.errors)
+        .flat()
+        .join("\n"); // Extract and format error messages
+      showToast(errorMessages, "error");
+    } else {
+      showToast("Something went wrong. Please try again.", "error");
+    }
+    console.error("Password Reset Failed:", error);
+  } finally {
+    setSubmitting(false);
+  }
+};
+const handleForgotpassword = async (
+  values: {
+    email: string;
+  },
+  { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void }
+) => {
+  try {
+    const response = await apiClient.post("/forget-password", {
+      email: values.email,
+    });
+
+    if (response.data.success) {
+      showToast("OTP sent to email successfully", "success");
+      setStep("reset password");
+    } else if (response.data.errors) {
+      const errorMessages = Object.values(response.data.errors)
+        .flat()
+        .join("\n"); // Combine errors into a readable string
+      showToast(errorMessages, "error");
+    } else if (response.data.message) {
+      showToast(response.data.message, "error");
+    }
+  } catch (error: any) {
+    if (error.response && error.response.data.errors) {
+      const errorMessages = Object.values(error.response.data.errors)
+        .flat()
+        .join("\n"); // Extract and format error messages
+      showToast(errorMessages, "error");
+    } else {
+      showToast("Something went wrong. Please try again.", "error");
+    }
+    console.error("Password Reset Failed:", error);
+  } finally {
+    setSubmitting(false);
+  }
+};
+
 // Login function
 const Auth = {
   login,
   register,
   logout,
   handleResendOTP,
+  handleResetPassword,
+  handleForgotpassword,
 };
 export default Auth;

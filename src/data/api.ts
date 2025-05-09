@@ -2,7 +2,7 @@ import apiClient from "./apiClient";
 import { AboutPageResponse } from "./types/aboutPageTypes";
 import { ContactPageResponse } from "./types/contactPageTypes";
 import { GetPropertyByIdResponse } from "./types/GetPropertyByIdResponse";
-import { HomepageResponse } from "./types/homepageTypes";
+import { GetUserResponse } from "./types/UserProfileTypes";
 import { GetJobByIdResponse, JobsApiResponse } from "./types/jobListTypes";
 import { PropertiesResponse } from "./types/propertiesPageTypes";
 import { PropertyLocationResponse } from "./types/PropertyLocationTypes";
@@ -13,8 +13,8 @@ import {
 import { VirtualTourResponse } from "./types/virtualTourPageTypes";
 
 // Homepage data with type annotation
-export const fetchHomePageData = async (): Promise<HomepageResponse> => {
-  const response = await apiClient.get("/home-page");
+export const getUser = async (): Promise<GetUserResponse> => {
+  const response = await apiClient.get("/user-profile");
   return response.data;
 };
 
