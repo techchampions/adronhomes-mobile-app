@@ -24,6 +24,7 @@ import ProppertyAgreement from "../pages/ProppertyAgreement";
 import PropertyPaymentMethod from "../pages/PropertyPaymentMethod";
 import MyPropertyDetail from "../pages/MyPropertyDetail";
 import MyPropertyPaymentList from "../pages/MyPropertyPaymentList";
+import FAQAccordion from "../pages/FAQScreen";
 
 const DashboardScreen = lazy(() => import("../pages/DashboardScreen"));
 
@@ -84,6 +85,7 @@ const AllRoutes = () => {
                   path="/my-property/:id/payment-list"
                   element={<MyPropertyPaymentList />}
                 />
+                <Route path="/FAQs" element={<FAQAccordion />} />
               </Route>
             </Route>
 

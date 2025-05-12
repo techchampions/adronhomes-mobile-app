@@ -4,6 +4,7 @@ import { Link, useRoutes } from "react-router-dom";
 import { useGetUser } from "../../data/hooks";
 import Loader from "../Loader";
 import ApiErrorBlock from "../ApiErrorBlock";
+import { formatDate } from "../../data/utils";
 
 interface Props {
   name: string;
@@ -40,7 +41,7 @@ const UserProfileCard: React.FC<Props> = ({
             </h4>
             <p className="text-gray-600 text-sm">{userData.email}</p>
             <p className="text-gray-500 text-xs">
-              Joined {userData.created_at}
+              Joined {formatDate(userData.created_at)}
             </p>
             <div className="flex items-center text-xs text-gray-500 mt-1">
               <FaMapMarkerAlt className="mr-1 h-3 w-3" />

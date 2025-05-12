@@ -1,56 +1,13 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { UserProperty } from "../../data/types/dashboardHomeTypes";
+import { formatPrice } from "../../data/utils";
 // types.ts
-type PropertyPlan = {
-  id: number;
-  name: string;
-  size: string;
-  amount: string;
-  progress: number; // between 0 - 100
-  isHighlighted?: boolean;
+type Props = {
+  plans: UserProperty[];
 };
 
-const plans: PropertyPlan[] = [
-  {
-    id: 1,
-    name: "Amade Suites & Gardens",
-    size: "678 Sq M",
-    amount: "₦170,000,000",
-    progress: 60,
-  },
-  {
-    id: 2,
-    name: "Amade Suites & Gardens",
-    size: "678 Sq M",
-    amount: "₦170,000,000",
-    progress: 80,
-    isHighlighted: true,
-  },
-  {
-    id: 3,
-    name: "Amade Suites & Gardens",
-    size: "678 Sq M",
-    amount: "₦170,000,000",
-    progress: 90,
-  },
-  {
-    id: 4,
-    name: "Amade Suites & Gardens",
-    size: "678 Sq M",
-    amount: "₦170,000,000",
-    progress: 45,
-    isHighlighted: true,
-  },
-  {
-    id: 5,
-    name: "Amade Suites & Gardens",
-    size: "678 Sq M",
-    amount: "₦170,000,000",
-    progress: 70,
-  },
-];
-
-const PropertyPlanList: React.FC = () => {
+const PropertyPlanList: React.FC<Props> = ({ plans }) => {
   const navigate = useNavigate();
   return (
     <div className="bg-white p-6 rounded-3xl w-full">
@@ -66,20 +23,22 @@ const PropertyPlanList: React.FC = () => {
           <li
             onClick={() => navigate(`/my-property/${plan.id}`)}
             key={plan.id}
-            className={`p-4 rounded-3xl ${
-              plan.isHighlighted ? "bg-gray-100" : ""
-            } flex justify-between items-center`}
+            className={`p-4 rounded-3xl even:bg-gray-100 flex justify-between items-center`}
           >
-            <div>
-              <p className="font-semibold text-gray-500 text-sm">{plan.name}</p>
-              <p className="text-xs text-gray-500">{plan.size}</p>
+            <div className="w-[70%]">
+              <p className="font-semibold text-gray-500 text-xs md:text-sm truncate">
+                {plan.property.name}
+              </p>
+              <p className="text-xs text-gray-500">{plan.property.size}</p>
             </div>
             <div className="text-right">
-              <p className="font-bold text-black text-sm">{plan.amount}</p>
+              <p className="font-bold text-black text-sm">
+                {formatPrice(plan.property.price)}
+              </p>
               <div className="mt-1 h-1 bg-adron-green-200 rounded-full w-full">
                 <div
                   className="bg-adron-green h-full rounded-full"
-                  style={{ width: `${plan.progress}%` }}
+                  style={{ width: `${plan.payment_percentage}%` }}
                 />
               </div>
             </div>

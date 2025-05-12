@@ -10,66 +10,8 @@ import { MdOutlinePower } from "react-icons/md";
 import { useNavigate, useParams } from "react-router-dom";
 import { useModalStore } from "../zustand/useModalStore";
 import InputAmount from "../components/PaymentComponents/InputAmount";
-
-const transactions: TransactionItem[] = [
-  {
-    id: 1,
-    title: "Wallet Top up",
-    date: "March 18th, 2020",
-    status: "Completed",
-    amount: "₦15,000,000",
-  },
-  {
-    id: 2,
-    title: "Amanda Suites & Gardens Payment",
-    date: "March 18th, 2020",
-    status: "Failed",
-    amount: "₦10,000,000",
-  },
-  {
-    id: 3,
-    title: "Amanda Suites & Gardens Payment",
-    date: "March 18th, 2020",
-    status: "Failed",
-    amount: "₦10,000,000",
-  },
-  {
-    id: 4,
-    title: "Amanda Suites & Gardens Payment",
-    date: "March 18th, 2020",
-    status: "Pending",
-    amount: "₦10,000,000",
-  },
-  {
-    id: 5,
-    title: "Amanda Suites & Gardens Payment",
-    date: "March 18th, 2020",
-    status: "Pending",
-    amount: "₦10,000,000",
-  },
-  {
-    id: 6,
-    title: "Amanda Suites & Gardens Payment",
-    date: "March 18th, 2020",
-    status: "Failed",
-    amount: "₦10,000,000",
-  },
-  {
-    id: 7,
-    title: "Amanda Suites & Gardens Payment",
-    date: "March 18th, 2020",
-    status: "Failed",
-    amount: "₦10,000,000",
-  },
-  {
-    id: 8,
-    title: "Amanda Suites & Gardens Payment",
-    date: "March 18th, 2020",
-    status: "Failed",
-    amount: "₦10,000,000",
-  },
-  // ...more
-];
+import { Transaction } from "../data/types/userTransactionsTypes";
+import { useGetUserTransactions } from "../data/hooks";
 
 const property = {
   raisedAmount: 36000000,
@@ -81,6 +23,9 @@ const progressPercent = Math.min(
 ).toFixed(1);
 
 const MyPropertyDetail = () => {
+  const { data, isLoading, isError } = useGetUserTransactions();
+  const transactions: Transaction[] = data?.user_transactions?.data ?? [];
+
   const { openModal } = useModalStore();
   const navigate = useNavigate();
   const params = useParams();
@@ -216,7 +161,11 @@ const MyPropertyDetail = () => {
         />
       </div>
 
-      <TransactionsList data={transactions} />
+      <TransactionsList
+        data={transactions}
+        isLoading={isLoading}
+        isError={isError}
+      />
     </div>
   );
 };

@@ -1,46 +1,40 @@
 import apiClient from "./apiClient";
-import { AboutPageResponse } from "./types/aboutPageTypes";
-import { ContactPageResponse } from "./types/contactPageTypes";
 import { GetPropertyByIdResponse } from "./types/GetPropertyByIdResponse";
 import { GetUserResponse } from "./types/UserProfileTypes";
-import { GetJobByIdResponse, JobsApiResponse } from "./types/jobListTypes";
 import { PropertiesResponse } from "./types/propertiesPageTypes";
 import { PropertyLocationResponse } from "./types/PropertyLocationTypes";
-import {
-  PropertiesTypeResponse,
-  PropertyTypeResponse,
-} from "./types/propertyTypes";
-import { VirtualTourResponse } from "./types/virtualTourPageTypes";
+import { PropertiesTypeResponse } from "./types/propertyTypes";
+import { UserTransactionResponse } from "./types/userTransactionsTypes";
+import { UserDashboardResponseData } from "./types/dashboardHomeTypes";
+import { UserWalletResponse } from "./types/userWalletTypes";
 
-// Homepage data with type annotation
+// Get User Profile
 export const getUser = async (): Promise<GetUserResponse> => {
   const response = await apiClient.get("/user-profile");
   return response.data;
 };
 
-//About Page Data
-export const fetchAboutPageData = async (): Promise<AboutPageResponse> => {
-  const response = await apiClient.get("/about-page");
-  return response.data;
-};
-//Contact Page Data
-export const fetchContactPageData = async (): Promise<ContactPageResponse> => {
-  const response = await apiClient.get("/contact-page");
-  return response.data;
-};
-//Virtual tour Page Data
-export const fetchVirtualTourPageData =
-  async (): Promise<VirtualTourResponse> => {
-    const response = await apiClient.get("/virtual-tour");
+//Get Dashboard Home data
+export const getDashboardHomeData =
+  async (): Promise<UserDashboardResponseData> => {
+    const response = await apiClient.get("/user/dashboard");
     return response.data;
   };
-//Properties Page Data
-// export const fetchPropertiesPageData = async (
-//   page: number
-// ): Promise<PropertiesResponse> => {
-//   const response = await apiClient.get(`/properties-page?page=${page}`);
-//   return response.data;
-// };
+
+//Get user Transactions
+export const getUserTransactions =
+  async (): Promise<UserTransactionResponse> => {
+    const response = await apiClient.get("/user/transactions");
+    return response.data;
+  };
+
+// Get wallet data
+export const getUserWallet = async (): Promise<UserWalletResponse> => {
+  const response = await apiClient.get("/user/fund-wallet-data");
+  return response.data;
+};
+
+//Get Properties
 export const fetchPropertiesPageData = async (
   page: number,
   filters: Record<string, any> = {}
@@ -68,18 +62,6 @@ export const getPropertyByID = async (
   id: number | string
 ): Promise<GetPropertyByIdResponse> => {
   const response = await apiClient.get(`/property/${id}`);
-  return response.data;
-};
-//jobList Page Data
-export const fetchJobsPageData = async (): Promise<JobsApiResponse> => {
-  const response = await apiClient.get("/jobs-page");
-  return response.data;
-};
-//Get Job by ID Data
-export const getJobByID = async (
-  id: number | string
-): Promise<GetJobByIdResponse> => {
-  const response = await apiClient.get(`/job/${id}`);
   return response.data;
 };
 

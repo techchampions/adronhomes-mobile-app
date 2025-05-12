@@ -4,12 +4,33 @@ import PropertyPlanList from "../components/DashboardHomeComponents/PropertyList
 import TransactionsList from "../components/DashboardHomeComponents/TransactionList";
 import { useModalStore } from "../zustand/useModalStore";
 import AddFundAmount from "../components/DashboardHomeComponents/AddFundAmount";
+import { useGetUserDashboardData, useGetUserTransactions } from "../data/hooks";
+import { Transaction } from "../data/types/userTransactionsTypes";
+import Loader from "../components/Loader";
+import ApiErrorBlock from "../components/ApiErrorBlock";
+import { UserProperty } from "../data/types/dashboardHomeTypes";
+import { formatPrice } from "../data/utils";
 
 const HomeScreen = () => {
   const openModal = useModalStore((state) => state.openModal);
   const startFundWallet = () => {
     openModal(<AddFundAmount goBack={startFundWallet} />);
   };
+  const { data, isError, isLoading } = useGetUserDashboardData();
+  const {
+    data: transRes,
+    isLoading: isLoadingTransaction,
+    isError: isErrorTransaction,
+  } = useGetUserTransactions();
+  if (isLoading) {
+    return <Loader />;
+  }
+  if (isError) {
+    return <ApiErrorBlock />;
+  }
+  const transactions: Transaction[] = transRes?.user_transactions?.data ?? [];
+  const plans: UserProperty[] = data?.user_properties ?? [];
+
   return (
     <div className="flex flex-col w-full gap-6">
       <div className="w-full">
@@ -24,7 +45,9 @@ const HomeScreen = () => {
         <div className="col-span-2 md:row-span-2 bg-white rounded-3xl p-6 flex flex-col gap-4">
           <div className="mt-5">
             <p className="text-gray-500 font-semibold mb-2">My Wallet</p>
-            <p className="text-3xl font-bold">₦4,040,000</p>
+            <p className="text-3xl font-bold">
+              {formatPrice(data?.wallet_balance ?? 0)}
+            </p>
             <p className="text-xs text-gray-400">Wallet balance</p>
           </div>
           <Button
@@ -43,11 +66,15 @@ const HomeScreen = () => {
             </p>
           </div>
           <div className="">
-            <p className="text-6xl font-bold">3</p>
+            <p className="text-6xl font-bold">{data?.total_property.total}</p>
             <div className="md:bg-adron-body flex w-full md:w-fit mx-auto rounded-full md:px-4 my-1 text-xs justify-between items-center gap-2 mb-4 md:mb-0">
-              <span>2 Houses</span>
+              <span> {data?.total_property.breakdown[1].count} Houses</span>
               <span className="text-lg">•</span>
-              <span>1 Land</span>
+              <span>
+                {" "}
+                {data?.total_property.breakdown[0].count}{" "}
+                {data?.total_property.breakdown[0].type_name}{" "}
+              </span>
             </div>
           </div>
           <a
@@ -57,24 +84,32 @@ const HomeScreen = () => {
             View Properties
           </a>
         </div>
-        <div className="flex flex-col md:flex-row gap-4 md:col-span-2">
+        <div className="flex flex-col md:flex-row gap-4 md:col-span-2 text-center">
           {/* Total Invoice */}
           <div className="bg-white rounded-3xl p-6 h-fit w-full">
             <p className="text-gray-500 font-semibold mb-2">Total Invoice</p>
-            <p className="text-xl font-bold">₦170,000,000</p>
+            <p className="text-xl font-bold">
+              {formatPrice(data?.total_invoice ?? 0)}
+            </p>
           </div>
 
           {/* Amount Paid */}
           <div className="bg-white rounded-3xl p-6 h-fit w-full">
             <p className="text-gray-500 font-semibold mb-2">Amount Paid</p>
-            <p className="text-xl font-bold">₦61,000,000</p>
+            <p className="text-xl font-bold">
+              {formatPrice(data?.total_amount_paid ?? 0)}
+            </p>
           </div>
         </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <PropertyPlanList />
-        <TransactionsList />
+        <PropertyPlanList plans={plans} />
+        <TransactionsList
+          data={transactions}
+          isLoading={isLoadingTransaction}
+          isError={isErrorTransaction}
+        />
       </div>
     </div>
   );
