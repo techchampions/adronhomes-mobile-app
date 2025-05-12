@@ -1,4 +1,6 @@
 import React from "react";
+import { useModalStore } from "../../zustand/useModalStore";
+import TransactionDetail from "../DashboardTransactionComponents/TransactionDetail";
 
 type WalletTransaction = {
   id: number;
@@ -62,6 +64,7 @@ const StatusBadge = ({ status }: { status: WalletTransaction["status"] }) => {
 };
 
 const WalletHistory: React.FC = () => {
+  const { openModal } = useModalStore();
   return (
     <div className="bg-white p-4 md:p-10 rounded-3xl">
       <div className="flex items-center justify-between mb-4 px-4">
@@ -74,6 +77,7 @@ const WalletHistory: React.FC = () => {
         {walletHistory.map((tx, idx) => (
           <li
             key={tx.id}
+            onClick={() => openModal(<TransactionDetail id={tx.id} />)}
             className={`grid grid-cols-2 md:grid-cols-3 items-center justify-between px-4 py-3 rounded-3xl ${
               idx % 2 !== 0 ? "bg-gray-100" : ""
             }`}

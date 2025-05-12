@@ -24,11 +24,12 @@ import ProppertyAgreement from "../pages/ProppertyAgreement";
 import PropertyPaymentMethod from "../pages/PropertyPaymentMethod";
 import MyPropertyDetail from "../pages/MyPropertyDetail";
 import MyPropertyPaymentList from "../pages/MyPropertyPaymentList";
+import FAQAccordion from "../pages/FAQScreen";
 
 const DashboardScreen = lazy(() => import("../pages/DashboardScreen"));
 
 const AllRoutes = () => {
-  const { show, message, type, hideToast } = useToastStore();
+  const { message, type, hideToast } = useToastStore();
   const { hasCompletedOnboarding } = useOnboardingStore();
   const { isLoggedIn } = useUserStore();
 
@@ -37,19 +38,6 @@ const AllRoutes = () => {
       <BrowserRouter>
         <Suspense fallback={<Loader className="h-[100px] w-[100px]" />}>
           <Routes>
-            {/* Onboarding Logic */}
-            {/* <Route
-            path="/"
-            element={
-              !hasCompletedOnboarding ? (
-                <OnboardingScreen />
-              ) : isLoggedIn ? (
-                <Navigate to="/" replace />
-              ) : (
-                <Navigate to="/auth" replace />
-              )
-            }
-          /> */}
             <Route
               path="/"
               element={
@@ -97,6 +85,7 @@ const AllRoutes = () => {
                   path="/my-property/:id/payment-list"
                   element={<MyPropertyPaymentList />}
                 />
+                <Route path="/FAQs" element={<FAQAccordion />} />
               </Route>
             </Route>
 

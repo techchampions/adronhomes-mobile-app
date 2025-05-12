@@ -1,4 +1,5 @@
 import axios, { AxiosInstance, AxiosResponse, AxiosError } from "axios";
+import { useUserStore } from "../zustand/UserStore";
 
 type ApiResponse<T = any> = {
   success: boolean;
@@ -28,5 +29,14 @@ apiClient.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
+// Interceptor to attach token if available
+apiClient.interceptors.request.use((config) => {
+  const token = useUserStore.getState().token;
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
 
 export default apiClient;

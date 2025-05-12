@@ -1,62 +1,46 @@
 import { useQuery } from "@tanstack/react-query";
 import {
-  fetchAboutPageData,
-  fetchContactPageData,
-  fetchHomePageData,
-  fetchJobsPageData,
   fetchPropertiesPageData,
-  fetchVirtualTourPageData,
   getAllPropertyLocations,
   getAllPropertyType,
-  getJobByID,
+  getDashboardHomeData,
   getPropertyByID,
+  getUserTransactions,
+  getUserWallet,
 } from "./api";
-import { HomepageResponse } from "./types/homepageTypes";
-import { AboutPageResponse } from "./types/aboutPageTypes";
-import { ContactPageResponse } from "./types/contactPageTypes";
-import { VirtualTourResponse } from "./types/virtualTourPageTypes";
 import { PropertiesResponse } from "./types/propertiesPageTypes";
 import { GetPropertyByIdResponse } from "./types/GetPropertyByIdResponse";
-import { GetJobByIdResponse, JobsApiResponse } from "./types/jobListTypes";
 import { PropertyLocationResponse } from "./types/PropertyLocationTypes";
 import { PropertiesTypeResponse } from "./types/propertyTypes";
+import { GetUserResponse } from "./types/UserProfileTypes";
+import { useUserStore } from "../zustand/UserStore";
+import { UserTransactionResponse } from "./types/userTransactionsTypes";
+import { UserDashboardResponseData } from "./types/dashboardHomeTypes";
+import { UserWalletResponse } from "./types/userWalletTypes";
+
+//Query hook for User profile
+export const useGetUser = () => {
+  const { getUser } = useUserStore();
+  return useQuery<GetUserResponse>({
+    queryKey: ["user-profile"],
+    queryFn: getUser,
+  });
+};
 
 // Query hook for homepage data with
-export const useHomepage = () => {
-  return useQuery<HomepageResponse>({
-    queryKey: ["home-page"],
-    queryFn: fetchHomePageData,
+export const useGetUserDashboardData = () => {
+  return useQuery<UserDashboardResponseData>({
+    queryKey: ["dashboard-data"],
+    queryFn: getDashboardHomeData,
   });
 };
-
-// Query hook for aboutpage data with
-export const useAboutpage = () => {
-  return useQuery<AboutPageResponse>({
-    queryKey: ["about-page"],
-    queryFn: fetchAboutPageData,
+// Query hook for wallet data with
+export const useGetUserWalletdata = () => {
+  return useQuery<UserWalletResponse>({
+    queryKey: ["user-wallet"],
+    queryFn: getUserWallet,
   });
 };
-// Query hook for contactpage data with
-export const useContactpage = () => {
-  return useQuery<ContactPageResponse>({
-    queryKey: ["contact-page"],
-    queryFn: fetchContactPageData,
-  });
-};
-// Query hook for virtual-tour page data with
-export const useVirtualTourpage = () => {
-  return useQuery<VirtualTourResponse>({
-    queryKey: ["virtual-tour-page"],
-    queryFn: fetchVirtualTourPageData,
-  });
-};
-// Query hook for properties page data with
-// export const usePropertiespage = (page: number) => {
-//   return useQuery<PropertiesResponse>({
-//     queryKey: ["properties-page", page],
-//     queryFn: () => fetchPropertiesPageData(page),
-//   });
-// };
 export const usePropertiespage = (
   page: number,
   filters?: Record<string, any>
@@ -75,21 +59,6 @@ export const useGetPropertyByID = (id: number | string) => {
     enabled: !!id, // prevents the query from running if id is undefined/null
   });
 };
-// Query hook for properties page data with
-export const useJobListPage = () => {
-  return useQuery<JobsApiResponse>({
-    queryKey: ["jobs-page"],
-    queryFn: fetchJobsPageData,
-  });
-};
-// Query hook for Jobs by ID data with
-export const useGetJobByID = (id: number | string) => {
-  return useQuery<GetJobByIdResponse>({
-    queryKey: ["job", id], // include id in the key to avoid collisions
-    queryFn: () => getJobByID(id),
-    enabled: !!id, // prevents the query from running if id is undefined/null
-  });
-};
 // Query hook for properties Locations data with
 export const useGetAllPropertyLocations = () => {
   return useQuery<PropertyLocationResponse>({
@@ -102,5 +71,13 @@ export const useGetAllPropertyTypes = () => {
   return useQuery<PropertiesTypeResponse>({
     queryKey: ["property-types"],
     queryFn: getAllPropertyType,
+  });
+};
+
+// Query hook for getting user transactions
+export const useGetUserTransactions = () => {
+  return useQuery<UserTransactionResponse>({
+    queryKey: ["user-transactions"],
+    queryFn: getUserTransactions,
   });
 };

@@ -1,49 +1,16 @@
 import React from "react";
 import { useModalStore } from "../../zustand/useModalStore";
 import TransactionDetail from "../DashboardTransactionComponents/TransactionDetail";
+import { Transaction } from "../../data/types/userTransactionsTypes";
+import { formatPrice } from "../../data/utils";
 // types.ts
-type Transaction = {
-  id: number;
-  name: string;
-  date: string;
-  amount: string;
-  isHighlighted?: boolean;
+type Props = {
+  data: Transaction[];
+  isLoading: boolean;
+  isError: boolean;
 };
 
-const transactions: Transaction[] = [
-  {
-    id: 1,
-    name: "Amade Suites & Gardens Payment",
-    date: "March 18th, 20:00",
-    amount: "₦170,000,000",
-  },
-  {
-    id: 2,
-    name: "Amade Suites & Gardens Payment",
-    date: "March 18th, 20:00",
-    amount: "₦170,000,000",
-  },
-  {
-    id: 3,
-    name: "Amade Suites & Gardens Payment",
-    date: "March 18th, 20:00",
-    amount: "₦170,000,000",
-  },
-  {
-    id: 4,
-    name: "Amade Suites & Gardens Payment",
-    date: "March 18th, 20:00",
-    amount: "₦170,000,000",
-  },
-  {
-    id: 5,
-    name: "Amade Suites & Gardens Payment",
-    date: "March 18th, 20:00",
-    amount: "₦170,000,000",
-  },
-];
-
-const TransactionsList: React.FC = () => {
+const TransactionsList: React.FC<Props> = ({ data, isLoading, isError }) => {
   const { openModal } = useModalStore();
   return (
     <div className="bg-white p-6 rounded-3xl w-full">
@@ -55,17 +22,21 @@ const TransactionsList: React.FC = () => {
       </div>
 
       <ul className="space-y-2">
-        {transactions.map((t) => (
+        {data.map((t) => (
           <li
             className="p-4 rounded-3xl flex justify-between items-center even:bg-gray-100"
-            onClick={() => openModal(<TransactionDetail id={t.id} />)}
+            onClick={() => openModal(<TransactionDetail id={t} />)}
           >
-            <div>
-              <p className="font-semibold text-gray-500 text-sm">{t.name}</p>
-              <p className="text-xs text-gray-500">{t.date}</p>
+            <div className="w-[70%]">
+              <p className="font-semibold text-gray-500 text-xs md:text-sm truncate">
+                {t.property.name}
+              </p>
+              <p className="text-xs text-gray-500">{t.created_at}</p>
             </div>
             <div className="text-right">
-              <p className="font-bold text-black text-sm">{t.amount}</p>
+              <p className="font-bold text-black text-sm">
+                {formatPrice(t.amount)}
+              </p>
             </div>
           </li>
         ))}
