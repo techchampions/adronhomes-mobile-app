@@ -2,7 +2,7 @@ import { BsExclamationCircle } from "react-icons/bs";
 
 const NoPropertyFound = () => {
   return (
-    <div className="flex flex-col items-center justify-center w-[300px] h-[80vh] mx-auto bg-red relative">
+    <div className="flex flex-col items-center justify-center w-[300px] h-[40vh] mx-auto bg-red relative">
       <img
         src="/house-searching.svg"
         alt="No Property Found"

@@ -4,17 +4,23 @@ import Button from "../Button";
 import { useNavigate } from "react-router-dom";
 
 type PropertyCardProps = {
+  id: number;
   imageUrl: string;
   title: string;
-  location: string;
+  state: string;
+  lga: string;
+  progress: number;
   raisedAmount: number;
   targetAmount: number;
 };
 
 const PropertyCard: React.FC<PropertyCardProps> = ({
+  id,
   imageUrl,
   title,
-  location,
+  state,
+  lga,
+  progress,
   raisedAmount,
   targetAmount,
 }) => {
@@ -24,8 +30,9 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
     (raisedAmount / targetAmount) * 100
   ).toFixed(1);
   const handleNavigation = () => {
-    navigate(`/my-property/${title}`);
+    navigate(`/my-property/${id}`);
   };
+  const location = `${lga}, ${state}`;
 
   return (
     <div className="bg-white rounded-3xl p-6 w-full">
@@ -36,7 +43,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
           className="w-12 h-12 rounded-lg object-cover"
         />
         <div className="w-full">
-          <h4 className="text-2xl text-adron-black leading-tight w-full">
+          <h4 className="text-lg md:text-2xl text-adron-black leading-tight w-full line-clamp-2">
             {title}
           </h4>
           <div className="flex items-center text-xs text-gray-400 mt-1">
@@ -51,7 +58,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
         <div className="w-full h-2.5 bg-adron-green-200 rounded-full overflow-hidden">
           <div
             className="h-full bg-adron-green rounded-3xl"
-            style={{ width: `${progressPercent}%` }}
+            style={{ width: `${progress}%` }}
           ></div>
         </div>
         <div className="flex justify-between text-sm mt-2">

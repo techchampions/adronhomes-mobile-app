@@ -7,6 +7,9 @@ import { PropertiesTypeResponse } from "./types/propertyTypes";
 import { UserTransactionResponse } from "./types/userTransactionsTypes";
 import { UserDashboardResponseData } from "./types/dashboardHomeTypes";
 import { UserWalletResponse } from "./types/userWalletTypes";
+import { UserPropertyPlanResponse } from "./types/userPropertiesTypes";
+import { PlanPropertiesDetailResponse } from "./types/PropertyPlanDetailTypes";
+import { NotificationsResponse } from "./types/notificationTypes";
 
 // Get User Profile
 export const getUser = async (): Promise<GetUserResponse> => {
@@ -31,6 +34,26 @@ export const getUserTransactions =
 // Get wallet data
 export const getUserWallet = async (): Promise<UserWalletResponse> => {
   const response = await apiClient.get("/user/fund-wallet-data");
+  return response.data;
+};
+// Get user Properties data
+export const getUserPropertiesPlan =
+  async (): Promise<UserPropertyPlanResponse> => {
+    const response = await apiClient.get("/user/plan-properties");
+    return response.data;
+  };
+
+//Get Properties Plan Datails by ID Data
+export const getPropertyPlanByID = async (
+  id: number | string
+): Promise<PlanPropertiesDetailResponse> => {
+  const response = await apiClient.get(`/user/plan-property/${id}`);
+  return response.data;
+};
+
+//get Notifications
+export const getNotifications = async (): Promise<NotificationsResponse> => {
+  const response = await apiClient.get("/notifications");
   return response.data;
 };
 

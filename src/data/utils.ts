@@ -11,8 +11,13 @@ export const formatDate = (dateString: string): string => {
     year: "numeric",
     month: "long",
     day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: true,
+    // hour: "2-digit",
+    // minute: "2-digit",
+    // hour12: true,
   });
 };
+
+export const getProgressPercent = Math.min(
+  100,
+  (40000000 / 700000000) * 100
+).toFixed(1);

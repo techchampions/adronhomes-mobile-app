@@ -6,6 +6,7 @@ import { useModalStore } from "../zustand/useModalStore";
 import AddFundAmount from "../components/DashboardHomeComponents/AddFundAmount";
 import { useGetUserWalletdata } from "../data/hooks";
 import { formatPrice } from "../data/utils";
+import TransactionsList from "../components/DashboardTransactionComponents/TransactionsList";
 
 const WalletScreen = () => {
   const openModal = useModalStore((state) => state.openModal);
@@ -13,6 +14,7 @@ const WalletScreen = () => {
     openModal(<AddFundAmount goBack={startFundWallet} />);
   };
   const { data, isLoading, isError } = useGetUserWalletdata();
+  const transactions = data?.user_transactions ?? [];
 
   return (
     <div className="flex flex-col gap-6">
@@ -37,17 +39,24 @@ const WalletScreen = () => {
           <p className="text-md font-semibold">Wallet Details</p>
           <div className="flex justify-between items-start w-full">
             <div className="flex flex-col">
-              <p className="text-sm">8394839302</p>
+              <p className="text-sm">
+                {data?.virtual_account.account_number || "loading..."}
+              </p>
               <p className="text-[9px] text-gray-400">Account Number</p>
             </div>
             <CopyButton text="8394839302" />
           </div>
           <div className="flex flex-col">
-            <p className="text-sm">Providus Bank</p>
+            <p className="text-sm">
+              {data?.virtual_account.account_bank || "loading..."}
+            </p>
             <p className="text-[9px] text-gray-400">Bank Name</p>
           </div>
           <div className="flex flex-col">
-            <p className="text-sm">Bimbo Adeleke</p>
+            <p className="text-sm">
+              {" "}
+              {data?.virtual_account.account_name || "loading..."}{" "}
+            </p>
             <p className="text-[9px] text-gray-400">Account Name</p>
           </div>
         </div>
@@ -67,7 +76,12 @@ const WalletScreen = () => {
           </div>
         </div>
       </div>
-      <WalletHistory />
+      <TransactionsList
+        data={transactions}
+        isLoading={isLoading}
+        isError={isError}
+      />
+      {/* <WalletHistory /> */}
     </div>
   );
 };

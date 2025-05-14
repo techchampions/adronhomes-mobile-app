@@ -14,79 +14,22 @@ import "swiper/css/navigation";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { GiStreetLight } from "react-icons/gi";
 import PropertyList from "../components/PropertyList";
+import { useGetPropertyByID } from "../data/hooks";
+import { formatPrice } from "../data/utils";
+import ApiErrorBlock from "../components/ApiErrorBlock";
+import Loader from "../components/Loader";
 
 const PropertyDetail = () => {
   const params = useParams();
-  const id = params?.id;
-  const name = "Treasure Island Homes";
-  const location = "Ejigbo Wuse, Lagos";
-  const street_address = "12 Green Way";
-  const description = "";
-  const overview = "";
-  const lga = "Ejigbo";
-  const state = "Lagos";
-  const country = "Nigeria";
-  const price = "4507500";
-  const size = "600sqm";
-  const features = ["600sqm", "Paved Roads", "Gym Facility"];
-  const type = "Bungalow";
-  const images = [
-    "/treasure-park-bg.png",
-    "/treasure-park-bg.png",
-    "/treasure-park-bg.png",
-  ];
-  const address = `${street_address}, ${lga}, ${state} ${country}`;
-
-  const properties = [
-    {
-      id: "1",
-      display_image: "/treasure-park-bg.png",
-      name: "Treasure Parks and Gardens",
-      price: "₦56,000,000",
-      street_address: "34",
-      state: "Ogun State",
-      lga: "Shimawa",
-      country: "Nigeria",
-      size: "648 Sq M",
-      hasLights: true,
-      hasGym: true,
-      isLand: true,
-    },
-    {
-      id: "2",
-      display_image: "/treasure-park-bg.png",
-      name: "Urban Haven Estate",
-      price: "₦42,000,000",
-      street_address: "Plot 12, Unity Road",
-      state: "Lagos State",
-      lga: "Ikeja",
-      country: "Nigeria",
-      size: "500 Sq M",
-      hasLights: true,
-      hasGym: false,
-      isLand: false,
-    },
-    {
-      id: "3",
-      display_image: "/treasure-park-bg.png",
-      name: "Sunshine Villa",
-      price: "₦65,000,000",
-      street_address: "15 Palm Avenue",
-      state: "Rivers State",
-      lga: "Port Harcourt",
-      country: "Nigeria",
-      size: "700 Sq M",
-      hasLights: false,
-      hasGym: true,
-      isLand: false,
-    },
-  ];
-
-  const formattedPrice = new Intl.NumberFormat("en-NG", {
-    style: "currency",
-    currency: "NGN",
-  }).format(Number(price));
   const navigate = useNavigate();
+  const id = params?.id;
+  const { data, isError, isLoading } = useGetPropertyByID(id ?? "");
+  if (isError) return <ApiErrorBlock />;
+  if (isLoading) return <Loader />;
+  const item = data?.data.properties[0];
+
+  const address = `${data?.data.properties[0].street_address}, ${data?.data.properties[0].lga}, ${data?.data.properties[0].state} ${data?.data.properties[0].country}`;
+
   const invest = () => {
     navigate(`/invest-property/${id}`);
   };
@@ -132,10 +75,10 @@ const PropertyDetail = () => {
   return (
     <div className="flex flex-col w-full px-4 md:px-0 pb-32">
       <div className="w-full flex flex-col md:flex-row justify-between md:items-start my-5">
-        <div className="flex flex-col gap-4">
-          <h4 className="font-bold text-3xl md:text-6xl">
-            {/* Treasure Parks and Gardens  */}
-            {name}
+        <div className="flex flex-col gap-4  md:w-[70%]">
+          <h4 className="font-bold text-3xl md:text-6x line-clamp-2">
+            {/* Treasure Parks and Gardens */}
+            {data?.data.properties[0].name}
           </h4>
           <p className="flex gap-2">
             <FaMapMarker />
@@ -173,7 +116,7 @@ const PropertyDetail = () => {
               }}
               className="w-full h-full rounded-xl"
             >
-              {images.map((img, idx) => (
+              {item?.photos.map((img, idx) => (
                 <SwiperSlide key={idx}>
                   <img
                     src={img}
@@ -198,7 +141,7 @@ const PropertyDetail = () => {
                   {/* <TfiRulerAlt2 />  */}
                   <img src="/ruler.svg" width={14} height={14} alt="dumbbell" />
 
-                  {size}
+                  {item?.size}
                 </span>
                 <span className="flex items-center gap-1 truncate">
                   <GiStreetLight /> Str Light
@@ -213,41 +156,29 @@ const PropertyDetail = () => {
                   />
                   Gym
                 </span>
-                <div className="flex items-center gap-1 text-sm">{type}</div>
+                <div className="flex items-center gap-1 text-sm">
+                  {/* {item?.type} */}
+                </div>
               </div>
               <div className=" flex items-center gap-1 text-2xl font-bold mt-3 md:mt-0">
-                {formattedPrice}
+                {formatPrice(item?.price ?? 0)}
               </div>
             </div>
             <div className="flex flex-col md:flex-row gap-4">
               <div className="flex flex-col w-full md:w-[70%] gap-10">
                 <div className="flex flex-col gap-2">
                   <h4 className="font-bold text-md">Overview</h4>
-                  <p className="text-sm ml-5">
-                    {" "}
-                    Discover your dream home in {address}. This stunning
-                    property offers a perfect blend of comfort, elegance, and
-                    convenience. With breathtaking city views and a spacious
-                    backyard, it's designed to suit your lifestyle needs.
-                  </p>
+                  <p className="text-sm ml-5">{item?.overview}</p>
                 </div>
 
                 <div className="flex flex-col gap-2">
                   <h4 className="font-bold text-md">Description</h4>
-                  <p className="text-sm ml-5">
-                    {" "}
-                    Step inside this beautifully designed home and experience an
-                    open-concept living space filled with natural light, premium
-                    finishes, and modern architectural details. From spacious
-                    master suites with walk-in closets to a chef’s kitchen with
-                    granite countertops and stainless-steel appliances, every
-                    detail has been thoughtfully curated.
-                  </p>
+                  <p className="text-sm ml-5">{item?.description}</p>
                 </div>
                 <div className="flex flex-col gap-2">
                   <h4 className="font-bold text-md">Features</h4>
                   <div className="text-md ml-5 grid grid-cols-3 text-gray-500 space-y-2">
-                    {features?.map((list) => (
+                    {item?.features?.map((list) => (
                       <div key={list} className="flex gap-2 items-center">
                         <IoIosCheckmarkCircleOutline /> <div>{list}</div>
                       </div>
@@ -267,7 +198,7 @@ const PropertyDetail = () => {
                             >
                               Country
                             </th>
-                            <td className="px-6 py-4">{country}</td>
+                            <td className="px-6 py-4">{item?.country}</td>
                           </tr>
 
                           <tr className="bg-white border-b border-gray-200">
@@ -277,7 +208,7 @@ const PropertyDetail = () => {
                             >
                               State
                             </th>
-                            <td className="px-6 py-4">{state}</td>
+                            <td className="px-6 py-4">{item?.state}</td>
                           </tr>
                         </tbody>
                       </table>
@@ -292,7 +223,7 @@ const PropertyDetail = () => {
                             >
                               LGA
                             </th>
-                            <td className="px-6 py-4">{lga}</td>
+                            <td className="px-6 py-4">{item?.lga}</td>
                           </tr>
 
                           <tr className="bg-white border-b border-gray-200">
@@ -303,7 +234,7 @@ const PropertyDetail = () => {
                               Address
                             </th>
                             <td className="px-6 py-4 line-clamp-1 truncate">
-                              {street_address}
+                              {item?.street_address}
                             </td>
                           </tr>
                         </tbody>
@@ -463,11 +394,11 @@ const PropertyDetail = () => {
           </div>
           <div className="flex flex-col mt-14 gap-4">
             <h4 className="font-bold">Similar Properties</h4>
-            <PropertyList properties={properties} />
+            {/* <PropertyList properties={properties} /> */}
           </div>
           <div className="flex flex-col mt-14 gap-4">
             <h4 className="font-bold">Recently Viewed</h4>
-            <PropertyList properties={properties} />
+            {/* <PropertyList properties={properties} /> */}
           </div>
         </div>
       </div>

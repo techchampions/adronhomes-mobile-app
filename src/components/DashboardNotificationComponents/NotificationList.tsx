@@ -1,37 +1,74 @@
 import React, { useState } from "react";
 import { useModalStore } from "../../zustand/useModalStore";
 import NotificationDetail from "./NotificationDetail";
+import {
+  Notification,
+  NotificationStatus,
+} from "../../data/types/notificationTypes";
+import { formatDate } from "../../data/utils";
+import Loader from "../Loader";
+import ApiErrorBlock from "../ApiErrorBlock";
+import NotFound from "../NotFound";
 
-export type NotificationStatus = "All" | "Read" | "Unread";
-
-export type NotificationItem = {
-  id: number;
-  title: string;
-  date: string;
-  status: NotificationStatus;
-  desc: string;
-};
+// export type NotificationStatus = "All" | "Read" | "Unread";
 
 type Props = {
-  data: NotificationItem[];
+  data: Notification[];
+  isError: boolean;
+  isLoading: boolean;
 };
 
-const tabs: (NotificationStatus | "All")[] = ["All", "Read", "Unread"];
+const tabs = ["All", "Read", "Unread"] as const;
+type Tab = (typeof tabs)[number];
 
-const NotificationList: React.FC<Props> = ({ data }) => {
+const NotificationList: React.FC<Props> = ({ data, isError, isLoading }) => {
   const { openModal } = useModalStore();
-  const [activeTab, setActiveTab] = useState<(typeof tabs)[number]>("All");
-
-  const isNotificationStatus = (tab: string): tab is NotificationStatus => {
-    return ["Read", "Unread"].includes(tab);
-  };
+  const [activeTab, setActiveTab] = useState<Tab>("All");
 
   const filteredData =
     activeTab === "All"
       ? data
-      : isNotificationStatus(activeTab)
-      ? data.filter((item) => item.status === activeTab)
-      : [];
+      : data.filter((item) => {
+          if (activeTab === "Read") return item.is_read === 1;
+          if (activeTab === "Unread") return item.is_read === 0;
+          return false;
+        });
+  const renderContent = () => {
+    if (isLoading) {
+      return <Loader />;
+    }
+    if (isError) {
+      return <ApiErrorBlock />;
+    }
+    if (filteredData.length <= 0) {
+      return <NotFound />;
+    }
+    return renderList();
+  };
+
+  const renderList = () => {
+    return (
+      <div className="">
+        {filteredData.map((item) => (
+          <div
+            key={item.id}
+            onClick={() => openModal(<NotificationDetail id={item.id} />)}
+            className="cursor-pointer flex justify-between gap-4 items-center p-4 even:bg-gray-100 rounded-3xl"
+          >
+            <div className="w-[70%]">
+              <div className="text-xs">{item.title}</div>
+              <div className="text-xs text-gray-400 truncate">
+                {item.content}
+              </div>
+            </div>
+            <div className="text-xs text-gray-400 text-end truncate">
+              {formatDate(item.created_at ?? "")}
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  };
 
   return (
     <div className="bg-white p-2 md:p-6 rounded-3xl">
@@ -71,23 +108,7 @@ const NotificationList: React.FC<Props> = ({ data }) => {
       </div>
 
       {/* List */}
-      <div className="">
-        {filteredData.map((item) => (
-          <div
-            key={item.id}
-            onClick={() => openModal(<NotificationDetail id={item.id} />)}
-            className="flex justify-between gap-4 items-center p-4 even:bg-gray-100 rounded-3xl"
-          >
-            <div className="w-[70%]">
-              <div className="text-xs">{item.title}</div>
-              <div className="text-xs text-gray-400 truncate">{item.desc}</div>
-            </div>
-            <div className="text-xs text-gray-400 text-end truncate">
-              {item.date}
-            </div>
-          </div>
-        ))}
-      </div>
+      {renderContent()}
 
       {/* Pagination Dots (Static for now) */}
       <div className="flex justify-center mt-4 gap-2">

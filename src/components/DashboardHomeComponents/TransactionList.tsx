@@ -24,7 +24,7 @@ const TransactionsList: React.FC<Props> = ({ data, isLoading, isError }) => {
       <ul className="space-y-2">
         {data.map((t) => (
           <li
-            className="p-4 rounded-3xl flex justify-between items-center even:bg-gray-100"
+            className="p-4 cursor-pointer rounded-3xl flex justify-between items-center even:bg-gray-100"
             onClick={() => openModal(<TransactionDetail id={t} />)}
           >
             <div className="w-[70%]">

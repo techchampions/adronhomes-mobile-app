@@ -4,7 +4,10 @@ import {
   getAllPropertyLocations,
   getAllPropertyType,
   getDashboardHomeData,
+  getNotifications,
   getPropertyByID,
+  getPropertyPlanByID,
+  getUserPropertiesPlan,
   getUserTransactions,
   getUserWallet,
 } from "./api";
@@ -17,6 +20,9 @@ import { useUserStore } from "../zustand/UserStore";
 import { UserTransactionResponse } from "./types/userTransactionsTypes";
 import { UserDashboardResponseData } from "./types/dashboardHomeTypes";
 import { UserWalletResponse } from "./types/userWalletTypes";
+import { UserPropertyPlanResponse } from "./types/userPropertiesTypes";
+import { PlanPropertiesDetailResponse } from "./types/PropertyPlanDetailTypes";
+import { NotificationsResponse } from "./types/notificationTypes";
 
 //Query hook for User profile
 export const useGetUser = () => {
@@ -39,6 +45,30 @@ export const useGetUserWalletdata = () => {
   return useQuery<UserWalletResponse>({
     queryKey: ["user-wallet"],
     queryFn: getUserWallet,
+  });
+};
+// Query hook for user property plan data with
+export const useGetUserPropertiesPlan = () => {
+  return useQuery<UserPropertyPlanResponse>({
+    queryKey: ["user-properties-plan"],
+    queryFn: getUserPropertiesPlan,
+  });
+};
+
+// Query hook for properties plan Deatil page data with
+export const useGetPropertyPlanByID = (id: number | string) => {
+  return useQuery<PlanPropertiesDetailResponse>({
+    queryKey: ["property-plan-details", id], // include id in the key to avoid collisions
+    queryFn: () => getPropertyPlanByID(id),
+    enabled: !!id, // prevents the query from running if id is undefined/null
+  });
+};
+
+//Query hook to get user notifications
+export const useGetNotifications = () => {
+  return useQuery<NotificationsResponse>({
+    queryKey: ["user-notifications"],
+    queryFn: getNotifications,
   });
 };
 export const usePropertiespage = (

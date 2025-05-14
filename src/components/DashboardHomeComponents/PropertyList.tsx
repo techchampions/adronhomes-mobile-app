@@ -23,7 +23,7 @@ const PropertyPlanList: React.FC<Props> = ({ plans }) => {
           <li
             onClick={() => navigate(`/my-property/${plan.id}`)}
             key={plan.id}
-            className={`p-4 rounded-3xl even:bg-gray-100 flex justify-between items-center`}
+            className={`p-4 cursor-pointer rounded-3xl even:bg-gray-100 flex justify-between items-center`}
           >
             <div className="w-[70%]">
               <p className="font-semibold text-gray-500 text-xs md:text-sm truncate">
