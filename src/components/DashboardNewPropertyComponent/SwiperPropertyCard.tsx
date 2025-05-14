@@ -17,17 +17,18 @@ import {
 } from "react-icons/fa";
 import { GiStreetLight } from "react-icons/gi";
 import Button from "../Button";
+import { formatPrice } from "../../data/utils";
 
 interface Props {
   property: {
-    id: string;
+    id: number;
     name: string;
     street_address: string;
     lga: string;
     state: string;
     country: string;
     location: string;
-    price: string;
+    price: number;
     features: string[];
     photos: string[];
     type: string;
@@ -95,7 +96,7 @@ export default function SwiperPropertyCard({ property }: Props) {
 
       {/* Property Info */}
       <div className="mt-4 space-y-2 bg-white p-6 rounded-3xl">
-        <h4 className="text-lg font-adron-text-body font-semibold">
+        <h4 className="text-lg font-adron-text-body font-semibold truncate">
           {property.name}
         </h4>
         <p className="text-xs text-gray-400 flex items-center mt-1">
@@ -104,7 +105,7 @@ export default function SwiperPropertyCard({ property }: Props) {
         </p>
 
         <p className="text-lg font-black text-adron-black mt-4 flex justify-between">
-          {property.price} <FaHeart className="mr-2" />
+          {formatPrice(property.price ?? 0)} <FaHeart className="mr-2" />
         </p>
 
         <div className="flex justify-between items-center">
@@ -129,11 +130,16 @@ export default function SwiperPropertyCard({ property }: Props) {
           </div>
         </div>
 
-        <div className="flex items-center justify-between mt-[20px] md:mt-[43px]">
+        <div className="flex items-center justify-between mt-[20px] md:mt-[43px] gap-2">
           <Button
             label="View Property"
-            className="bg-adron-green max-w-fit text-xs px-10 py-3"
+            className="bg-adron-green text-xs py-3"
             onClick={() => navigate(`/properties/${property.id}`)}
+          />
+          <Button
+            label="Invest in Property"
+            className="!bg-adron-black text-xs py-3"
+            onClick={() => navigate(`/invest-property/${property.id}`)}
           />
         </div>
       </div>

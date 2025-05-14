@@ -3,6 +3,7 @@ import { FaMapMarkerAlt } from "react-icons/fa";
 import { GiStreetLight } from "react-icons/gi";
 import Button from "../components/Button";
 import { useNavigate, useParams } from "react-router-dom";
+import PropertySummary from "../components/PropertySummary";
 
 const ProppertyAgreement = () => {
   const navigate = useNavigate();
@@ -11,46 +12,7 @@ const ProppertyAgreement = () => {
   return (
     <div>
       <div className=" ">
-        <div className="flex flex-col md:flex-row justify-between items-start gap-4">
-          <div className="flex flex-col md:flex-row gap-4 w-full md:w-auto">
-            <img
-              src="/treasure-park-bg.png"
-              className="h-[100px] w-[150px] rounded-lg "
-              alt=""
-            />
-            <div className="w-full md:w-auto space-y-2 md:space-y-0">
-              <h4 className="text-xl font-semibold">
-                Treasure Parks and Gardens
-              </h4>
-              <p className="text-sm text-gray-500 flex items-center gap-1">
-                <FaMapMarkerAlt className="h-4 w-4" /> 34, Shimawa, Ogun State,
-                Nigeria
-              </p>
-              <div className="flex items-center text-sm md:text-xs mt-2 justify-between font-bold text-gray-500 gap-4">
-                <span className="flex items-center gap-1 truncate">
-                  {/* <TfiRulerAlt2 />  */}
-                  <img src="/ruler.svg" width={14} height={14} alt="dumbbell" />
-                  648 Sq M
-                </span>
-                <span className="flex items-center gap-1 truncate">
-                  <GiStreetLight /> Str Light
-                </span>
-                <span className="flex items-center gap-1 truncate">
-                  {/* <FaDumbbell /> */}
-                  <img
-                    src="/dumbbell.svg"
-                    width={18}
-                    height={18}
-                    alt="dumbbell"
-                  />
-                  Gym
-                </span>
-                <div className="flex items-center gap-1 text-xs ">Land</div>
-              </div>
-            </div>
-          </div>
-          <div className="text-right text-2xl font-bold">₦56,000,000</div>
-        </div>
+        <PropertySummary id={id} />
       </div>
       <div className="flex flex-col gap-7 mt-20">
         <h4 className="text-2xl">Property Agreement</h4>

@@ -33,7 +33,8 @@ export default function FilterBar({
     isError: isPropertyTypesError,
   } = useGetAllPropertyTypes();
 
-  const { data: locations } = useGetAllPropertyLocations();
+  const { data: locations, isLoading: isloadingLocations } =
+    useGetAllPropertyLocations();
   const searchParams = useSearchParams();
   const location = "";
   const [showModal, setShowModal] = useState(false);
@@ -42,7 +43,9 @@ export default function FilterBar({
     : PropertyTypeData?.propertiesType || [];
   if (isPropertyTypesError) return <div>Error loading property types.</div>;
 
-  const stateNames = locations?.locations.map((loc) => loc.state_name);
+  const stateNames = isloadingLocations
+    ? ["loading..."]
+    : locations?.locations.map((loc) => loc.state_name);
   return (
     <Formik
       initialValues={{

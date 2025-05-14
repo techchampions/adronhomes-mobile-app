@@ -45,7 +45,7 @@ const UserProfileCard: React.FC<Props> = ({
             </p>
             <div className="flex items-center text-xs text-gray-500 mt-1">
               <FaMapMarkerAlt className="mr-1 h-3 w-3" />
-              {location}
+              {userData.address}, {userData.lga}, {userData.state}
             </div>
           </div>
         </div>

@@ -1,8 +1,6 @@
 // pages/MyPropertyDetail.tsx
 import React from "react";
-import TransactionsList, {
-  TransactionItem,
-} from "../components/DashboardTransactionComponents/TransactionsList";
+import TransactionsList from "../components/DashboardTransactionComponents/TransactionsList";
 import Button from "../components/Button";
 import { HiOutlineLocationMarker } from "react-icons/hi";
 import { GiStreetLight } from "react-icons/gi";
@@ -10,28 +8,30 @@ import { MdOutlinePower } from "react-icons/md";
 import { useNavigate, useParams } from "react-router-dom";
 import { useModalStore } from "../zustand/useModalStore";
 import InputAmount from "../components/PaymentComponents/InputAmount";
+import { useGetPropertyPlanByID } from "../data/hooks";
+import Loader from "../components/Loader";
+import ApiErrorBlock from "../components/ApiErrorBlock";
+import { formatDate, formatPrice } from "../data/utils";
 import { Transaction } from "../data/types/userTransactionsTypes";
-import { useGetUserTransactions } from "../data/hooks";
-
-const property = {
-  raisedAmount: 36000000,
-  targetAmount: 57000000,
-};
-const progressPercent = Math.min(
-  100,
-  (property.raisedAmount / property.targetAmount) * 100
-).toFixed(1);
 
 const MyPropertyDetail = () => {
-  const { data, isLoading, isError } = useGetUserTransactions();
-  const transactions: Transaction[] = data?.user_transactions?.data ?? [];
+  // const { data, isLoading, isError } = useGetUserTransactions();
 
   const { openModal } = useModalStore();
   const navigate = useNavigate();
   const params = useParams();
   const id = params?.id;
+  const { data, isLoading, isError } = useGetPropertyPlanByID(id ?? "");
+  if (isLoading) {
+    return <Loader />;
+  }
+  if (isError) {
+    return <ApiErrorBlock />;
+  }
+  const transactions: Transaction[] = data?.transactions ?? [];
+
   const handleViewProperty = () => {
-    navigate(`/properties/${id}`);
+    navigate(`/properties/${data?.plan_properties.property.id}`);
   };
   const makePayment = () => {
     openModal(<InputAmount goBack={makePayment} />);
@@ -47,17 +47,19 @@ const MyPropertyDetail = () => {
           <div className="mt-5 space-y-4">
             <div className="flex justify-between items-baseline text-sm mt-2 w-fit text-white">
               <span className="text-white text-4xl">
-                ₦{property.raisedAmount.toLocaleString()}
+                {formatPrice(data?.plan_properties.paid_amount ?? 0)}
               </span>
               /
               <span className="text-white/50">
-                ₦{property.targetAmount.toLocaleString()}
+                {formatPrice(data?.plan_properties.property.price ?? 0)}
               </span>
             </div>
             <div className="w-full h-2.5 bg-green-900/50 rounded-full overflow-hidden">
               <div
                 className="h-full bg-white rounded-3xl"
-                style={{ width: `${progressPercent}%` }}
+                style={{
+                  width: `${data?.plan_properties.payment_percentage ?? 0}%`,
+                }}
               ></div>
             </div>
           </div>
@@ -68,11 +70,17 @@ const MyPropertyDetail = () => {
           />
           <div className="flex bg-white/20 justify-between p-4 rounded-2xl">
             <div className="flex flex-col gap-2">
-              <p className="text-sm text-white">Weekly</p>
+              <p className="text-sm text-white">
+                {data?.plan_properties.repayment_schedule ?? "loading..."}
+              </p>
               <p className="text-xs text-white">Payment Schedule</p>
             </div>
-            <div className="flex flex-col gap-2">
-              <p className="text-sm text-white">15/09/2025</p>
+            <div className="flex flex-col gap-2 text-right">
+              <p className="text-sm text-white">
+                {formatDate(
+                  data?.plan_properties.next_payment_date ?? "Loading..."
+                )}
+              </p>
               <p className="text-xs text-white">Next Payment</p>
             </div>
           </div>
@@ -81,7 +89,7 @@ const MyPropertyDetail = () => {
           <div className="w-full max-w-[472px] mx-auto overflow-hidden relative z-10">
             <div className="relative w-[50%] h-[120px] p-6 md:h-[150px] overflow-hidden">
               <img
-                src="/treasure-park-bg.png"
+                src={data?.plan_properties.property.display_image}
                 alt="s"
                 className="object-cover w-full h-full rounded-2xl"
               />
@@ -90,11 +98,14 @@ const MyPropertyDetail = () => {
             <div className="w-full px-6 text-white space-y-5 flex flex-col h-auto">
               <div className="flex-grow space-y-4">
                 <h4 className="text-lg font-semibold  line-clamp-1">
-                  Treasure Parks and Gardens
+                  {data?.plan_properties.property.name ?? "loading..."}
                 </h4>
                 <div className="flex items-center  text-sm">
                   <HiOutlineLocationMarker className="mr-2 flex-shrink-0" />
-                  <p className="truncate">34, Shimawa, Ogun State, Nigeria</p>
+                  <p className="truncate">
+                    {data?.plan_properties.property.lga},{" "}
+                    {data?.plan_properties.property.state}
+                  </p>
                 </div>
                 <div className="flex items-center gap-4 text-[10px] ">
                   <div className="flex items-center gap-1">
