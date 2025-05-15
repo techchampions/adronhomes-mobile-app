@@ -9,6 +9,7 @@ import Loader from "../Loader";
 import { formatDate, formatPrice } from "../../data/utils";
 import NotFound from "../NotFound";
 import ApiErrorBlock from "../ApiErrorBlock";
+import SmallLoader from "../SmallLoader";
 
 type Props = {
   data: Transaction[];
@@ -83,7 +84,7 @@ const TransactionsList: React.FC<Props> = ({ data, isLoading, isError }) => {
   };
   const renderContent = () => {
     if (isLoading) {
-      return <Loader />;
+      return <SmallLoader />;
     }
 
     if (isError) {

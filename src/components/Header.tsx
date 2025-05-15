@@ -4,9 +4,11 @@ import InputField from "./InputField";
 import Button from "./Button";
 import { Formik } from "formik";
 import { useNavigate } from "react-router-dom";
+import { useUserStore } from "../zustand/UserStore";
 
 const Header = ({ pageTitle }) => {
   const navigate = useNavigate();
+  const { user } = useUserStore();
   const newProperty = () => {
     navigate("/new-properties");
   };
@@ -44,7 +46,15 @@ const Header = ({ pageTitle }) => {
           onClick={newProperty}
         />
         <div className="p-2 bg-adron-body rounded-full" onClick={goTpProfile}>
-          <FaUser className="h-4 w-4" />
+          {user?.profile_picture ? (
+            <img
+              src={user?.profile_picture}
+              alt="profile"
+              className="h-4 w-4"
+            />
+          ) : (
+            <FaUser className="h-4 w-4" />
+          )}
         </div>
       </div>
     </div>

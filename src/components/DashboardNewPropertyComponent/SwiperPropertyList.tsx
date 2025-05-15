@@ -4,6 +4,7 @@ import SwiperPropertyCard from "./SwiperPropertyCard";
 import Loader from "../Loader";
 import ApiErrorBlock from "../ApiErrorBlock";
 import NoPropertyFound from "../NoPropertyFound";
+import SmallLoader from "../SmallLoader";
 
 type Props = {
   properties: Property[];
@@ -15,7 +16,7 @@ const SwiperPropertyList: React.FC<Props> = ({
   isError,
   isLoading,
 }) => {
-  if (isLoading) return <Loader />;
+  if (isLoading) return <SmallLoader />;
   if (isError) return <ApiErrorBlock />;
   if (properties.length <= 0) return <NoPropertyFound />;
   return (

@@ -16,8 +16,10 @@ import NavbarAddorder from "./NavbarAddorder";
 import Auth from "../../utils/Auth";
 import Button from "../Button";
 import { Input } from "@headlessui/react";
+import { useUserStore } from "../../zustand/UserStore";
 
 const MobileNav = () => {
+  const { user } = useUserStore();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
@@ -33,7 +35,12 @@ const MobileNav = () => {
         </div>
         <div className="flex items-center gap-4">
           <Button label="View Property" className="text-xs px-4" />
-          <img src="/mika.png" alt="" className="h-7 w-7" />
+
+          <img
+            src={user?.profile_picture ?? "/mika.png"}
+            alt=""
+            className="h-7 w-7"
+          />
         </div>
       </nav>
       {/* Hamburger Button */}

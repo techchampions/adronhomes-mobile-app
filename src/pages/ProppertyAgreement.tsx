@@ -4,6 +4,7 @@ import { GiStreetLight } from "react-icons/gi";
 import Button from "../components/Button";
 import { useNavigate, useParams } from "react-router-dom";
 import PropertySummary from "../components/PropertySummary";
+import SignaturePad from "../components/SignaturePad";
 
 const ProppertyAgreement = () => {
   const navigate = useNavigate();
@@ -52,6 +53,11 @@ const ProppertyAgreement = () => {
           herein and supersedes any prior agreements or understandings. 10.
           SIGNATURES
         </article>
+        <div className="flex justify-end">
+          <div className="w-full md:w-1/2">
+            <SignaturePad />
+          </div>
+        </div>
       </div>
       <div className="flex justify-end mt-20">
         <Button

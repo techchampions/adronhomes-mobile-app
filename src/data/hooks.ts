@@ -4,9 +4,11 @@ import {
   getAllPropertyLocations,
   getAllPropertyType,
   getDashboardHomeData,
+  getNotificationByID,
   getNotifications,
   getPropertyByID,
   getPropertyPlanByID,
+  getTransactionByID,
   getUserPropertiesPlan,
   getUserTransactions,
   getUserWallet,
@@ -23,6 +25,8 @@ import { UserWalletResponse } from "./types/userWalletTypes";
 import { UserPropertyPlanResponse } from "./types/userPropertiesTypes";
 import { PlanPropertiesDetailResponse } from "./types/PropertyPlanDetailTypes";
 import { NotificationsResponse } from "./types/notificationTypes";
+import { TransactionByIDResponse } from "./types/userTransactionByIDTypes";
+import { NotificationByIDResponse } from "./types/NotificationByIDTypes";
 
 //Query hook for User profile
 export const useGetUser = () => {
@@ -89,6 +93,25 @@ export const useGetPropertyByID = (id: number | string) => {
     enabled: !!id, // prevents the query from running if id is undefined/null
   });
 };
+
+// Query hook for Transsaction by ID
+export const useGetTransactionByID = (id: number | string) => {
+  return useQuery<TransactionByIDResponse>({
+    queryKey: ["tranaction", id],
+    queryFn: () => getTransactionByID(id),
+    enabled: !!id,
+  });
+};
+
+// Query hook for Transsaction by ID
+export const useGetNotificationByID = (id: number | string) => {
+  return useQuery<NotificationByIDResponse>({
+    queryKey: ["notification", id],
+    queryFn: () => getNotificationByID(id),
+    enabled: !!id,
+  });
+};
+
 // Query hook for properties Locations data with
 export const useGetAllPropertyLocations = () => {
   return useQuery<PropertyLocationResponse>({
