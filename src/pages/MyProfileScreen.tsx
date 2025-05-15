@@ -3,35 +3,51 @@ import UserProfileCard from "../components/MyProfile/UserProfileCard";
 import Button from "../components/Button";
 import { useModalStore } from "../zustand/useModalStore";
 import StatementRequest from "../components/MyProfile/StatementRequest";
+import { useNavigate } from "react-router-dom";
+import Loader from "../components/Loader";
+import { useGetUser, useGetUserPropertiesPlan } from "../data/hooks";
+import ApiErrorBlock from "../components/ApiErrorBlock";
+import { formatPrice } from "../data/utils";
 
 const MyProfileScreen = () => {
   const { openModal } = useModalStore();
+  const navigate = useNavigate();
+  const { data, isLoading, isError } = useGetUser();
+  const { data: planData, isLoading: isLoadingPlanData } =
+    useGetUserPropertiesPlan();
+  const userData = data?.user;
+  if (isLoading) return <Loader />;
+  if (isError) return <ApiErrorBlock />;
+
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
       <div className="col-span-2 md:col-span-3">
         <UserProfileCard
-          name="Mika Edmoud Miles"
-          email="Simonbii99@yahoo.com"
-          joinedDate="25th June 1999"
-          location="Ejigbo Wuse, Lagos"
+          firstName={userData.first_name}
+          lastName={userData.last_name}
+          email={userData.email}
+          joinedDate={userData.created_at}
+          location={`${userData.address}, ${userData.lga}, ${userData.state}`}
           imageUrl="/mika.png"
         />
       </div>
       <div className="p-4 bg-white rounded-3xl flex flex-col items-center h-fit col-span-2 md:col-span-1">
         <p className="text-gray-400 text-sm">total Properties</p>
         <div className=" flex w-fit mx-auto font-bold rounded-full justify-between items-center gap-2 ">
-          <span>2 Houses</span>
+          <span>{planData?.total_property.breakdown[1].count} Houses</span>
           <span className="">•</span>
-          <span>3 Lands</span>
+          <span>{planData?.total_property.breakdown[0].count} Lands</span>
         </div>
       </div>
       <div className="p-4 bg-white rounded-3xl flex flex-col items-center h-fit">
         <p className="text-gray-400 text-sm">Total Invoice</p>
-        <p className="font-bold">₦170,000,000</p>
+        <p className="font-bold">{formatPrice(planData?.total_invoice ?? 0)}</p>
       </div>
       <div className="p-4 bg-white rounded-3xl flex flex-col items-center h-fit">
         <p className="text-gray-400 text-sm">Amount Paid</p>
-        <p className="font-bold">₦61,000,000</p>
+        <p className="font-bold">
+          {formatPrice(planData?.total_amount_paid ?? 0)}
+        </p>
       </div>
 
       <div className="col-span-2 md:col-span-3 flex flex-col md:flex-row justify-between gap-3 md:items-center bg-white py-4 px-4 md:px-12 rounded-3xl">
@@ -59,6 +75,7 @@ const MyProfileScreen = () => {
         <Button
           label="See FAQs"
           className="bg-black text-white font-bold !w-[155px] text-xs"
+          onClick={() => navigate("/faqs")}
         />
       </div>
     </div>

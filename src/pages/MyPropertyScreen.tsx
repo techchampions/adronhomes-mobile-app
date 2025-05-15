@@ -1,14 +1,15 @@
 import React from "react";
 import PropertyList from "../components/DashboardPropertyComponent/PropertyList";
 import { useGetUserPropertiesPlan } from "../data/hooks";
-import Loader from "../components/Loader";
 import ApiErrorBlock from "../components/ApiErrorBlock";
+import SmallLoader from "../components/SmallLoader";
+import { formatPrice } from "../data/utils";
 
 const MyPropertyScreen = () => {
   const { data, isLoading, isError } = useGetUserPropertiesPlan();
-  if (isLoading) {
-    return <Loader />;
-  }
+  // if (isLoading) {
+  //   return <SmallLoader />;
+  // }
   if (isError) {
     return <ApiErrorBlock />;
   }
@@ -26,14 +27,20 @@ const MyPropertyScreen = () => {
         </div>
         <div className="p-4 bg-white rounded-3xl flex flex-col items-center h-fit">
           <p className="text-gray-400 text-sm">Total Invoice</p>
-          <p className="font-bold">₦170,000,000</p>
+          <p className="font-bold">{formatPrice(data?.total_invoice ?? 0)}</p>
         </div>
         <div className="p-4 bg-white rounded-3xl flex flex-col items-center h-fit">
           <p className="text-gray-400 text-sm">Amount Paid</p>
-          <p className="font-bold">₦61,000,000</p>
+          <p className="font-bold">
+            {formatPrice(data?.total_amount_paid ?? 0)}
+          </p>
         </div>
       </div>
-      <PropertyList properties={properties} />
+      <PropertyList
+        properties={properties}
+        isError={isError}
+        isloading={isLoading}
+      />
     </div>
   );
 };

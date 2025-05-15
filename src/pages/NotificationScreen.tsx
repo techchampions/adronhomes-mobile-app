@@ -1,8 +1,6 @@
 // pages/NotificationsPage.tsx
 import React from "react";
-import NotificationList, {
-  NotificationItem,
-} from "../components/DashboardNotificationComponents/NotificationList";
+import NotificationList from "../components/DashboardNotificationComponents/NotificationList";
 import { useGetNotifications } from "../data/hooks";
 
 const NotificationsPage = () => {

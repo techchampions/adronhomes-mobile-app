@@ -9,6 +9,7 @@ import { formatDate } from "../../data/utils";
 import Loader from "../Loader";
 import ApiErrorBlock from "../ApiErrorBlock";
 import NotFound from "../NotFound";
+import SmallLoader from "../SmallLoader";
 
 // export type NotificationStatus = "All" | "Read" | "Unread";
 
@@ -35,7 +36,7 @@ const NotificationList: React.FC<Props> = ({ data, isError, isLoading }) => {
         });
   const renderContent = () => {
     if (isLoading) {
-      return <Loader />;
+      return <SmallLoader />;
     }
     if (isError) {
       return <ApiErrorBlock />;

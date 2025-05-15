@@ -7,6 +7,8 @@ import AddFundAmount from "../components/DashboardHomeComponents/AddFundAmount";
 import { useGetUserWalletdata } from "../data/hooks";
 import { formatPrice } from "../data/utils";
 import TransactionsList from "../components/DashboardTransactionComponents/TransactionsList";
+import ApiErrorBlock from "../components/ApiErrorBlock";
+import SmallLoader from "../components/SmallLoader";
 
 const WalletScreen = () => {
   const openModal = useModalStore((state) => state.openModal);
@@ -14,6 +16,12 @@ const WalletScreen = () => {
     openModal(<AddFundAmount goBack={startFundWallet} />);
   };
   const { data, isLoading, isError } = useGetUserWalletdata();
+  if (isError) {
+    return <ApiErrorBlock />;
+  }
+  if (isLoading) {
+    return <SmallLoader />;
+  }
   const transactions = data?.user_transactions ?? [];
 
   return (
@@ -32,7 +40,7 @@ const WalletScreen = () => {
             onClick={startFundWallet}
           />
           <p className="text-xs bg-gray-200 px-6 py-1 rounded-full">
-            3 active plans
+            {data?.total_property} active plans
           </p>
         </div>
         <div className="row-span-1 md:row-span-2 col-span-2 md:col-span-1 p-10 bg-white rounded-3xl flex flex-col gap-4 justify-between">

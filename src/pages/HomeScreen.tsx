@@ -10,6 +10,7 @@ import Loader from "../components/Loader";
 import ApiErrorBlock from "../components/ApiErrorBlock";
 import { UserProperty } from "../data/types/dashboardHomeTypes";
 import { formatPrice } from "../data/utils";
+import SmallLoader from "../components/SmallLoader";
 
 const HomeScreen = () => {
   const openModal = useModalStore((state) => state.openModal);
@@ -23,7 +24,7 @@ const HomeScreen = () => {
     isError: isErrorTransaction,
   } = useGetUserTransactions();
   if (isLoading) {
-    return <Loader />;
+    return <SmallLoader />;
   }
   if (isError) {
     return <ApiErrorBlock />;
