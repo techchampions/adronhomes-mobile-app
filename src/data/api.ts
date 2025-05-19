@@ -80,7 +80,6 @@ export const fetchPropertiesPageData = async (
   filters: Record<string, any> = {}
 ): Promise<PropertiesResponse> => {
   const hasFilters = Object.values(filters).some((v) => v !== "");
-  console.log("fetching properties");
   const params = new URLSearchParams({
     page: String(page),
     ...(filters.state && { state: filters.state }),
@@ -95,6 +94,12 @@ export const fetchPropertiesPageData = async (
 
   const response = await apiClient.get(endpoint);
   return response.data;
+};
+
+// Get Saved Properties
+export const fetchSavedProperties = async (): Promise<PropertiesResponse> => {
+  const res = await apiClient.get("/user/saved-property");
+  return res.data;
 };
 
 //Get Properties by ID Data
@@ -115,4 +120,27 @@ export const getAllPropertyLocations =
 export const getAllPropertyType = async (): Promise<PropertiesTypeResponse> => {
   const response = await apiClient.get("/properties-type");
   return response.data;
+};
+
+// Toggle Save Property
+export const toggleSaveProperty = async (propertyId: number): Promise<void> => {
+  const formData = new FormData();
+  formData.append("property_id", propertyId.toString());
+
+  await apiClient.post("/user/save-property-toggle", formData);
+};
+
+// Fund Wallet
+export const fundWallet = async ({
+  amount,
+  payment_method,
+}: {
+  amount: number;
+  payment_method: string;
+}): Promise<void> => {
+  const formData = new FormData();
+  formData.append("amount", amount.toString());
+  formData.append("payment_method", payment_method);
+
+  await apiClient.post("/user/fund-wallet", formData);
 };

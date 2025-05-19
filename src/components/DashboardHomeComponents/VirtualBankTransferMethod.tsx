@@ -5,9 +5,9 @@ import SelectPaymentMethod from "./SelectPaymentMethod";
 import CopyButton from "../CopyButton";
 import { useToastStore } from "../../zustand/useToastStore";
 import PaymentSuccessfull from "../PaymentSuccessfull";
-import { RiUpload2Line } from "react-icons/ri";
+import { useFundWallet } from "../../data/hooks";
 
-const BankTransfer = ({
+const VirtualBankTransfer = ({
   goBack,
   amount,
 }: {
@@ -15,13 +15,19 @@ const BankTransfer = ({
   amount: number | null;
 }) => {
   const { closeModal, openModal } = useModalStore();
+  const { mutate: fundWallet } = useFundWallet();
   const { showToast } = useToastStore();
   const GoToSelectPaymentMethod = () => {
     openModal(<SelectPaymentMethod goBack={goBack} amount={amount} />);
   };
   const handlePaymentSuccess = () => {
     closeModal();
+
     showToast("Payment Recieved Successfully", "success");
+    fundWallet({
+      amount: amount || 0,
+      payment_method: "virtual_wallet",
+    });
     openModal(<PaymentSuccessfull text={"Payment received successfully."} />);
   };
 
@@ -37,7 +43,7 @@ const BankTransfer = ({
         <div className="flex flex-col gap-2">
           <div className="w-full bg-adron-green rounded-2xl flex gap-3 items-center p-3">
             <img src="/bank-transfer-icon.svg" alt="" className="h-6 w-6" />
-            <p className="text-sm text-white">Bank Transfer</p>
+            <p className="text-sm text-white">Virtual Bank Transfer</p>
           </div>
           <p className="text-sm text-gray-500">
             Transfer{" "}
@@ -46,35 +52,30 @@ const BankTransfer = ({
             </span>{" "}
             to the account below to complete your wallet funding.
           </p>
-          <div className="flex flex-col w-full gap-4 mt-4">
-            <div className="flex justify-between items-center w-full">
+          <div className="flex flex-col w-full gap-4 mt-7">
+            <div className="flex justify-between items-start w-full">
               <div className="flex flex-col">
-                <p className="text-sm">8394839302</p>
-                <p className="text-xs font-adron-thin text-gray-400">
+                <p className="text-md">8394839302</p>
+                <p className="text-[12px] font-adron-thin text-gray-400">
                   Account Number
                 </p>
               </div>
               <CopyButton text="8394839302" />
             </div>
             <div className="flex flex-col">
-              <p className="text-sm">Providus Bank</p>
-              <p className="text-xs font-adron-thin text-gray-400">Bank Name</p>
+              <p className="text-md">Providus Bank</p>
+              <p className="text-[12px] font-adron-thin text-gray-400">
+                Bank Name
+              </p>
             </div>
             <div className="flex flex-col">
-              <p className="text-sm">Bimbo Adeleke</p>
-              <p className="text-xs font-adron-thin text-gray-400">
+              <p className="text-md">Bimbo Adeleke</p>
+              <p className="text-[12px] font-adron-thin text-gray-400">
                 Account Name
               </p>
             </div>
           </div>
         </div>
-        <label className="mt-4">
-          <label className="block text-xs">Proof of Payment</label>
-          <div className="flex justify-between w-full px-4 py-2 bg-adron-body rounded-3xl items-center">
-            <input type="file" name="proof" className="text-xs w-[70%]" />
-            <RiUpload2Line className="text-gray-500 h-5 w-5 hover:text-black" />
-          </div>
-        </label>
 
         <div className="flex justify-between w-full gap-4 mt-4">
           <Button
@@ -93,4 +94,4 @@ const BankTransfer = ({
   );
 };
 
-export default BankTransfer;
+export default VirtualBankTransfer;

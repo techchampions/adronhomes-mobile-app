@@ -45,7 +45,7 @@ const MobileNav = () => {
       </nav>
       {/* Hamburger Button */}
       <div
-        className={`fixed left-0 top-0 z-[60] transition-transform duration-300 md:hidden ${
+        className={`fixed left-0 top-0 z-[60] transition-transform duration-300 h-screen md:hidden ${
           isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
         } flex`}
       >
@@ -56,7 +56,7 @@ const MobileNav = () => {
         />
 
         {/* Side drawer menu */}
-        <div className="w-64 bg-white h-full p-6 shadow-lg">
+        <div className="w-64 bg-white h-screen p-6 shadow-lg ">
           <div className="flex flex-col">
             <div className="flex justify-between mb-6">
               <img src="/logo.png" alt="logo" className=" w-[60%]" />
@@ -70,7 +70,7 @@ const MobileNav = () => {
             />
           </div>
 
-          <div className="w-full py-1.5 h-screen overflow-y-scroll scrollbar-hide bg-white rounded-2xl">
+          <div className="w-full py-1.5 h-[88%] overflow-y-scroll scrollbar-hide bg-white rounded-2xl">
             <nav className="space-y-2 p-2">
               <NavItem
                 label="Dashboard"

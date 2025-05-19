@@ -43,7 +43,7 @@ function DashboardScreen() {
   const pageTitle = getPageTitle(location.pathname);
   const { data, isLoading, isError } = useGetUser();
   if (isLoading) return <Loader />;
-  if (isError) return <ApiErrorBlock />;
+  // if (isError) return <ApiErrorBlock />;
   if (data) {
     return (
       <div className="fixed inset-0 z-50 flex h-screen w-screen">

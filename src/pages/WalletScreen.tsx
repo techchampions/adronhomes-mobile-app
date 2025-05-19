@@ -1,7 +1,7 @@
 import React from "react";
 import Button from "../components/Button";
 import CopyButton from "../components/CopyButton";
-import WalletHistory from "../components/DashboardWalletComponents/WalletHistoryList";
+// import WalletHistory from "../components/DashboardWalletComponents/WalletHistoryList";
 import { useModalStore } from "../zustand/useModalStore";
 import AddFundAmount from "../components/DashboardHomeComponents/AddFundAmount";
 import { useGetUserWalletdata } from "../data/hooks";

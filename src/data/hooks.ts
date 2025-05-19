@@ -1,6 +1,8 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   fetchPropertiesPageData,
+  fetchSavedProperties,
+  fundWallet,
   getAllPropertyLocations,
   getAllPropertyType,
   getDashboardHomeData,
@@ -12,6 +14,7 @@ import {
   getUserPropertiesPlan,
   getUserTransactions,
   getUserWallet,
+  toggleSaveProperty,
 } from "./api";
 import { PropertiesResponse } from "./types/propertiesPageTypes";
 import { GetPropertyByIdResponse } from "./types/GetPropertyByIdResponse";
@@ -85,6 +88,14 @@ export const usePropertiespage = (
   });
 };
 
+// Query hook to get user Saved property
+export const useGetSavedProperties = () => {
+  return useQuery<PropertiesResponse>({
+    queryKey: ["saved-properties"],
+    queryFn: fetchSavedProperties,
+  });
+};
+
 // Query hook for properties page data with
 export const useGetPropertyByID = (id: number | string) => {
   return useQuery<GetPropertyByIdResponse>({
@@ -132,5 +143,38 @@ export const useGetUserTransactions = () => {
   return useQuery<UserTransactionResponse>({
     queryKey: ["user-transactions"],
     queryFn: getUserTransactions,
+  });
+};
+
+export const useToggleSaveProperty = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: toggleSaveProperty,
+    onSuccess: () => {
+      // Refetch relevant data if needed
+      queryClient.invalidateQueries({
+        queryKey: ["saved-properties"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["properties-page"],
+      });
+    },
+  });
+};
+export const useFundWallet = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: fundWallet,
+    onSuccess: () => {
+      // Refetch relevant data if needed
+      queryClient.invalidateQueries({
+        queryKey: ["user-wallet"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["dashboard-data"],
+      });
+    },
   });
 };

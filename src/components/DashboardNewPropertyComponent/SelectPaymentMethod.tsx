@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Button from "../Button";
 import { useModalStore } from "../../zustand/useModalStore";
 import BankTransfer from "./BankTransferMethod";
+import { FaWallet } from "react-icons/fa";
 
 const SelectPaymentMethod = ({
   goBack,
@@ -63,6 +64,33 @@ const SelectPaymentMethod = ({
 
           <div
             className={`flex items-center gap-4 p-4 rounded-xl cursor-pointer transition-all ${
+              selectedPaymentMethod === "Virtual Bank Transfer"
+                ? "bg-adron-green text-white border-none "
+                : "bg-transparent border  border-gray-300"
+            }`}
+            onClick={() => setSelectedPaymentMethod("Virtual Bank Transfer")}
+          >
+            <img
+              src="/bank-transfer-icon.svg"
+              alt="Virtual bank transfer"
+              className="h-10 w-10"
+            />
+            <div>
+              <p className="font-adron-mid text-sm">Virtual Bank Transfer</p>
+              <p
+                className={`text-xs ${
+                  selectedPaymentMethod == "Virtual Bank Transfer"
+                    ? `text-white`
+                    : `text-gray-500`
+                } `}
+              >
+                Transfer to generated Virtual bank account
+              </p>
+            </div>
+          </div>
+
+          <div
+            className={`flex items-center gap-4 p-4 rounded-xl cursor-pointer transition-all ${
               selectedPaymentMethod === "Paystack"
                 ? "bg-adron-green text-white border-none "
                 : "bg-transparent border  border-gray-300"
@@ -84,6 +112,36 @@ const SelectPaymentMethod = ({
                 } `}
               >
                 Pay through Paystack
+              </p>
+            </div>
+          </div>
+
+          <div
+            className={`flex items-center gap-4 p-4 rounded-xl cursor-pointer transition-all ${
+              selectedPaymentMethod === "Virtual Wallet"
+                ? "bg-adron-green text-white border-none "
+                : "bg-transparent border  border-gray-300"
+            }`}
+            onClick={() => setSelectedPaymentMethod("Virtual Wallet")}
+          >
+            {/* <img
+              src="/bank-transfer-icon.svg"
+              alt="Virtual Wallet"
+              className="h-10 w-10"
+            /> */}
+            <div className="p-2 rounded-full bg-white">
+              <FaWallet className="h-5 w-5 text-adron-green" />
+            </div>
+            <div>
+              <p className="font-adron-mid text-sm">Virtual Wallet</p>
+              <p
+                className={`text-xs ${
+                  selectedPaymentMethod == "Virtual Wallet"
+                    ? `text-white`
+                    : `text-gray-500`
+                } `}
+              >
+                Pay With Wallet
               </p>
             </div>
           </div>

@@ -29,11 +29,11 @@ const DatePickerInput: React.FC<DatePickerInputProps> = ({
       {label && (
         <label className="block text-gray-600 text-sm mb-1">{label}</label>
       )}
-      <div className="relative flex items-center justify-between border px-4 py-1 border-gray-300 rounded-lg">
+      <div className="relative flex items-center justify-between bg-adron-body px-4 py-1 rounded-full">
         <DatePicker
           selected={field.value}
           onChange={handleChange}
-          className="w-full p-2 outline-none text-gray-500"
+          className="w-full p-1 outline-none text-gray-500"
           dateFormat="dd-MM-yyyy"
           placeholderText={placeholder}
           isClearable

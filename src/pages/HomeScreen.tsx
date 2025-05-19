@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+// import React, { useState } from "react";
 import Button from "../components/Button";
 import PropertyPlanList from "../components/DashboardHomeComponents/PropertyList";
 import TransactionsList from "../components/DashboardHomeComponents/TransactionList";
@@ -6,7 +6,7 @@ import { useModalStore } from "../zustand/useModalStore";
 import AddFundAmount from "../components/DashboardHomeComponents/AddFundAmount";
 import { useGetUserDashboardData, useGetUserTransactions } from "../data/hooks";
 import { Transaction } from "../data/types/userTransactionsTypes";
-import Loader from "../components/Loader";
+// import Loader from "../components/Loader";
 import ApiErrorBlock from "../components/ApiErrorBlock";
 import { UserProperty } from "../data/types/dashboardHomeTypes";
 import { formatPrice } from "../data/utils";
@@ -29,7 +29,7 @@ const HomeScreen = () => {
   if (isError) {
     return <ApiErrorBlock />;
   }
-  const transactions: Transaction[] = transRes?.user_transactions?.data ?? [];
+  const transactions: Transaction[] = data?.user_transactions ?? [];
   const plans: UserProperty[] = data?.user_properties ?? [];
 
   return (
