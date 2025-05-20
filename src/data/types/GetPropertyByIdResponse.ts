@@ -12,7 +12,8 @@ export interface Property {
   display_image: string;
   photos: string[];
   size: string;
-  price: number;
+  price: number | null;
+  initial_deposit: number | null;
   type: number;
   slug: string;
   features: string[];

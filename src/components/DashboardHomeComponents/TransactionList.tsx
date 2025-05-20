@@ -29,7 +29,7 @@ const TransactionsList: React.FC<Props> = ({ data, isLoading, isError }) => {
           >
             <div className="w-[70%]">
               <p className="font-semibold text-gray-500 text-xs md:text-sm truncate">
-                {t.transaction_type}
+                {t.description}
                 {/* {t.property?.name} */}
               </p>
               <p className="text-xs text-gray-500">

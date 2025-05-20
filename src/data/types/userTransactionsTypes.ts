@@ -16,10 +16,11 @@ export interface Transaction {
   user_id: number;
   plan_id: number;
   amount: number;
+  description: string;
   transaction_type: string;
   created_at: string | null;
   updated_at: string | null;
-  status: TransactionStatus;
+  status: TransactionStatus | null;
   property: Property;
 }
 

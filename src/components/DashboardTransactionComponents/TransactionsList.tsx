@@ -69,8 +69,7 @@ const TransactionsList: React.FC<Props> = ({ data, isLoading, isError }) => {
       >
         <div>
           <div className="font-medium text-xs md:text-sm truncate">
-            {/* {item.property?.name} */}
-            {item.transaction_type}
+            {item.description}
           </div>
           <div className="text-xs text-gray-500">
             {formatDate(item.created_at || "")}

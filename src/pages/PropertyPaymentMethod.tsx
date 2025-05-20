@@ -1,6 +1,6 @@
 import React from "react";
 import SelectPaymentMethod from "../components/DashboardNewPropertyComponent/SelectPaymentMethod";
-import PaymentBreakDown from "../components/DashboardNewPropertyComponent/PaymentBreakDown";
+import PaymentBreakDown2 from "../components/DashboardNewPropertyComponent/PaymentBreakDownStatic";
 
 const PropertyPaymentMethod = () => {
   const renderPaymentMethod = () => {
@@ -9,7 +9,7 @@ const PropertyPaymentMethod = () => {
         <div className="md:col-span-2 md:p-10">
           <SelectPaymentMethod amount={3000000} goBack={renderPaymentMethod} />
         </div>
-        <PaymentBreakDown />
+        <PaymentBreakDown2 />
       </div>
     );
   };

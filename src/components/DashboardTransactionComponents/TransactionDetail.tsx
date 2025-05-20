@@ -1,8 +1,6 @@
-import React from "react";
 import CopyButton from "../CopyButton";
 import Button from "../Button";
 import { useGetTransactionByID } from "../../data/hooks";
-import Loader from "../Loader";
 import ApiErrorBlock from "../ApiErrorBlock";
 import { formatPrice } from "../../data/utils";
 import { TransactionStatus } from "../../data/types/userTransactionsTypes";
@@ -22,11 +20,11 @@ const TransactionDetail = ({ id }) => {
       TransactionStatus,
       { label: string; style: string }
     > = {
-      1: {
+      0: {
         label: "Completed",
         style: "bg-adron-green",
       },
-      0: { label: "Failed", style: "bg-red-600" },
+      1: { label: "Failed", style: "bg-red-600" },
       2: {
         label: "Pending",
         style: "bg-gray-600",
@@ -60,16 +58,19 @@ const TransactionDetail = ({ id }) => {
         <div className="flex justify-between items-start py-3">
           <div className="flex flex-col">
             <p className="text-gray-400 text-xs">Description</p>
-            <p className="font-bold text-xs">Property Investment</p>
+            <p className="font-bold text-xs">
+              {data?.user_transaction.description}
+            </p>
           </div>
         </div>
         <div className="flex justify-between items-start py-3">
           <div className="flex flex-col">
             <p className="text-gray-400 text-xs">Transaction Type</p>
             <p className="font-bold text-xs">
-              {data?.user_transaction.transaction_type == "1"
+              {/* {data?.user_transaction.transaction_type == "1"
                 ? "Scheduled Payment"
-                : "Wallet Funding"}
+                : "Wallet Funding"} */}
+              {data?.user_transaction.transaction_type}
             </p>
           </div>
         </div>
@@ -99,7 +100,7 @@ const TransactionDetail = ({ id }) => {
               {/* {" "}
               <span className="bg-adron-green h-2 w-2 rounded-full"></span>{" "}
               Completed */}
-              {renderStatusBadge(data?.user_transaction.status)}
+              {renderStatusBadge(data?.user_transaction.status ?? 2)}
             </p>
           </div>
         </div>

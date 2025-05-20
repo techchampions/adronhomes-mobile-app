@@ -6,6 +6,8 @@ import CopyButton from "../CopyButton";
 import { useToastStore } from "../../zustand/useToastStore";
 import PaymentSuccessfull from "../PaymentSuccessfull";
 import { RiUpload2Line } from "react-icons/ri";
+import { useFundWallet } from "../../data/hooks";
+import PaymentPending from "../PaymentPending";
 
 const BankTransfer = ({
   goBack,
@@ -15,14 +17,20 @@ const BankTransfer = ({
   amount: number | null;
 }) => {
   const { closeModal, openModal } = useModalStore();
+  const { mutate: fundWallet } = useFundWallet();
+
   const { showToast } = useToastStore();
   const GoToSelectPaymentMethod = () => {
     openModal(<SelectPaymentMethod goBack={goBack} amount={amount} />);
   };
   const handlePaymentSuccess = () => {
     closeModal();
-    showToast("Payment Recieved Successfully", "success");
-    openModal(<PaymentSuccessfull text={"Payment received successfully."} />);
+    fundWallet({
+      amount: amount || 0,
+      payment_method: "bank_transfer",
+    });
+    // showToast("Payment Recieved Successfully", "success");
+    openModal(<PaymentPending text={"Payment is being confirmed by Admin."} />);
   };
 
   return (
