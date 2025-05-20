@@ -69,12 +69,15 @@ const HomeScreen = () => {
           <div className="">
             <p className="text-6xl font-bold">{data?.total_property.total}</p>
             <div className="md:bg-adron-body flex w-full md:w-fit mx-auto rounded-full md:px-4 my-1 text-xs justify-between items-center gap-2 mb-4 md:mb-0">
-              <span> {data?.total_property.breakdown[1].count} Houses</span>
+              <span>
+                {" "}
+                {data?.total_property.breakdown[1]?.count ?? 0} Houses
+              </span>
               <span className="text-lg">•</span>
               <span>
                 {" "}
-                {data?.total_property.breakdown[0].count}{" "}
-                {data?.total_property.breakdown[0].type_name}{" "}
+                {data?.total_property.breakdown[0]?.count ?? 0}{" "}
+                {data?.total_property?.breakdown[0]?.type_name || "Lands"}{" "}
               </span>
             </div>
           </div>

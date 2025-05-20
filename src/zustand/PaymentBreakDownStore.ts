@@ -9,7 +9,7 @@ type PaymentBreakDownStore = {
   propertyId: string | number;
   propertyPrice: number;
   propertyName: string;
-
+  marketerId: string;
   paymentType: string;
   paymentDuration: string;
   paymentSchedule: string;
@@ -32,7 +32,7 @@ export const usePaymentBreakDownStore = create<PaymentBreakDownStore>(
     propertyId: "",
     propertyPrice: 0,
     propertyName: "",
-
+    marketerId: "",
     paymentType: "",
     paymentDuration: "",
     paymentSchedule: "",
@@ -50,7 +50,7 @@ export const usePaymentBreakDownStore = create<PaymentBreakDownStore>(
         propertyId: "",
         propertyPrice: 0,
         propertyName: "",
-
+        marketerId: "",
         paymentType: "",
         paymentDuration: "",
         paymentSchedule: "",

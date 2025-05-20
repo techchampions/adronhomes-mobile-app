@@ -12,6 +12,8 @@ import { PlanPropertiesDetailResponse } from "./types/PropertyPlanDetailTypes";
 import { NotificationsResponse } from "./types/notificationTypes";
 import { TransactionByIDResponse } from "./types/userTransactionByIDTypes";
 import { NotificationByIDResponse } from "./types/NotificationByIDTypes";
+import { number } from "yup";
+import { PropertyPlanPayload } from "./types/CreatePropertyPayload";
 
 // Get User Profile
 export const getUser = async (): Promise<GetUserResponse> => {
@@ -143,4 +145,22 @@ export const fundWallet = async ({
   formData.append("payment_method", payment_method);
 
   await apiClient.post("/user/fund-wallet", formData);
+};
+
+// Create Property Plan
+export const createPropertyPlan = async ({
+  payload,
+}: PropertyPlanPayload): Promise<void> => {
+  // const payload = {
+  //   property_id,
+  //   payment_type,
+  //   monthly_duration,
+  //   repayment_schedule,
+  //   start_date,
+  //   end_date,
+  //   paid_amount,
+  //   payment_method,
+  // };
+
+  await apiClient.post("/user/buy-property", payload);
 };

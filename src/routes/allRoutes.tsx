@@ -105,9 +105,9 @@ const AllRoutes = () => {
             {/* <Route path="*" element={<Navigate to="/auth" />} /> */}
           </Routes>
         </Suspense>
+        <Toast message={message} type={type} onClose={hideToast} />
+        <Modal />
       </BrowserRouter>
-      <Toast message={message} type={type} onClose={hideToast} />
-      <Modal />
     </>
   );
 };

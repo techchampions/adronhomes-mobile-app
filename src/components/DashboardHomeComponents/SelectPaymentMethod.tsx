@@ -58,7 +58,7 @@ const SelectPaymentMethod = ({
                     : `text-gray-500`
                 } `}
               >
-                Transfer to virtual account
+                Wallet will be funded instantly
               </p>
             </div>
           </div>
@@ -76,7 +76,9 @@ const SelectPaymentMethod = ({
               className="h-10 w-10"
             />
             <div>
-              <p className="font-adron-mid text-sm">Bank Transfer</p>
+              <p className="font-adron-mid text-sm">
+                Bank Transfer to Adron Homes
+              </p>
               <p
                 className={`text-xs ${
                   selectedPaymentMethod == "Bank Transfer"
@@ -84,7 +86,7 @@ const SelectPaymentMethod = ({
                     : `text-gray-500`
                 } `}
               >
-                From your bank app or internet bank
+                payment will be confrimed within 24 hours.
               </p>
             </div>
           </div>
