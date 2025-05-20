@@ -48,7 +48,7 @@ const WalletScreen = () => {
           <div className="flex justify-between items-start w-full">
             <div className="flex flex-col">
               <p className="text-sm">
-                {data?.virtual_account.account_number || "loading..."}
+                {data?.virtual_account?.account_number || "loading..."}
               </p>
               <p className="text-[9px] text-gray-400">Account Number</p>
             </div>
@@ -56,14 +56,14 @@ const WalletScreen = () => {
           </div>
           <div className="flex flex-col">
             <p className="text-sm">
-              {data?.virtual_account.account_bank || "loading..."}
+              {data?.virtual_account?.account_bank || "loading..."}
             </p>
             <p className="text-[9px] text-gray-400">Bank Name</p>
           </div>
           <div className="flex flex-col">
             <p className="text-sm">
               {" "}
-              {data?.virtual_account.account_name || "loading..."}{" "}
+              {data?.virtual_account?.account_name || "loading..."}{" "}
             </p>
             <p className="text-[9px] text-gray-400">Account Name</p>
           </div>

@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
+  createPropertyPlan,
   fetchPropertiesPageData,
   fetchSavedProperties,
   fundWallet,
@@ -174,6 +175,30 @@ export const useFundWallet = () => {
       });
       queryClient.invalidateQueries({
         queryKey: ["dashboard-data"],
+      });
+    },
+  });
+};
+
+// Query hook for creating a new property plan
+export const useCreatePropertyPlan = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: createPropertyPlan,
+    onSuccess: () => {
+      // Refetch relevant data if needed
+      queryClient.invalidateQueries({
+        queryKey: ["user-properties-plan"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["dashboard-data"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["user-wallet"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["user-transactions"],
       });
     },
   });

@@ -20,6 +20,7 @@ const SelectPaymentMethod = ({
     string | null
   >(null);
   const { openModal } = useModalStore();
+  // const mutation = useModalStore((state) => state.mutate);
 
   const handleContinue = () => {
     if (selectedPaymentMethod == "Bank Transfer") {

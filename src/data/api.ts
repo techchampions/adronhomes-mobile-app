@@ -148,19 +148,8 @@ export const fundWallet = async ({
 };
 
 // Create Property Plan
-export const createPropertyPlan = async ({
-  payload,
-}: PropertyPlanPayload): Promise<void> => {
-  // const payload = {
-  //   property_id,
-  //   payment_type,
-  //   monthly_duration,
-  //   repayment_schedule,
-  //   start_date,
-  //   end_date,
-  //   paid_amount,
-  //   payment_method,
-  // };
-
+export const createPropertyPlan = async (
+  payload: PropertyPlanPayload
+): Promise<void> => {
   await apiClient.post("/user/buy-property", payload);
 };
