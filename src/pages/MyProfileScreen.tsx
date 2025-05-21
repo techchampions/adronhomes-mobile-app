@@ -28,15 +28,15 @@ const MyProfileScreen = () => {
           email={userData.email}
           joinedDate={userData.created_at}
           location={`${userData.address}, ${userData.lga}, ${userData.state}`}
-          imageUrl="/mika.png"
+          imageUrl={userData.profile_picture}
         />
       </div>
       <div className="p-4 bg-white rounded-3xl flex flex-col items-center h-fit col-span-2 md:col-span-1">
         <p className="text-gray-400 text-sm">total Properties</p>
         <div className=" flex w-fit mx-auto font-bold rounded-full justify-between items-center gap-2 ">
-          <span>{planData?.total_property.breakdown[1].count} Houses</span>
+          <span>{planData?.total_property?.breakdown[1]?.count} Houses</span>
           <span className="">•</span>
-          <span>{planData?.total_property.breakdown[0].count} Lands</span>
+          <span>{planData?.total_property?.breakdown[0]?.count} Lands</span>
         </div>
       </div>
       <div className="p-4 bg-white rounded-3xl flex flex-col items-center h-fit">

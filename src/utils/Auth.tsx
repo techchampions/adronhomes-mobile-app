@@ -40,7 +40,7 @@ const login = async (
     if (response.data.success && response.data.otpVerified) {
       showToast("User LoggedIn successfully!", "success");
       setToken(response.data.token); // Save token in store
-      await getUser();
+      // await getUser();
       setHasCompletedOnboarding(true); // Set onboarding state in store
       setIsLoggedIn(true); // Set logged-in state in store
       setStep("onboarding complete");
@@ -51,7 +51,7 @@ const login = async (
       );
       setToken(response.data.token); // Save token in store
       setIsLoggedIn(true); // Set logged-in state in store
-      await getUser();
+      // await getUser();
       handleResendOTP();
       setStep("verify OTP");
     } else if (response.data.errors) {
@@ -106,13 +106,6 @@ const register = async (
     if (response.data.success) {
       setToken(response.data.token); // Save token in store
       showToast("User registered successfully!", "success");
-      await getUser();
-      // setEmail(response.data.user.email);
-      // setFirstName(response.data.user.first_name);
-      // setLastName(response.data.user.last_name);
-      // setReferralCode(response.data.user.referral_code);
-      // setPhoneNumber(response.data.user.phone_number);
-      // setId(response.data.user.id);
       localStorage.setItem("otp", response.data.otp.otp);
       console.log(response.data.otp.otp); // Save OTP for verification
       setStep("verify OTP");

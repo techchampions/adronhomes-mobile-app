@@ -2,10 +2,15 @@ import { useField } from "formik";
 import React from "react";
 import { IoCaretDown } from "react-icons/io5";
 
+interface Option {
+  id?: string | number;
+  name?: string;
+}
 interface SelectFieldProps {
   name: string;
   options: string[];
   placeholder?: string;
+  onchange?: (value) => void;
 }
 
 const SelectField: React.FC<SelectFieldProps> = ({
@@ -17,10 +22,10 @@ const SelectField: React.FC<SelectFieldProps> = ({
   const hasError = meta.touched && meta.error;
 
   return (
-    <div className="w-full relative bg-adron-body rounded-full">
+    <div className="w-full relative rounded-full">
       <select
         {...field}
-        className={`w-full py-2.5 px-4 pr-10 rounded-full appearance-none text-xs text-gray-500 bg-transparent focus:outline-none ${
+        className={`w-full py-2.5 px-4 pr-10 rounded-full appearance-none text-xs text-gray-500  bg-adron-body  focus:outline-none ${
           hasError ? "border border-red-500" : "border border-transparent"
         }`}
       >

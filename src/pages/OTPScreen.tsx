@@ -11,7 +11,7 @@ interface OTPProps {
 
 const OTPScreen: React.FC<OTPProps> = ({ length = 4 }) => {
   const { showToast } = useToastStore();
-  const { isLoggedIn } = useUserStore();
+  const { setIsLoggedIn, token } = useUserStore();
   const { setStep, setHasCompletedOnboarding } = useOnboardingStore();
   const [otp, setOtp] = useState<string[]>(new Array(length).fill(""));
   const [timer, setTimer] = useState<number>(59);
@@ -72,9 +72,10 @@ const OTPScreen: React.FC<OTPProps> = ({ length = 4 }) => {
 
         if (response.data.success) {
           showToast("OTP verified successfully!", "success");
-          if (isLoggedIn) {
+          if (token) {
             setStep("onboarding complete");
             setHasCompletedOnboarding(true);
+            setIsLoggedIn(true);
           }
           setStep("signup completed");
         }
@@ -102,6 +103,7 @@ const OTPScreen: React.FC<OTPProps> = ({ length = 4 }) => {
       }
     } catch (error) {
       showToast("Failed to resend OTP. Please try again.", "error");
+      console.log(error);
     }
   };
 

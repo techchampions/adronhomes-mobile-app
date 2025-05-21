@@ -1,51 +1,95 @@
-import { Form, Formik } from "formik";
+import { Form, Formik, useFormikContext } from "formik";
 import * as Yup from "yup";
 import SelectField from "../components/SelectField";
-import InputField from "../components/InputField";
-import { HiOutlineExclamationCircle } from "react-icons/hi";
-import { FaMapMarkerAlt } from "react-icons/fa";
-import { RiUpload2Line } from "react-icons/ri";
 import Button from "../components/Button";
-import { GiStreetLight } from "react-icons/gi";
-import { useNavigate, useParams } from "react-router-dom";
-import PaymentBreakDown from "../components/DashboardNewPropertyComponent/PaymentBreakDown";
 import PropertySummary from "../components/PropertySummary";
+import DatePickerInput from "../components/DatePickerInput";
+import { useEffect, useState } from "react";
+import { addMonths } from "date-fns";
+import { useModalStore } from "../zustand/useModalStore";
+import InputMarketerId from "../components/DashboardNewPropertyComponent/InputMarketerId";
+import { usePaymentBreakDownStore } from "../zustand/PaymentBreakDownStore";
+import { HiOutlineExclamationCircle } from "react-icons/hi";
+import SmallLoader from "../components/SmallLoader";
+import ApiErrorBlock from "../components/ApiErrorBlock";
+import { useGetPropertyByID } from "../data/hooks";
+import { calculatePaymentDetails } from "../utils/PaymentBreakdownCalculation";
+import { useParams } from "react-router-dom";
+import { paymentTypeWatcher } from "../utils/PaymentTypeWatcher";
 
 export default function InvestmentForm() {
-  const navigate = useNavigate();
+  const { openModal } = useModalStore();
   const params = useParams();
   const id = params?.id;
+  const { setPaymentDetails } = usePaymentBreakDownStore();
+  const [selectedPaymentType, setSelectedPaymentType] = useState("");
+  const { data, isError, isLoading } = useGetPropertyByID(id || 0);
+  const property = data?.data.properties[0];
+  if (isLoading) return <SmallLoader />;
+  if (isError) return <ApiErrorBlock />;
+
   const initialValues = {
     paymentType: "",
     paymentDuration: "",
     paymentSchedule: "",
     startDate: "",
     endDate: "",
-    govId: "",
-    govIdType: "",
-    nextOfKinName: "",
-    bankStatement: null,
-    utilityBill: null,
-    nextOfKinRelationship: "",
-    nextOfKinPhone: "",
+    // marketerId: "",
   };
   const validationSchema = Yup.object({
-    paymentType: Yup.string().required("Required"),
-    paymentDuration: Yup.string().required("Required"),
-    paymentSchedule: Yup.string().required("Required"),
-    startDate: Yup.date().required("Required"),
-    endDate: Yup.date().required("Required"),
-    govId: Yup.string().required("Required"),
-    govIdType: Yup.string().required("Required"),
-    nextOfKinName: Yup.string().required("Required"),
-    bankStatement: Yup.mixed().required("Required"),
-    utilityBill: Yup.mixed().required("Required"),
-    nextOfKinRelationship: Yup.string().required("Required"),
-    nextOfKinPhone: Yup.string().required("Required"),
+    ...(selectedPaymentType === "Installment"
+      ? {
+          paymentDuration: Yup.string().required("Required"),
+          paymentSchedule: Yup.string().required("Required"),
+          startDate: Yup.date().required("Required"),
+          endDate: Yup.date().required("Required"),
+          paymentType: Yup.string().required("Required"),
+        }
+      : {
+          paymentType: Yup.string().required("Required"),
+        }),
+
+    // marketerId: Yup.string().required("Required"),
   });
-  const submit = () => {
-    navigate(`/property-agreement/${id}`);
-    // console.log("submiting");
+  const submit = (values: typeof initialValues) => {
+    const { initialDeposit, weeklyAmount, fees, totalAmount } =
+      calculatePaymentDetails(values, property);
+    const planDetails = {
+      paymentType: values.paymentType,
+      paymentDuration: values.paymentDuration,
+      paymentSchedule: values.paymentSchedule,
+      startDate: values.startDate,
+      endDate: values.endDate,
+      initialDeposit: initialDeposit,
+      weeklyAmount: weeklyAmount,
+      fees,
+      totalAmount,
+      // marketerId: values.marketerId,
+      propertyId: id,
+    };
+    setPaymentDetails(planDetails);
+    console.log("planDetails", planDetails);
+    openModal(<InputMarketerId />);
+  };
+
+  // 👇 Component to auto-calculate endDate
+  const AutoEndDateUpdater = () => {
+    const { values, setFieldValue } = useFormikContext<typeof initialValues>();
+
+    useEffect(() => {
+      // const { paymentDuration, startDate } = values;
+
+      // Only calculate if both are available
+      if (values.paymentDuration && values.startDate) {
+        const months = parseInt(values.paymentDuration);
+        if (!isNaN(months)) {
+          const newEndDate = addMonths(new Date(values.startDate), months);
+          setFieldValue("endDate", newEndDate);
+        }
+      }
+    }, [values.startDate, setFieldValue]);
+
+    return null; // no UI
   };
 
   return (
@@ -54,104 +98,130 @@ export default function InvestmentForm() {
       validationSchema={validationSchema}
       onSubmit={submit}
     >
-      <Form className="space-y-10">
-        {/* Property Summary */}
-        <div className=" ">
-          <PropertySummary id={id} />
-        </div>
+      {({ values, isValid, dirty }) => {
+        const { fees, initialDeposit, weeklyAmount, totalAmount } =
+          calculatePaymentDetails(values, property);
+        const { SelectedPaymentType } = paymentTypeWatcher(values);
+        setSelectedPaymentType(SelectedPaymentType);
 
-        {/* Investment Section */}
-        <div className="grid grid-cols-1 bg-white md:grid-cols-3 p-8 gap-8 rounded-3xl">
-          <div className="md:col-span-2 p-6 space-y-4">
-            <div className="grid grid-cols-1 gap-4 md:gap-6">
-              <div>
-                <label className="block text-sm mb-2">Payment Type</label>
-                <SelectField
-                  name="paymentType"
-                  options={["Select", "Outright", "Installment"]}
-                />
-              </div>
-              <div>
-                <label className="block text-sm mb-2">Payment Duration</label>
-                <SelectField
-                  name="paymentDuration"
-                  options={["6 months", "12 months"]}
-                />
-              </div>
-              <div>
-                <label className="block text-sm mb-2">Payment Schedule</label>
-                <SelectField
-                  name="paymentSchedule"
-                  options={["Monthly", "Quarterly"]}
-                />
-              </div>
-              <div className="flex gap-4">
-                <div className="w-1/2">
-                  <label className="block text-sm mb-2">Start Date</label>
-                  <InputField name="startDate" />
+        return (
+          <Form className="space-y-10">
+            <AutoEndDateUpdater /> {/* 👈 place this inside Formik form */}
+            {/* Property Summary */}
+            <div className=" ">
+              <PropertySummary id={id ?? ""} />
+            </div>
+            {/* Investment Section */}
+            <div className="grid grid-cols-1 bg-white md:grid-cols-3 p-8 gap-8 rounded-3xl">
+              <div className="md:col-span-2 p-6 space-y-4">
+                <div className="grid grid-cols-1 gap-4 md:gap-6">
+                  <div>
+                    <label className="block text-sm mb-2">Payment Type</label>
+                    <SelectField
+                      name="paymentType"
+                      placeholder="Select Payment Type"
+                      options={["One Time", "Installment"]}
+                      onchange={(e) => {
+                        setSelectedPaymentType(e.target.value);
+                      }}
+                    />
+                  </div>
+                  {selectedPaymentType === "Installment" && (
+                    <>
+                      <div>
+                        <label className="block text-sm mb-2">
+                          Payment Duration
+                        </label>
+                        <SelectField
+                          name="paymentDuration"
+                          placeholder="Number in month(s)"
+                          options={["6", "12"]}
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm mb-2">
+                          Payment Schedule
+                        </label>
+                        <SelectField
+                          name="paymentSchedule"
+                          placeholder="Select Payment Schedule"
+                          options={["Monthly", "Quarterly"]}
+                        />
+                      </div>
+                      <div className="flex gap-4">
+                        <div className="w-1/2">
+                          <DatePickerInput
+                            label="Start Date"
+                            name="startDate"
+                            minDate={new Date()}
+                            placeholder="Start Date"
+                          />
+                        </div>
+                        <div className="w-1/2">
+                          <DatePickerInput
+                            label="End Date"
+                            name="endDate"
+                            placeholder="End date"
+                            readOnly
+                          />
+                        </div>
+                      </div>
+                    </>
+                  )}
                 </div>
-                <div className="w-1/2">
-                  <label className="block text-sm mb-2">End Date</label>
-                  <InputField name="endDate" />
+              </div>
+              <div className="bg-white p-6 rounded-3xl shadow-xl">
+                <h4 className="font-semibold mb-4">Payment Breakdown</h4>
+                <div className="space-y-4 text-sm">
+                  <p className="text-black flex justify-between gap-4">
+                    ₦{initialDeposit?.toLocaleString()}
+                    <span className="text-xs text-gray-400 text-right">
+                      {values.paymentType === "One Time"
+                        ? "Full Payment"
+                        : "Initial Deposit"}
+                    </span>
+                  </p>
+                  <p className="text-black flex justify-between gap-4">
+                    ₦{fees.toLocaleString()}
+                    <span className="text-xs text-gray-400 text-right">
+                      Fees & Charges
+                    </span>
+                  </p>
+                  <p className="text-black flex justify-between gap-4">
+                    ₦{weeklyAmount.toLocaleString()}
+                    <span className="text-xs text-gray-400 text-right">
+                      {values.paymentSchedule} Amount
+                    </span>
+                  </p>
+                  <p className="text-black flex justify-between gap-4">
+                    ₦{totalAmount.toLocaleString()}
+                    <span className="text-xs text-gray-400 text-right">
+                      Total Amount to be Paid
+                    </span>
+                  </p>
                 </div>
+                <div className="mt-6 bg-adron-green text-white text-start px-4 md:px-6 py-2 rounded-3xl font-semibold text-lg flex flex-col">
+                  ₦{totalAmount.toLocaleString()}{" "}
+                  <span className="text-xs text-white/50">Total</span>
+                </div>
+                <p className="text-xs text-gray-400 mt-2 flex items-start gap-2">
+                  <HiOutlineExclamationCircle className="h-10 w-10" />
+                  The breakdown updates based on your selection. Contact support
+                  if you have questions.
+                </p>
               </div>
             </div>
-          </div>
-          <PaymentBreakDown />{" "}
-        </div>
-
-        {/* Customer Verification */}
-        <div className="bg-white p-6 rounded-3xl space-y-6">
-          <h4 className="text-lg font-bold">Customer Verification</h4>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="grid grid-cols-2 gap-2">
-              <label className="block text-sm col-span-2">
-                Government Issued ID
-              </label>
-              <SelectField
-                name="govIdType"
-                options={["National ID", "Passport", "Driver's License"]}
+            <div className="text-right md:p-5">
+              <Button
+                label="Continue"
+                className="!w-fit px-18"
+                type="submit"
+                disabled={!isValid}
               />
-              <InputField name="govId" />
             </div>
-            <div>
-              <label className="block text-sm">Next of Kin Full Name</label>
-              <InputField name="nextOfKinName" />
-            </div>
-            <div>
-              <label className="block text-sm">Bank Statement</label>
-              <div className="flex justify-between w-full px-4 py-4 bg-adron-body rounded-3xl items-center">
-                <input type="file" name="bankStatement" className="text-xs" />
-                <RiUpload2Line />{" "}
-              </div>
-            </div>
-            <div>
-              <label className="block text-sm">Relationship</label>
-              <InputField name="nextOfKinRelationship" />
-            </div>
-            <div>
-              <label className="block text-sm">Utility Bill</label>
-              <div className="flex justify-between w-full px-4 py-4 bg-adron-body rounded-3xl items-center">
-                <input type="file" name="utilityBill" className="text-xs" />
-                <RiUpload2Line />{" "}
-              </div>
-            </div>
-            <div>
-              <label className="block text-sm">Next of Kin Phone</label>
-              <InputField name="nextOfKinPhone" />
-            </div>
-          </div>
-        </div>
-
-        <div className="text-right md:p-18">
-          <Button
-            type="submit"
-            label="Proceed"
-            className="!w-fit px-10"
-            onClick={submit}
-          />
-        </div>
-      </Form>
+          </Form>
+        );
+      }}
     </Formik>
   );
 }

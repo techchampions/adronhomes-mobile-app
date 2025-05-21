@@ -8,6 +8,7 @@ interface ButtonProps {
   disabled?: boolean;
   className?: string;
   icon?: React.ReactNode;
+  rightIcon?: React.ReactNode;
 }
 
 const Button: React.FC<ButtonProps> = ({
@@ -18,6 +19,7 @@ const Button: React.FC<ButtonProps> = ({
   disabled = false,
   className = "",
   icon,
+  rightIcon,
 }) => {
   return (
     <button
@@ -56,6 +58,7 @@ const Button: React.FC<ButtonProps> = ({
         <div className="flex items-center justify-center">
           {icon && <span className="mr-2">{icon}</span>}
           {label}
+          {rightIcon && <span className="ml-2">{rightIcon}</span>}
         </div>
       )}
     </button>

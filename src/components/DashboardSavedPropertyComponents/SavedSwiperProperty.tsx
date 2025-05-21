@@ -19,35 +19,38 @@ import {
 import { GiStreetLight } from "react-icons/gi";
 import Button from "../Button";
 import { formatPrice } from "../../data/utils";
-import apiClient from "../../data/apiClient";
 import { useToastStore } from "../../zustand/useToastStore";
 import { PropertyType } from "../../data/types/propertiesPageTypes";
-// import { useToggleSaveProperty } from "../../data/hooks";
+import { useToggleSaveProperty } from "../../data/hooks";
 
 interface Props {
-  property: {
+  saved_property: {
     id: number;
-    name: string;
-    street_address: string;
-    lga: string;
-    state: string;
-    country: string;
-    price: number;
-    features: string[];
-    photos: string[];
-    type: PropertyType;
-    is_saved: boolean;
+    property_id: number;
+    property: {
+      id: number;
+      name: string;
+      street_address: string;
+      lga: string;
+      state: string;
+      country: string;
+      price: number;
+      features: string[];
+      photos: string[];
+      type: PropertyType;
+      is_saved: boolean;
+    };
   };
 }
 
-export default function SwiperPropertyCard({ property }: Props) {
+export default function SavedSwiperPropertyCard({ saved_property }: Props) {
   const navigate = useNavigate();
   const { showToast } = useToastStore();
-  // const { mutate: toggleSavePropertyHook, isLoading } = useToggleSaveProperty();
+  const { mutate: toggleSavePropertyHook, isLoading } = useToggleSaveProperty();
 
   const prevRef = useRef(null);
   const nextRef = useRef(null);
-  const [isSaved, setIsSaved] = useState(property.is_saved);
+  const [isSaved, setIsSaved] = useState(saved_property.property.is_saved);
   const [swiper, setSwiper] = useState(null); // State to store the swiper instance
 
   useEffect(() => {
@@ -57,33 +60,19 @@ export default function SwiperPropertyCard({ property }: Props) {
       swiper.navigation.update(); // Ensure the navigation buttons are updated after initialization
     }
   }, [swiper]); // Ensure this effect runs when the swiper instance is available
+  console.log(saved_property);
 
-  const address = `${property.street_address}, ${property.lga}, ${property.state} ${property.country}`;
+  const address = `${saved_property.property.street_address}, ${saved_property.property.lga}, ${saved_property.property.state} ${saved_property.property.country}`;
   // const features = property.features;
   const toggleSaveProperty = async () => {
-    try {
-      const formData = new FormData();
-      formData.append("property_id", property.id);
-      const res = await apiClient.post("/user/save-property-toggle", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-      showToast(res.data.message, "success");
-      setIsSaved(!isSaved);
-    } catch (error) {
-      showToast(`${error}`, "error");
-    }
-  };
-  // const toggleSaveProperty = async () => {
-  //   toggleSavePropertyHook(property.id, {
-  //     onSuccess: () => {
-  //       showToast("Property removed successfully", "success");
+    toggleSavePropertyHook(saved_property.property.id, {
+      onSuccess: () => {
+        showToast("Property removed successfully", "success");
 
-  //       setIsSaved(!isSaved);
-  //     },
-  //   });
-  // };
+        setIsSaved(!isSaved);
+      },
+    });
+  };
 
   return (
     <div className="rounded-3xl">
@@ -100,7 +89,7 @@ export default function SwiperPropertyCard({ property }: Props) {
           modules={[Navigation]}
           className="w-full h-full rounded-[40px]"
         >
-          {property.photos.map((img, idx) => (
+          {saved_property.property.photos.map((img, idx) => (
             <SwiperSlide key={idx}>
               <img
                 src={img}
@@ -129,7 +118,7 @@ export default function SwiperPropertyCard({ property }: Props) {
       {/* Property Info */}
       <div className="mt-4 space-y-2 bg-white p-6 rounded-3xl">
         <h4 className="text-lg font-adron-text-body font-semibold truncate">
-          {property.name}
+          {saved_property.property.name}
         </h4>
         <p className="text-xs text-gray-400 flex items-center mt-1 truncate">
           <FaMapMarkerAlt className="mr-1" /> {address}
@@ -137,7 +126,7 @@ export default function SwiperPropertyCard({ property }: Props) {
         </p>
 
         <p className="text-lg font-black text-adron-black mt-4 flex justify-between">
-          {formatPrice(property.price ?? 0)}
+          {formatPrice(saved_property.property.price ?? 0)}
           <div className="mr-2" onClick={toggleSaveProperty}>
             {isSaved ? (
               <FaHeart className="text-adron-green" size={20} />
@@ -153,19 +142,19 @@ export default function SwiperPropertyCard({ property }: Props) {
               {/* <TfiRulerAlt2 />  */}
               <img src="/ruler.svg" width={14} height={14} alt="dumbbell" />
 
-              {property.features[0]}
+              {saved_property.property.features[0]}
             </span>
             <span className="flex items-center gap-1 truncate">
-              <GiStreetLight /> {property.features[1]}
+              <GiStreetLight /> {saved_property.property.features[1]}
             </span>
             <span className="flex items-center gap-1 truncate">
               {/* <FaDumbbell /> */}
               <img src="/dumbbell.svg" width={14} height={14} alt="dumbbell" />
-              {property.features[2]}
+              {saved_property.property.features[2]}
             </span>
           </div>
           <div className="text-gray-400 flex items-center gap-1 text-xs">
-            {property.type.name}
+            {saved_property.property.type.name}
           </div>
         </div>
 
@@ -173,12 +162,16 @@ export default function SwiperPropertyCard({ property }: Props) {
           <Button
             label="View Property"
             className="bg-adron-green text-xs py-3"
-            onClick={() => navigate(`/properties/${property.id}`)}
+            onClick={() =>
+              navigate(`/properties/${saved_property.property_id}`)
+            }
           />
           <Button
             label="Invest in Property"
             className="!bg-transparent !text-black border hover:!text-white hover:!bg-black text-xs py-3"
-            onClick={() => navigate(`/invest-property/${property.id}`)}
+            onClick={() =>
+              navigate(`/invest-property/${saved_property.property_id}`)
+            }
           />
         </div>
       </div>

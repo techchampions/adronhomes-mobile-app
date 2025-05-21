@@ -12,9 +12,17 @@ import ApiErrorBlock from "../components/ApiErrorBlock";
 import apiClient from "../data/apiClient";
 import { useToastStore } from "../zustand/useToastStore";
 import { TbCameraPlus } from "react-icons/tb";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 const ProfileSettings = () => {
-  const { openModal } = useModalStore();
+  const [showPassword, setShowPassword] = useState(false);
+
+  // Password visibility toggle logic
+  const togglePasswordVisibility = () => setShowPassword((prev) => !prev);
+  const navigate = useNavigate();
+
+  const { openModal, closeModal } = useModalStore();
   const { showToast } = useToastStore();
   const { data, isLoading, isError } = useGetUser();
   const userData = data?.user;
@@ -79,12 +87,39 @@ const ProfileSettings = () => {
         },
       });
       showToast("Profile updated successfully", "success");
+      navigate("/my-profile");
 
       console.log("Profile updated successfully:", response.data);
     } catch (error) {
       showToast("Error updating profile", "error");
       console.error("Error updating profile:", error);
     }
+  };
+
+  const confirmChangePassword = async (values: typeof initialValues) => {
+    try {
+      const formData = new FormData();
+
+      if (values.password && values.passwordConfirmation) {
+        formData.append("password", values.password);
+        formData.append("password_confirmation", values.passwordConfirmation);
+      }
+
+      const response = await apiClient.post("/update-profile", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      showToast("Password changed successfully", "success");
+      navigate("/my-profile");
+
+      console.log("Profile updated successfully:", response.data);
+    } catch (error) {
+      showToast("Error changing password", "error");
+      console.error("Error changing password:", error);
+    }
+
+    closeModal();
   };
 
   return (
@@ -151,7 +186,11 @@ const ProfileSettings = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-gray-600 text-sm">Email</label>
-                  <InputField name="email" placeholder={initialValues.email} />
+                  <InputField
+                    name="email"
+                    placeholder={initialValues.email}
+                    isReadOnly={true}
+                  />
                 </div>
                 <div>
                   <label className="block text-gray-600 text-sm">Phone</label>
@@ -190,17 +229,67 @@ const ProfileSettings = () => {
 
             {/* Password Section */}
             <div className="flex items-center gap-4 bg-white rounded-3xl p-10">
-              <div className="flex flex-col md:flex-row md:items-center gap-4 w-full md:w-[75%]">
+              <div className="flex flex-col md:flex-row md:items-center gap-2 w-full md:w-[75%]">
                 <InputField
                   name="password"
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   className="w-1/2 !md:w-[400px]"
                   placeholder="* * * * * * * * *"
+                  rightIcon={
+                    showPassword ? (
+                      <FaEyeSlash
+                        className="text-gray-500 w-5 h-5 cursor-pointer"
+                        onClick={togglePasswordVisibility}
+                      />
+                    ) : (
+                      <FaEye
+                        className="text-gray-500 w-5 h-5 cursor-pointer"
+                        onClick={togglePasswordVisibility}
+                      />
+                    )
+                  }
+                />
+                <InputField
+                  name="passwordConfirmation"
+                  type={showPassword ? "text" : "password"}
+                  className="w-1/2 !md:w-[400px]"
+                  placeholder="* * * * * * * * *"
+                  rightIcon={
+                    showPassword ? (
+                      <FaEyeSlash
+                        className="text-gray-500 w-5 h-5 cursor-pointer"
+                        onClick={togglePasswordVisibility}
+                      />
+                    ) : (
+                      <FaEye
+                        className="text-gray-500 w-5 h-5 cursor-pointer"
+                        onClick={togglePasswordVisibility}
+                      />
+                    )
+                  }
                 />
                 <Button
                   label="Change Password"
-                  className="bg-black text-sm !w-1/2"
-                  onClick={() => openModal(<Confirmation />)}
+                  className="bg-black text-sm "
+                  onClick={() =>
+                    openModal(
+                      <div className="flex flex-col gap-20 text-center p-5">
+                        <p>Are you sure</p>
+                        <div className="flex w-full justify-center gap-4">
+                          <Button
+                            label="No, cancel"
+                            className="!w-fit px-6 text-xs bg-transparent !text-red-500"
+                            onClick={closeModal}
+                          />
+                          <Button
+                            label="Yes, confirm"
+                            className="!w-fit px-6 bg-adron-black text-xs"
+                            onClick={confirmChangePassword}
+                          />
+                        </div>
+                      </div>
+                    )
+                  }
                 />
               </div>
             </div>

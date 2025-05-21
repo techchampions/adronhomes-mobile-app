@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+// import React, { useState } from "react";
 import Button from "../components/Button";
 import PropertyPlanList from "../components/DashboardHomeComponents/PropertyList";
 import TransactionsList from "../components/DashboardHomeComponents/TransactionList";
@@ -6,7 +6,7 @@ import { useModalStore } from "../zustand/useModalStore";
 import AddFundAmount from "../components/DashboardHomeComponents/AddFundAmount";
 import { useGetUserDashboardData, useGetUserTransactions } from "../data/hooks";
 import { Transaction } from "../data/types/userTransactionsTypes";
-import Loader from "../components/Loader";
+// import Loader from "../components/Loader";
 import ApiErrorBlock from "../components/ApiErrorBlock";
 import { UserProperty } from "../data/types/dashboardHomeTypes";
 import { formatPrice } from "../data/utils";
@@ -29,7 +29,7 @@ const HomeScreen = () => {
   if (isError) {
     return <ApiErrorBlock />;
   }
-  const transactions: Transaction[] = transRes?.user_transactions?.data ?? [];
+  const transactions: Transaction[] = data?.user_transactions ?? [];
   const plans: UserProperty[] = data?.user_properties ?? [];
 
   return (
@@ -69,12 +69,15 @@ const HomeScreen = () => {
           <div className="">
             <p className="text-6xl font-bold">{data?.total_property.total}</p>
             <div className="md:bg-adron-body flex w-full md:w-fit mx-auto rounded-full md:px-4 my-1 text-xs justify-between items-center gap-2 mb-4 md:mb-0">
-              <span> {data?.total_property.breakdown[1].count} Houses</span>
+              <span>
+                {" "}
+                {data?.total_property.breakdown[1]?.count ?? 0} Houses
+              </span>
               <span className="text-lg">•</span>
               <span>
                 {" "}
-                {data?.total_property.breakdown[0].count}{" "}
-                {data?.total_property.breakdown[0].type_name}{" "}
+                {data?.total_property.breakdown[0]?.count ?? 0}{" "}
+                {data?.total_property?.breakdown[0]?.type_name || "Lands"}{" "}
               </span>
             </div>
           </div>

@@ -16,14 +16,14 @@ const PropertyList: React.FC<PropertyListProps> = ({
   isloading,
 }) => {
   const renderList = () => {
+    if (isloading) {
+      return <SmallLoader />;
+    }
     if (properties.length <= 0) {
       return <NotFound />;
     }
     if (isError) {
       return <ApiErrorBlock />;
-    }
-    if (isloading) {
-      return <SmallLoader />;
     }
     return (
       <div className="w-full grid grid-cols-1 md:grid-cols-3 justify-between items-center gap-4">

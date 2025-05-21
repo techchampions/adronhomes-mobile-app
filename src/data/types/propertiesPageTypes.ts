@@ -32,6 +32,12 @@ export interface PaginationLink {
   label: string;
   active: boolean;
 }
+export interface PropertyType {
+  id: number;
+  name: string;
+  created_at: string | null;
+  updated_at: string | null;
+}
 
 export interface Property {
   id: number;
@@ -40,7 +46,7 @@ export interface Property {
   photos: string[];
   size: string;
   price: number;
-  type: number;
+  type: PropertyType;
   slug: string;
   features: string[];
   overview: string;
@@ -63,4 +69,11 @@ export interface Property {
   actual_total: number;
   building_approval: string;
   status: string;
+  is_saved: boolean;
+}
+
+export interface SavedProperty {
+  id: number;
+  property_id: number;
+  property: Property;
 }

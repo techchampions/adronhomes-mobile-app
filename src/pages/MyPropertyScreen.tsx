@@ -20,9 +20,9 @@ const MyPropertyScreen = () => {
         <div className="p-4 bg-white rounded-3xl flex flex-col items-center h-fit col-span-2 md:col-span-1">
           <p className="text-gray-400 text-sm">Total Properties</p>
           <div className=" flex w-fit mx-auto font-bold rounded-full justify-between items-center gap-2 ">
-            <span>{data?.total_property.breakdown[1].count ?? 0} Houses</span>
+            <span>{data?.total_property?.breakdown[1]?.count ?? 0} Houses</span>
             <span className="">•</span>
-            <span>{data?.total_property.breakdown[0].count ?? 0} Lands</span>
+            <span>{data?.total_property?.breakdown[0]?.count ?? 0} Lands</span>
           </div>
         </div>
         <div className="p-4 bg-white rounded-3xl flex flex-col items-center h-fit">

@@ -29,11 +29,11 @@ const TransactionsList: React.FC<Props> = ({ data, isLoading, isError }) => {
       TransactionStatus,
       { label: string; style: string }
     > = {
-      1: {
+      0: {
         label: "Completed",
         style: "bg-green-100 text-green-600 border-green-400",
       },
-      0: { label: "Failed", style: "bg-red-100 text-red-600 border-red-400" },
+      1: { label: "Failed", style: "bg-red-100 text-red-600 border-red-400" },
       2: {
         label: "Pending",
         style: "bg-gray-100 text-gray-600 border-gray-400",
@@ -55,8 +55,8 @@ const TransactionsList: React.FC<Props> = ({ data, isLoading, isError }) => {
     activeTab === "All"
       ? data
       : data.filter((item) => {
-          if (activeTab === "Completed") return item.status === 1;
-          if (activeTab === "Failed") return item.status === 0;
+          if (activeTab === "Failed") return item.status === 1;
+          if (activeTab === "Completed") return item.status === 0;
           if (activeTab === "Pending") return item.status === 2;
           return false;
         });
@@ -69,7 +69,7 @@ const TransactionsList: React.FC<Props> = ({ data, isLoading, isError }) => {
       >
         <div>
           <div className="font-medium text-xs md:text-sm truncate">
-            {item.property.name}
+            {item.description}
           </div>
           <div className="text-xs text-gray-500">
             {formatDate(item.created_at || "")}

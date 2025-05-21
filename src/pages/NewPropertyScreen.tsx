@@ -46,6 +46,7 @@ const NewPropertyScreen = () => {
         properties={properties}
         isError={isError}
         isLoading={isLoading}
+        isSavePropertyList={false}
       />
     </div>
   );

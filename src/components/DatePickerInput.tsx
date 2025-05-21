@@ -8,13 +8,20 @@ import { FaExclamationCircle } from "react-icons/fa";
 interface DatePickerInputProps {
   name: string;
   label?: string;
+  minDate?: Date;
+  maxDate?: Date;
+
   placeholder?: string;
+  readOnly?: boolean;
 }
 
 const DatePickerInput: React.FC<DatePickerInputProps> = ({
   name,
   label,
+  minDate,
+  maxDate,
   placeholder,
+  readOnly = false,
 }) => {
   const { setFieldValue } = useFormikContext();
   const [field, meta] = useField(name);
@@ -29,20 +36,24 @@ const DatePickerInput: React.FC<DatePickerInputProps> = ({
       {label && (
         <label className="block text-gray-600 text-sm mb-1">{label}</label>
       )}
-      <div className="relative flex items-center justify-between border px-4 py-1 border-gray-300 rounded-lg">
+      <label className="relative flex items-center justify-between bg-adron-body px-4 py-1 rounded-full">
         <DatePicker
           selected={field.value}
           onChange={handleChange}
-          className="w-full p-2 outline-none text-gray-500"
+          className="w-full p-1 outline-none text-gray-500"
+          minDate={minDate} // 👈 Prevent past dates
+          maxDate={maxDate} // 👈 Prevent future dates
           dateFormat="dd-MM-yyyy"
           placeholderText={placeholder}
-          isClearable
+          readOnly={readOnly} // 👈 Prevent typing
+          disabled={readOnly} // 👈 Disable calendar pop-up
+          isClearable={!readOnly} // 👈 Disable clear if readOnly
         />
         <div className="flex gap-2 items-center">
           {hasError && <FaExclamationCircle className="w-5 h-5 text-red-500" />}
           <MdOutlineCalendarToday className="text-gray-900 ml-2" />
         </div>
-      </div>
+      </label>
       <ErrorMessage
         name={name}
         component="p"

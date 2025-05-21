@@ -2,7 +2,7 @@ import React from "react";
 import { useModalStore } from "../../zustand/useModalStore";
 import TransactionDetail from "../DashboardTransactionComponents/TransactionDetail";
 import { Transaction } from "../../data/types/userTransactionsTypes";
-import { formatPrice } from "../../data/utils";
+import { formatDate, formatPrice } from "../../data/utils";
 // types.ts
 type Props = {
   data: Transaction[];
@@ -29,9 +29,12 @@ const TransactionsList: React.FC<Props> = ({ data, isLoading, isError }) => {
           >
             <div className="w-[70%]">
               <p className="font-semibold text-gray-500 text-xs md:text-sm truncate">
-                {t.property.name}
+                {t.description}
+                {/* {t.property?.name} */}
               </p>
-              <p className="text-xs text-gray-500">{t.created_at}</p>
+              <p className="text-xs text-gray-500">
+                {formatDate(t.created_at ?? "")}
+              </p>
             </div>
             <div className="text-right">
               <p className="font-bold text-black text-sm">

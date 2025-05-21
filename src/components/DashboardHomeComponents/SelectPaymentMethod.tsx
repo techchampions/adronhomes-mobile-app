@@ -2,13 +2,14 @@ import React, { useState } from "react";
 import Button from "../Button";
 import { useModalStore } from "../../zustand/useModalStore";
 import BankTransfer from "./BankTransferMethod";
+import VirtualBankTransfer from "./VirtualBankTransferMethod";
 
 const SelectPaymentMethod = ({
   goBack,
   amount,
 }: {
   goBack: () => void;
-  amount: number;
+  amount: number | null;
 }) => {
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<
     string | null
@@ -18,6 +19,8 @@ const SelectPaymentMethod = ({
   const handleContinue = () => {
     if (selectedPaymentMethod == "Bank Transfer") {
       openModal(<BankTransfer goBack={goBack} amount={amount} />);
+    } else if (selectedPaymentMethod == "Virtual Bank Transfer") {
+      openModal(<VirtualBankTransfer goBack={goBack} amount={amount} />);
     } else if (selectedPaymentMethod == "Paystack") {
       alert("Credit/Debit Card selected");
     }
@@ -35,6 +38,32 @@ const SelectPaymentMethod = ({
         <div className="flex flex-col gap-2">
           <div
             className={`flex items-center gap-4 p-4 rounded-xl cursor-pointer transition-all ${
+              selectedPaymentMethod === "Virtual Bank Transfer"
+                ? "bg-adron-green text-white border-none "
+                : "bg-transparent border  border-gray-300"
+            }`}
+            onClick={() => setSelectedPaymentMethod("Virtual Bank Transfer")}
+          >
+            <img
+              src="/bank-transfer-icon.svg"
+              alt="bank transfer"
+              className="h-10 w-10"
+            />
+            <div>
+              <p className="font-adron-mid text-sm">Virtual Bank Transfer</p>
+              <p
+                className={`text-xs ${
+                  selectedPaymentMethod == "Virtual Bank Transfer"
+                    ? `text-white`
+                    : `text-gray-500`
+                } `}
+              >
+                Wallet will be funded instantly
+              </p>
+            </div>
+          </div>
+          <div
+            className={`flex items-center gap-4 p-4 rounded-xl cursor-pointer transition-all ${
               selectedPaymentMethod === "Bank Transfer"
                 ? "bg-adron-green text-white border-none "
                 : "bg-transparent border  border-gray-300"
@@ -47,7 +76,9 @@ const SelectPaymentMethod = ({
               className="h-10 w-10"
             />
             <div>
-              <p className="font-adron-mid text-sm">Bank Transfer</p>
+              <p className="font-adron-mid text-sm">
+                Bank Transfer to Adron Homes
+              </p>
               <p
                 className={`text-xs ${
                   selectedPaymentMethod == "Bank Transfer"
@@ -55,7 +86,7 @@ const SelectPaymentMethod = ({
                     : `text-gray-500`
                 } `}
               >
-                From your bank app or internet bank
+                payment will be confrimed within 24 hours.
               </p>
             </div>
           </div>

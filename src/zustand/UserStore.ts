@@ -193,6 +193,7 @@ export const useUserStore = create<UserState>()(
           }
         } catch (error) {
           console.error("Failed to load user data:", error);
+          throw error; // Rethrow the error to handle it in the component
         }
       },
 

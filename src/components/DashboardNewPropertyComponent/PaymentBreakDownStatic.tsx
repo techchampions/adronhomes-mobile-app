@@ -1,39 +1,25 @@
 import React from "react";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
-import { useGetPropertyByID } from "../../data/hooks";
-import SmallLoader from "../SmallLoader";
-import ApiErrorBlock from "../ApiErrorBlock";
+import { usePaymentBreakDownStore } from "../../zustand/PaymentBreakDownStore";
 
-interface PaymentBreakDownProps {
-  paymentType: string;
-  paymentDuration: string;
-  paymentSchedule: string;
-  propertyId: number | string;
-}
+// interface PaymentBreakDownProps {
+//   values: {
+//     paymentType: string;
+//     paymentDuration: string;
+//     paymentSchedule: string;
+//     startDate: string;
+//     endDate: string;
+//   };
+//   propertyId: number | string;
+// }
 
-const PaymentBreakDown: React.FC<PaymentBreakDownProps> = ({
-  paymentDuration,
-  paymentSchedule,
-  paymentType,
-  propertyId,
-}) => {
-  const { data, isError, isLoading } = useGetPropertyByID(propertyId);
-  const property = data?.data.properties[0];
-  if (isLoading) return <SmallLoader />;
-  if (isError) return <ApiErrorBlock />;
-
-  console.log("Payment Duration", paymentDuration);
-  const initialDeposit =
-    paymentType === "One Time" ? property?.price : property?.initial_deposit;
-  const remPrice = property?.price - property?.initial_deposit;
-  const fees = 5000;
-  const weeklyAmount =
-    paymentSchedule === "Monthly"
-      ? remPrice / Number(paymentDuration)
-      : paymentSchedule === "Quarterly"
-      ? remPrice / (Number(paymentDuration) / 3)
-      : 0;
-  const totalAmount = initialDeposit + fees;
+// const PaymentBreakDown2: React.FC<PaymentBreakDownProps> = ({
+//   values,
+//   propertyId,
+// }) => {
+const PaymentBreakDown2 = () => {
+  const { paymentSchedule, initialDeposit, fees, weeklyAmount, totalAmount } =
+    usePaymentBreakDownStore();
 
   return (
     <div className="bg-white p-6 rounded-3xl shadow-xl">
@@ -42,7 +28,7 @@ const PaymentBreakDown: React.FC<PaymentBreakDownProps> = ({
         <p className="text-black flex justify-between gap-4">
           ₦{initialDeposit?.toLocaleString()}
           <span className="text-xs text-gray-400 text-right">
-            {paymentType === "One Time" ? "Full Payment" : "Initial Deposit"}
+            Initial Deposit
           </span>
         </p>
         <p className="text-black flex justify-between gap-4">
@@ -77,4 +63,4 @@ const PaymentBreakDown: React.FC<PaymentBreakDownProps> = ({
   );
 };
 
-export default PaymentBreakDown;
+export default PaymentBreakDown2;

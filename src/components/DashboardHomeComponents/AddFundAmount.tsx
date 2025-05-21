@@ -27,7 +27,7 @@ const AddFundAmount = ({ goBack }: { goBack: () => void }) => {
       </div>
       <div className="flex flex-col justify-between mt-10">
         <Formik
-          initialValues={{ amount: "" }}
+          initialValues={{ amount: null }}
           validationSchema={validationSchema}
           onSubmit={(values) =>
             openModal(
