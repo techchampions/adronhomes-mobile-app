@@ -4,7 +4,7 @@ import SelectField from "../components/SelectField";
 import Button from "../components/Button";
 import PropertySummary from "../components/PropertySummary";
 import DatePickerInput from "../components/DatePickerInput";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { addMonths } from "date-fns";
 import { useModalStore } from "../zustand/useModalStore";
 import InputMarketerId from "../components/DashboardNewPropertyComponent/InputMarketerId";
@@ -15,12 +15,14 @@ import ApiErrorBlock from "../components/ApiErrorBlock";
 import { useGetPropertyByID } from "../data/hooks";
 import { calculatePaymentDetails } from "../utils/PaymentBreakdownCalculation";
 import { useParams } from "react-router-dom";
+import { paymentTypeWatcher } from "../utils/PaymentTypeWatcher";
 
 export default function InvestmentForm() {
   const { openModal } = useModalStore();
   const params = useParams();
   const id = params?.id;
   const { setPaymentDetails } = usePaymentBreakDownStore();
+  const [selectedPaymentType, setSelectedPaymentType] = useState("");
   const { data, isError, isLoading } = useGetPropertyByID(id || 0);
   const property = data?.data.properties[0];
   if (isLoading) return <SmallLoader />;
@@ -35,11 +37,18 @@ export default function InvestmentForm() {
     // marketerId: "",
   };
   const validationSchema = Yup.object({
-    paymentType: Yup.string().required("Required"),
-    paymentDuration: Yup.string().required("Required"),
-    paymentSchedule: Yup.string().required("Required"),
-    startDate: Yup.date().required("Required"),
-    endDate: Yup.date().required("Required"),
+    ...(selectedPaymentType === "Installment"
+      ? {
+          paymentDuration: Yup.string().required("Required"),
+          paymentSchedule: Yup.string().required("Required"),
+          startDate: Yup.date().required("Required"),
+          endDate: Yup.date().required("Required"),
+          paymentType: Yup.string().required("Required"),
+        }
+      : {
+          paymentType: Yup.string().required("Required"),
+        }),
+
     // marketerId: Yup.string().required("Required"),
   });
   const submit = (values: typeof initialValues) => {
@@ -92,6 +101,8 @@ export default function InvestmentForm() {
       {({ values, isValid, dirty }) => {
         const { fees, initialDeposit, weeklyAmount, totalAmount } =
           calculatePaymentDetails(values, property);
+        const { SelectedPaymentType } = paymentTypeWatcher(values);
+        setSelectedPaymentType(SelectedPaymentType);
 
         return (
           <Form className="space-y-10">
@@ -110,46 +121,53 @@ export default function InvestmentForm() {
                       name="paymentType"
                       placeholder="Select Payment Type"
                       options={["One Time", "Installment"]}
+                      onchange={(e) => {
+                        setSelectedPaymentType(e.target.value);
+                      }}
                     />
                   </div>
-                  <div>
-                    <label className="block text-sm mb-2">
-                      Payment Duration
-                    </label>
-                    <SelectField
-                      name="paymentDuration"
-                      placeholder="Number in month(s)"
-                      options={["6", "12"]}
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm mb-2">
-                      Payment Schedule
-                    </label>
-                    <SelectField
-                      name="paymentSchedule"
-                      placeholder="Select Payment Schedule"
-                      options={["Monthly", "Quarterly"]}
-                    />
-                  </div>
-                  <div className="flex gap-4">
-                    <div className="w-1/2">
-                      <DatePickerInput
-                        label="Start Date"
-                        name="startDate"
-                        minDate={new Date()}
-                        placeholder="Start Date"
-                      />
-                    </div>
-                    <div className="w-1/2">
-                      <DatePickerInput
-                        label="End Date"
-                        name="endDate"
-                        placeholder="End date"
-                        readOnly
-                      />
-                    </div>
-                  </div>
+                  {selectedPaymentType === "Installment" && (
+                    <>
+                      <div>
+                        <label className="block text-sm mb-2">
+                          Payment Duration
+                        </label>
+                        <SelectField
+                          name="paymentDuration"
+                          placeholder="Number in month(s)"
+                          options={["6", "12"]}
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm mb-2">
+                          Payment Schedule
+                        </label>
+                        <SelectField
+                          name="paymentSchedule"
+                          placeholder="Select Payment Schedule"
+                          options={["Monthly", "Quarterly"]}
+                        />
+                      </div>
+                      <div className="flex gap-4">
+                        <div className="w-1/2">
+                          <DatePickerInput
+                            label="Start Date"
+                            name="startDate"
+                            minDate={new Date()}
+                            placeholder="Start Date"
+                          />
+                        </div>
+                        <div className="w-1/2">
+                          <DatePickerInput
+                            label="End Date"
+                            name="endDate"
+                            placeholder="End date"
+                            readOnly
+                          />
+                        </div>
+                      </div>
+                    </>
+                  )}
                 </div>
               </div>
               <div className="bg-white p-6 rounded-3xl shadow-xl">
@@ -198,7 +216,7 @@ export default function InvestmentForm() {
                 label="Continue"
                 className="!w-fit px-18"
                 type="submit"
-                disabled={!isValid || !dirty}
+                disabled={!isValid}
               />
             </div>
           </Form>

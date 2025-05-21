@@ -3,9 +3,15 @@ import Button from "../Button";
 import { useModalStore } from "../../zustand/useModalStore";
 import BankTransfer from "./BankTransferMethod";
 import { FaWallet } from "react-icons/fa";
-import { useGetUserWalletdata } from "../../data/hooks";
+import { useCreatePropertyPlan, useGetUserWalletdata } from "../../data/hooks";
 import { formatPrice } from "../../data/utils";
 import { useToastStore } from "../../zustand/useToastStore";
+import { usePaymentBreakDownStore } from "../../zustand/PaymentBreakDownStore";
+import PaymentSuccessfull from "../PaymentSuccessfull";
+import SmallLoader from "../SmallLoader";
+import { useNavigate } from "react-router-dom";
+import { usePaystackPayment } from "../../hooks/usePaystackPayment";
+import { useUserStore } from "../../zustand/UserStore";
 
 const SelectPaymentMethod = ({
   goBack,
@@ -15,26 +21,78 @@ const SelectPaymentMethod = ({
   amount: number;
 }) => {
   const { showToast } = useToastStore();
+  const { user } = useUserStore();
+  const paystack = usePaystackPayment();
   const { data: userWalletData, isLoading, isError } = useGetUserWalletdata();
+  const navigate = useNavigate();
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<
     string | null
   >(null);
   const { openModal } = useModalStore();
-  // const mutation = useModalStore((state) => state.mutate);
+  const { mutate, isPending } = useCreatePropertyPlan();
+  const {
+    totalAmount,
+    startDate,
+    endDate,
+    paymentType,
+    paymentDuration,
+    paymentSchedule,
+    propertyId,
+    marketerId,
+  } = usePaymentBreakDownStore();
 
   const handleContinue = () => {
     if (selectedPaymentMethod == "Bank Transfer") {
       openModal(<BankTransfer goBack={goBack} amount={amount} />);
     } else if (selectedPaymentMethod == "Paystack") {
-      alert("Credit/Debit Card selected");
+      paystack({
+        email: user?.email || "",
+        amount: totalAmount, // in Naira
+        onSuccess: (ref) => {
+          console.log("Payment successful!", ref);
+          // TODO: call your backend API to confirm payment
+        },
+        onClose: () => {
+          showToast("Payment popup closed", "error");
+        },
+      });
     } else if (selectedPaymentMethod == "Virtual Wallet") {
-      if (userWalletData?.wallet_balance || 0 > amount) {
-        alert("Virtual Wallet selected");
+      if (userWalletData?.wallet_balance > amount) {
+        mutate(
+          {
+            payment_method: "virtual_wallet",
+            payment_type: 1,
+            monthly_duration: Number(paymentDuration),
+            property_id: Number(propertyId),
+            start_date: startDate,
+            end_date: endDate,
+            repayment_schedule: paymentSchedule,
+            paid_amount: totalAmount,
+            marketer_code: marketerId,
+          },
+          {
+            onSuccess: (data) => {
+              openModal(
+                <PaymentSuccessfull text="Payment received successfully." />
+              );
+              navigate(`/my-property/${data.plan.id}`);
+            },
+            onError: (error: any) => {
+              // Customize this based on your error shape
+              const message =
+                error?.response?.data?.message || "Something went wrong";
+              showToast(message, "error");
+            },
+          }
+        );
       } else {
         showToast("Insufficient balance", "error");
       }
     }
   };
+  if (isPending) {
+    return <SmallLoader />;
+  }
 
   return (
     <div className="flex flex-col">
@@ -181,9 +239,7 @@ const SelectPaymentMethod = ({
                         : `text-gray-400`
                     }`}
                   >
-                    {userWalletData?.wallet_balance || 0 > amount
-                      ? `${formatPrice(userWalletData?.wallet_balance || 0)}`
-                      : `Insufficient Balance`}
+                    {formatPrice(userWalletData?.wallet_balance || 0)}
                   </p>
                 )}
                 <p
@@ -193,7 +249,9 @@ const SelectPaymentMethod = ({
                       : `text-gray-500`
                   } `}
                 >
-                  balance
+                  {userWalletData?.wallet_balance > amount
+                    ? `Available Balance`
+                    : `Insufficient Balance`}
                 </p>
               </div>
             </div>

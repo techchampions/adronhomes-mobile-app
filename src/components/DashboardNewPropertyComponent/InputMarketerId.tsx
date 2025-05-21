@@ -26,10 +26,10 @@ const InputMarketerId = () => {
       </div>
       <div className="flex flex-col justify-between mt-7">
         <Formik
-          initialValues={{ marketerId: marketerId }}
+          initialValues={{ marketerId: "" }}
           validationSchema={validationSchema}
           onSubmit={(values) => {
-            setPaymentDetails({ marketerId: "" });
+            setPaymentDetails({ marketerId: values.marketerId });
             closeModal();
             navigate(`/property-agreement/${propertyId}`);
           }}

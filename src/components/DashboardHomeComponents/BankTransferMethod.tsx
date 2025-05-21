@@ -8,6 +8,8 @@ import PaymentSuccessfull from "../PaymentSuccessfull";
 import { RiUpload2Line } from "react-icons/ri";
 import { useFundWallet } from "../../data/hooks";
 import PaymentPending from "../PaymentPending";
+import { Form, Formik } from "formik";
+import InputField from "../InputField";
 
 const BankTransfer = ({
   goBack,
@@ -76,26 +78,38 @@ const BankTransfer = ({
             </div>
           </div>
         </div>
-        <label className="mt-4">
-          <label className="block text-xs">Proof of Payment</label>
-          <div className="flex justify-between w-full px-4 py-2 bg-adron-body rounded-3xl items-center">
-            <input type="file" name="proof" className="text-xs w-[70%]" />
-            <RiUpload2Line className="text-gray-500 h-5 w-5 hover:text-black" />
-          </div>
-        </label>
+        <Formik
+          initialValues={{ proof: "", sender_name: "" }}
+          onSubmit={() => {}}
+        >
+          <Form className="flex flex-col gap-2">
+            <InputField
+              name="sender_name"
+              placeholder="Enter your Account name"
+              className="mt-4"
+            />
+            <label className="mt-4">
+              <label className="block text-xs">Proof of Payment</label>
+              <div className="flex justify-between w-full px-4 py-2 bg-adron-body rounded-3xl items-center">
+                <input type="file" name="proof" className="text-xs w-[70%]" />
+                <RiUpload2Line className="text-gray-500 h-5 w-5 hover:text-black" />
+              </div>
+            </label>
 
-        <div className="flex justify-between w-full gap-4 mt-4">
-          <Button
-            label="Back"
-            className="!w-fit px-12 py-2 text-xs bg-transparent !text-black font-bold"
-            onClick={GoToSelectPaymentMethod}
-          />
-          <Button
-            label="Done"
-            className="!w-fit px-12 py-2 text-xs bg-black text-white"
-            onClick={handlePaymentSuccess}
-          />
-        </div>
+            <div className="flex justify-between w-full gap-4 mt-4">
+              <Button
+                label="Back"
+                className="!w-fit px-12 py-2 text-xs bg-transparent !text-black font-bold"
+                onClick={GoToSelectPaymentMethod}
+              />
+              <Button
+                label="Done"
+                className="!w-fit px-12 py-2 text-xs bg-black text-white"
+                onClick={handlePaymentSuccess}
+              />
+            </div>
+          </Form>
+        </Formik>
       </div>
     </div>
   );

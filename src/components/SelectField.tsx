@@ -10,6 +10,7 @@ interface SelectFieldProps {
   name: string;
   options: string[];
   placeholder?: string;
+  onchange?: (value) => void;
 }
 
 const SelectField: React.FC<SelectFieldProps> = ({

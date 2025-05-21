@@ -17,6 +17,7 @@ interface InputFieldProps {
   rightIcon?: React.ReactNode;
   className?: string;
   rows?: number;
+  isReadOnly?: boolean;
 }
 
 const InputField: React.FC<InputFieldProps> = ({
@@ -27,6 +28,7 @@ const InputField: React.FC<InputFieldProps> = ({
   rightIcon,
   className = "",
   rows = 4,
+  isReadOnly = false,
 }) => {
   const [field, meta] = useField(name);
   const isTextarea = type === "textarea";
@@ -53,6 +55,7 @@ const InputField: React.FC<InputFieldProps> = ({
           type={isTextarea ? undefined : type}
           placeholder={placeholder}
           rows={isTextarea ? rows : undefined}
+          readOnly={isReadOnly}
           className={` text-gray-900 text-sm rounded-lg focus:ring-0 block w-full px-5 outline-none resize-none ${
             isTextarea ? "min-h-[60px]" : ""
           }`}

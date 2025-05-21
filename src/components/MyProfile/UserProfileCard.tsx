@@ -1,5 +1,5 @@
 import React from "react";
-import { FaMapMarkerAlt } from "react-icons/fa";
+import { FaMapMarkerAlt, FaUser } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { formatDate } from "../../data/utils";
 
@@ -23,11 +23,15 @@ const UserProfileCard: React.FC<Props> = ({
   return (
     <div className="bg-white py-6 px-12 rounded-3xl flex flex-col md:flex-row justify-between items-center md:items-end">
       <div className="flex items-start gap-6 py-5">
-        <img
-          src={imageUrl}
-          alt={firstName}
-          className="w-[140px] h-[140px] rounded-full object-cover"
-        />
+        {imageUrl ? (
+          <img
+            src={imageUrl}
+            alt={firstName}
+            className="w-[140px] h-[140px] rounded-full object-cover"
+          />
+        ) : (
+          <FaUser className="w-[140px] h-[140px] rounded-full object-cover" />
+        )}
         <div className="space-y-1.5">
           <h4 className="text-2xl font-bold">
             {firstName} {lastName}

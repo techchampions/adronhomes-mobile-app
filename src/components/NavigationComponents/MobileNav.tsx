@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FaUserAlt } from "react-icons/fa";
+import { FaUserAlt, FaUserCircle } from "react-icons/fa";
 import { FaArrowRightArrowLeft } from "react-icons/fa6";
 import { MdAddHome, MdDashboardCustomize, MdOutlineHelp } from "react-icons/md";
 import { IoSettingsSharp } from "react-icons/io5";
@@ -17,10 +17,16 @@ import Auth from "../../utils/Auth";
 import Button from "../Button";
 import { Input } from "@headlessui/react";
 import { useUserStore } from "../../zustand/UserStore";
+import { useNavigate } from "react-router-dom";
 
 const MobileNav = () => {
   const { user } = useUserStore();
+  const navigate = useNavigate();
+
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const goTpProfile = () => {
+    navigate("/my-profile");
+  };
 
   return (
     <>
@@ -35,12 +41,16 @@ const MobileNav = () => {
         </div>
         <div className="flex items-center gap-4">
           <Button label="View Property" className="text-xs px-4" />
-
-          <img
-            src={user?.profile_picture ?? "/mika.png"}
-            alt=""
-            className="h-7 w-7"
-          />
+          {!user?.profile_picture ? (
+            <img
+              src={user?.profile_picture ?? "/mika.png"}
+              alt=""
+              className="h-7 w-7"
+              onClick={goTpProfile}
+            />
+          ) : (
+            <FaUserCircle className="h-7 w-7" onClick={goTpProfile} />
+          )}
         </div>
       </nav>
       {/* Hamburger Button */}

@@ -50,13 +50,13 @@ function DashboardScreen() {
       </aside>
 
       {/* Main Content */}
-      <main className="pt-[70px] md:pt-0 flex-1 bg-adron-body overflow-y-auto mb-16 md:mb-0 py-5 px-4 md:px-0 md:pr-4 scrollbar-hide">
+      <main className="pt-[70px] md:pt-0 flex-1 bg-adron-body overflow-y-auto mb-0 py-5 px-4 md:px-0 md:pr-4 scrollbar-hide">
         <Header pageTitle={pageTitle} />
         <Outlet />
       </main>
-      <div className="md:block fixed bottom-0 w-full">
+      {/* <div className="md:block fixed bottom-0 w-full">
         <MobileNavContainer />
-      </div>
+      </div> */}
     </div>
   );
 }

@@ -149,7 +149,41 @@ export const fundWallet = async ({
 
 // Create Property Plan
 export const createPropertyPlan = async (
-  payload: PropertyPlanPayload
+  payload: Partial<PropertyPlanPayload>
 ): Promise<void> => {
-  await apiClient.post("/user/buy-property", payload);
+  const formData = new FormData();
+
+  if (payload.property_id !== undefined)
+    formData.append("property_id", payload.property_id.toString());
+
+  if (payload.payment_type !== undefined)
+    formData.append("payment_type", payload.payment_type.toString());
+
+  if (payload.monthly_duration !== undefined)
+    formData.append("monthly_duration", payload.monthly_duration.toString());
+
+  if (payload.repayment_schedule)
+    formData.append("repayment_schedule", payload.repayment_schedule);
+
+  if (payload.start_date) formData.append("start_date", payload.start_date);
+
+  if (payload.end_date) formData.append("end_date", payload.end_date);
+
+  if (payload.paid_amount !== undefined)
+    formData.append("paid_amount", payload.paid_amount.toString());
+
+  if (payload.payment_method)
+    formData.append("payment_method", payload.payment_method);
+
+  if (payload.marketer_code)
+    formData.append("marketer_code", payload.marketer_code);
+
+  if (payload.proof_of_payment)
+    formData.append("proof_of_payment", payload.proof_of_payment);
+
+  await apiClient.post("/user/buy-property", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
 };

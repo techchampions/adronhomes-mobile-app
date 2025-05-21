@@ -28,7 +28,7 @@ const MyProfileScreen = () => {
           email={userData.email}
           joinedDate={userData.created_at}
           location={`${userData.address}, ${userData.lga}, ${userData.state}`}
-          imageUrl="/mika.png"
+          imageUrl={userData.profile_picture}
         />
       </div>
       <div className="p-4 bg-white rounded-3xl flex flex-col items-center h-fit col-span-2 md:col-span-1">
