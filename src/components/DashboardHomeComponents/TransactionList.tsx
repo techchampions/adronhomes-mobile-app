@@ -16,9 +16,9 @@ const TransactionsList: React.FC<Props> = ({ data, isLoading, isError }) => {
     <div className="bg-white p-6 rounded-3xl w-full">
       <div className="flex items-center justify-between mb-6">
         <h4 className="text-lg text-gray-400">Transactions</h4>
-        <button className="text-xs px-4 py-1.5 text-adron-green font-bold">
+        {/* <button className="text-xs px-4 py-1.5 text-adron-green font-bold">
           View All
-        </button>
+        </button> */}
       </div>
 
       <ul className="space-y-2">

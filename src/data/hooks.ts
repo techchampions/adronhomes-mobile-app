@@ -13,6 +13,7 @@ import {
   getPropertyPlanByID,
   getTransactionByID,
   getUserPropertiesPlan,
+  getUserPropertiesPlanPaymentHistory,
   getUserTransactions,
   getUserWallet,
   toggleSaveProperty,
@@ -31,6 +32,7 @@ import { PlanPropertiesDetailResponse } from "./types/PropertyPlanDetailTypes";
 import { NotificationsResponse } from "./types/notificationTypes";
 import { TransactionByIDResponse } from "./types/userTransactionByIDTypes";
 import { NotificationByIDResponse } from "./types/NotificationByIDTypes";
+import { PropertyPlanPaymentResponse } from "./types/PropertyPlanPaymentListTypes";
 
 //Query hook for User profile
 export const useGetUser = () => {
@@ -69,6 +71,15 @@ export const useGetPropertyPlanByID = (id: number | string) => {
     queryKey: ["property-plan-details", id], // include id in the key to avoid collisions
     queryFn: () => getPropertyPlanByID(id),
     enabled: !!id, // prevents the query from running if id is undefined/null
+  });
+};
+
+// Query hook for user properties plan payment history
+export const useGetUserPropertiesPlanPaymentHistory = (id: number | string) => {
+  return useQuery<PropertyPlanPaymentResponse>({
+    queryKey: ["user-properties-plan-payment-history", id],
+    queryFn: () => getUserPropertiesPlanPaymentHistory(id),
+    enabled: !!id,
   });
 };
 

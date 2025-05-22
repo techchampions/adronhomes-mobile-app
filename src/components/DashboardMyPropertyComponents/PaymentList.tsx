@@ -2,8 +2,11 @@ import React, { useState } from "react";
 import Button from "../Button";
 import InputAmount from "../PaymentComponents/InputAmount";
 import { useModalStore } from "../../zustand/useModalStore";
+import SmallLoader from "../SmallLoader";
+import ApiErrorBlock from "../ApiErrorBlock";
+import NotFound from "../NotFound";
 
-export type PaymentStatus = "All" | "Paid" | "Pending" | "Missed";
+export type PaymentStatus = 0 | 1 | 2;
 
 export type PaymentItem = {
   id: number;
@@ -15,41 +18,105 @@ export type PaymentItem = {
 
 type Props = {
   data: PaymentItem[];
+  isLoading?: boolean;
+  isError?: boolean;
 };
 
-const tabs: (PaymentStatus | "All")[] = ["All", "Paid", "Pending", "Missed"];
+const tabs = ["All", "Paid", "Pending", "Missed"] as const;
+type Tab = (typeof tabs)[number];
 
-const PaymentList: React.FC<Props> = ({ data }) => {
+const PaymentList: React.FC<Props> = ({ data, isLoading, isError }) => {
   const { openModal } = useModalStore();
-  const [activeTab, setActiveTab] = useState<(typeof tabs)[number]>("All");
-
-  const isPaymentStatus = (tab: string): tab is PaymentStatus => {
-    return ["Paid", "Pending", "Missed"].includes(tab);
-  };
+  const [activeTab, setActiveTab] = useState<Tab>("All");
 
   const filteredData =
     activeTab === "All"
       ? data
-      : isPaymentStatus(activeTab)
-      ? data.filter((item) => item.status === activeTab)
-      : [];
+      : data.filter((item) => {
+          if (activeTab === "Missed") return item.status === 1;
+          if (activeTab === "Paid") return item.status === 0;
+          if (activeTab === "Pending") return item.status === 2;
+          return false;
+        });
 
   const renderStatusBadge = (status: PaymentStatus) => {
-    const styles: Record<PaymentStatus, string> = {
-      Paid: "bg-green-100 text-green-600 border-green-400",
-      Pending: "bg-gray-100 text-gray-600 border-gray-400",
-      Missed: "bg-red-100 text-red-600 border-red-400",
+    const statusMap: Record<PaymentStatus, { label: string; style: string }> = {
+      0: {
+        label: "Paid",
+        style: "bg-green-100 text-green-600 border-green-400",
+      },
+      1: { label: "Pending", style: "bg-red-100 text-red-600 border-red-400" },
+      2: {
+        label: "Missed",
+        style: "bg-gray-100 text-gray-600 border-gray-400",
+      },
     };
+
+    const { label, style } = statusMap[status];
+
     return (
       <span
-        className={`hidden md:block text-xs border px-3 py-1 rounded-full w-fit mx-auto font-medium ${styles[status]}`}
+        className={`hidden md:block text-xs border py-1 rounded-full w-24 text-center mx-auto font-medium ${style}`}
       >
-        {status}
+        {label}
       </span>
     );
   };
   const makePayment = () => {
     openModal(<InputAmount goBack={makePayment} />);
+  };
+
+  const renderList = () => {
+    return (
+      <div className="">
+        {filteredData.map((item) => (
+          <div
+            key={item.id}
+            className="cursor-pointer grid grid-cols-3 md:grid-cols-4 justify-between items-center p-4 even:bg-gray-100 rounded-3xl"
+          >
+            <div>
+              <div className="font-medium text-sm">{item.date}</div>
+              <div className="text-xs text-gray-500">{item.title}</div>
+            </div>
+            {renderStatusBadge(item.status)}
+            <div className="text-sm font-semibold text-end">{item.amount}</div>
+            <div className="flex justify-end">
+              {item.status == 1 && (
+                <Button
+                  label="Make Payment"
+                  className="bg-black text-[9px] md:text-xs !w-fit px-4 md:px-6"
+                  onClick={makePayment}
+                />
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  };
+
+  const renderContent = () => {
+    if (isLoading) {
+      return <SmallLoader />;
+    }
+
+    if (isError) {
+      return (
+        <div className="text-center py-4">
+          <ApiErrorBlock />
+        </div>
+      );
+    }
+
+    if (filteredData.length === 0) {
+      return (
+        <div className="text-center py-4">
+          <NotFound />
+        </div>
+      );
+    }
+
+    return renderList();
   };
 
   return (
@@ -90,30 +157,9 @@ const PaymentList: React.FC<Props> = ({ data }) => {
       </div>
 
       {/* List */}
-      <div className="">
-        {filteredData.map((item) => (
-          <div
-            key={item.id}
-            className="grid grid-cols-3 md:grid-cols-4 justify-between items-center p-4 even:bg-gray-100 rounded-3xl"
-          >
-            <div>
-              <div className="font-medium text-sm">{item.title}</div>
-              <div className="text-xs text-gray-500">{item.date}</div>
-            </div>
-            {renderStatusBadge(item.status)}
-            <div className="text-sm font-semibold text-end">{item.amount}</div>
-            <div className="flex justify-end">
-              {item.status == "Missed" && (
-                <Button
-                  label="Make Payment"
-                  className="bg-black text-[9px] md:text-xs !w-fit px-4 md:px-6"
-                  onClick={makePayment}
-                />
-              )}
-            </div>
-          </div>
-        ))}
-      </div>
+      {renderContent()}
+
+      {/* Pagination */}
 
       {/* Pagination Dots (Static for now) */}
       <div className="flex justify-center mt-4 gap-2">

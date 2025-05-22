@@ -14,6 +14,7 @@ import { TransactionByIDResponse } from "./types/userTransactionByIDTypes";
 import { NotificationByIDResponse } from "./types/NotificationByIDTypes";
 import { number } from "yup";
 import { PropertyPlanPayload } from "./types/CreatePropertyPayload";
+import { PropertyPlanPaymentResponse } from "./types/PropertyPlanPaymentListTypes";
 
 // Get User Profile
 export const getUser = async (): Promise<GetUserResponse> => {
@@ -52,6 +53,14 @@ export const getPropertyPlanByID = async (
   id: number | string
 ): Promise<PlanPropertiesDetailResponse> => {
   const response = await apiClient.get(`/user/plan-property/${id}`);
+  return response.data;
+};
+
+// get User Properties Plan payment history
+export const getUserPropertiesPlanPaymentHistory = async (
+  id: number | string
+): Promise<PropertyPlanPaymentResponse> => {
+  const response = await apiClient.get(`/plan-payment-list/${id}`);
   return response.data;
 };
 
@@ -181,9 +190,10 @@ export const createPropertyPlan = async (
   if (payload.proof_of_payment)
     formData.append("proof_of_payment", payload.proof_of_payment);
 
-  await apiClient.post("/user/buy-property", formData, {
+  const res = await apiClient.post("/user/buy-property", formData, {
     headers: {
       "Content-Type": "multipart/form-data",
     },
   });
+  return res.data;
 };

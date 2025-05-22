@@ -18,8 +18,14 @@ import { usePaymentBreakDownStore } from "../../zustand/PaymentBreakDownStore";
 //   propertyId,
 // }) => {
 const PaymentBreakDown2 = () => {
-  const { paymentSchedule, initialDeposit, fees, weeklyAmount, totalAmount } =
-    usePaymentBreakDownStore();
+  const {
+    paymentSchedule,
+    initialDeposit,
+    fees,
+    weeklyAmount,
+    totalAmount,
+    paymentType,
+  } = usePaymentBreakDownStore();
 
   return (
     <div className="bg-white p-6 rounded-3xl shadow-xl">
@@ -28,7 +34,9 @@ const PaymentBreakDown2 = () => {
         <p className="text-black flex justify-between gap-4">
           ₦{initialDeposit?.toLocaleString()}
           <span className="text-xs text-gray-400 text-right">
-            Initial Deposit
+            {paymentType === "One Time"
+              ? "One Time Payment"
+              : "Initial Deposit"}
           </span>
         </p>
         <p className="text-black flex justify-between gap-4">
@@ -37,12 +45,14 @@ const PaymentBreakDown2 = () => {
             Fees & Charges
           </span>
         </p>
-        <p className="text-black flex justify-between gap-4">
-          ₦{weeklyAmount.toLocaleString()}
-          <span className="text-xs text-gray-400 text-right">
-            {paymentSchedule} Amount
-          </span>
-        </p>
+        {paymentType === "Installment" && weeklyAmount > 0 && (
+          <p className="text-black flex justify-between gap-4">
+            ₦{weeklyAmount.toLocaleString()}
+            <span className="text-xs text-gray-400 text-right">
+              {paymentSchedule} Amount
+            </span>
+          </p>
+        )}
         <p className="text-black flex justify-between gap-4">
           ₦{totalAmount.toLocaleString()}
           <span className="text-xs text-gray-400 text-right">

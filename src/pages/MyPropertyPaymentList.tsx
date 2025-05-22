@@ -1,72 +1,35 @@
 import React from "react";
 import PaymentList, {
   PaymentItem,
+  PaymentStatus,
 } from "../components/DashboardMyPropertyComponents/PaymentList";
-
-const Payments: PaymentItem[] = [
-  {
-    id: 1,
-    title: "Wallet Top up",
-    date: "March 18th, 2020",
-    status: "Paid",
-    amount: "₦15,000,000",
-  },
-  {
-    id: 2,
-    title: "Amanda Suites & Gardens Payment",
-    date: "March 18th, 2020",
-    status: "Missed",
-    amount: "₦10,000,000",
-  },
-  {
-    id: 3,
-    title: "Amanda Suites & Gardens Payment",
-    date: "March 18th, 2020",
-    status: "Missed",
-    amount: "₦10,000,000",
-  },
-  {
-    id: 4,
-    title: "Amanda Suites & Gardens Payment",
-    date: "March 18th, 2020",
-    status: "Pending",
-    amount: "₦10,000,000",
-  },
-  {
-    id: 5,
-    title: "Amanda Suites & Gardens Payment",
-    date: "March 18th, 2020",
-    status: "Pending",
-    amount: "₦10,000,000",
-  },
-  {
-    id: 6,
-    title: "Amanda Suites & Gardens Payment",
-    date: "March 18th, 2020",
-    status: "Missed",
-    amount: "₦10,000,000",
-  },
-  {
-    id: 7,
-    title: "Amanda Suites & Gardens Payment",
-    date: "March 18th, 2020",
-    status: "Missed",
-    amount: "₦10,000,000",
-  },
-  {
-    id: 8,
-    title: "Amanda Suites & Gardens Payment",
-    date: "March 18th, 2020",
-    status: "Missed",
-    amount: "₦10,000,000",
-  },
-  // ...more
-];
+import { useParams } from "react-router-dom";
+import {
+  useGetPropertyPlanByID,
+  useGetUserPropertiesPlanPaymentHistory,
+} from "../data/hooks";
+import { Transaction } from "../data/types/userTransactionsTypes";
+import { formatDate, formatPrice } from "../data/utils";
 
 const MyPropertyPaymentList = () => {
+  const params = useParams();
+  const id = params?.id;
+  const { data, isLoading, isError } = useGetUserPropertiesPlanPaymentHistory(
+    id ?? ""
+  );
+  const payments: PaymentItem[] = (data?.properties?.data ?? []).map(
+    (item: any) => ({
+      id: item.id,
+      title: item.property.name ?? "Untitled",
+      date: formatDate(item.due_date),
+      status: item.status,
+      amount: formatPrice(item.amount),
+    })
+  );
+
   return (
     <div>
-      <PaymentList data={Payments} />
+      <PaymentList data={payments} isError={isError} isLoading={isLoading} />
     </div>
   );
 };

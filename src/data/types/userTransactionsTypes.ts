@@ -18,6 +18,7 @@ export interface Transaction {
   amount: number;
   description: string;
   transaction_type: string;
+  transaction_method: string;
   created_at: string | null;
   updated_at: string | null;
   status: TransactionStatus | null;

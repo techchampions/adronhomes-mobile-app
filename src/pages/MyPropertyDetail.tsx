@@ -13,10 +13,12 @@ import Loader from "../components/Loader";
 import ApiErrorBlock from "../components/ApiErrorBlock";
 import { formatDate, formatPrice } from "../data/utils";
 import { Transaction } from "../data/types/userTransactionsTypes";
+import { usePaymentBreakDownStore } from "../zustand/PaymentBreakDownStore";
+import { FaCheck } from "react-icons/fa";
 
 const MyPropertyDetail = () => {
   // const { data, isLoading, isError } = useGetUserTransactions();
-
+  const { setPaymentDetails, resetPaymentDetails } = usePaymentBreakDownStore();
   const { openModal } = useModalStore();
   const navigate = useNavigate();
   const params = useParams();
@@ -34,10 +36,15 @@ const MyPropertyDetail = () => {
     navigate(`/properties/${data?.plan_properties.property.id}`);
   };
   const makePayment = () => {
+    resetPaymentDetails();
+    setPaymentDetails({
+      totalAmount: data?.plan_properties.property.price,
+      propertyId: data?.plan_properties.property.id,
+    });
     openModal(<InputAmount goBack={makePayment} />);
   };
   const viewPaymentList = () => {
-    navigate(`/my-property/${id}/payment-list`);
+    navigate(`/my-property/payment-list/${id}`);
   };
   return (
     <div className="space-y-4">
@@ -51,7 +58,7 @@ const MyPropertyDetail = () => {
               </span>
               /
               <span className="text-white/50">
-                {formatPrice(data?.plan_properties.property.price ?? 0)}
+                {formatPrice(data?.plan_properties.property.total_amount ?? 0)}
               </span>
             </div>
             <div className="w-full h-2.5 bg-green-900/50 rounded-full overflow-hidden">
@@ -63,11 +70,19 @@ const MyPropertyDetail = () => {
               ></div>
             </div>
           </div>
-          <Button
-            onClick={makePayment}
-            label="Make Payment"
-            className="mt-5 bg-white !text-adron-green !w-fit px-6 text-sm"
-          />
+          {data?.plan_properties.payment_percentage === 100 ? (
+            <Button
+              label="Payment Completed"
+              className="mt-5 bg-white !text-adron-green !w-fit px-6 text-sm"
+              rightIcon={<FaCheck />}
+            />
+          ) : (
+            <Button
+              onClick={makePayment}
+              label="Make Payment"
+              className="mt-5 bg-white !text-adron-green !w-fit px-6 text-sm"
+            />
+          )}
           <div className="flex bg-white/20 justify-between p-4 rounded-2xl">
             <div className="flex flex-col gap-2">
               <p className="text-sm text-white">

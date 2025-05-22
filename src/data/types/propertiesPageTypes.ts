@@ -70,6 +70,8 @@ export interface Property {
   building_approval: string;
   status: string;
   is_saved: boolean;
+  is_bought: boolean;
+  total_amount: number;
 }
 
 export interface SavedProperty {

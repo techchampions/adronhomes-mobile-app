@@ -37,6 +37,7 @@ interface Props {
     photos: string[];
     type: PropertyType;
     is_saved: boolean;
+    is_bought: boolean;
   };
 }
 
@@ -176,7 +177,10 @@ export default function SwiperPropertyCard({ property }: Props) {
             onClick={() => navigate(`/properties/${property.id}`)}
           />
           <Button
-            label="Invest in Property"
+            label={
+              property.is_bought ? `Already bought this` : `Invest in Property`
+            }
+            disabled={property.is_bought}
             className="!bg-transparent !text-black border hover:!text-white hover:!bg-black text-xs py-3"
             onClick={() => navigate(`/invest-property/${property.id}`)}
           />

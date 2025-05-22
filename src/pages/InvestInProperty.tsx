@@ -98,7 +98,7 @@ export default function InvestmentForm() {
       validationSchema={validationSchema}
       onSubmit={submit}
     >
-      {({ values, isValid, dirty }) => {
+      {({ values, isValid, dirty, setFieldValue }) => {
         const { fees, initialDeposit, weeklyAmount, totalAmount } =
           calculatePaymentDetails(values, property);
         const { SelectedPaymentType } = paymentTypeWatcher(values);
@@ -123,6 +123,16 @@ export default function InvestmentForm() {
                       options={["One Time", "Installment"]}
                       onchange={(e) => {
                         setSelectedPaymentType(e.target.value);
+                        // setSelectedPaymentType(selected);
+                        // setFieldValue("paymentType", selected);
+
+                        // if (selected === "One Time") {
+                        //   // Reset other form values when One Time is selected
+                        //   setFieldValue("paymentDuration", "");
+                        //   setFieldValue("paymentSchedule", "");
+                        //   setFieldValue("startDate", "");
+                        //   setFieldValue("endDate", "");
+                        // }
                       }}
                     />
                   </div>
@@ -187,16 +197,19 @@ export default function InvestmentForm() {
                       Fees & Charges
                     </span>
                   </p>
-                  <p className="text-black flex justify-between gap-4">
-                    ₦{weeklyAmount.toLocaleString()}
-                    <span className="text-xs text-gray-400 text-right">
-                      {values.paymentSchedule} Amount
-                    </span>
-                  </p>
+                  {selectedPaymentType === "Installment" &&
+                    weeklyAmount > 0 && (
+                      <p className="text-black flex justify-between gap-4">
+                        ₦{weeklyAmount.toLocaleString()}
+                        <span className="text-xs text-gray-400 text-right">
+                          {values.paymentSchedule} Amount
+                        </span>
+                      </p>
+                    )}
                   <p className="text-black flex justify-between gap-4">
                     ₦{totalAmount.toLocaleString()}
                     <span className="text-xs text-gray-400 text-right">
-                      Total Amount to be Paid
+                      Total initial Payment
                     </span>
                   </p>
                 </div>

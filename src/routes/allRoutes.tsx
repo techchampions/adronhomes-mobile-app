@@ -82,7 +82,7 @@ const AllRoutes = () => {
                 />{" "}
                 <Route path="/my-property/:id" element={<MyPropertyDetail />} />
                 <Route
-                  path="/my-property/:id/payment-list"
+                  path="/my-property/payment-list/:id"
                   element={<MyPropertyPaymentList />}
                 />
                 <Route path="/FAQs" element={<FAQAccordion />} />

@@ -3,6 +3,10 @@ import Button from "../Button";
 import { useModalStore } from "../../zustand/useModalStore";
 import BankTransfer from "./BankTransferMethod";
 import VirtualBankTransfer from "./VirtualBankTransferMethod";
+import { usePaystackPayment } from "../../hooks/usePaystackPayment";
+import { useUserStore } from "../../zustand/UserStore";
+import { useToastStore } from "../../zustand/useToastStore";
+import { useFundWallet } from "../../data/hooks";
 
 const SelectPaymentMethod = ({
   goBack,
@@ -14,7 +18,12 @@ const SelectPaymentMethod = ({
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<
     string | null
   >(null);
-  const { openModal } = useModalStore();
+  const { openModal, closeModal } = useModalStore();
+  const { showToast } = useToastStore();
+  const paystack = usePaystackPayment();
+  const { mutate: fundWallet } = useFundWallet();
+
+  const { user } = useUserStore();
 
   const handleContinue = () => {
     if (selectedPaymentMethod == "Bank Transfer") {
@@ -22,7 +31,24 @@ const SelectPaymentMethod = ({
     } else if (selectedPaymentMethod == "Virtual Bank Transfer") {
       openModal(<VirtualBankTransfer goBack={goBack} amount={amount} />);
     } else if (selectedPaymentMethod == "Paystack") {
-      alert("Credit/Debit Card selected");
+      paystack({
+        email: user?.email || "",
+        amount: amount, // in Naira
+        onSuccess: (ref) => {
+          fundWallet({
+            amount: amount || 0,
+            payment_method: "paystack",
+          });
+          showToast("Payment successful!", "success");
+          closeModal();
+
+          console.log("Payment successful!", ref);
+          // TODO: call your backend API to confirm payment
+        },
+        onClose: () => {
+          showToast("Payment popup closed", "error");
+        },
+      });
     }
   };
 

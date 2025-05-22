@@ -11,6 +11,7 @@ import { Form, Formik } from "formik";
 import { useCreatePropertyPlan, useFundWallet } from "../../data/hooks";
 import { usePaymentBreakDownStore } from "../../zustand/PaymentBreakDownStore";
 import { useNavigate } from "react-router-dom";
+import PaymentPending from "../PaymentPending";
 
 const BankTransfer = ({
   goBack,
@@ -55,7 +56,7 @@ const BankTransfer = ({
         {
           onSuccess: (data) => {
             openModal(
-              <PaymentSuccessfull text="Payment received successfully." />
+              <PaymentPending text="Your payment is being confrimed by Admin" />
             );
             navigate(`/my-property/${data.plan.id}`);
           },
@@ -69,8 +70,10 @@ const BankTransfer = ({
       );
 
       closeModal();
-      showToast("Payment Recieved Successfully", "success");
-      openModal(<PaymentSuccessfull text={"Payment received successfully."} />);
+      // showToast("Payment Recieved Successfully", "success");
+      openModal(
+        <PaymentPending text="Your payment is being confrimed by Admin" />
+      );
     }
   };
 

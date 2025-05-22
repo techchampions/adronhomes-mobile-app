@@ -5,9 +5,11 @@ import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import InputField from "../InputField";
 import SelectPaymentMethod from "../DashboardNewPropertyComponent/SelectPaymentMethod";
+import { usePaymentBreakDownStore } from "../../zustand/PaymentBreakDownStore";
 
 const InputAmount = ({ goBack }: { goBack: () => void }) => {
   const { openModal, closeModal } = useModalStore();
+  const { resetPaymentDetails, setPaymentDetails } = usePaymentBreakDownStore();
 
   // Validation schema
   const validationSchema = Yup.object().shape({
@@ -29,11 +31,19 @@ const InputAmount = ({ goBack }: { goBack: () => void }) => {
         <Formik
           initialValues={{ amount: "" }}
           validationSchema={validationSchema}
-          onSubmit={(values) =>
+          onSubmit={(values) => {
+            resetPaymentDetails();
+            setPaymentDetails({
+              totalAmount: Number(values.amount),
+            });
             openModal(
-              <SelectPaymentMethod goBack={goBack} amount={values.amount} />
-            )
-          }
+              <SelectPaymentMethod
+                goBack={goBack}
+                amount={Number(values.amount)}
+                isBuyNow={false}
+              />
+            );
+          }}
         >
           {({ isValid, dirty }) => (
             <Form className="flex flex-col justify-between min-h-[400px]">

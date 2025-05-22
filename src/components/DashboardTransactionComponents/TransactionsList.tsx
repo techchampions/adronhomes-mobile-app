@@ -123,7 +123,7 @@ const TransactionsList: React.FC<Props> = ({ data, isLoading, isError }) => {
             </button>
           ))}
         </div>
-        <div>
+        {/* <div>
           <button className="border border-gray-300 text-xs px-4 py-1 rounded-3xl flex items-center gap-1">
             Latest
             <svg
@@ -140,7 +140,7 @@ const TransactionsList: React.FC<Props> = ({ data, isLoading, isError }) => {
               />
             </svg>
           </button>
-        </div>
+        </div> */}
       </div>
 
       {/* List */}

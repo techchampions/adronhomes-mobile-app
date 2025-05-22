@@ -1,7 +1,7 @@
 // src/store/useToastStore.ts
 import { create } from "zustand";
 
-type ToastType = "success" | "error";
+type ToastType = "success" | "error" | "pending";
 
 interface ToastStore {
   show: boolean;
