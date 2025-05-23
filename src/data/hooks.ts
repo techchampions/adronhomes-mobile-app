@@ -16,6 +16,7 @@ import {
   getUserPropertiesPlanPaymentHistory,
   getUserTransactions,
   getUserWallet,
+  propertyPlanRepayment,
   toggleSaveProperty,
 } from "./api";
 import { PropertiesResponse } from "./types/propertiesPageTypes";
@@ -199,6 +200,33 @@ export const useCreatePropertyPlan = () => {
     mutationFn: createPropertyPlan,
     onSuccess: () => {
       // Refetch relevant data if needed
+      queryClient.invalidateQueries({
+        queryKey: ["user-properties-plan"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["dashboard-data"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["user-wallet"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["user-transactions"],
+      });
+    },
+  });
+};
+
+// Query hook for a property plan repayment
+export const usePropertyPlanRepayment = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: propertyPlanRepayment,
+    onSuccess: () => {
+      // Refetch relevant data if needed
+      queryClient.invalidateQueries({
+        queryKey: ["property-plan-details"],
+      });
       queryClient.invalidateQueries({
         queryKey: ["user-properties-plan"],
       });

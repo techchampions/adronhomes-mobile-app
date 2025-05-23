@@ -63,15 +63,27 @@ const login = async (
       showToast(response.data.message, "error");
     }
   } catch (error: any) {
-    if (error.response && error.response.data.errors) {
-      const errorMessages = Object.values(error.response.data.errors)
-        .flat()
-        .join("\n"); // Extract and format error messages
-      showToast(errorMessages, "error");
-    } else {
-      showToast("An unexpected error occurred. Please try again.", "error");
+    if (error.response) {
+      const data = error.response.data;
+
+      if (data.errors) {
+        const errorMessages = Object.values(data.errors).flat().join("\n");
+        showToast(errorMessages, "error");
+      } else if (data.message) {
+        showToast(data.message, "error");
+      } else {
+        showToast("An unexpected error occurred. Please try again.", "error");
+      }
     }
-    console.error("Login failed:", error);
+    // if (error.response && error.response.data.errors) {
+    //   const errorMessages = Object.values(error.response.data.errors)
+    //     .flat()
+    //     .join("\n"); // Extract and format error messages
+    //   showToast(errorMessages, "error");
+    // } else {
+    //   showToast("An unexpected error occurred. Please try again.", "error");
+    // }
+    // console.error("Login failed:", error);
   } finally {
     setSubmitting(false);
   }

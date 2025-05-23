@@ -1,5 +1,5 @@
 // pages/MyPropertyDetail.tsx
-import React from "react";
+import React, { useEffect } from "react";
 import TransactionsList from "../components/DashboardTransactionComponents/TransactionsList";
 import Button from "../components/Button";
 import { HiOutlineLocationMarker } from "react-icons/hi";
@@ -14,16 +14,24 @@ import ApiErrorBlock from "../components/ApiErrorBlock";
 import { formatDate, formatPrice } from "../data/utils";
 import { Transaction } from "../data/types/userTransactionsTypes";
 import { usePaymentBreakDownStore } from "../zustand/PaymentBreakDownStore";
-import { FaCheck } from "react-icons/fa";
+import InlineLoader from "../components/InlineLoader";
+import RequestDocument from "../components/DashboardNewPropertyComponent/RequestDocument";
 
 const MyPropertyDetail = () => {
   // const { data, isLoading, isError } = useGetUserTransactions();
-  const { setPaymentDetails, resetPaymentDetails } = usePaymentBreakDownStore();
+  const { setPaymentDetails, resetPaymentDetails, planId } =
+    usePaymentBreakDownStore();
   const { openModal } = useModalStore();
   const navigate = useNavigate();
   const params = useParams();
   const id = params?.id;
   const { data, isLoading, isError } = useGetPropertyPlanByID(id ?? "");
+  useEffect(() => {
+    if (data?.plan_properties.payment_percentage === 100) {
+      openModal(<RequestDocument />);
+    }
+  }, [data?.plan_properties.payment_percentage]);
+
   if (isLoading) {
     return <Loader />;
   }
@@ -38,9 +46,9 @@ const MyPropertyDetail = () => {
   const makePayment = () => {
     resetPaymentDetails();
     setPaymentDetails({
-      totalAmount: data?.plan_properties.property.price,
-      propertyId: data?.plan_properties.property.id,
+      planId: data?.plan_properties.id,
     });
+    console.log("plan ID", data?.plan_properties.id, "Plan ID state", planId);
     openModal(<InputAmount goBack={makePayment} />);
   };
   const viewPaymentList = () => {
@@ -58,7 +66,7 @@ const MyPropertyDetail = () => {
               </span>
               /
               <span className="text-white/50">
-                {formatPrice(data?.plan_properties.property.total_amount ?? 0)}
+                {formatPrice(data?.plan_properties.total_amount ?? 0)}
               </span>
             </div>
             <div className="w-full h-2.5 bg-green-900/50 rounded-full overflow-hidden">
@@ -71,11 +79,10 @@ const MyPropertyDetail = () => {
             </div>
           </div>
           {data?.plan_properties.payment_percentage === 100 ? (
-            <Button
-              label="Payment Completed"
-              className="mt-5 bg-white !text-adron-green !w-fit px-6 text-sm"
-              rightIcon={<FaCheck />}
-            />
+            <div className="flex items-center mb-5 gap-2 text-white">
+              <InlineLoader />
+              <p className="text-sm">Documents are being prepared</p>
+            </div>
           ) : (
             <Button
               onClick={makePayment}
@@ -86,15 +93,17 @@ const MyPropertyDetail = () => {
           <div className="flex bg-white/20 justify-between p-4 rounded-2xl">
             <div className="flex flex-col gap-2">
               <p className="text-sm text-white">
-                {data?.plan_properties.repayment_schedule ?? "loading..."}
+                {data?.plan_properties.repayment_schedule ?? <InlineLoader />}
               </p>
               <p className="text-xs text-white">Payment Schedule</p>
             </div>
             <div className="flex flex-col gap-2 text-right">
               <p className="text-sm text-white">
-                {formatDate(
-                  data?.plan_properties.next_payment_date ?? "Loading..."
-                )}
+                {data?.plan_properties.payment_percentage === 100
+                  ? "Payment Complete"
+                  : formatDate(
+                      data?.plan_properties.next_payment_date ?? "Loading..."
+                    )}
               </p>
               <p className="text-xs text-white">Next Payment</p>
             </div>

@@ -32,7 +32,7 @@ const InputAmount = ({ goBack }: { goBack: () => void }) => {
           initialValues={{ amount: "" }}
           validationSchema={validationSchema}
           onSubmit={(values) => {
-            resetPaymentDetails();
+            // resetPaymentDetails();
             setPaymentDetails({
               totalAmount: Number(values.amount),
             });

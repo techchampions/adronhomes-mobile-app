@@ -7,6 +7,7 @@ import { usePaystackPayment } from "../../hooks/usePaystackPayment";
 import { useUserStore } from "../../zustand/UserStore";
 import { useToastStore } from "../../zustand/useToastStore";
 import { useFundWallet } from "../../data/hooks";
+import ApiErrorBlock from "../ApiErrorBlock";
 
 const SelectPaymentMethod = ({
   goBack,
@@ -35,18 +36,30 @@ const SelectPaymentMethod = ({
         email: user?.email || "",
         amount: amount, // in Naira
         onSuccess: (ref) => {
-          fundWallet({
-            amount: amount || 0,
-            payment_method: "paystack",
-          });
-          showToast("Payment successful!", "success");
-          closeModal();
+          fundWallet(
+            {
+              amount: amount || 0,
+              payment_method: "paystack",
+            },
+            {
+              onSuccess() {
+                showToast("Payment successful!", "success");
+                closeModal();
+              },
+              onError: (error: any) => {
+                const message =
+                  error?.response?.data?.message || "Something went wrong";
+                showToast(message, "error");
+                openModal(<ApiErrorBlock />);
+              },
+            }
+          );
 
           console.log("Payment successful!", ref);
           // TODO: call your backend API to confirm payment
         },
         onClose: () => {
-          showToast("Payment popup closed", "error");
+          showToast("Payment Canceled", "error");
         },
       });
     }

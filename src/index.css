@@ -58,7 +58,6 @@ button {
   }
 } */
 @import "tailwindcss";
-/* styles/globals.css */
 @import "swiper/css";
 @import "swiper/css/navigation";
 
@@ -122,6 +121,24 @@ input:-webkit-autofill:active {
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
   /* Chrome, Safari, Opera */
+}
+
+@layer utilities {
+  @keyframes pulse-dot {
+    0%, 100% {
+      transform: scale(0);
+      opacity: 0.5;
+    }
+
+    50% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  .animate-pulse-dot {
+    animation: pulse-dot 1s ease-in-out infinite;
+  }
 }
 
 

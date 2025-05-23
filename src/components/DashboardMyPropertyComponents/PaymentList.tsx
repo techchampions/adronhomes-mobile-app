@@ -33,21 +33,21 @@ const PaymentList: React.FC<Props> = ({ data, isLoading, isError }) => {
     activeTab === "All"
       ? data
       : data.filter((item) => {
-          if (activeTab === "Missed") return item.status === 1;
-          if (activeTab === "Paid") return item.status === 0;
-          if (activeTab === "Pending") return item.status === 2;
+          if (activeTab === "Missed") return item.status === 2;
+          if (activeTab === "Paid") return item.status === 1;
+          if (activeTab === "Pending") return item.status === 0;
           return false;
         });
 
   const renderStatusBadge = (status: PaymentStatus) => {
     const statusMap: Record<PaymentStatus, { label: string; style: string }> = {
-      0: {
+      1: {
         label: "Paid",
         style: "bg-green-100 text-green-600 border-green-400",
       },
-      1: { label: "Pending", style: "bg-red-100 text-red-600 border-red-400" },
-      2: {
-        label: "Missed",
+      2: { label: "Pending", style: "bg-red-100 text-red-600 border-red-400" },
+      0: {
+        label: "Pending",
         style: "bg-gray-100 text-gray-600 border-gray-400",
       },
     };
@@ -81,7 +81,7 @@ const PaymentList: React.FC<Props> = ({ data, isLoading, isError }) => {
             {renderStatusBadge(item.status)}
             <div className="text-sm font-semibold text-end">{item.amount}</div>
             <div className="flex justify-end">
-              {item.status == 1 && (
+              {item.status != 1 && (
                 <Button
                   label="Make Payment"
                   className="bg-black text-[9px] md:text-xs !w-fit px-4 md:px-6"

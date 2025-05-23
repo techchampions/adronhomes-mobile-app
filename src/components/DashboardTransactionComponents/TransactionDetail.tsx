@@ -20,12 +20,12 @@ const TransactionDetail = ({ id }) => {
       TransactionStatus,
       { label: string; style: string }
     > = {
-      0: {
+      1: {
         label: "Completed",
         style: "bg-adron-green",
       },
-      1: { label: "Failed", style: "bg-red-600" },
-      2: {
+      2: { label: "Failed", style: "bg-red-600" },
+      0: {
         label: "Pending",
         style: "bg-gray-600",
       },

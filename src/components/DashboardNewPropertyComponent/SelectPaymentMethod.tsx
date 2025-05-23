@@ -3,7 +3,11 @@ import Button from "../Button";
 import { useModalStore } from "../../zustand/useModalStore";
 import BankTransfer from "./BankTransferMethod";
 import { FaWallet } from "react-icons/fa";
-import { useCreatePropertyPlan, useGetUserWalletdata } from "../../data/hooks";
+import {
+  useCreatePropertyPlan,
+  useGetUserWalletdata,
+  usePropertyPlanRepayment,
+} from "../../data/hooks";
 import { formatPrice } from "../../data/utils";
 import { useToastStore } from "../../zustand/useToastStore";
 import { usePaymentBreakDownStore } from "../../zustand/PaymentBreakDownStore";
@@ -32,6 +36,7 @@ const SelectPaymentMethod = ({
   >(null);
   const { openModal } = useModalStore();
   const { mutate, isPending } = useCreatePropertyPlan();
+  const { mutate: makeRepayment } = usePropertyPlanRepayment();
   const {
     totalAmount,
     startDate,
@@ -41,7 +46,10 @@ const SelectPaymentMethod = ({
     paymentSchedule,
     propertyId,
     marketerId,
+    planId,
   } = usePaymentBreakDownStore();
+
+  console.log("Payment details", planId);
 
   useEffect(() => {
     const check = () => {
@@ -55,7 +63,11 @@ const SelectPaymentMethod = ({
 
   const handleContinue = () => {
     if (selectedPaymentMethod == "Bank Transfer") {
-      openModal(<BankTransfer goBack={goBack} amount={amount} />);
+      if (isBuyNow) {
+        openModal(
+          <BankTransfer goBack={goBack} amount={amount} isBuyNow={isBuyNow} />
+        );
+      }
     } else if (selectedPaymentMethod == "Paystack") {
       paystack({
         email: user?.email || "",
@@ -103,7 +115,6 @@ const SelectPaymentMethod = ({
                 navigate(`/my-property/${res.plan.id}`);
               },
               onError: (error: any) => {
-                // Customize this based on your error shape
                 const message =
                   error?.response?.data?.message || "Something went wrong";
                 showToast(message, "error");
@@ -115,13 +126,12 @@ const SelectPaymentMethod = ({
         }
       } else {
         if (userWalletData?.wallet_balance > amount) {
-          mutate(
+          console.log("Plan ID", planId);
+          makeRepayment(
             {
               payment_method: "virtual_wallet",
-              payment_type: 2,
               paid_amount: totalAmount,
-              property_id: Number(propertyId),
-              marketer_code: "Adron-123",
+              plan_id: Number(planId),
             },
             {
               onSuccess: (res) => {
@@ -129,7 +139,7 @@ const SelectPaymentMethod = ({
                   <PaymentSuccessfull text="Payment received successfully." />
                 );
                 console.log("data", res);
-                navigate(`/my-property/${res.plan.id}`);
+                // navigate(`/my-property/${res.plan.id}`);
               },
               onError: (error: any) => {
                 // Customize this based on your error shape

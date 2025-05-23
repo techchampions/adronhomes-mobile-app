@@ -15,6 +15,7 @@ import { NotificationByIDResponse } from "./types/NotificationByIDTypes";
 import { number } from "yup";
 import { PropertyPlanPayload } from "./types/CreatePropertyPayload";
 import { PropertyPlanPaymentResponse } from "./types/PropertyPlanPaymentListTypes";
+import { FundWalletPayload } from "./types/FundWalletPayloadTypes";
 
 // Get User Profile
 export const getUser = async (): Promise<GetUserResponse> => {
@@ -142,18 +143,29 @@ export const toggleSaveProperty = async (propertyId: number): Promise<void> => {
 };
 
 // Fund Wallet
-export const fundWallet = async ({
-  amount,
-  payment_method,
-}: {
-  amount: number;
-  payment_method: string;
-}): Promise<void> => {
+export const fundWallet = async (
+  payload: Partial<FundWalletPayload>
+): Promise<void> => {
   const formData = new FormData();
-  formData.append("amount", amount.toString());
-  formData.append("payment_method", payment_method);
+  if (payload.payment_method !== undefined)
+    formData.append("payment_method", payload.payment_method);
 
-  await apiClient.post("/user/fund-wallet", formData);
+  if (payload.sender_name !== undefined)
+    formData.append("sender_name", payload.sender_name);
+
+  if (payload.amount !== undefined)
+    formData.append("amount", payload.amount.toString());
+
+  if (payload.proof_of_payment && payload.proof_of_payment instanceof File) {
+    formData.append("proof_of_payment", payload.proof_of_payment);
+  } else {
+    console.warn("proof_of_payment is not a File:", payload.proof_of_payment);
+  }
+  await apiClient.post("/user/fund-wallet", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
 };
 
 // Create Property Plan
@@ -191,6 +203,32 @@ export const createPropertyPlan = async (
     formData.append("proof_of_payment", payload.proof_of_payment);
 
   const res = await apiClient.post("/user/buy-property", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+  return res.data;
+};
+
+// Propperty Plan Repayment
+export const propertyPlanRepayment = async (
+  payload: Partial<PropertyPlanPayload>
+): Promise<void> => {
+  const formData = new FormData();
+
+  if (payload.plan_id !== undefined)
+    formData.append("plan_id", payload.plan_id.toString());
+
+  if (payload.payment_method)
+    formData.append("payment_method", payload.payment_method);
+
+  if (payload.paid_amount !== undefined)
+    formData.append("amount", payload.paid_amount.toString());
+
+  if (payload.proof_of_payment)
+    formData.append("proof_of_payment", payload.proof_of_payment);
+
+  const res = await apiClient.post("/user/repayment", formData, {
     headers: {
       "Content-Type": "multipart/form-data",
     },

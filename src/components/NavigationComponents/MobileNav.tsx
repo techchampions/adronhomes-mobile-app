@@ -41,9 +41,9 @@ const MobileNav = () => {
         </div>
         <div className="flex items-center gap-4">
           <Button label="View Property" className="text-xs px-4" />
-          {!user?.profile_picture ? (
+          {user?.profile_picture ? (
             <img
-              src={user?.profile_picture ?? "/mika.png"}
+              src={user?.profile_picture || ""}
               alt=""
               className="h-7 w-7"
               onClick={goTpProfile}
