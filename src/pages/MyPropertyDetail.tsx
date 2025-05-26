@@ -1,5 +1,5 @@
 // pages/MyPropertyDetail.tsx
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import TransactionsList from "../components/DashboardTransactionComponents/TransactionsList";
 import Button from "../components/Button";
 import { HiOutlineLocationMarker } from "react-icons/hi";
@@ -19,6 +19,7 @@ import RequestDocument from "../components/DashboardNewPropertyComponent/Request
 
 const MyPropertyDetail = () => {
   // const { data, isLoading, isError } = useGetUserTransactions();
+  const [requested, setRequested] = useState(false);
   const { setPaymentDetails, resetPaymentDetails, planId } =
     usePaymentBreakDownStore();
   const { openModal } = useModalStore();
@@ -85,10 +86,20 @@ const MyPropertyDetail = () => {
             </div>
           </div>
           {data?.plan_properties.payment_percentage === 100 ? (
-            <div className="flex items-center mb-5 gap-2 text-white">
-              <InlineLoader />
-              <p className="text-sm">Documents are being prepared</p>
-            </div>
+            !requested ? (
+              <Button
+                label="Request Documents"
+                className="text-sm !w-fit px-6 bg-white !text-adron-green"
+                onClick={() => {
+                  setRequested(true);
+                }}
+              />
+            ) : (
+              <div className="flex items-center mb-5 gap-2 text-white">
+                <InlineLoader />
+                <p className="text-sm">Documents are being prepared</p>
+              </div>
+            )
           ) : (
             <Button
               onClick={makePayment}

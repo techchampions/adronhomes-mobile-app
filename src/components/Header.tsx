@@ -11,7 +11,7 @@ import { useSearchStore } from "../zustand/SearchStore";
 const Header = ({ pageTitle }) => {
   const navigate = useNavigate();
   const { user } = useUserStore();
-  const { setSearchResults } = useSearchStore();
+  const { setSearchResults, setLoading } = useSearchStore();
   const queryClient = useQueryClient();
   const newProperty = () => {
     navigate("/new-properties");
@@ -26,16 +26,20 @@ const Header = ({ pageTitle }) => {
         <Formik
           initialValues={{ search: "" }}
           onSubmit={async (values) => {
-            console.log(values.search);
+            setLoading(true); // ✅ Start loading
 
-            // Prefetch data
-            const data = await queryClient.fetchQuery({
-              queryKey: ["search-properties-results"],
-              queryFn: () => searchProperties({ name: values.search }),
-            });
+            try {
+              const data = await queryClient.fetchQuery({
+                queryKey: ["search-properties-results", values.search],
+                queryFn: () => searchProperties({ name: values.search }),
+              });
 
-            setSearchResults(data);
-            navigate("/search-properties");
+              setSearchResults(data);
+              navigate("/search-properties");
+            } catch (error) {
+              console.error("Search error:", error);
+              setLoading(false); // ✅ Stop loading on error
+            }
           }}
         >
           <Form className="flex items-center gap-2">
