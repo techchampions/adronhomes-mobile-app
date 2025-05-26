@@ -49,7 +49,13 @@ const MyPropertyDetail = () => {
       planId: data?.plan_properties.id,
     });
     console.log("plan ID", data?.plan_properties.id, "Plan ID state", planId);
-    openModal(<InputAmount goBack={makePayment} />);
+    openModal(
+      <InputAmount
+        goBack={makePayment}
+        repaymentAmount={data.next_repayment.amount}
+        dueDate={data.next_repayment.due_date}
+      />
+    );
   };
   const viewPaymentList = () => {
     navigate(`/my-property/payment-list/${id}`);

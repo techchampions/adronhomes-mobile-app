@@ -12,10 +12,10 @@ import { PlanPropertiesDetailResponse } from "./types/PropertyPlanDetailTypes";
 import { NotificationsResponse } from "./types/notificationTypes";
 import { TransactionByIDResponse } from "./types/userTransactionByIDTypes";
 import { NotificationByIDResponse } from "./types/NotificationByIDTypes";
-import { number } from "yup";
 import { PropertyPlanPayload } from "./types/CreatePropertyPayload";
 import { PropertyPlanPaymentResponse } from "./types/PropertyPlanPaymentListTypes";
 import { FundWalletPayload } from "./types/FundWalletPayloadTypes";
+import { PropertiesSearchResultResponse } from "./types/SearchPropertiesResultTypes";
 
 // Get User Profile
 export const getUser = async (): Promise<GetUserResponse> => {
@@ -105,6 +105,20 @@ export const fetchPropertiesPageData = async (
     : `/properties-page?page=${page}`;
 
   const response = await apiClient.get(endpoint);
+  return response.data;
+};
+
+//Search Properties
+export const searchProperties = async (
+  filters: Record<string, any> = {}
+): Promise<PropertiesSearchResultResponse> => {
+  const params = new URLSearchParams({
+    ...(filters.name && { name: filters.name }),
+  });
+
+  const endpoint = `/search?${params.toString()}`;
+
+  const response = await apiClient.post(endpoint);
   return response.data;
 };
 

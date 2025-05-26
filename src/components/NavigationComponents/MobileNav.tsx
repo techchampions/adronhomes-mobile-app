@@ -45,7 +45,7 @@ const MobileNav = () => {
             <img
               src={user?.profile_picture || ""}
               alt=""
-              className="h-7 w-7"
+              className="h-7 w-7 rounded-full"
               onClick={goTpProfile}
             />
           ) : (

@@ -75,9 +75,9 @@ const PropertyPlanList: React.FC<Props> = ({ plans, isError, isLoading }) => {
     <div className="bg-white p-6 rounded-3xl w-full">
       <div className="flex items-center justify-between mb-6">
         <h4 className="text-lg text-gray-400">My Property Plans</h4>
-        <button className="text-xs px-4 py-1.5 border rounded-full border-gray-300 text-gray-600 hover:bg-gray-100">
+        {/* <button className="text-xs px-4 py-1.5 border rounded-full border-gray-300 text-gray-600 hover:bg-gray-100">
           In Progress <span className="ml-1">▼</span>
-        </button>
+        </button> */}
       </div>
 
       {/* LIST */}

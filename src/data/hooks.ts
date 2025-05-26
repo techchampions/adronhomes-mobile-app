@@ -17,6 +17,7 @@ import {
   getUserTransactions,
   getUserWallet,
   propertyPlanRepayment,
+  searchProperties,
   toggleSaveProperty,
 } from "./api";
 import { PropertiesResponse } from "./types/propertiesPageTypes";
@@ -34,6 +35,7 @@ import { NotificationsResponse } from "./types/notificationTypes";
 import { TransactionByIDResponse } from "./types/userTransactionByIDTypes";
 import { NotificationByIDResponse } from "./types/NotificationByIDTypes";
 import { PropertyPlanPaymentResponse } from "./types/PropertyPlanPaymentListTypes";
+import { PropertiesSearchResultResponse } from "./types/SearchPropertiesResultTypes";
 
 //Query hook for User profile
 export const useGetUser = () => {
@@ -91,6 +93,8 @@ export const useGetNotifications = () => {
     queryFn: getNotifications,
   });
 };
+
+// Query hook for properties and filtering
 export const usePropertiespage = (
   page: number,
   filters?: Record<string, any>
@@ -98,6 +102,14 @@ export const usePropertiespage = (
   return useQuery<PropertiesResponse>({
     queryKey: ["properties-page", page, filters],
     queryFn: () => fetchPropertiesPageData(page, filters),
+  });
+};
+
+// Query hook to search Properties
+export const useSearchProperties = (filters?: Record<string, any>) => {
+  return useQuery<PropertiesSearchResultResponse>({
+    queryKey: ["search-properties-results"],
+    queryFn: () => searchProperties(filters),
   });
 };
 
@@ -238,6 +250,9 @@ export const usePropertyPlanRepayment = () => {
       });
       queryClient.invalidateQueries({
         queryKey: ["user-transactions"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["user-properties-plan-payment-history"],
       });
     },
   });

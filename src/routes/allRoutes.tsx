@@ -25,6 +25,7 @@ import PropertyPaymentMethod from "../pages/PropertyPaymentMethod";
 import MyPropertyDetail from "../pages/MyPropertyDetail";
 import MyPropertyPaymentList from "../pages/MyPropertyPaymentList";
 import FAQAccordion from "../pages/FAQScreen";
+import PropertySearchResultScreen from "../pages/PropertySearchResult";
 
 const DashboardScreen = lazy(() => import("../pages/DashboardScreen"));
 
@@ -57,6 +58,10 @@ const AllRoutes = () => {
                 <Route path="/notifications" element={<NotificationsPage />} />
                 <Route path="/my-properties" element={<MyPropertyScreen />} />
                 <Route path="/new-properties" element={<NewPropertyScreen />} />
+                <Route
+                  path="/search-properties"
+                  element={<PropertySearchResultScreen />}
+                />
                 <Route
                   path="/saved-properties"
                   element={<SavedPropertyScreen />}

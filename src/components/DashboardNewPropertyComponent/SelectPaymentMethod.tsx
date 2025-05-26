@@ -63,11 +63,9 @@ const SelectPaymentMethod = ({
 
   const handleContinue = () => {
     if (selectedPaymentMethod == "Bank Transfer") {
-      if (isBuyNow) {
-        openModal(
-          <BankTransfer goBack={goBack} amount={amount} isBuyNow={isBuyNow} />
-        );
-      }
+      openModal(
+        <BankTransfer goBack={goBack} amount={amount} isBuyNow={isBuyNow} />
+      );
     } else if (selectedPaymentMethod == "Paystack") {
       paystack({
         email: user?.email || "",
@@ -75,6 +73,68 @@ const SelectPaymentMethod = ({
         onSuccess: (ref) => {
           console.log("Payment successful!", ref);
           // TODO: call your backend API to confirm payment
+          if (isBuyNow) {
+            mutate(
+              {
+                ...(paymentType == "One Time"
+                  ? {
+                      payment_method: "paystack",
+                      payment_type: 1,
+                      property_id: Number(propertyId),
+                      paid_amount: totalAmount,
+                      marketer_code: marketerId,
+                    }
+                  : {
+                      payment_method: "paystack",
+                      payment_type: 2,
+                      monthly_duration: Number(paymentDuration),
+                      property_id: Number(propertyId),
+                      start_date: startDate,
+                      end_date: endDate,
+                      repayment_schedule: paymentSchedule,
+                      paid_amount: totalAmount,
+                      marketer_code: marketerId,
+                    }),
+              },
+              {
+                onSuccess: (res) => {
+                  openModal(
+                    <PaymentSuccessfull text="Payment received successfully." />
+                  );
+                  console.log("data", res);
+                  navigate(`/my-property/${res.plan.id}`);
+                },
+                onError: (error: any) => {
+                  const message =
+                    error?.response?.data?.message || "Something went wrong";
+                  showToast(message, "error");
+                },
+              }
+            );
+          } else {
+            makeRepayment(
+              {
+                payment_method: "paystack",
+                paid_amount: totalAmount,
+                plan_id: Number(planId),
+              },
+              {
+                onSuccess: (res) => {
+                  openModal(
+                    <PaymentSuccessfull text="Payment received successfully." />
+                  );
+                  console.log("data", res);
+                  // navigate(`/my-property/${res.plan.id}`);
+                },
+                onError: (error: any) => {
+                  // Customize this based on your error shape
+                  const message =
+                    error?.response?.data?.message || "Something went wrong";
+                  showToast(message, "error");
+                },
+              }
+            );
+          }
         },
         onClose: () => {
           showToast("Payment popup closed", "error");

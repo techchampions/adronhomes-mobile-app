@@ -235,6 +235,7 @@ const ProfileSettings = () => {
                   type={showPassword ? "text" : "password"}
                   className="w-1/2 !md:w-[400px]"
                   placeholder="* * * * * * * * *"
+                  autocomplete="new-password"
                   rightIcon={
                     showPassword ? (
                       <FaEyeSlash

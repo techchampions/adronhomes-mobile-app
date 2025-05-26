@@ -1,14 +1,18 @@
-import React from "react";
-import { FaUser } from "react-icons/fa";
+import { FaSearch, FaUser } from "react-icons/fa";
 import InputField from "./InputField";
 import Button from "./Button";
-import { Formik } from "formik";
+import { Form, Formik } from "formik";
 import { useNavigate } from "react-router-dom";
 import { useUserStore } from "../zustand/UserStore";
+import { useQueryClient } from "@tanstack/react-query";
+import { searchProperties } from "../data/api";
+import { useSearchStore } from "../zustand/SearchStore";
 
 const Header = ({ pageTitle }) => {
   const navigate = useNavigate();
   const { user } = useUserStore();
+  const { setSearchResults } = useSearchStore();
+  const queryClient = useQueryClient();
   const newProperty = () => {
     navigate("/new-properties");
   };
@@ -21,16 +25,30 @@ const Header = ({ pageTitle }) => {
       <div className="">
         <Formik
           initialValues={{ search: "" }}
-          onSubmit={(values) => {
+          onSubmit={async (values) => {
             console.log(values.search);
+
+            // Prefetch data
+            const data = await queryClient.fetchQuery({
+              queryKey: ["search-properties-results"],
+              queryFn: () => searchProperties({ name: values.search }),
+            });
+
+            setSearchResults(data);
+            navigate("/search-properties");
           }}
         >
-          <InputField
-            name="search"
-            type="text"
-            placeholder="Search..."
-            className="!w-[400px] text-adron-black"
-          />
+          <Form className="flex items-center gap-2">
+            <InputField
+              name="search"
+              type="text"
+              placeholder="Search..."
+              className="!w-[400px] text-adron-black"
+            />
+            <button type="submit">
+              <FaSearch />
+            </button>
+          </Form>
         </Formik>
       </div>
       <div className="flex items-center gap-4">
@@ -50,7 +68,7 @@ const Header = ({ pageTitle }) => {
             <img
               src={user?.profile_picture}
               alt="profile"
-              className="h-4 w-4"
+              className="w-14 h-7 object-cover rounded-full"
             />
           ) : (
             <FaUser className="h-4 w-4" />

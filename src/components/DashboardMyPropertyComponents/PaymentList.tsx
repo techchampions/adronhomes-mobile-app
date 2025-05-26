@@ -5,11 +5,13 @@ import { useModalStore } from "../../zustand/useModalStore";
 import SmallLoader from "../SmallLoader";
 import ApiErrorBlock from "../ApiErrorBlock";
 import NotFound from "../NotFound";
+import { usePaymentBreakDownStore } from "../../zustand/PaymentBreakDownStore";
 
 export type PaymentStatus = 0 | 1 | 2;
 
 export type PaymentItem = {
   id: number;
+  plan_id: number;
   title: string;
   date: string;
   status: PaymentStatus;
@@ -28,6 +30,7 @@ type Tab = (typeof tabs)[number];
 const PaymentList: React.FC<Props> = ({ data, isLoading, isError }) => {
   const { openModal } = useModalStore();
   const [activeTab, setActiveTab] = useState<Tab>("All");
+  const { resetPaymentDetails, setPaymentDetails } = usePaymentBreakDownStore();
 
   const filteredData =
     activeTab === "All"
@@ -85,7 +88,20 @@ const PaymentList: React.FC<Props> = ({ data, isLoading, isError }) => {
                 <Button
                   label="Make Payment"
                   className="bg-black text-[9px] md:text-xs !w-fit px-4 md:px-6"
-                  onClick={makePayment}
+                  onClick={() => {
+                    resetPaymentDetails();
+                    setPaymentDetails({
+                      planId: item.plan_id,
+                    });
+
+                    openModal(
+                      <InputAmount
+                        goBack={makePayment}
+                        repaymentAmount={item.amount}
+                        dueDate={item.date}
+                      />
+                    );
+                  }}
                 />
               )}
             </div>

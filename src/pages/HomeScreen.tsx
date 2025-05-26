@@ -108,7 +108,11 @@ const HomeScreen = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <PropertyPlanList plans={plans} />
+        <PropertyPlanList
+          plans={plans}
+          isError={isError}
+          isLoading={isLoading}
+        />
         <TransactionsList
           data={transactions}
           isLoading={isLoadingTransaction}
