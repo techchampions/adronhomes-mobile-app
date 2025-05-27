@@ -1,15 +1,14 @@
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
-import React from "react";
-import DatePicker from "react-datepicker";
-import { MdOutlineCalendarToday } from "react-icons/md";
 import Button from "../Button";
 import { useModalStore } from "../../zustand/useModalStore";
-import PaymentSuccessfull from "../PaymentSuccessfull";
 import DatePickerInput from "../DatePickerInput";
+import { useUserStore } from "../../zustand/UserStore";
+import { formatDate } from "../../data/utils";
 
 const StatementRequest = () => {
   const { closeModal, openModal } = useModalStore();
+  const { user } = useUserStore();
   const today = new Date();
   const initialValues = {
     startDate: null,
@@ -62,8 +61,18 @@ const StatementRequest = () => {
               />
               <MdOutlineCalendarToday className=" text-gray-900" />
             </div> */}
-            <DatePickerInput label="Start Date" name="startDate" />
-            <DatePickerInput label="End Date" name="endDate" />
+            <DatePickerInput
+              label="Start Date"
+              name="startDate"
+              minDate={formatDate(user?.created_at || "")}
+              maxDate={new Date()}
+            />
+            <DatePickerInput
+              label="End Date"
+              name="endDate"
+              minDate={formatDate(user?.created_at || "")}
+              maxDate={new Date()}
+            />
             <div className="flex justify-between mt-12">
               <Button
                 label="Cancel"

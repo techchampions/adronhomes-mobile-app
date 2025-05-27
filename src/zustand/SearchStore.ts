@@ -1,7 +1,19 @@
 import { create } from "zustand";
 import { PropertiesSearchResultResponse } from "../data/types/SearchPropertiesResultTypes";
+import { Property } from "../data/types/propertiesPageTypes";
 
-export const useSearchStore = create((set) => ({
+type SearchStoreState = {
+  searchResults: Property[];
+  searchMessage: string;
+  status: string;
+  isLoading: boolean;
+
+  setSearchResults: (response: PropertiesSearchResultResponse) => void;
+  setLoading: (loading: boolean) => void;
+  clearSearchResults: () => void;
+};
+
+export const useSearchStore = create<SearchStoreState>((set) => ({
   searchResults: [],
   searchMessage: "",
   status: "",
@@ -15,7 +27,7 @@ export const useSearchStore = create((set) => ({
       isLoading: false,
     }),
 
-  setLoading: (loading) => set({ isLoading: loading }),
+  setLoading: (loading: boolean) => set({ isLoading: loading }),
 
   clearSearchResults: () =>
     set({

@@ -5,7 +5,6 @@ import { Switch } from "@headlessui/react"; // optional for toggle UI
 import InputField from "../components/InputField";
 import Button from "../components/Button";
 import { useModalStore } from "../zustand/useModalStore";
-import Confirmation from "../components/Confirmation";
 import { useGetUser } from "../data/hooks";
 import Loader from "../components/Loader";
 import ApiErrorBlock from "../components/ApiErrorBlock";
@@ -210,6 +209,8 @@ const ProfileSettings = () => {
                         values.profilePicture
                           ? URL.createObjectURL(values.profilePicture)
                           : userData.profile_picture
+                          ? userData.profile_picture
+                          : "/user.svg"
                       }
                       alt="Profile"
                       className="w-20 h-20 rounded-full object-cover"

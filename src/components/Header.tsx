@@ -62,6 +62,7 @@ const Header = ({ pageTitle }) => {
           className="h-7 w-7"
           onClick={() => navigate("/notifications")}
         />
+
         <Button
           label="New Property"
           className="bg-adron-green text-sm px-4"

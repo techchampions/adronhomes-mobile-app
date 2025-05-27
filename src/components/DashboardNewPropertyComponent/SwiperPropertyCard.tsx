@@ -177,10 +177,11 @@ export default function SwiperPropertyCard({ property }: Props) {
             onClick={() => navigate(`/properties/${property.id}`)}
           />
           <Button
-            label={
-              property.is_bought ? `Already bought this` : `Invest in Property`
-            }
-            disabled={property.is_bought}
+            // label={
+            //   property.is_bought ? `Already bought this` : `Invest in Property`
+            // }
+            // disabled={property.is_bought}
+            label="Invest in Property"
             className="!bg-transparent !text-black border hover:!text-white hover:!bg-black text-xs py-3"
             onClick={() => navigate(`/invest-property/${property.id}`)}
           />
