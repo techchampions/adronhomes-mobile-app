@@ -242,101 +242,70 @@ const PropertyDetail = () => {
                     </div>
                   </div>
                 </div>
+
+                {/* New Additional details */}
                 <div className="flex flex-col gap-2">
                   <h4 className="font-bold text-md">Additional Details</h4>
+
                   <div className="grid grid-cols-2 gap-2">
-                    <div className="relative overflow-x-hidden">
-                      <table className="w-full text-sm text-left rtl:text-right text-gray-500">
-                        <tbody>
-                          <tr className="bg-white border-b border-gray-200">
-                            <th
-                              scope="row"
-                              className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap "
-                            >
-                              Legal Documentation Fees
-                            </th>
-                            <td className="px-6 py-4">10000000</td>
-                          </tr>
+                    {/* Split details in half for two tables */}
+                    {item?.details && item.details.length > 0 ? (
+                      <>
+                        <div className="relative overflow-x-hidden">
+                          <table className="w-full text-sm text-left rtl:text-right text-gray-500">
+                            <tbody>
+                              {item.details
+                                .slice(0, Math.ceil(item.details.length / 2))
+                                .map((detail) => (
+                                  <tr
+                                    key={detail.id}
+                                    className="bg-white border-b border-gray-200"
+                                  >
+                                    <th
+                                      scope="row"
+                                      className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
+                                    >
+                                      {detail.name.trim()}
+                                    </th>
+                                    <td className="px-6 py-4">
+                                      {formatPrice(detail.value)}
+                                    </td>
+                                  </tr>
+                                ))}
+                            </tbody>
+                          </table>
+                        </div>
 
-                          <tr className="bg-white border-b border-gray-200">
-                            <th
-                              scope="row"
-                              className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap "
-                            >
-                              Survey plan
-                            </th>
-                            <td className="px-6 py-4">1000000 </td>
-                          </tr>
-                          <tr className="bg-white border-b border-gray-200">
-                            <th
-                              scope="row"
-                              className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap "
-                            >
-                              Architectural Drawing fee
-                            </th>
-                            <td className="px-6 py-4">10000000 </td>
-                          </tr>
-
-                          <tr className="bg-white border-b border-gray-200">
-                            <th
-                              scope="row"
-                              className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap "
-                            >
-                              Structure Drawing fee
-                            </th>
-                            <td className="px-6 py-4">1000000 </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-                    <div className="relative overflow-x-hidden">
-                      <table className="w-full text-sm text-left rtl:text-right text-gray-500">
-                        <tbody>
-                          <tr className="bg-white border-b border-gray-200">
-                            <th
-                              scope="row"
-                              className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
-                            >
-                              M & E Drawing
-                            </th>
-                            <td className="px-6 py-4">100000 </td>
-                          </tr>
-
-                          <tr className="bg-white border-b border-gray-200">
-                            <th
-                              scope="row"
-                              className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
-                            >
-                              Certification fee
-                            </th>
-                            <td className="px-6 py-4 line-clamp-1 truncate">
-                              1000000{" "}
-                            </td>
-                          </tr>
-                          <tr className="bg-white border-b border-gray-200">
-                            <th
-                              scope="row"
-                              className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
-                            >
-                              Total
-                            </th>
-                            <td className="px-6 py-4">10000000 </td>
-                          </tr>
-
-                          <tr className="bg-white border-b border-gray-200">
-                            <th
-                              scope="row"
-                              className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
-                            >
-                              Developmental fee
-                            </th>
-                            <td className="px-6 py-4 line-clamp-1 truncate">
-                              1000000{" "}
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
+                        <div className="relative overflow-x-hidden">
+                          <table className="w-full text-sm text-left rtl:text-right text-gray-500">
+                            <tbody>
+                              {item.details
+                                .slice(Math.ceil(item.details.length / 2))
+                                .map((detail) => (
+                                  <tr
+                                    key={detail.id}
+                                    className="bg-white border-b border-gray-200"
+                                  >
+                                    <th
+                                      scope="row"
+                                      className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
+                                    >
+                                      {detail.name.trim()}
+                                    </th>
+                                    <td className="px-6 py-4">
+                                      {detail.value.toLocaleString()}
+                                    </td>
+                                  </tr>
+                                ))}
+                            </tbody>
+                          </table>
+                        </div>
+                      </>
+                    ) : (
+                      <p className="text-gray-500 text-sm col-span-2">
+                        No additional details available.
+                      </p>
+                    )}
                   </div>
                 </div>
               </div>

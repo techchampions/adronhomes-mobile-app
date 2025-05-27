@@ -6,6 +6,7 @@ import SmallLoader from "../SmallLoader";
 import ApiErrorBlock from "../ApiErrorBlock";
 import NotFound from "../NotFound";
 import { usePaymentBreakDownStore } from "../../zustand/PaymentBreakDownStore";
+import { formatPrice } from "../../data/utils";
 
 export type PaymentStatus = 0 | 1 | 2;
 
@@ -15,7 +16,7 @@ export type PaymentItem = {
   title: string;
   date: string;
   status: PaymentStatus;
-  amount: string;
+  amount: number;
 };
 
 type Props = {
@@ -82,7 +83,9 @@ const PaymentList: React.FC<Props> = ({ data, isLoading, isError }) => {
               <div className="text-xs text-gray-500">{item.title}</div>
             </div>
             {renderStatusBadge(item.status)}
-            <div className="text-sm font-semibold text-end">{item.amount}</div>
+            <div className="text-sm font-semibold text-end">
+              {formatPrice(item.amount)}
+            </div>
             <div className="flex justify-end">
               {item.status != 1 && (
                 <Button
@@ -152,7 +155,7 @@ const PaymentList: React.FC<Props> = ({ data, isLoading, isError }) => {
             </button>
           ))}
         </div>
-        <div>
+        {/* <div>
           <button className="border border-gray-300 text-xs px-4 py-1 rounded-3xl flex items-center gap-1">
             Latest
             <svg
@@ -169,7 +172,7 @@ const PaymentList: React.FC<Props> = ({ data, isLoading, isError }) => {
               />
             </svg>
           </button>
-        </div>
+        </div> */}
       </div>
 
       {/* List */}

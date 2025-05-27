@@ -7,6 +7,7 @@ import { useUserStore } from "../zustand/UserStore";
 import { useQueryClient } from "@tanstack/react-query";
 import { searchProperties } from "../data/api";
 import { useSearchStore } from "../zustand/SearchStore";
+import CopyButton from "./CopyButton";
 
 const Header = ({ pageTitle }) => {
   const navigate = useNavigate();
@@ -62,18 +63,24 @@ const Header = ({ pageTitle }) => {
           className="h-7 w-7"
           onClick={() => navigate("/notifications")}
         />
-
-        <Button
+        <div className="border border-adron-body rounded-xl px-4 py-1 gap-1 flex flex-col">
+          <div className="flex justify-between w-full gap-4">
+            <p className="text-xs text-gray-400">Contract ID</p>
+            <CopyButton text="73648KFHD87" />
+          </div>
+          <p className="text-sm">73648KFHD87</p>
+        </div>
+        {/* <Button
           label="New Property"
           className="bg-adron-green text-sm px-4"
           onClick={newProperty}
-        />
+        /> */}
         <div className="p-2 bg-adron-body rounded-full" onClick={goTpProfile}>
           {user?.profile_picture ? (
             <img
               src={user?.profile_picture}
               alt="profile"
-              className="w-14 h-7 object-cover rounded-full"
+              className="w-7 h-7 object-cover rounded-full"
             />
           ) : (
             <FaUser className="h-4 w-4" />

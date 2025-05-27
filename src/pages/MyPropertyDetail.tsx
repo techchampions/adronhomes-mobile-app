@@ -110,7 +110,13 @@ const MyPropertyDetail = () => {
           <div className="flex bg-white/20 justify-between p-4 rounded-2xl">
             <div className="flex flex-col gap-2">
               <p className="text-sm text-white">
-                {data?.plan_properties.repayment_schedule ?? <InlineLoader />}
+                {data?.plan_properties.payment_percentage === 100 ? (
+                  "Payment Complete"
+                ) : data?.plan_properties.repayment_schedule ? (
+                  `$${data.plan_properties.repayment_schedule}`
+                ) : (
+                  <InlineLoader />
+                )}
               </p>
               <p className="text-xs text-white">Payment Schedule</p>
             </div>
@@ -196,22 +202,25 @@ const MyPropertyDetail = () => {
           />
         </div>
       </div>
-      <div className=" flex flex-col md:flex-row gap-3 justify-between md:items-center bg-white py-4 px-4 md:px-12 rounded-3xl">
-        <div className="flex flex-col w-full md:w-[60%]">
-          <h4 className=" font-bold text-md">Payment List</h4>
-          <p className="text-gray-400 text-xs">
-            Click <span className="font-bold">‘view list’</span> to see a list
-            of all scheduled payments available for your property payment plan.
-            This is helpful if you have missed some payments int the past.{" "}
-          </p>
-        </div>
+      {data?.plan_properties.payment_type === "2" && (
+        <div className=" flex flex-col md:flex-row gap-3 justify-between md:items-center bg-white py-4 px-4 md:px-12 rounded-3xl">
+          <div className="flex flex-col w-full md:w-[60%]">
+            <h4 className=" font-bold text-md">Payment List</h4>
+            <p className="text-gray-400 text-xs">
+              Click <span className="font-bold">‘view list’</span> to see a list
+              of all scheduled payments available for your property payment
+              plan. This is helpful if you have missed some payments int the
+              past.{" "}
+            </p>
+          </div>
 
-        <Button
-          label="View List"
-          className="bg-black text-white font-bold !w-[155px] text-xs"
-          onClick={viewPaymentList}
-        />
-      </div>
+          <Button
+            label="View List"
+            className="bg-black text-white font-bold !w-[155px] text-xs"
+            onClick={viewPaymentList}
+          />
+        </div>
+      )}
 
       <TransactionsList
         data={transactions}
