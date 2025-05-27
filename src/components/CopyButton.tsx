@@ -3,7 +3,7 @@ import { IoCopy } from "react-icons/io5";
 import { useToastStore } from "../zustand/useToastStore";
 
 type CopyButtonProps = {
-  text: string;
+  text: string | number;
   className?: string;
 };
 

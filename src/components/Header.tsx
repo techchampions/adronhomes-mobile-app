@@ -1,6 +1,5 @@
 import { FaSearch, FaUser } from "react-icons/fa";
 import InputField from "./InputField";
-import Button from "./Button";
 import { Form, Formik } from "formik";
 import { useNavigate } from "react-router-dom";
 import { useUserStore } from "../zustand/UserStore";
@@ -14,9 +13,9 @@ const Header = ({ pageTitle }) => {
   const { user } = useUserStore();
   const { setSearchResults, setLoading } = useSearchStore();
   const queryClient = useQueryClient();
-  const newProperty = () => {
-    navigate("/new-properties");
-  };
+  // const newProperty = () => {
+  //   navigate("/new-properties");
+  // };
   const goTpProfile = () => {
     navigate("/my-profile");
   };
@@ -65,10 +64,10 @@ const Header = ({ pageTitle }) => {
         />
         <div className="border border-adron-body rounded-xl px-4 py-1 gap-1 flex flex-col">
           <div className="flex justify-between w-full gap-4">
-            <p className="text-xs text-gray-400">Contract ID</p>
-            <CopyButton text="73648KFHD87" />
+            <p className="text-[10px] text-gray-400">Contract ID</p>
+            <CopyButton text={user?.contract_id} />
           </div>
-          <p className="text-sm">73648KFHD87</p>
+          <p className="text-xs">{user?.contract_id || "No contract ID"}</p>
         </div>
         {/* <Button
           label="New Property"

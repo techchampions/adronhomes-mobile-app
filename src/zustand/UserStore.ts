@@ -119,6 +119,7 @@ import apiClient from "../utils/AxiosInstance";
 
 type User = {
   id: number;
+  contract_id?: number | null;
   email: string;
   phone_number: string;
   referral_code: string;
@@ -168,6 +169,7 @@ export const useUserStore = create<UserState>()(
             set({
               user: {
                 id: userData.id,
+                contract_id: userData.contract_id,
                 email: userData.email,
                 phone_number: userData.phone_number,
                 referral_code: userData.referral_code,
