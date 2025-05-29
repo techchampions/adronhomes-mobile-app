@@ -1,4 +1,4 @@
-import { FaSearch, FaUser } from "react-icons/fa";
+import { FaArrowLeft, FaSearch, FaUser } from "react-icons/fa";
 import InputField from "./InputField";
 import { Form, Formik } from "formik";
 import { useNavigate } from "react-router-dom";
@@ -8,19 +8,20 @@ import { searchProperties } from "../data/api";
 import { useSearchStore } from "../zustand/SearchStore";
 import CopyButton from "./CopyButton";
 
-const Header = ({ pageTitle }) => {
+const Header = ({ pageTitle }: { pageTitle: string }) => {
   const navigate = useNavigate();
   const { user } = useUserStore();
   const { setSearchResults, setLoading } = useSearchStore();
   const queryClient = useQueryClient();
-  // const newProperty = () => {
-  //   navigate("/new-properties");
-  // };
-  const goTpProfile = () => {
+  const goToProfile = () => {
     navigate("/my-profile");
+  };
+  const goBack = () => {
+    navigate(-1);
   };
   return (
     <div className="hidden md:flex justify-between items-center bg-white rounded-3xl p-8 mb-5">
+      <FaArrowLeft className="cursor-pointer" onClick={goBack} />
       <div className="text-2xl">{pageTitle}</div>
       <div className="">
         <Formik
@@ -69,12 +70,7 @@ const Header = ({ pageTitle }) => {
           </div>
           <p className="text-xs">{user?.contract_id || "No contract ID"}</p>
         </div>
-        {/* <Button
-          label="New Property"
-          className="bg-adron-green text-sm px-4"
-          onClick={newProperty}
-        /> */}
-        <div className="p-2 bg-adron-body rounded-full" onClick={goTpProfile}>
+        <div className="p-2 bg-adron-body rounded-full" onClick={goToProfile}>
           {user?.profile_picture ? (
             <img
               src={user?.profile_picture}

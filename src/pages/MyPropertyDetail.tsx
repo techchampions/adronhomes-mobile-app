@@ -1,5 +1,4 @@
-// pages/MyPropertyDetail.tsx
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import TransactionsList from "../components/DashboardTransactionComponents/TransactionsList";
 import Button from "../components/Button";
 import { HiOutlineLocationMarker } from "react-icons/hi";
@@ -15,10 +14,38 @@ import { formatDate, formatPrice } from "../data/utils";
 import { Transaction } from "../data/types/userTransactionsTypes";
 import { usePaymentBreakDownStore } from "../zustand/PaymentBreakDownStore";
 import InlineLoader from "../components/InlineLoader";
+import useEmblaCarousel from "embla-carousel-react";
+
 import RequestDocument from "../components/DashboardNewPropertyComponent/RequestDocument";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
 const MyPropertyDetail = () => {
   // const { data, isLoading, isError } = useGetUserTransactions();
+
+  // Embla Carousel Config
+  const [emblaRef, embla] = useEmblaCarousel({
+    align: "start",
+    loop: false,
+    slidesToScroll: 1,
+  });
+  const [canScrollPrev, setCanScrollPrev] = useState(false);
+  const [canScrollNext, setCanScrollNext] = useState(false);
+
+  useEffect(() => {
+    if (!embla) return;
+    const updateButtons = () => {
+      setCanScrollPrev(embla.canScrollPrev());
+      setCanScrollNext(embla.canScrollNext());
+    };
+
+    updateButtons();
+    embla.on("select", updateButtons);
+    embla.on("reInit", updateButtons);
+  }, [embla]);
+
+  const scrollPrev = () => embla?.scrollPrev();
+  const scrollNext = () => embla?.scrollNext();
+
   const [requested, setRequested] = useState(false);
   const { setPaymentDetails, resetPaymentDetails, planId } =
     usePaymentBreakDownStore();
@@ -53,8 +80,8 @@ const MyPropertyDetail = () => {
     openModal(
       <InputAmount
         goBack={makePayment}
-        repaymentAmount={data.next_repayment.amount}
-        dueDate={data.next_repayment.due_date}
+        repaymentAmount={data?.next_repayment.amount}
+        dueDate={data?.next_repayment.due_date}
       />
     );
   };
@@ -64,74 +91,178 @@ const MyPropertyDetail = () => {
   return (
     <div className="space-y-4">
       <div className="flex justify-between flex-col md:flex-row bg-adron-green rounded-3xl overflow-hidden">
-        <div className="flex flex-col w-full md:w-[60%] gap-4 p-8">
-          {/* Progress Bar */}
-          <div className="mt-5 space-y-4">
-            <div className="flex justify-between items-baseline text-sm mt-2 w-fit text-white">
-              <span className="text-white text-4xl">
-                {formatPrice(data?.plan_properties.paid_amount ?? 0)}
-              </span>
-              /
-              <span className="text-white/50">
-                {formatPrice(data?.plan_properties.total_amount ?? 0)}
-              </span>
-            </div>
-            <div className="w-full h-2.5 bg-green-900/50 rounded-full overflow-hidden">
-              <div
-                className="h-full bg-white rounded-3xl"
-                style={{
-                  width: `${data?.plan_properties.payment_percentage ?? 0}%`,
-                }}
-              ></div>
-            </div>
-          </div>
-          {data?.plan_properties.payment_percentage === 100 ? (
-            !requested ? (
-              <Button
-                label="Request Documents"
-                className="text-sm !w-fit px-6 bg-white !text-adron-green"
-                onClick={() => {
-                  setRequested(true);
-                }}
-              />
-            ) : (
-              <div className="flex items-center mb-5 gap-2 text-white">
-                <InlineLoader />
-                <p className="text-sm">Documents are being prepared</p>
-              </div>
-            )
-          ) : (
-            <Button
-              onClick={makePayment}
-              label="Make Payment"
-              className="mt-5 bg-white !text-adron-green !w-fit px-6 text-sm"
-            />
+        <div
+          className="relative overflow-hidden flex w-full md:w-[60%]"
+          ref={emblaRef}
+        >
+          {canScrollPrev && (
+            <button
+              className="absolute z-50 left-1 top-1/2 -translate-y-1/2 bg-white/50 hover:bg-white p-4 rounded-full shadow-md"
+              onClick={scrollPrev}
+            >
+              <FaChevronLeft size={20} />
+            </button>
           )}
-          <div className="flex bg-white/20 justify-between p-4 rounded-2xl">
-            <div className="flex flex-col gap-2">
-              <p className="text-sm text-white">
-                {data?.plan_properties.payment_percentage === 100 ? (
-                  "Payment Complete"
-                ) : data?.plan_properties.repayment_schedule ? (
-                  `$${data.plan_properties.repayment_schedule}`
+          {canScrollNext && (
+            <button
+              className="absolute z-50 right-1 top-1/2 -translate-y-1/2 bg-white/50 hover:bg-white p-4 rounded-full shadow-md"
+              onClick={scrollNext}
+            >
+              <FaChevronRight size={20} />
+            </button>
+          )}
+
+          <div className="flex space-x-4 w-full">
+            <div className="flex flex-col flex-[0_0_100%] w-full gap-4 px-4 md:px-14 py-8">
+              {/* Progress Bar */}
+              <div className="mt-5 space-y-4">
+                <p className="text-xs text-white/80">Invoice</p>
+
+                <div className="flex justify-between items-baseline text-sm mt-2 w-fit text-white">
+                  <span className="text-white text-2xl md:text-4xl">
+                    {formatPrice(data?.plan_properties.paid_amount ?? 0)}
+                  </span>
+                  /
+                  <span className="text-white/50 text-sm md:text-md">
+                    {formatPrice(data?.plan_properties.total_amount ?? 0)}
+                  </span>
+                </div>
+                <div className="w-full h-2.5 bg-green-900/50 rounded-full overflow-hidden">
+                  <div
+                    className="h-full bg-white rounded-3xl"
+                    style={{
+                      width: `${
+                        data?.plan_properties.payment_percentage ?? 0
+                      }%`,
+                    }}
+                  ></div>
+                </div>
+              </div>
+              {data?.plan_properties.payment_percentage === 100 ? (
+                !requested ? (
+                  <Button
+                    label="Request Documents"
+                    className="text-sm !w-fit px-6 bg-white !text-adron-green"
+                    onClick={() => {
+                      setRequested(true);
+                    }}
+                  />
                 ) : (
-                  <InlineLoader />
-                )}
-              </p>
-              <p className="text-xs text-white">Payment Schedule</p>
-            </div>
-            <div className="flex flex-col gap-2 text-right">
-              <p className="text-sm text-white">
-                {data?.plan_properties.payment_percentage === 100
-                  ? "Payment Complete"
-                  : formatDate(
-                      data?.plan_properties.next_payment_date ?? "Loading..."
+                  <div className="flex items-center mb-5 gap-2 text-white">
+                    <InlineLoader />
+                    <p className="text-sm">Documents are being prepared</p>
+                  </div>
+                )
+              ) : (
+                <Button
+                  onClick={makePayment}
+                  label="Make Payment"
+                  className="mt-5 bg-white !text-adron-green !w-fit px-6 text-sm"
+                />
+              )}
+              <div className="flex bg-white/20 justify-between p-4 rounded-2xl">
+                <div className="flex flex-col gap-2">
+                  <p className="text-sm text-white">
+                    {data?.plan_properties.payment_percentage === 100 ? (
+                      "Payment Complete"
+                    ) : data?.plan_properties.repayment_schedule ? (
+                      `${data.plan_properties.repayment_schedule}`
+                    ) : (
+                      <InlineLoader />
                     )}
-              </p>
-              <p className="text-xs text-white">Next Payment</p>
+                  </p>
+                  <p className="text-xs text-white">Payment Schedule</p>
+                </div>
+                <div className="flex flex-col gap-2 text-right">
+                  <p className="text-sm text-white">
+                    {data?.plan_properties.payment_percentage === 100
+                      ? "Payment Complete"
+                      : formatDate(
+                          data?.plan_properties.next_payment_date ??
+                            "Loading..."
+                        )}
+                  </p>
+                  <p className="text-xs text-white">Next Payment</p>
+                </div>
+              </div>
+            </div>
+            <div className="flex flex-col flex-[0_0_100%] w-full gap-4 px-4 md:px-14 p-8">
+              {/* Progress Bar */}
+              <div className="mt-5 space-y-4">
+                <p className="text-xs text-white/80">
+                  Infrastructure and other fees
+                </p>
+                <div className="flex justify-between items-baseline text-sm mt-2 w-fit text-white">
+                  <span className="text-white text-2xl md:text-4xl">
+                    {formatPrice(data?.plan_properties.paid_amount ?? 0)}
+                  </span>
+                  /
+                  <span className="text-white/50 text-sm md:text-md">
+                    {formatPrice(data?.plan_properties.total_amount ?? 0)}
+                  </span>
+                </div>
+                <div className="w-full h-2.5 bg-green-900/50 rounded-full overflow-hidden">
+                  <div
+                    className="h-full bg-white rounded-3xl"
+                    style={{
+                      width: `${
+                        data?.plan_properties.payment_percentage ?? 0
+                      }%`,
+                    }}
+                  ></div>
+                </div>
+              </div>
+              {data?.plan_properties.payment_percentage === 100 ? (
+                !requested ? (
+                  <Button
+                    label="Request Documents"
+                    className="text-sm !w-fit px-6 bg-white !text-adron-green"
+                    onClick={() => {
+                      setRequested(true);
+                    }}
+                  />
+                ) : (
+                  <div className="flex items-center mb-5 gap-2 text-white">
+                    <InlineLoader />
+                    <p className="text-sm">Documents are being prepared</p>
+                  </div>
+                )
+              ) : (
+                <Button
+                  onClick={makePayment}
+                  label="Make Payment"
+                  className="mt-5 bg-white !text-adron-green !w-fit px-6 text-sm"
+                />
+              )}
+              <div className="flex bg-white/20 justify-between p-4 rounded-2xl">
+                <div className="flex flex-col gap-2">
+                  <p className="text-sm text-white">
+                    {data?.plan_properties.payment_percentage === 100 ? (
+                      "Payment Complete"
+                    ) : data?.plan_properties.repayment_schedule ? (
+                      `${data.plan_properties.repayment_schedule}`
+                    ) : (
+                      <InlineLoader />
+                    )}
+                  </p>
+                  <p className="text-xs text-white">Payment Schedule</p>
+                </div>
+                <div className="flex flex-col gap-2 text-right">
+                  <p className="text-sm text-white">
+                    {data?.plan_properties.payment_percentage === 100
+                      ? "Payment Complete"
+                      : formatDate(
+                          data?.plan_properties.next_payment_date ??
+                            "Loading..."
+                        )}
+                  </p>
+                  <p className="text-xs text-white">Next Payment</p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
+
         <div className="flex relative w-full md:w-[40%] bg-[#44691B] rounded-3xl md:rounded-none p-4 md:p-2">
           <div className="w-full max-w-[472px] mx-auto overflow-hidden relative z-10">
             <div className="relative w-[50%] h-[120px] p-6 md:h-[150px] overflow-hidden">
@@ -202,6 +333,8 @@ const MyPropertyDetail = () => {
           />
         </div>
       </div>
+
+      {/* Payment Schedule List */}
       {data?.plan_properties.payment_type === "2" && (
         <div className=" flex flex-col md:flex-row gap-3 justify-between md:items-center bg-white py-4 px-4 md:px-12 rounded-3xl">
           <div className="flex flex-col w-full md:w-[60%]">

@@ -32,6 +32,10 @@ export interface PlanProperty {
   next_payment_date: string;
   property: Property;
 }
+export interface NextPayment {
+  amount: number;
+  due_date: string;
+}
 
 // export interface Transaction {
 //   id: number;
@@ -49,5 +53,6 @@ export interface PlanProperty {
 export interface PlanPropertiesDetailResponse {
   success: boolean;
   plan_properties: PlanProperty;
+  next_repayment: NextPayment;
   transactions: Transaction[];
 }

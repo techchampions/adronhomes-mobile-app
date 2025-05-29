@@ -102,7 +102,7 @@ const BankTransfer = ({
               />
               <label className="mt-4">
                 <label className="block text-xs">Proof of Payment</label>
-                <div className="flex justify-between w-full px-4 py-2 bg-adron-body rounded-3xl items-center">
+                <div className="flex justify-between w-full px-4 py-2 bg-adron-body rounded-lg items-center">
                   <input
                     type="file"
                     name="proof"
