@@ -8,6 +8,7 @@ import { Form, Formik } from "formik";
 import { useInfrastructurePayment } from "../../data/hooks";
 import { useNavigate } from "react-router-dom";
 import PaymentPending from "../PaymentPending";
+import StatusFailed from "../StatusFailed";
 
 const InfrastructureBankTransfer = ({
   goBack,
@@ -47,15 +48,10 @@ const InfrastructureBankTransfer = ({
               error?.response?.data?.message || "Something went wrong";
             showToast(message, "error");
             openModal(
-              <PaymentPending text="Oops... there might have been an error. Try again later" />
+              <StatusFailed text="Oops... there might have been an error. Try again later" />
             );
           },
         }
-      );
-
-      closeModal();
-      openModal(
-        <PaymentPending text="Oops... there might have been an error. Try again later" />
       );
     }
   };
