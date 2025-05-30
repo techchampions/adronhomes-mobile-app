@@ -18,6 +18,7 @@ import useEmblaCarousel from "embla-carousel-react";
 
 import RequestDocument from "../components/DashboardNewPropertyComponent/RequestDocument";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import InputInfrastructureAmount from "../components/DashboardMyPropertyComponents/InputAmount";
 
 const MyPropertyDetail = () => {
   // const { data, isLoading, isError } = useGetUserTransactions();
@@ -71,7 +72,7 @@ const MyPropertyDetail = () => {
   const handleViewProperty = () => {
     navigate(`/properties/${data?.plan_properties.property.id}`);
   };
-  const makePayment = () => {
+  const makePaymentForProperty = () => {
     resetPaymentDetails();
     setPaymentDetails({
       planId: data?.plan_properties.id,
@@ -79,9 +80,22 @@ const MyPropertyDetail = () => {
     console.log("plan ID", data?.plan_properties.id, "Plan ID state", planId);
     openModal(
       <InputAmount
-        goBack={makePayment}
+        goBack={makePaymentForProperty}
         repaymentAmount={data?.next_repayment.amount}
         dueDate={data?.next_repayment.due_date}
+      />
+    );
+  };
+  const makeInfrastructurePayment = () => {
+    resetPaymentDetails();
+    // setPaymentDetails({
+    //   planId: data?.plan_properties.id,
+    // });
+    openModal(
+      <InputInfrastructureAmount
+        goBack={makeInfrastructurePayment}
+        planID={data?.plan_properties.id}
+        infrastructureAmount={data?.next_repayment.amount}
       />
     );
   };
@@ -116,7 +130,7 @@ const MyPropertyDetail = () => {
             <div className="flex flex-col flex-[0_0_100%] w-full gap-4 px-4 md:px-14 py-8">
               {/* Progress Bar */}
               <div className="mt-5 space-y-4">
-                <p className="text-xs text-white/80">Invoice</p>
+                <p className="text-xs text-white/80">Property Payment</p>
 
                 <div className="flex justify-between items-baseline text-sm mt-2 w-fit text-white">
                   <span className="text-white text-2xl md:text-4xl">
@@ -155,7 +169,7 @@ const MyPropertyDetail = () => {
                 )
               ) : (
                 <Button
-                  onClick={makePayment}
+                  onClick={makePaymentForProperty}
                   label="Make Payment"
                   className="mt-5 bg-white !text-adron-green !w-fit px-6 text-sm"
                 />
@@ -229,7 +243,7 @@ const MyPropertyDetail = () => {
                 )
               ) : (
                 <Button
-                  onClick={makePayment}
+                  onClick={makeInfrastructurePayment}
                   label="Make Payment"
                   className="mt-5 bg-white !text-adron-green !w-fit px-6 text-sm"
                 />
@@ -264,68 +278,104 @@ const MyPropertyDetail = () => {
         </div>
 
         <div className="flex relative w-full md:w-[40%] bg-[#44691B] rounded-3xl md:rounded-none p-4 md:p-2">
-          <div className="w-full max-w-[472px] mx-auto overflow-hidden relative z-10">
-            <div className="relative w-[50%] h-[120px] p-6 md:h-[150px] overflow-hidden">
-              <img
-                src={data?.plan_properties.property.display_image}
-                alt="s"
-                className="object-cover w-full h-full rounded-2xl"
-              />
-            </div>
+          {canScrollNext ? (
+            <div className="w-full max-w-[472px] mx-auto overflow-hidden relative z-10">
+              <div className="relative w-[50%] h-[120px] p-6 md:h-[150px] overflow-hidden">
+                <img
+                  src={data?.plan_properties.property.display_image}
+                  alt="s"
+                  className="object-cover w-full h-full rounded-2xl"
+                />
+              </div>
 
-            <div className="w-full px-6 text-white space-y-5 flex flex-col h-auto">
-              <div className="flex-grow space-y-4">
-                <h4 className="text-lg font-semibold  line-clamp-1">
-                  {data?.plan_properties.property.name ?? "loading..."}
-                </h4>
-                <div className="flex items-center  text-sm">
-                  <HiOutlineLocationMarker className="mr-2 flex-shrink-0" />
-                  <p className="truncate">
-                    {data?.plan_properties.property.lga},{" "}
-                    {data?.plan_properties.property.state}
-                  </p>
-                </div>
-                <div className="flex items-center gap-4 text-[10px] ">
-                  <div className="flex items-center gap-1">
-                    <img
-                      src="/ruler.svg"
-                      width={14}
-                      height={14}
-                      alt="ruler"
-                      className="brightness-200"
+              <div className="w-full px-6 text-white space-y-5 flex flex-col h-auto">
+                <div className="flex-grow space-y-4">
+                  <h4 className="text-lg font-semibold  line-clamp-1">
+                    {data?.plan_properties.property.name ?? "loading..."}
+                  </h4>
+                  <div className="flex items-center  text-sm">
+                    <HiOutlineLocationMarker className="mr-2 flex-shrink-0" />
+                    <p className="truncate">
+                      {data?.plan_properties.property.lga},{" "}
+                      {data?.plan_properties.property.state}
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-4 text-[10px] ">
+                    <div className="flex items-center gap-1">
+                      <img
+                        src="/ruler.svg"
+                        width={14}
+                        height={14}
+                        alt="ruler"
+                        className="brightness-200"
+                      />
+
+                      <span className="mr-1">648 Sq M</span>
+                    </div>
+
+                    <div className="flex items-center">
+                      <GiStreetLight className="h-4 w-4" />
+                      <span>Str Lights</span>
+                    </div>
+                    <div className="flex items-center">
+                      <MdOutlinePower className="h-4 w-4" />
+                      <span>Electricity</span>
+                    </div>
+                    <div className="flex gap-1 items-center">
+                      <img
+                        src="/dumbbell.svg"
+                        width={16}
+                        height={16}
+                        alt="dumbbell"
+                      />
+                      <span>Gym</span>
+                    </div>
+                  </div>
+                  <div className="flex justify-between w-full mt-6 items-center">
+                    <Button
+                      onClick={handleViewProperty}
+                      label="View Property"
+                      className="bg-transparent text-xs px-4 !w-fit"
                     />
-
-                    <span className="mr-1">648 Sq M</span>
                   </div>
-
-                  <div className="flex items-center">
-                    <GiStreetLight className="h-4 w-4" />
-                    <span>Str Lights</span>
-                  </div>
-                  <div className="flex items-center">
-                    <MdOutlinePower className="h-4 w-4" />
-                    <span>Electricity</span>
-                  </div>
-                  <div className="flex gap-1 items-center">
-                    <img
-                      src="/dumbbell.svg"
-                      width={16}
-                      height={16}
-                      alt="dumbbell"
-                    />
-                    <span>Gym</span>
-                  </div>
-                </div>
-                <div className="flex justify-between w-full mt-6 items-center">
-                  <Button
-                    onClick={handleViewProperty}
-                    label="View Property"
-                    className="bg-transparent text-xs px-4 !w-fit"
-                  />
                 </div>
               </div>
             </div>
-          </div>
+          ) : (
+            <div className="w-full mx-auto overflow-hidden relative z-10 flex items-center">
+              <div className="flex p-4 flex-col gap-3 w-full text-white">
+                <p className="text-lg text-white">Payment Breakdown</p>
+                <div className="flex justify-between items-center">
+                  <p className="text-xs ">Development Fee:</p>
+                  <p className="text-sm font-bold">
+                    {" "}
+                    {formatPrice(data?.plan_properties.paid_amount || 0)}{" "}
+                  </p>
+                </div>
+                <div className="flex justify-between items-center">
+                  <p className="text-xs ">Survery Fee:</p>
+                  <p className="text-sm font-bold">
+                    {" "}
+                    {formatPrice(data?.plan_properties.paid_amount || 0)}{" "}
+                  </p>
+                </div>
+                <div className="flex justify-between items-center">
+                  <p className="text-xs ">Plan and Architect Fee:</p>
+                  <p className="text-sm font-bold">
+                    {" "}
+                    {formatPrice(data?.plan_properties.paid_amount || 0)}{" "}
+                  </p>
+                </div>
+                <div className="flex justify-between items-center bg-white/30 text-white py-5 px-5 rounded-3xl mt-5">
+                  <p className="text-sm font-bold ">Total:</p>
+                  <p className="text-md font-bold">
+                    {" "}
+                    {formatPrice(data?.plan_properties.paid_amount || 0)}{" "}
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
           <img
             src="/images/referNearn-bg.png"
             className="absolute inset-0 w-full h-full object-cover"

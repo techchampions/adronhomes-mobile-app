@@ -1,128 +1,61 @@
-import React, { useState } from "react";
 import Button from "../Button";
 import { useModalStore } from "../../zustand/useModalStore";
-import SelectPaymentMethod from "./SelectPaymentMethod";
 import CopyButton from "../CopyButton";
 import { useToastStore } from "../../zustand/useToastStore";
-import PaymentSuccessfull from "../PaymentSuccessfull";
 import { RiUpload2Line } from "react-icons/ri";
 import InputField from "../InputField";
 import { Form, Formik } from "formik";
-import {
-  useCreatePropertyPlan,
-  useFundWallet,
-  usePropertyPlanRepayment,
-} from "../../data/hooks";
-import { usePaymentBreakDownStore } from "../../zustand/PaymentBreakDownStore";
+import { useInfrastructurePayment } from "../../data/hooks";
 import { useNavigate } from "react-router-dom";
 import PaymentPending from "../PaymentPending";
 
-const BankTransfer = ({
+const InfrastructureBankTransfer = ({
   goBack,
   amount,
-  isBuyNow = true,
+  planID,
 }: {
   goBack: () => void;
-  amount: number;
-  isBuyNow?: boolean;
+  amount?: number;
+  planID?: number | undefined;
 }) => {
   const initialValues = { proof: null, sender_name: "" };
   const navigate = useNavigate();
-  const { mutate } = useCreatePropertyPlan();
-  const { mutate: makeRepayment } = usePropertyPlanRepayment();
-  const {
-    paymentDuration,
-    paymentSchedule,
-    totalAmount,
-    marketerId,
-    endDate,
-    startDate,
-    propertyId,
-    paymentType,
-    planId,
-  } = usePaymentBreakDownStore();
+  const { mutate: makePayment } = useInfrastructurePayment();
   const { showToast } = useToastStore();
   const { closeModal, openModal } = useModalStore();
-  const GoToSelectPaymentMethod = () => {
-    openModal(<SelectPaymentMethod goBack={goBack} amount={amount} />);
-  };
   const handlePaymentSuccess = (values: typeof initialValues) => {
     console.log("values", values);
-    if (values.sender_name && values.proof) {
-      if (isBuyNow) {
-        mutate(
-          {
-            ...(paymentType === "One Time"
-              ? {
-                  payment_method: "bank_transfer",
-                  payment_type: 1,
-                  monthly_duration: Number(paymentDuration),
-                  property_id: Number(propertyId),
-                  start_date: startDate,
-                  end_date: endDate,
-                  repayment_schedule: paymentSchedule,
-                  paid_amount: totalAmount,
-                  marketer_code: marketerId,
-                  proof_of_payment: values.proof,
-                }
-              : {
-                  payment_method: "bank_transfer",
-                  payment_type: 1,
-                  monthly_duration: Number(paymentDuration),
-                  property_id: Number(propertyId),
-                  start_date: startDate,
-                  end_date: endDate,
-                  repayment_schedule: paymentSchedule,
-                  paid_amount: totalAmount,
-                  marketer_code: marketerId,
-                  proof_of_payment: values.proof,
-                }),
+    if (values.proof) {
+      makePayment(
+        {
+          payment_method: "bank_transfer",
+          plan_id: planID,
+          paid_amount: amount,
+          proof_of_payment: values.proof,
+        },
+        {
+          onSuccess: (data) => {
+            console.log(data);
+            openModal(
+              <PaymentPending text="Your payment is being confrimed by Admin" />
+            );
+            navigate(`/my-property/${planID}`);
           },
-          {
-            onSuccess: (data) => {
-              openModal(
-                <PaymentPending text="Your payment is being confrimed by Admin" />
-              );
-              navigate(`/my-property/${data.plan.id}`);
-            },
-            onError: (error: any) => {
-              // Customize this based on your error shape
-              const message =
-                error?.response?.data?.message || "Something went wrong";
-              showToast(message, "error");
-            },
-          }
-        );
-      } else {
-        makeRepayment(
-          {
-            payment_method: "bank_transfer",
-            paid_amount: totalAmount,
-            plan_id: Number(planId),
-            proof_of_payment: values.proof,
+          onError: (error: any) => {
+            // Customize this based on your error shape
+            const message =
+              error?.response?.data?.message || "Something went wrong";
+            showToast(message, "error");
+            openModal(
+              <PaymentPending text="Oops... there might have been an error. Try again later" />
+            );
           },
-          {
-            onSuccess: (res) => {
-              openModal(
-                <PaymentPending text="Payment will be processed within 24Hrs." />
-              );
-              console.log("data", res);
-              // navigate(`/my-property/${res.plan.id}`);
-            },
-            onError: (error: any) => {
-              // Customize this based on your error shape
-              const message =
-                error?.response?.data?.message || "Something went wrong";
-              showToast(message, "error");
-            },
-          }
-        );
-      }
+        }
+      );
 
       closeModal();
-      // showToast("Payment Recieved Successfully", "success");
       openModal(
-        <PaymentPending text="Your payment is being confrimed by Admin" />
+        <PaymentPending text="Oops... there might have been an error. Try again later" />
       );
     }
   };
@@ -138,7 +71,7 @@ const BankTransfer = ({
           <p className="text-sm text-gray-500">
             Transfer{" "}
             <span className="font-bold text-black">
-              ₦{amount.toLocaleString()}
+              ₦{amount?.toLocaleString()}
             </span>{" "}
             to the account below to complete your payment.
           </p>
@@ -215,4 +148,4 @@ const BankTransfer = ({
   );
 };
 
-export default BankTransfer;
+export default InfrastructureBankTransfer;

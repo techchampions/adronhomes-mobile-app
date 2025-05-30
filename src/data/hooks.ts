@@ -16,6 +16,7 @@ import {
   getUserPropertiesPlanPaymentHistory,
   getUserTransactions,
   getUserWallet,
+  infrastructurePayment,
   propertyPlanRepayment,
   searchProperties,
   toggleSaveProperty,
@@ -236,6 +237,34 @@ export const usePropertyPlanRepayment = () => {
     mutationFn: propertyPlanRepayment,
     onSuccess: () => {
       // Refetch relevant data if needed
+      queryClient.invalidateQueries({
+        queryKey: ["property-plan-details"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["user-properties-plan"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["dashboard-data"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["user-wallet"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["user-transactions"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["user-properties-plan-payment-history"],
+      });
+    },
+  });
+};
+
+//Hook for Infrastructure Payment
+export const useInfrastructurePayment = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: infrastructurePayment,
+    onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["property-plan-details"],
       });

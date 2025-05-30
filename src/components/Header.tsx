@@ -48,7 +48,7 @@ const Header = ({ pageTitle }: { pageTitle: string }) => {
               name="search"
               type="text"
               placeholder="Search..."
-              className="!w-[400px] text-adron-black"
+              className="!w-[300px] text-adron-black"
             />
             <button type="submit">
               <FaSearch />

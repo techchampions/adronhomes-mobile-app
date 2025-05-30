@@ -249,3 +249,23 @@ export const propertyPlanRepayment = async (
   });
   return res.data;
 };
+
+export const infrastructurePayment = async (
+  payload: Partial<PropertyPlanPayload>
+): Promise<void> => {
+  const formData = new FormData();
+  if (payload.plan_id !== undefined)
+    formData.append("plan_id", payload.plan_id.toString());
+  if (payload.payment_method)
+    formData.append("payment_method", payload.payment_method);
+  if (payload.paid_amount !== undefined)
+    formData.append("paid_amount", payload.paid_amount.toString());
+  if (payload.proof_of_payment)
+    formData.append("proof_of_payment", payload.proof_of_payment);
+  const res = await apiClient.post("/user/pay-for-infrastructure", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+  return res.data;
+};

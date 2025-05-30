@@ -4,6 +4,9 @@ import MobileNavContainer from "../components/NavigationComponents/MobileNavCont
 import Header from "../components/Header";
 import MobileNav from "../components/NavigationComponents/MobileNav";
 import { useGetUser } from "../data/hooks";
+import Loader from "../components/Loader";
+import ApiErrorBlock from "../components/ApiErrorBlock";
+import { useToastStore } from "../zustand/useToastStore";
 
 const routeTitles = {
   "/": "Dashboard",
@@ -19,7 +22,7 @@ const routeTitles = {
   "/settings": "Account Settings",
   "/support": "Support",
 };
-function getPageTitle(pathname) {
+function getPageTitle(pathname: string) {
   if (pathname.startsWith("/my-properties/")) {
     return "My Property";
   }
@@ -38,7 +41,11 @@ function getPageTitle(pathname) {
 function DashboardScreen() {
   const location = useLocation();
   const pageTitle = getPageTitle(location.pathname);
+  // const { showToast } = useToastStore();
   const { data, isLoading, isError } = useGetUser();
+  // if (isLoading) return <Loader />;
+  // if (isError) return <ApiErrorBlock />;
+  // if (data) showToast(`Welcome Back... ${data.user.first_name} `, "success");
   return (
     <div className="fixed inset-0 z-50 flex h-screen w-screen">
       {/* Sidebar */}

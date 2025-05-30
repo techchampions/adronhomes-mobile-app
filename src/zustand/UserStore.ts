@@ -117,7 +117,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import apiClient from "../utils/AxiosInstance";
 
-type User = {
+export type User = {
   id: number;
   contract_id?: number | null;
   email: string;
