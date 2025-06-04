@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { FaUserAlt, FaUserCircle } from "react-icons/fa";
 import { FaArrowRightArrowLeft } from "react-icons/fa6";
 import { MdAddHome, MdDashboardCustomize, MdOutlineHelp } from "react-icons/md";
@@ -14,8 +14,6 @@ import { Menu, X } from "lucide-react"; // or use any icon you prefer
 import NavItem from "./NavItem";
 import NavbarAddorder from "./NavbarAddorder";
 import Auth from "../../utils/Auth";
-import Button from "../Button";
-import { Input } from "@headlessui/react";
 import { useUserStore } from "../../zustand/UserStore";
 import { useNavigate } from "react-router-dom";
 import CopyButton from "../CopyButton";

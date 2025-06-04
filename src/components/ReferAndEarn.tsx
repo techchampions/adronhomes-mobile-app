@@ -1,4 +1,3 @@
-import React from "react";
 import { FaCircleExclamation } from "react-icons/fa6";
 import CopyButton from "./CopyButton";
 import Button from "./Button";

@@ -7,7 +7,7 @@ import ApiErrorBlock from "./ApiErrorBlock";
 import { formatPrice } from "../data/utils";
 
 type Prop = {
-  id: number | string;
+  id?: number | string;
 };
 const PropertySummary: React.FC<Prop> = ({ id }) => {
   const { data, isError, isLoading } = useGetPropertyByID(id);

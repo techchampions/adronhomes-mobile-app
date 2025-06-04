@@ -1,4 +1,3 @@
-import React from "react";
 import Button from "./Button";
 import { useModalStore } from "../zustand/useModalStore";
 import { useToastStore } from "../zustand/useToastStore";

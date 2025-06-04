@@ -1,4 +1,3 @@
-import React from "react";
 import SelectPaymentMethod from "../components/DashboardNewPropertyComponent/SelectPaymentMethod";
 import PaymentBreakDown2 from "../components/DashboardNewPropertyComponent/PaymentBreakDownStatic";
 import { usePaymentBreakDownStore } from "../zustand/PaymentBreakDownStore";

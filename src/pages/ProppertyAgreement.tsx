@@ -1,10 +1,6 @@
-import React from "react";
-import { FaMapMarkerAlt } from "react-icons/fa";
-import { GiStreetLight } from "react-icons/gi";
 import Button from "../components/Button";
 import { useNavigate, useParams } from "react-router-dom";
 import PropertySummary from "../components/PropertySummary";
-import SignaturePad from "../components/SignaturePad";
 
 const ProppertyAgreement = () => {
   const navigate = useNavigate();
@@ -54,9 +50,7 @@ const ProppertyAgreement = () => {
           SIGNATURES
         </article>
         <div className="flex justify-end">
-          <div className="w-full md:w-1/2">
-            <SignaturePad />
-          </div>
+          <div className="w-full md:w-1/2">{/* <SignaturePad /> */}</div>
         </div>
       </div>
       <div className="flex justify-end mt-20">

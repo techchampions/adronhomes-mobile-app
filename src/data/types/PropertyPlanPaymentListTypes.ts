@@ -1,3 +1,5 @@
+import { PaymentStatus } from "../../components/DashboardMyPropertyComponents/PaymentList";
+
 export interface PropertyPlanPaymentResponse {
   status: string;
   message: string;
@@ -13,7 +15,8 @@ export interface PropertyPlanPayment {
   id: number;
   property_id: number;
   plan_id: number;
-  status: number;
+  title?: string;
+  status: PaymentStatus;
   amount: number;
   due_date: string;
   created_at: string;

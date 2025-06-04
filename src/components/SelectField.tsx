@@ -8,9 +8,9 @@ interface Option {
 }
 interface SelectFieldProps {
   name: string;
-  options: string[];
+  options: Option[] | string[];
   placeholder?: string;
-  onchange?: (value) => void;
+  onchange?: (value: string) => void;
 }
 
 const SelectField: React.FC<SelectFieldProps> = ({
@@ -34,11 +34,28 @@ const SelectField: React.FC<SelectFieldProps> = ({
             {placeholder}
           </option>
         )}
-        {options.map((opt, idx) => (
+
+        {options.map((opt, idx) => {
+          if (typeof opt === "string") {
+            return (
+              <option value={opt} key={idx}>
+                {opt}
+              </option>
+            );
+          } else {
+            return (
+              <option value={opt.id} key={idx}>
+                {opt.name}
+              </option>
+            );
+          }
+        })}
+
+        {/* {options.map((opt, idx) => (
           <option value={opt.id ? opt.id : opt} key={idx}>
             {opt.name ? opt.name : opt}
           </option>
-        ))}
+        ))} */}
       </select>
 
       {/* Custom Chevron Icon */}

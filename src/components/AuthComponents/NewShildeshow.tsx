@@ -1,5 +1,5 @@
 // src/components/Slideshow.tsx
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 const images = ["/images/lemon-friday.png", "/treasure-park-bg.png"];
 

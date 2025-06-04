@@ -31,12 +31,23 @@ export interface PlanProperty {
   repayment_schedule: string;
   next_payment_date: string;
   property: Property;
+  total_infrastructure_fee: number;
+  total_others_fee: number;
+  total_infrastructure_break_down: InfrastructureBreakDown[];
 }
 export interface NextPayment {
   amount: number;
   due_date: string;
 }
-
+export interface InfrastructureBreakDown {
+  id: number;
+  name: string;
+  value: number;
+  property_id: number;
+  created_at: string;
+  updated_at: string;
+  type: string;
+}
 // export interface Transaction {
 //   id: number;
 //   property_id: number;

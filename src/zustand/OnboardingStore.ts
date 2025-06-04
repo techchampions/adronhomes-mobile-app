@@ -1,6 +1,5 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import apiClient from "../utils/AxiosInstance";
 
 type OnboardingState = {
   step:

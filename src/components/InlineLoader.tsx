@@ -125,8 +125,6 @@
 
 // export default Loader;
 
-import React from "react";
-
 const InlineLoader = () => {
   const rotations = [
     "rotate-0",

@@ -8,8 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { useModalStore } from "../../zustand/useModalStore";
 
 const InputMarketerId = () => {
-  const { setPaymentDetails, marketerId, propertyId } =
-    usePaymentBreakDownStore();
+  const { setPaymentDetails, propertyId } = usePaymentBreakDownStore();
   const { closeModal } = useModalStore();
   const navigate = useNavigate();
 

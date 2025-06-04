@@ -16,7 +16,17 @@ import { PropertyPlanPayload } from "./types/CreatePropertyPayload";
 import { PropertyPlanPaymentResponse } from "./types/PropertyPlanPaymentListTypes";
 import { FundWalletPayload } from "./types/FundWalletPayloadTypes";
 import { PropertiesSearchResultResponse } from "./types/SearchPropertiesResultTypes";
+import { SavedPropertiesResponse } from "./types/SavedPropertiesResponse";
+import { FundWalletResponse } from "../components/DashboardHomeComponents/SelectPaymentMethod";
 
+export type ApiError = {
+  response?: {
+    data?: {
+      errors?: Record<string, string[]>;
+      message?: string;
+    };
+  };
+};
 // Get User Profile
 export const getUser = async (): Promise<GetUserResponse> => {
   const response = await apiClient.get("/user-profile");
@@ -86,18 +96,49 @@ export const getNotificationByID = async (
   return res.data;
 };
 
+// types.ts (or at the top of your file)
 //Get Properties
+// export const fetchPropertiesPageData = async (
+//   page: number,
+//   filters: Record<string, any> = {}
+// ): Promise<PropertiesResponse> => {
+//   const hasFilters = Object.values(filters).some((v) => v !== "");
+//   const params = new URLSearchParams({
+//     page: String(page),
+//     ...(filters.state && { state: filters.state }),
+//     ...(filters.type && { type: filters.type }),
+//     ...(filters.minPrice && { minPrice: filters.minPrice }),
+//     ...(filters.maxPrice && { maxPrice: filters.maxPrice }),
+//   });
+
+//   const endpoint = hasFilters
+//     ? `/filter-property?${params.toString()}`
+//     : `/properties-page?page=${page}`;
+
+//   const response = await apiClient.get(endpoint);
+//   return response.data;
+// };
+export interface PropertyFilters {
+  state?: string;
+  propertyType?: string;
+  status?: string;
+  bedrooms?: string;
+  min?: string | number;
+  max?: string | number;
+}
 export const fetchPropertiesPageData = async (
   page: number,
-  filters: Record<string, any> = {}
+  filters: PropertyFilters = {} // Use the defined type
 ): Promise<PropertiesResponse> => {
-  const hasFilters = Object.values(filters).some((v) => v !== "");
+  const hasFilters = Object.values(filters).some(
+    (v) => v !== "" && v !== undefined
+  );
   const params = new URLSearchParams({
     page: String(page),
     ...(filters.state && { state: filters.state }),
-    ...(filters.type && { type: filters.type }),
-    ...(filters.minPrice && { minPrice: filters.minPrice }),
-    ...(filters.maxPrice && { maxPrice: filters.maxPrice }),
+    ...(filters.propertyType && { type: filters.propertyType }),
+    ...(filters.min && { minPrice: String(filters.min) }),
+    ...(filters.max && { maxPrice: String(filters.max) }),
   });
 
   const endpoint = hasFilters
@@ -108,12 +149,16 @@ export const fetchPropertiesPageData = async (
   return response.data;
 };
 
+export interface SearchParam {
+  search?: string;
+}
 //Search Properties
 export const searchProperties = async (
-  filters: Record<string, any> = {}
+  // filters: Record<string, any>
+  filters: SearchParam = {}
 ): Promise<PropertiesSearchResultResponse> => {
   const params = new URLSearchParams({
-    ...(filters.name && { name: filters.name }),
+    ...(filters.search && { name: filters.search }),
   });
 
   const endpoint = `/search?${params.toString()}`;
@@ -123,14 +168,15 @@ export const searchProperties = async (
 };
 
 // Get Saved Properties
-export const fetchSavedProperties = async (): Promise<PropertiesResponse> => {
-  const res = await apiClient.get("/user/saved-property");
-  return res.data;
-};
+export const fetchSavedProperties =
+  async (): Promise<SavedPropertiesResponse> => {
+    const res = await apiClient.get("/user/saved-property");
+    return res.data;
+  };
 
 //Get Properties by ID Data
 export const getPropertyByID = async (
-  id: number | string
+  id?: number | string
 ): Promise<GetPropertyByIdResponse> => {
   const response = await apiClient.get(`/property/${id}`);
   return response.data;
@@ -159,7 +205,7 @@ export const toggleSaveProperty = async (propertyId: number): Promise<void> => {
 // Fund Wallet
 export const fundWallet = async (
   payload: Partial<FundWalletPayload>
-): Promise<void> => {
+): Promise<FundWalletResponse> => {
   const formData = new FormData();
   if (payload.payment_method !== undefined)
     formData.append("payment_method", payload.payment_method);
@@ -175,17 +221,55 @@ export const fundWallet = async (
   } else {
     console.warn("proof_of_payment is not a File:", payload.proof_of_payment);
   }
-  await apiClient.post("/user/fund-wallet", formData, {
+  const res = await apiClient.post("/user/fund-wallet", formData, {
     headers: {
       "Content-Type": "multipart/form-data",
     },
   });
+  return res.data;
+};
+export type InitiatePropertyPurchaseResponse = {
+  success: boolean;
+  message: string;
+  plan: {
+    id: number;
+    payment_type: string; // "2" as a string — you can also type it more strictly if needed
+    monthly_duration: string;
+    repayment_schedule: string;
+    start_date: string | null; // ISO date or null
+    end_date: string | null; // ISO date or null
+    property_id: number;
+    user_id: number;
+    property_type: number;
+    total_amount: number;
+    paid_amount: string;
+    marketer_id: number;
+    remaining_balance: number;
+    next_payment_date: string; // ISO date string
+    payment_percentage: number;
+    updated_at: string;
+    created_at: string;
+  };
+  payment: {
+    id: number;
+    user_id: number;
+    property_id: number;
+    property_plan_id: number;
+    amount_paid: string;
+    reference: string;
+    payment_type: "Paystack" | string;
+    purpose: "property" | string;
+    proof_of_payment: string | null;
+    updated_at: string;
+    created_at: string;
+  };
+  total_amount: number;
 };
 
 // Create Property Plan
 export const createPropertyPlan = async (
   payload: Partial<PropertyPlanPayload>
-): Promise<void> => {
+): Promise<InitiatePropertyPurchaseResponse> => {
   const formData = new FormData();
 
   if (payload.property_id !== undefined)

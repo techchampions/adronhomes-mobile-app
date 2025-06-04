@@ -58,7 +58,7 @@ const InputField: React.FC<InputFieldProps> = ({
           placeholder={placeholder}
           rows={isTextarea ? rows : undefined}
           readOnly={isReadOnly}
-          autocomplete={autocomplete}
+          autoComplete={autocomplete}
           className={` text-gray-900 text-sm rounded-lg focus:ring-0 block w-full px-5 outline-none resize-none ${
             isTextarea ? "min-h-[60px]" : ""
           }`}

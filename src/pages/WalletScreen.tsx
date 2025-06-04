@@ -1,4 +1,3 @@
-import React from "react";
 import Button from "../components/Button";
 import CopyButton from "../components/CopyButton";
 // import WalletHistory from "../components/DashboardWalletComponents/WalletHistoryList";

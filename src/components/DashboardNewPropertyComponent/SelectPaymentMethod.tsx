@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "../Button";
 import { useModalStore } from "../../zustand/useModalStore";
 import BankTransfer from "./BankTransferMethod";
@@ -16,6 +16,7 @@ import SmallLoader from "../SmallLoader";
 import { useNavigate } from "react-router-dom";
 import { usePaystackPayment } from "../../hooks/usePaystackPayment";
 import { useUserStore } from "../../zustand/UserStore";
+import { ApiError } from "../DashboardHomeComponents/SelectPaymentMethod";
 
 const SelectPaymentMethod = ({
   goBack,
@@ -35,8 +36,9 @@ const SelectPaymentMethod = ({
     string | null
   >(null);
   const { openModal } = useModalStore();
-  const { mutate, isPending } = useCreatePropertyPlan();
-  const { mutate: makeRepayment } = usePropertyPlanRepayment();
+  const { mutate: makePayment, isPending: isPaying } = useCreatePropertyPlan();
+  const { mutate: makeRepayment, isPending: isRepaying } =
+    usePropertyPlanRepayment();
   const {
     totalAmount,
     startDate,
@@ -59,7 +61,7 @@ const SelectPaymentMethod = ({
     };
 
     check();
-  }, []);
+  }, [navigate, totalAmount]);
 
   const handleContinue = () => {
     if (selectedPaymentMethod == "Bank Transfer") {
@@ -67,84 +69,101 @@ const SelectPaymentMethod = ({
         <BankTransfer goBack={goBack} amount={amount} isBuyNow={isBuyNow} />
       );
     } else if (selectedPaymentMethod == "Paystack") {
-      paystack({
-        email: user?.email || "",
-        amount: totalAmount, // in Naira
-        onSuccess: (ref) => {
-          console.log("Payment successful!", ref);
-          // TODO: call your backend API to confirm payment
-          if (isBuyNow) {
-            mutate(
-              {
-                ...(paymentType == "One Time"
-                  ? {
-                      payment_method: "paystack",
-                      payment_type: 1,
-                      property_id: Number(propertyId),
-                      paid_amount: totalAmount,
-                      marketer_code: marketerId,
-                    }
-                  : {
-                      payment_method: "paystack",
-                      payment_type: 2,
-                      monthly_duration: Number(paymentDuration),
-                      property_id: Number(propertyId),
-                      start_date: startDate,
-                      end_date: endDate,
-                      repayment_schedule: paymentSchedule,
-                      paid_amount: totalAmount,
-                      marketer_code: marketerId,
-                    }),
-              },
-              {
-                onSuccess: (res) => {
+      if (isBuyNow) {
+        makePayment(
+          {
+            ...(paymentType == "One Time"
+              ? {
+                  payment_method: "paystack",
+                  payment_type: 1,
+                  property_id: Number(propertyId),
+                  paid_amount: totalAmount,
+                  marketer_code: marketerId,
+                }
+              : {
+                  payment_method: "paystack",
+                  payment_type: 2,
+                  monthly_duration: Number(paymentDuration),
+                  property_id: Number(propertyId),
+                  start_date: startDate,
+                  end_date: endDate,
+                  repayment_schedule: paymentSchedule,
+                  paid_amount: totalAmount,
+                  marketer_code: marketerId,
+                }),
+          },
+          {
+            onSuccess: (res) => {
+              paystack({
+                email: user?.email || "",
+                amount: totalAmount, // in Naira
+                reference: res.payment.reference,
+                onSuccess: (ref) => {
                   openModal(
                     <PaymentSuccessfull text="Payment received successfully." />
                   );
-                  console.log("data", res);
-                  navigate(`/my-property/${res.plan.id}`);
+                  console.log("Payment successful!", ref);
+                  navigate(`/my-property/${res.plan?.id}`);
+
+                  // TODO: call your backend API to confirm payment
                 },
-                onError: (error: any) => {
-                  const message =
-                    error?.response?.data?.message || "Something went wrong";
-                  showToast(message, "error");
+                onClose: () => {
+                  showToast("Payment popup closed", "error");
                 },
-              }
-            );
-          } else {
-            makeRepayment(
-              {
-                payment_method: "paystack",
-                paid_amount: totalAmount,
-                plan_id: Number(planId),
-              },
-              {
-                onSuccess: (res) => {
-                  openModal(
-                    <PaymentSuccessfull text="Payment received successfully." />
-                  );
-                  console.log("data", res);
-                  // navigate(`/my-property/${res.plan.id}`);
-                },
-                onError: (error: any) => {
-                  // Customize this based on your error shape
-                  const message =
-                    error?.response?.data?.message || "Something went wrong";
-                  showToast(message, "error");
-                },
-              }
-            );
+              });
+            },
+            onError: (error: ApiError) => {
+              const message =
+                error?.response?.data?.message ||
+                error?.message ||
+                "Something went wrong";
+              showToast(message, "error");
+            },
           }
-        },
-        onClose: () => {
-          showToast("Payment popup closed", "error");
-        },
-      });
+        );
+      } else {
+        makeRepayment(
+          {
+            payment_method: "paystack",
+            paid_amount: totalAmount,
+            plan_id: Number(planId),
+          },
+          {
+            onSuccess: (res) => {
+              paystack({
+                email: user?.email || "",
+                amount: totalAmount, // in Naira
+                reference: "wonder",
+                onSuccess: (ref) => {
+                  openModal(
+                    <PaymentSuccessfull text="Payment received successfully." />
+                  );
+                  console.log("Payment successful!", ref);
+                  // TODO: call your backend API to confirm payment
+                },
+                onClose: () => {
+                  showToast("Payment popup closed", "error");
+                },
+              });
+
+              console.log("data", res);
+              // navigate(`/my-property/${res.plan.id}`);
+            },
+            onError: (error: ApiError) => {
+              const message =
+                error?.response?.data?.message ||
+                error?.message ||
+                "Something went wrong";
+              showToast(message, "error");
+            },
+          }
+        );
+      }
     } else if (selectedPaymentMethod == "Virtual Wallet") {
       // Check if payment is to buy property or Recuring payment
       if (isBuyNow) {
-        if (userWalletData?.wallet_balance > amount) {
-          mutate(
+        if (userWalletData?.wallet_balance || 0 > amount) {
+          makePayment(
             {
               ...(paymentType == "One Time"
                 ? {
@@ -171,12 +190,13 @@ const SelectPaymentMethod = ({
                 openModal(
                   <PaymentSuccessfull text="Payment received successfully." />
                 );
-                console.log("data", res);
-                navigate(`/my-property/${res.plan.id}`);
+                navigate(`/my-property/${res.plan?.id}`);
               },
-              onError: (error: any) => {
+              onError: (error: ApiError) => {
                 const message =
-                  error?.response?.data?.message || "Something went wrong";
+                  error?.response?.data?.message ||
+                  error?.message ||
+                  "Something went wrong";
                 showToast(message, "error");
               },
             }
@@ -185,7 +205,7 @@ const SelectPaymentMethod = ({
           showToast("Insufficient balance", "error");
         }
       } else {
-        if (userWalletData?.wallet_balance > amount) {
+        if (userWalletData?.wallet_balance || 0 > amount) {
           console.log("Plan ID", planId);
           makeRepayment(
             {
@@ -199,12 +219,12 @@ const SelectPaymentMethod = ({
                   <PaymentSuccessfull text="Payment received successfully." />
                 );
                 console.log("data", res);
-                // navigate(`/my-property/${res.plan.id}`);
               },
-              onError: (error: any) => {
-                // Customize this based on your error shape
+              onError: (error: ApiError) => {
                 const message =
-                  error?.response?.data?.message || "Something went wrong";
+                  error?.response?.data?.message ||
+                  error?.message ||
+                  "Something went wrong";
                 showToast(message, "error");
               },
             }
@@ -215,7 +235,7 @@ const SelectPaymentMethod = ({
       }
     }
   };
-  if (isPending) {
+  if (isPaying || isRepaying) {
     return <SmallLoader />;
   }
 
@@ -375,7 +395,7 @@ const SelectPaymentMethod = ({
                       : `text-gray-500`
                   } `}
                 >
-                  {userWalletData?.wallet_balance > amount
+                  {userWalletData?.wallet_balance || 0 > amount
                     ? `Available Balance`
                     : `Insufficient Balance`}
                 </p>
@@ -392,9 +412,10 @@ const SelectPaymentMethod = ({
           />
           <Button
             label="Continue"
+            isLoading={isPaying || isRepaying}
             className="!w-fit px-12 py-2 text-xs bg-black text-white"
             onClick={handleContinue}
-            disabled={!selectedPaymentMethod}
+            disabled={!selectedPaymentMethod || isPaying || isRepaying}
           />
         </div>
       </div>

@@ -19,6 +19,7 @@ export const calculatePaymentDetails = (
       : property?.initial_deposit || 0;
 
   const remPrice = (property?.price || 0) - (property?.initial_deposit || 0);
+  console.log(remPrice);
 
   const weeklyAmount =
     values.paymentSchedule === "Monthly"
@@ -29,7 +30,7 @@ export const calculatePaymentDetails = (
 
   const totalAmount =
     // values.paymentType === "One Time" ? initialDeposit :
-    initialDeposit + fees;
+    initialDeposit;
 
   return {
     fees,

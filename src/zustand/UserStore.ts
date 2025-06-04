@@ -142,11 +142,12 @@ export type User = {
 
 type UserState = {
   user: User | null;
+
   token: string;
   isLoggedIn: boolean;
   setToken: (token: string) => void;
   setIsLoggedIn: (status: boolean) => void;
-  getUser: () => Promise<void>;
+  setUser: (user: User) => void; // 👈 add this  getUser: () => Promise<void>;
   reset: () => void;
 };
 
@@ -159,6 +160,7 @@ export const useUserStore = create<UserState>()(
 
       setToken: (token) => set({ token }),
       setIsLoggedIn: (status) => set({ isLoggedIn: status }),
+      setUser: (user) => set({ user }), // 👈 add this below setIsLoggedIn
 
       getUser: async () => {
         try {

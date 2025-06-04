@@ -19,7 +19,7 @@ const HomeScreen = () => {
   };
   const { data, isError, isLoading } = useGetUserDashboardData();
   const {
-    data: transRes,
+    // data: transRes,
     isLoading: isLoadingTransaction,
     isError: isErrorTransaction,
   } = useGetUserTransactions();

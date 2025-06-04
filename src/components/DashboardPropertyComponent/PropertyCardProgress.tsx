@@ -25,10 +25,10 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
   targetAmount,
 }) => {
   const navigate = useNavigate();
-  const progressPercent = Math.min(
-    100,
-    (raisedAmount / targetAmount) * 100
-  ).toFixed(1);
+  // const progressPercent = Math.min(
+  //   100,
+  //   (raisedAmount / targetAmount) * 100
+  // ).toFixed(1);
   const handleNavigation = () => {
     navigate(`/my-property/${id}`);
   };

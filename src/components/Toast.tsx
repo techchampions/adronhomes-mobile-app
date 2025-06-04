@@ -46,7 +46,7 @@
 // export default Toast;
 
 // components/GeneralComponents/Toast.tsx
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { FaCheckCircle, FaExclamation, FaTimes } from "react-icons/fa";
 import { useToastStore } from "../zustand/useToastStore";
 

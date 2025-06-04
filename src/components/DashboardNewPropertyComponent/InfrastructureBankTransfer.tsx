@@ -8,6 +8,7 @@ import { Form, Formik } from "formik";
 import { useInfrastructurePayment } from "../../data/hooks";
 import { useNavigate } from "react-router-dom";
 import PaymentPending from "../PaymentPending";
+import { ApiError } from "../DashboardHomeComponents/SelectPaymentMethod";
 import StatusFailed from "../StatusFailed";
 
 const InfrastructureBankTransfer = ({
@@ -19,11 +20,11 @@ const InfrastructureBankTransfer = ({
   amount?: number;
   planID?: number | undefined;
 }) => {
-  const initialValues = { proof: null, sender_name: "" };
+  const initialValues = { proof: null as File | null, sender_name: "" };
   const navigate = useNavigate();
   const { mutate: makePayment } = useInfrastructurePayment();
   const { showToast } = useToastStore();
-  const { closeModal, openModal } = useModalStore();
+  const { openModal } = useModalStore();
   const handlePaymentSuccess = (values: typeof initialValues) => {
     console.log("values", values);
     if (values.proof) {
@@ -42,10 +43,11 @@ const InfrastructureBankTransfer = ({
             );
             navigate(`/my-property/${planID}`);
           },
-          onError: (error: any) => {
-            // Customize this based on your error shape
+          onError: (error: ApiError) => {
             const message =
-              error?.response?.data?.message || "Something went wrong";
+              error?.response?.data?.message ||
+              error?.message ||
+              "Something went wrong";
             showToast(message, "error");
             openModal(
               <StatusFailed text="Oops... there might have been an error. Try again later" />

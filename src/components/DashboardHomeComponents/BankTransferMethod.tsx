@@ -1,7 +1,7 @@
 // import React, { useState } from "react";
 import Button from "../Button";
 import { useModalStore } from "../../zustand/useModalStore";
-import SelectPaymentMethod from "./SelectPaymentMethod";
+import SelectPaymentMethod, { ApiError } from "./SelectPaymentMethod";
 import CopyButton from "../CopyButton";
 import { useToastStore } from "../../zustand/useToastStore";
 import { RiUpload2Line } from "react-icons/ri";
@@ -32,17 +32,19 @@ const BankTransfer = ({
         amount: amount || 0,
         payment_method: "bank_transfer",
         sender_name: values.sender_name,
-        proof_of_payment: values.proof,
+        proof_of_payment: values.proof ?? undefined,
       },
       {
-        onSuccess(data) {
+        onSuccess() {
           openModal(
             <PaymentPending text={"Payment is being confirmed by Admin."} />
           );
         },
-        onError: (error: any) => {
+        onError: (error: ApiError) => {
           const message =
-            error?.response?.data?.message || "Something went wrong";
+            error?.response?.data?.message ||
+            error?.message ||
+            "Something went wrong";
           showToast(message, "error");
         },
       }

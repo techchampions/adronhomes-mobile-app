@@ -1,7 +1,5 @@
-import React from "react";
 import { MdPending } from "react-icons/md";
-
-const PaymentPending = ({ text }) => {
+const PaymentPending = ({ text }: { text: string }) => {
   return (
     <div className="flex flex-col justify-center items-center py-0 gap-4">
       {/* <img src="/ep_success-filled.svg" alt="" className="h-32 w-32" /> */}

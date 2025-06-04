@@ -1,5 +1,5 @@
 // components/Modal.tsx
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { IoClose } from "react-icons/io5";
 import { useModalStore } from "../zustand/useModalStore";
 

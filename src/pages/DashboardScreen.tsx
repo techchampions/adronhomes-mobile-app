@@ -1,12 +1,8 @@
 import { Outlet, useLocation } from "react-router-dom";
 import NavigationContainer from "../components/NavigationComponents/NavigationContainer";
-import MobileNavContainer from "../components/NavigationComponents/MobileNavContainer";
 import Header from "../components/Header";
 import MobileNav from "../components/NavigationComponents/MobileNav";
 import { useGetUser } from "../data/hooks";
-import Loader from "../components/Loader";
-import ApiErrorBlock from "../components/ApiErrorBlock";
-import { useToastStore } from "../zustand/useToastStore";
 
 const routeTitles = {
   "/": "Dashboard",
@@ -36,16 +32,15 @@ function getPageTitle(pathname: string) {
     return "My Property";
   }
 
-  return routeTitles[pathname] || "Dashboard";
+  // return routeTitles[pathname] || "Dashboard";
+  return (routeTitles as Record<string, string>)[pathname] || "Dashboard";
 }
 function DashboardScreen() {
   const location = useLocation();
   const pageTitle = getPageTitle(location.pathname);
   // const { showToast } = useToastStore();
-  const { data, isLoading, isError } = useGetUser();
-  // if (isLoading) return <Loader />;
-  // if (isError) return <ApiErrorBlock />;
-  // if (data) showToast(`Welcome Back... ${data.user.first_name} `, "success");
+  const { isError } = useGetUser();
+  if (isError) console.log("error");
   return (
     <div className="fixed inset-0 z-50 flex h-screen w-screen">
       {/* Sidebar */}

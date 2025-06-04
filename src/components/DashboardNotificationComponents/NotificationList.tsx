@@ -1,12 +1,8 @@
 import React, { useState } from "react";
 import { useModalStore } from "../../zustand/useModalStore";
 import NotificationDetail from "./NotificationDetail";
-import {
-  Notification,
-  NotificationStatus,
-} from "../../data/types/notificationTypes";
+import { Notification } from "../../data/types/notificationTypes";
 import { formatDate } from "../../data/utils";
-import Loader from "../Loader";
 import ApiErrorBlock from "../ApiErrorBlock";
 import NotFound from "../NotFound";
 import SmallLoader from "../SmallLoader";

@@ -1,11 +1,13 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import SwiperPropertyList from "../components/DashboardNewPropertyComponent/SwiperPropertyList";
 import FilterBar from "../components/DashboardNewPropertyComponent/FilterBar";
 import { usePropertiespage } from "../data/hooks";
+import { PropertyFilters } from "../data/api";
 
 const NewPropertyScreen = () => {
   const [page, setPage] = useState(1);
-  const [filters, setFilters] = useState<Record<string, any>>({});
+  // const [filters, setFilters] = useState<Record<string, any>>({});
+  const [filters, setFilters] = useState<PropertyFilters>({});
 
   const { data, isLoading, isError } = usePropertiespage(page, filters);
   const properties =
@@ -13,7 +15,7 @@ const NewPropertyScreen = () => {
       ? data?.data || []
       : data?.properties?.data || [];
 
-  const pagination = data?.properties;
+  // const pagination = data?.properties;
   return (
     <div className="">
       <div className="flex flex-col justify-center mx-auto text-center space-y-2 my-7">
@@ -28,7 +30,7 @@ const NewPropertyScreen = () => {
       </div>
 
       <FilterBar
-        initialFilters={properties}
+        initialFilters={{}}
         onFilter={(values) => {
           const mapped = {
             state: values.state,

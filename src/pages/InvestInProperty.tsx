@@ -54,19 +54,34 @@ export default function InvestmentForm() {
   const submit = (values: typeof initialValues) => {
     const { initialDeposit, weeklyAmount, fees, totalAmount } =
       calculatePaymentDetails(values, property);
+    // const planDetails = {
+    //   paymentType: values.paymentType,
+    //   paymentDuration: values.paymentDuration,
+    //   paymentSchedule: values.paymentSchedule,
+    //   startDate: values.startDate,
+    //   endDate: values.endDate,
+    //   initialDeposit: initialDeposit,
+    //   weeklyAmount: weeklyAmount,
+    //   fees,
+    //   totalAmount,
+    //   // marketerId: values.marketerId,
+    //   propertyId: id,
+    // };
     const planDetails = {
       paymentType: values.paymentType,
-      paymentDuration: values.paymentDuration,
+      paymentDuration: values.paymentDuration
+        ? Number(values.paymentDuration)
+        : null,
       paymentSchedule: values.paymentSchedule,
       startDate: values.startDate,
       endDate: values.endDate,
-      initialDeposit: initialDeposit,
-      weeklyAmount: weeklyAmount,
+      initialDeposit,
+      weeklyAmount,
       fees,
       totalAmount,
-      // marketerId: values.marketerId,
-      propertyId: id,
+      propertyId: id ? Number(id) : null, // Convert string ID to number
     };
+
     setPaymentDetails(planDetails);
     console.log("planDetails", planDetails);
     openModal(<InputMarketerId />);
@@ -80,6 +95,7 @@ export default function InvestmentForm() {
       // const { paymentDuration, startDate } = values;
 
       // Only calculate if both are available
+      console.log(selectedPaymentType);
       if (values.paymentDuration && values.startDate) {
         const months = parseInt(values.paymentDuration);
         if (!isNaN(months)) {
@@ -87,7 +103,7 @@ export default function InvestmentForm() {
           setFieldValue("endDate", newEndDate);
         }
       }
-    }, [values.startDate, setFieldValue]);
+    }, [values.startDate, values.paymentDuration, setFieldValue]);
 
     return null; // no UI
   };
@@ -98,7 +114,7 @@ export default function InvestmentForm() {
       validationSchema={validationSchema}
       onSubmit={submit}
     >
-      {({ values, isValid, dirty, setFieldValue }) => {
+      {({ values, isValid }) => {
         const { fees, initialDeposit, weeklyAmount, totalAmount } =
           calculatePaymentDetails(values, property);
         const { SelectedPaymentType } = paymentTypeWatcher(values);
@@ -121,18 +137,8 @@ export default function InvestmentForm() {
                       name="paymentType"
                       placeholder="Select Payment Type"
                       options={["One Time", "Installment"]}
-                      onchange={(e) => {
-                        setSelectedPaymentType(e.target.value);
-                        // setSelectedPaymentType(selected);
-                        // setFieldValue("paymentType", selected);
-
-                        // if (selected === "One Time") {
-                        //   // Reset other form values when One Time is selected
-                        //   setFieldValue("paymentDuration", "");
-                        //   setFieldValue("paymentSchedule", "");
-                        //   setFieldValue("startDate", "");
-                        //   setFieldValue("endDate", "");
-                        // }
+                      onchange={(value: string) => {
+                        setSelectedPaymentType(value);
                       }}
                     />
                   </div>
@@ -181,6 +187,16 @@ export default function InvestmentForm() {
                 </div>
               </div>
               <div className="bg-white p-6 rounded-3xl shadow-xl">
+                <h4 className="font-semibold mb-4">Infrastructure Fees</h4>
+                <div className="space-y-4 mb-4 text-sm">
+                  <p className="text-black flex justify-between gap-4">
+                    ₦{fees.toLocaleString()}
+                    <span className="text-xs text-gray-400 text-right">
+                      Fees & Charges
+                    </span>
+                  </p>
+                </div>
+
                 <h4 className="font-semibold mb-4">Payment Breakdown</h4>
                 <div className="space-y-4 text-sm">
                   <p className="text-black flex justify-between gap-4">
@@ -191,12 +207,12 @@ export default function InvestmentForm() {
                         : "Initial Deposit"}
                     </span>
                   </p>
-                  <p className="text-black flex justify-between gap-4">
+                  {/* <p className="text-black flex justify-between gap-4">
                     ₦{fees.toLocaleString()}
                     <span className="text-xs text-gray-400 text-right">
                       Fees & Charges
                     </span>
-                  </p>
+                  </p> */}
                   {selectedPaymentType === "Installment" &&
                     weeklyAmount > 0 && (
                       <p className="text-black flex justify-between gap-4">
@@ -206,16 +222,18 @@ export default function InvestmentForm() {
                         </span>
                       </p>
                     )}
-                  <p className="text-black flex justify-between gap-4">
+                  {/* <p className="text-black flex justify-between gap-4">
                     ₦{totalAmount.toLocaleString()}
                     <span className="text-xs text-gray-400 text-right">
                       Total initial Payment
                     </span>
-                  </p>
+                  </p> */}
                 </div>
                 <div className="mt-6 bg-adron-green text-white text-start px-4 md:px-6 py-2 rounded-3xl font-semibold text-lg flex flex-col">
                   ₦{totalAmount.toLocaleString()}{" "}
-                  <span className="text-xs text-white/50">Total</span>
+                  <span className="text-[10px] text-white/50">
+                    Total is exclusive of Infrastructure Fees
+                  </span>
                 </div>
                 <p className="text-xs text-gray-400 mt-2 flex items-start gap-2">
                   <HiOutlineExclamationCircle className="h-10 w-10" />

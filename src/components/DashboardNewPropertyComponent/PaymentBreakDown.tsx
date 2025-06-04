@@ -23,9 +23,11 @@ const PaymentBreakDown: React.FC<PaymentBreakDownProps> = ({
   if (isError) return <ApiErrorBlock />;
 
   console.log("Payment Duration", paymentDuration);
+  const price = property?.price ?? 0;
+  const iniDepo = property?.initial_deposit ?? 0;
   const initialDeposit =
     paymentType === "One Time" ? property?.price : property?.initial_deposit;
-  const remPrice = property?.price - property?.initial_deposit;
+  const remPrice = price - iniDepo;
   const fees = 5000;
   const weeklyAmount =
     paymentSchedule === "Monthly"
@@ -33,7 +35,7 @@ const PaymentBreakDown: React.FC<PaymentBreakDownProps> = ({
       : paymentSchedule === "Quarterly"
       ? remPrice / (Number(paymentDuration) / 3)
       : 0;
-  const totalAmount = initialDeposit + fees;
+  const totalAmount = (initialDeposit ?? 0) + fees;
 
   return (
     <div className="bg-white p-6 rounded-3xl shadow-xl">

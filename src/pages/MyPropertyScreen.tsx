@@ -1,8 +1,6 @@
-import React from "react";
 import PropertyList from "../components/DashboardPropertyComponent/PropertyList";
 import { useGetUserPropertiesPlan } from "../data/hooks";
 import ApiErrorBlock from "../components/ApiErrorBlock";
-import SmallLoader from "../components/SmallLoader";
 import { formatPrice } from "../data/utils";
 
 const MyPropertyScreen = () => {

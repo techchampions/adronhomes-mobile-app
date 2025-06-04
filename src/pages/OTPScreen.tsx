@@ -120,7 +120,10 @@ const OTPScreen: React.FC<OTPProps> = ({ length = 4 }) => {
         {otp.map((value, index) => (
           <input
             key={index}
-            ref={(el) => (inputRefs.current[index] = el)}
+            // ref={(el) => (inputRefs.current[index] = el)}
+            ref={(el) => {
+              inputRefs.current[index] = el;
+            }}
             type="text"
             value={value}
             maxLength={1}

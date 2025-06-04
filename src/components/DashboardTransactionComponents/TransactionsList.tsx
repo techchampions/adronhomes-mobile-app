@@ -5,7 +5,6 @@ import {
   Transaction,
   TransactionStatus,
 } from "../../data/types/userTransactionsTypes";
-import Loader from "../Loader";
 import { formatDate, formatPrice } from "../../data/utils";
 import NotFound from "../NotFound";
 import ApiErrorBlock from "../ApiErrorBlock";
@@ -75,7 +74,7 @@ const TransactionsList: React.FC<Props> = ({ data, isLoading, isError }) => {
             {formatDate(item.created_at || "")}
           </div>
         </div>
-        {renderStatusBadge(item.status)}
+        {renderStatusBadge(item.status || 0)}
         <div className="text-sm font-semibold text-end">
           {formatPrice(item.amount)}
         </div>

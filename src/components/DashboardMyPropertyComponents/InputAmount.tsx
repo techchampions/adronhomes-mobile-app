@@ -48,7 +48,7 @@ const InputInfrastructureAmount = ({
               <InfrastructureBankTransfer
                 amount={values.amount}
                 goBack={goBack}
-                planID={planID}
+                planID={Number(planID)}
               />
             );
           }}

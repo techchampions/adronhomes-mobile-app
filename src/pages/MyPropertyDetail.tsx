@@ -17,7 +17,7 @@ import InlineLoader from "../components/InlineLoader";
 import useEmblaCarousel from "embla-carousel-react";
 
 import RequestDocument from "../components/DashboardNewPropertyComponent/RequestDocument";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { FaCheckCircle, FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import InputInfrastructureAmount from "../components/DashboardMyPropertyComponents/InputAmount";
 
 const MyPropertyDetail = () => {
@@ -59,7 +59,7 @@ const MyPropertyDetail = () => {
     if (data?.plan_properties.payment_percentage === 100) {
       openModal(<RequestDocument />);
     }
-  }, [data?.plan_properties.payment_percentage]);
+  }, [data?.plan_properties.payment_percentage, openModal]);
 
   if (isLoading) {
     return <Loader />;
@@ -153,15 +153,24 @@ const MyPropertyDetail = () => {
                 </div>
               </div>
               {data?.plan_properties.payment_percentage === 100 ? (
-                !requested ? (
-                  <Button
-                    label="Request Documents"
-                    className="text-sm !w-fit px-6 bg-white !text-adron-green"
-                    onClick={() => {
-                      setRequested(true);
-                    }}
-                  />
+                requested ? (
+                  <div className="flex items-center text-white gap-4">
+                    <div className="flex items-center">
+                      <FaCheckCircle className="text-white" />
+                      <span className="text-sm text-white/50">
+                        Documents Received
+                      </span>
+                    </div>
+                    <a href="">Download</a>
+                  </div>
                 ) : (
+                  // <Button
+                  //   label="Request Documents"
+                  //   className="text-sm !w-fit px-6 bg-white !text-adron-green"
+                  //   onClick={() => {
+                  //     setRequested(true);
+                  //   }}
+                  // />
                   <div className="flex items-center mb-5 gap-2 text-white">
                     <InlineLoader />
                     <p className="text-sm">Documents are being prepared</p>
@@ -212,7 +221,9 @@ const MyPropertyDetail = () => {
                   </span>
                   /
                   <span className="text-white/50 text-sm md:text-md">
-                    {formatPrice(data?.plan_properties.total_amount ?? 0)}
+                    {formatPrice(
+                      data?.plan_properties.total_infrastructure_fee ?? 0
+                    )}
                   </span>
                 </div>
                 <div className="w-full h-2.5 bg-green-900/50 rounded-full overflow-hidden">
@@ -227,14 +238,18 @@ const MyPropertyDetail = () => {
                 </div>
               </div>
               {data?.plan_properties.payment_percentage === 100 ? (
-                !requested ? (
-                  <Button
-                    label="Request Documents"
-                    className="text-sm !w-fit px-6 bg-white !text-adron-green"
-                    onClick={() => {
-                      setRequested(true);
-                    }}
-                  />
+                requested ? (
+                  <div className="flex items-center text-white gap-4">
+                    <div className="flex items-center">
+                      <FaCheckCircle className="text-white" />
+                      <span className="text-sm text-white/50">
+                        Documents Received
+                      </span>
+                    </div>
+                    <a href="https://lovely-melba-60c6a6.netlify.app/logo.png">
+                      Download
+                    </a>
+                  </div>
                 ) : (
                   <div className="flex items-center mb-5 gap-2 text-white">
                     <InlineLoader />
@@ -248,29 +263,95 @@ const MyPropertyDetail = () => {
                   className="mt-5 bg-white !text-adron-green !w-fit px-6 text-sm"
                 />
               )}
-              <div className="flex bg-white/20 justify-between p-4 rounded-2xl">
+              <div className="flex bg-white/10 invisible justify-between p-4 rounded-2xl">
                 <div className="flex flex-col gap-2">
                   <p className="text-sm text-white">
-                    {data?.plan_properties.payment_percentage === 100 ? (
-                      "Payment Complete"
-                    ) : data?.plan_properties.repayment_schedule ? (
-                      `${data.plan_properties.repayment_schedule}`
-                    ) : (
-                      <InlineLoader />
-                    )}
+                    {data?.plan_properties.payment_percentage === 100
+                      ? "Payment Complete"
+                      : "View Payment Breakdown"}
                   </p>
-                  <p className="text-xs text-white">Payment Schedule</p>
                 </div>
                 <div className="flex flex-col gap-2 text-right">
                   <p className="text-sm text-white">
                     {data?.plan_properties.payment_percentage === 100
                       ? "Payment Complete"
                       : formatDate(
-                          data?.plan_properties.next_payment_date ??
-                            "Loading..."
+                          data?.plan_properties.start_date ?? "Loading..."
                         )}
                   </p>
-                  <p className="text-xs text-white">Next Payment</p>
+                  <p className="text-xs text-white">Last Payment</p>
+                </div>
+              </div>
+            </div>
+            <div className="flex flex-col flex-[0_0_100%] w-full gap-4 px-4 md:px-14 p-8">
+              {/* Progress Bar */}
+              <div className="mt-5 space-y-4">
+                <p className="text-xs text-white/80">
+                  Development and other fees
+                </p>
+                <div className="flex justify-between items-baseline text-sm mt-2 w-fit text-white">
+                  <span className="text-white text-2xl md:text-4xl">
+                    {formatPrice(data?.plan_properties.paid_amount ?? 0)}
+                  </span>
+                  /
+                  <span className="text-white/50 text-sm md:text-md">
+                    {formatPrice(data?.plan_properties.total_others_fee ?? 0)}
+                  </span>
+                </div>
+                <div className="w-full h-2.5 bg-green-900/50 rounded-full overflow-hidden">
+                  <div
+                    className="h-full bg-white rounded-3xl"
+                    style={{
+                      width: `${
+                        data?.plan_properties.payment_percentage ?? 0
+                      }%`,
+                    }}
+                  ></div>
+                </div>
+              </div>
+              {data?.plan_properties.payment_percentage === 100 ? (
+                requested ? (
+                  <div className="flex items-center text-white gap-4">
+                    <div className="flex items-center">
+                      <FaCheckCircle className="text-white" />
+                      <span className="text-sm text-white/50">
+                        Documents Received
+                      </span>
+                    </div>
+                    <a href="https://lovely-melba-60c6a6.netlify.app/logo.png">
+                      Download
+                    </a>
+                  </div>
+                ) : (
+                  <div className="flex items-center mb-5 gap-2 text-white">
+                    <InlineLoader />
+                    <p className="text-sm">Documents are being prepared</p>
+                  </div>
+                )
+              ) : (
+                <Button
+                  onClick={makeInfrastructurePayment}
+                  label="Make Payment"
+                  className="mt-5 bg-white !text-adron-green !w-fit px-6 text-sm"
+                />
+              )}
+              <div className="flex bg-white/10 invisible justify-between p-4 rounded-2xl">
+                <div className="flex flex-col gap-2">
+                  <p className="text-sm text-white">
+                    {data?.plan_properties.payment_percentage === 100
+                      ? "Payment Complete"
+                      : "View Payment Breakdown"}
+                  </p>
+                </div>
+                <div className="flex flex-col gap-2 text-right">
+                  <p className="text-sm text-white">
+                    {data?.plan_properties.payment_percentage === 100
+                      ? "Payment Complete"
+                      : formatDate(
+                          data?.plan_properties.start_date ?? "Loading..."
+                        )}
+                  </p>
+                  <p className="text-xs text-white">Last Payment</p>
                 </div>
               </div>
             </div>

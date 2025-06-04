@@ -1,7 +1,12 @@
+import { Property } from "../data/types/propertiesPageTypes";
 import NoPropertyFound from "./NoPropertyFound";
 import PropertyCard from "./PropertyCard";
 
-export default function PropertyList({ properties }) {
+export default function PropertyList({
+  properties,
+}: {
+  properties: Property[];
+}) {
   //   const address = `${properties[0].street_address}, ${properties[0].lga}, ${properties[0].state} ${properties[0].country}`;
 
   return (

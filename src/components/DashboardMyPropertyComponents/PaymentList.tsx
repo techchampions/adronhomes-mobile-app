@@ -6,7 +6,8 @@ import SmallLoader from "../SmallLoader";
 import ApiErrorBlock from "../ApiErrorBlock";
 import NotFound from "../NotFound";
 import { usePaymentBreakDownStore } from "../../zustand/PaymentBreakDownStore";
-import { formatPrice } from "../../data/utils";
+import { formatDate, formatPrice } from "../../data/utils";
+import { PropertyPlanPayment } from "../../data/types/PropertyPlanPaymentListTypes";
 
 export type PaymentStatus = 0 | 1 | 2;
 
@@ -20,7 +21,8 @@ export type PaymentItem = {
 };
 
 type Props = {
-  data: PaymentItem[];
+  // data: PaymentItem[];
+  data: PropertyPlanPayment[];
   isLoading?: boolean;
   isError?: boolean;
 };
@@ -32,7 +34,11 @@ const PaymentList: React.FC<Props> = ({ data, isLoading, isError }) => {
   const { openModal } = useModalStore();
   const [activeTab, setActiveTab] = useState<Tab>("All");
   const { resetPaymentDetails, setPaymentDetails } = usePaymentBreakDownStore();
-
+  // Find the latest due date among items with status !== 1
+  const unpaidItems = data.filter((item) => item.status !== 1);
+  const latestDueDate =
+    unpaidItems.length > 0 &&
+    Math.min(...unpaidItems.map((item) => new Date(item.due_date).getTime()));
   const filteredData =
     activeTab === "All"
       ? data
@@ -73,43 +79,53 @@ const PaymentList: React.FC<Props> = ({ data, isLoading, isError }) => {
   const renderList = () => {
     return (
       <div className="">
-        {filteredData.map((item) => (
-          <div
-            key={item.id}
-            className="cursor-pointer grid grid-cols-3 md:grid-cols-4 justify-between items-center p-4 even:bg-gray-100 rounded-3xl"
-          >
-            <div>
-              <div className="font-medium text-sm">{item.date}</div>
-              <div className="text-xs text-gray-500">{item.title}</div>
-            </div>
-            {renderStatusBadge(item.status)}
-            <div className="text-sm font-semibold text-end">
-              {formatPrice(item.amount)}
-            </div>
-            <div className="flex justify-end">
-              {item.status != 1 && (
-                <Button
-                  label="Make Payment"
-                  className="bg-black text-[9px] md:text-xs !w-fit px-4 md:px-6"
-                  onClick={() => {
-                    resetPaymentDetails();
-                    setPaymentDetails({
-                      planId: item.plan_id,
-                    });
+        {filteredData.map((item) => {
+          const isLatestUnpaid =
+            item.status !== 1 &&
+            latestDueDate &&
+            new Date(item.due_date).getTime() === latestDueDate;
 
-                    openModal(
-                      <InputAmount
-                        goBack={makePayment}
-                        repaymentAmount={item.amount}
-                        dueDate={item.date}
-                      />
-                    );
-                  }}
-                />
-              )}
+          return (
+            <div
+              key={item.id}
+              className="cursor-pointer grid grid-cols-3 md:grid-cols-4 justify-between items-center p-4 even:bg-gray-100 rounded-3xl"
+            >
+              <div>
+                <div className="font-medium text-sm">
+                  {formatDate(item.due_date)}
+                </div>
+                <div className="text-xs text-gray-500">{item.title}</div>
+              </div>
+              {renderStatusBadge(item.status)}
+              <div className="text-sm font-semibold text-end">
+                {formatPrice(item.amount)}
+              </div>
+              <div className="flex justify-end">
+                {item.status != 1 && (
+                  <Button
+                    label="Make Payment"
+                    disabled={!isLatestUnpaid}
+                    className="bg-black text-[9px] md:text-xs !w-fit px-4 md:px-6"
+                    onClick={() => {
+                      resetPaymentDetails();
+                      setPaymentDetails({
+                        planId: item.plan_id,
+                      });
+
+                      openModal(
+                        <InputAmount
+                          goBack={makePayment}
+                          repaymentAmount={item.amount}
+                          dueDate={item.due_date}
+                        />
+                      );
+                    }}
+                  />
+                )}
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     );
   };

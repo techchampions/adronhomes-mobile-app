@@ -32,7 +32,7 @@ const Header = ({ pageTitle }: { pageTitle: string }) => {
             try {
               const data = await queryClient.fetchQuery({
                 queryKey: ["search-properties-results", values.search],
-                queryFn: () => searchProperties({ name: values.search }),
+                queryFn: () => searchProperties({ search: values.search }),
               });
 
               setSearchResults(data);

@@ -1,11 +1,10 @@
-import React from "react";
 import Button from "../Button";
 import { useGetNotificationByID } from "../../data/hooks";
 import ApiErrorBlock from "../ApiErrorBlock";
 import SmallLoader from "../SmallLoader";
 import { formatDate, formatPrice } from "../../data/utils";
 
-const NotificationDetail = ({ id }) => {
+const NotificationDetail = ({ id }: { id: number }) => {
   const { data, isLoading, isError } = useGetNotificationByID(id);
   if (isError) {
     return <ApiErrorBlock />;

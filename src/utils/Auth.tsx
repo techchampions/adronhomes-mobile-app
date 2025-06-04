@@ -3,10 +3,11 @@ import apiClient from "./AxiosInstance";
 import { useUserStore } from "../zustand/UserStore";
 import { useOnboardingStore } from "../zustand/OnboardingStore";
 import { useToastStore } from "../zustand/useToastStore";
+import { ApiError } from "../data/api";
 
 const { showToast } = useToastStore.getState();
 const { setHasCompletedOnboarding, setStep } = useOnboardingStore.getState();
-const { setToken, setIsLoggedIn, getUser } = useUserStore.getState();
+const { setToken, setIsLoggedIn } = useUserStore.getState();
 
 const handleResendOTP = async () => {
   try {
@@ -62,14 +63,15 @@ const login = async (
     } else if (response.data.message) {
       showToast(response.data.message, "error");
     }
-  } catch (error: any) {
-    if (error.response) {
-      const data = error.response.data;
+  } catch (error: unknown) {
+    const apiError = error as ApiError;
+    if (apiError.response) {
+      const data = apiError.response.data;
 
-      if (data.errors) {
+      if (data?.errors) {
         const errorMessages = Object.values(data.errors).flat().join("\n");
         showToast(errorMessages, "error");
-      } else if (data.message) {
+      } else if (data?.message) {
         showToast(data.message, "error");
       } else {
         showToast("An unexpected error occurred. Please try again.", "error");
@@ -215,9 +217,11 @@ const handleForgotpassword = async (
     } else if (response.data.message) {
       showToast(response.data.message, "error");
     }
-  } catch (error: any) {
-    if (error.response && error.response.data.errors) {
-      const errorMessages = Object.values(error.response.data.errors)
+  } catch (error: unknown) {
+    const apiError = error as ApiError;
+
+    if (apiError.response && apiError.response.data?.errors) {
+      const errorMessages = Object.values(apiError.response.data.errors)
         .flat()
         .join("\n"); // Extract and format error messages
       showToast(errorMessages, "error");

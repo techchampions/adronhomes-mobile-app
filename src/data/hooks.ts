@@ -12,12 +12,15 @@ import {
   getPropertyByID,
   getPropertyPlanByID,
   getTransactionByID,
+  getUser,
   getUserPropertiesPlan,
   getUserPropertiesPlanPaymentHistory,
   getUserTransactions,
   getUserWallet,
   infrastructurePayment,
+  PropertyFilters,
   propertyPlanRepayment,
+  SearchParam,
   searchProperties,
   toggleSaveProperty,
 } from "./api";
@@ -37,15 +40,47 @@ import { TransactionByIDResponse } from "./types/userTransactionByIDTypes";
 import { NotificationByIDResponse } from "./types/NotificationByIDTypes";
 import { PropertyPlanPaymentResponse } from "./types/PropertyPlanPaymentListTypes";
 import { PropertiesSearchResultResponse } from "./types/SearchPropertiesResultTypes";
+import { useEffect } from "react";
+import { SavedPropertiesResponse } from "./types/SavedPropertiesResponse";
 
 //Query hook for User profile
 export const useGetUser = () => {
-  const { getUser } = useUserStore();
-  return useQuery<GetUserResponse>({
+  const { setUser, setIsLoggedIn } = useUserStore();
+  const queryResult = useQuery<GetUserResponse, Error>({
     queryKey: ["user-profile"],
     queryFn: getUser,
   });
+
+  useEffect(() => {
+    if (queryResult.data?.success) {
+      setUser(queryResult.data.user);
+      setIsLoggedIn(true);
+    }
+  }, [queryResult.data, setUser, setIsLoggedIn]);
+
+  return queryResult;
 };
+// export const useGetUser = () => {
+//   const { setUser, setIsLoggedIn } = useUserStore();
+//   return useQuery<GetUserResponse, Error, GetUserResponse, ["user-profile"]>({
+//     queryKey: ["user-profile"],
+//     queryFn: getUser,
+//     onSettled: (data: GetUserResponse) => {
+//       if (data.success) {
+//         setUser(data.user);
+//         setIsLoggedIn(true);
+//       }
+//     },
+//   });
+//   useEffect(() => {
+//     if (queryResult.data?.success) {
+//       setUser(queryResult.data.user);
+//       setIsLoggedIn(true);
+//     }
+//   }, [queryResult.data, setUser, setIsLoggedIn]);
+
+//   return queryResult;
+// };
 
 // Query hook for homepage data with
 export const useGetUserDashboardData = () => {
@@ -98,7 +133,8 @@ export const useGetNotifications = () => {
 // Query hook for properties and filtering
 export const usePropertiespage = (
   page: number,
-  filters?: Record<string, any>
+  // filters?: Record<string, any>
+  filters?: PropertyFilters // Use the defined type instead of `Record<string, any>`
 ) => {
   return useQuery<PropertiesResponse>({
     queryKey: ["properties-page", page, filters],
@@ -107,7 +143,7 @@ export const usePropertiespage = (
 };
 
 // Query hook to search Properties
-export const useSearchProperties = (filters?: Record<string, any>) => {
+export const useSearchProperties = (filters?: SearchParam) => {
   return useQuery<PropertiesSearchResultResponse>({
     queryKey: ["search-properties-results"],
     queryFn: () => searchProperties(filters),
@@ -116,14 +152,14 @@ export const useSearchProperties = (filters?: Record<string, any>) => {
 
 // Query hook to get user Saved property
 export const useGetSavedProperties = () => {
-  return useQuery<PropertiesResponse>({
+  return useQuery<SavedPropertiesResponse>({
     queryKey: ["saved-properties"],
     queryFn: fetchSavedProperties,
   });
 };
 
 // Query hook for properties page data with
-export const useGetPropertyByID = (id: number | string) => {
+export const useGetPropertyByID = (id?: number | string) => {
   return useQuery<GetPropertyByIdResponse>({
     queryKey: ["property", id], // include id in the key to avoid collisions
     queryFn: () => getPropertyByID(id),

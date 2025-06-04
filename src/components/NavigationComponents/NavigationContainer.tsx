@@ -1,23 +1,18 @@
-import React, { useState } from "react";
 import NavItem from "./NavItem";
 import { FaUserAlt } from "react-icons/fa";
 import { FaArrowRightArrowLeft } from "react-icons/fa6";
 import { MdAddHome, MdDashboardCustomize, MdOutlineHelp } from "react-icons/md";
-import { IoLogOut, IoSettingsSharp } from "react-icons/io5";
+import { IoSettingsSharp } from "react-icons/io5";
 import {
-  RiAppsLine,
   RiHomeHeartFill,
   RiLogoutBoxRFill,
   RiNotificationBadgeFill,
   RiWallet3Fill,
 } from "react-icons/ri";
 import NavbarAddorder from "./NavbarAddorder";
-import { useNavigate } from "react-router-dom";
 import Auth from "../../utils/Auth";
 
 function NavigationContainer() {
-  const navigate = useNavigate();
-
   return (
     <div className="flex flex-col p-5 gap-5 h-screen justify-between overflow-y-auto scrollbar-hide">
       <img

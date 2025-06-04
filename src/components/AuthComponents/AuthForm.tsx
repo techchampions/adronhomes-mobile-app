@@ -47,7 +47,7 @@ const AuthForm = ({
           OTP: Yup.number().required("Required"),
           password: Yup.string().required("Required"),
           confirmPassword: Yup.string()
-            .oneOf([Yup.ref("password"), null], "Passwords must match")
+            .oneOf([Yup.ref("password")], "Passwords must match")
             .required("Required"),
         }
       : isLogin
@@ -79,7 +79,15 @@ const AuthForm = ({
     if (isForgotPassword) {
       Auth.handleForgotpassword(values, { setSubmitting });
     } else if (isResetPassword) {
-      Auth.handleResetPassword(values, { setSubmitting });
+      // Auth.handleResetPassword(values, { setSubmitting });
+      // When calling the function:
+      Auth.handleResetPassword(
+        {
+          ...values,
+          OTP: Number(values.OTP), // Convert string OTP to number
+        },
+        { setSubmitting }
+      );
       console.log("Resetting password:", values.password);
     } else if (isLogin) {
       Auth.login(values, { setSubmitting });

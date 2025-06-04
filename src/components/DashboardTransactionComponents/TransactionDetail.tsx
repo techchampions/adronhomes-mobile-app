@@ -6,7 +6,7 @@ import { formatPrice } from "../../data/utils";
 import { TransactionStatus } from "../../data/types/userTransactionsTypes";
 import SmallLoader from "../SmallLoader";
 
-const TransactionDetail = ({ id }) => {
+const TransactionDetail = ({ id }: { id: number }) => {
   const { data, isLoading, isError } = useGetTransactionByID(id);
   if (isLoading) {
     return <SmallLoader />;

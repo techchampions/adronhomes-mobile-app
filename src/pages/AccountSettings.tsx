@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { Switch } from "@headlessui/react"; // optional for toggle UI
@@ -12,14 +12,13 @@ import apiClient from "../data/apiClient";
 import { useToastStore } from "../zustand/useToastStore";
 import { TbCameraPlus } from "react-icons/tb";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
+import { ApiError } from "../data/api";
 
 const ProfileSettings = () => {
   const [showPassword, setShowPassword] = useState(false);
 
   // Password visibility toggle logic
   const togglePasswordVisibility = () => setShowPassword((prev) => !prev);
-  const navigate = useNavigate();
   const [isPassword, setisPassword] = useState(false);
 
   const { openModal, closeModal } = useModalStore();
@@ -30,17 +29,17 @@ const ProfileSettings = () => {
   if (isError) return <ApiErrorBlock />;
 
   const initialValues = {
-    firstName: `${userData.first_name}`,
-    lastName: ` ${userData.last_name}`,
-    email: `${userData.email}`,
-    phone: `${userData.phone_number}`,
-    state: `${userData.state}`,
-    country: `${userData.country}`,
-    lga: `${userData.lga}`,
-    address: `${userData.address}`,
+    firstName: `${userData?.first_name}`,
+    lastName: ` ${userData?.last_name}`,
+    email: `${userData?.email}`,
+    phone: `${userData?.phone_number}`,
+    state: `${userData?.state}`,
+    country: `${userData?.country}`,
+    lga: `${userData?.lga}`,
+    address: `${userData?.address}`,
     password: "",
     passwordConfirmation: "",
-    newPropertyNotification: userData.notification_enabled == 1 ? true : false,
+    newPropertyNotification: userData?.notification_enabled == 1 ? true : false,
     promoNotification: false,
     profilePicture: null,
   };
@@ -67,7 +66,7 @@ const ProfileSettings = () => {
     address: Yup.string().required("Address is required"),
     password: Yup.string().min(8, "Password must be at least 8 characters"),
     passwordConfirmation: Yup.string()
-      .oneOf([Yup.ref("password"), null], "Passwords must match")
+      .oneOf([Yup.ref("password")], "Passwords must match")
       .required("Required")
       .min(8, "Password must be at least 8 characters"),
   });
@@ -120,10 +119,11 @@ const ProfileSettings = () => {
       // navigate("/my-profile");
 
       console.log("Profile updated successfully:", response.data);
-    } catch (error) {
-      // showToast("Error updating profile", "error");
-      if (error.response) {
-        const data = error.response.data;
+    } catch (error: unknown) {
+      const apiError = error as ApiError; // Type assertion
+
+      if (apiError.response?.data) {
+        const data = apiError.response.data;
 
         if (data.errors) {
           const errorMessages = Object.values(data.errors).flat().join("\n");
@@ -133,10 +133,29 @@ const ProfileSettings = () => {
         } else {
           showToast("An unexpected error occurred. Please try again.", "error");
         }
+      } else {
+        showToast("Network error. Please check your connection.", "error");
       }
 
       console.error("Error updating profile:", error);
     }
+    // catch (error) {
+    //   // showToast("Error updating profile", "error");
+    //   if (error.response) {
+    //     const data = error.response.data;
+
+    //     if (data.errors) {
+    //       const errorMessages = Object.values(data.errors).flat().join("\n");
+    //       showToast(errorMessages, "error");
+    //     } else if (data.message) {
+    //       showToast(data.message, "error");
+    //     } else {
+    //       showToast("An unexpected error occurred. Please try again.", "error");
+    //     }
+    //   }
+
+    //   console.error("Error updating profile:", error);
+    // }
   };
 
   const confirmChangePassword = async (values: typeof initialValues) => {
@@ -158,9 +177,11 @@ const ProfileSettings = () => {
       // navigate("/my-profile");
 
       console.log("Profile updated successfully:", response.data);
-    } catch (error) {
-      if (error.response) {
-        const data = error.response.data;
+    } catch (error: unknown) {
+      const apiError = error as ApiError;
+
+      if (apiError.response?.data) {
+        const data = apiError.response.data;
 
         if (data.errors) {
           const errorMessages = Object.values(data.errors).flat().join("\n");
@@ -170,8 +191,24 @@ const ProfileSettings = () => {
         } else {
           showToast("An unexpected error occurred. Please try again.", "error");
         }
+      } else {
+        showToast("Network error. Please check your connection.", "error");
       }
     }
+    //  catch (error) {
+    //   if (error.response) {
+    //     const data = error.response.data;
+
+    //     if (data.errors) {
+    //       const errorMessages = Object.values(data.errors).flat().join("\n");
+    //       showToast(errorMessages, "error");
+    //     } else if (data.message) {
+    //       showToast(data.message, "error");
+    //     } else {
+    //       showToast("An unexpected error occurred. Please try again.", "error");
+    //     }
+    //   }
+    // }
 
     closeModal();
   };
@@ -208,8 +245,8 @@ const ProfileSettings = () => {
                       src={
                         values.profilePicture
                           ? URL.createObjectURL(values.profilePicture)
-                          : userData.profile_picture
-                          ? userData.profile_picture
+                          : userData?.profile_picture
+                          ? userData?.profile_picture
                           : "/user.svg"
                       }
                       alt="Profile"

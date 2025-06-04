@@ -1,4 +1,3 @@
-import React from "react";
 import Button from "../Button";
 
 const RequestDocument = () => {
@@ -7,10 +6,10 @@ const RequestDocument = () => {
       <img src="/ep_success-filled.svg" alt="" className="h-14 w-14" />
       <h4 className="font-bold">Payment Complete</h4>
       <p className="text-gray-400 text-center text-sm">
-        Congrats! You just completed your payment for this property. Click the
-        button below to request for your documents.
+        Congrats! You just completed your payment for this property. Your will
+        be processed and delivered to you.
       </p>
-      <Button label="Request Documents" className="text-sm" />
+      {/* <Button label="Request Documents" className="text-sm" /> */}
     </div>
   );
 };

@@ -1,4 +1,3 @@
-import React from "react";
 import UserProfileCard from "../components/MyProfile/UserProfileCard";
 import Button from "../components/Button";
 import { useModalStore } from "../zustand/useModalStore";
@@ -22,12 +21,12 @@ const MyProfileScreen = () => {
     <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
       <div className="col-span-2 md:col-span-3">
         <UserProfileCard
-          firstName={userData.first_name}
-          lastName={userData.last_name}
-          email={userData.email}
-          joinedDate={userData.created_at}
-          location={`${userData.address}, ${userData.lga}, ${userData.state}`}
-          imageUrl={userData.profile_picture}
+          firstName={userData?.first_name || ""}
+          lastName={userData?.last_name || ""}
+          email={userData?.email || ""}
+          joinedDate={userData?.created_at || ""}
+          location={`${userData?.address}, ${userData?.lga}, ${userData?.state}`}
+          imageUrl={userData?.profile_picture || ""}
         />
       </div>
       <div className="p-4 bg-white rounded-3xl flex flex-col items-center h-fit col-span-2 md:col-span-1">

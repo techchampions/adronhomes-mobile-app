@@ -1,5 +1,4 @@
 // pages/NotificationsPage.tsx
-import React from "react";
 import NotificationList from "../components/DashboardNotificationComponents/NotificationList";
 import { useGetNotifications } from "../data/hooks";
 

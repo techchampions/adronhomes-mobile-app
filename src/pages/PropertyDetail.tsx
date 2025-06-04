@@ -1,19 +1,14 @@
-import Slider from "react-slick";
-import { useRef, useState } from "react";
 import { Form, Formik } from "formik";
 import { FaHeart, FaMapMarker } from "react-icons/fa";
-import { IoIosCheckmarkCircleOutline, IoLogoWhatsapp } from "react-icons/io";
+import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 import { useNavigate, useParams } from "react-router-dom";
 import InputField from "../components/InputField";
 import Button from "../components/Button";
-import SelectField from "../components/SelectField";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { GiStreetLight } from "react-icons/gi";
-import PropertyList from "../components/PropertyList";
 import { useGetPropertyByID } from "../data/hooks";
 import { formatPrice } from "../data/utils";
 import ApiErrorBlock from "../components/ApiErrorBlock";
@@ -34,43 +29,43 @@ const PropertyDetail = () => {
     navigate(`/invest-property/${id}`);
   };
 
-  const NextArrow = ({ onClick }: { onClick?: () => void }) => (
-    <div
-      onClick={onClick}
-      className="absolute top-1/2 right-2 transform -translate-y-1/2 z-10 bg-white/60 bg-opacity-50 hover:bg-opacity-70 w-10 h-10 rounded-full flex items-center justify-center cursor-pointer"
-    >
-      <svg
-        className="w-5 h-5 text-gray-800"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth={2.5}
-        viewBox="0 0 24 24"
-      >
-        <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-      </svg>
-    </div>
-  );
+  // const NextArrow = ({ onClick }: { onClick?: () => void }) => (
+  //   <div
+  //     onClick={onClick}
+  //     className="absolute top-1/2 right-2 transform -translate-y-1/2 z-10 bg-white/60 bg-opacity-50 hover:bg-opacity-70 w-10 h-10 rounded-full flex items-center justify-center cursor-pointer"
+  //   >
+  //     <svg
+  //       className="w-5 h-5 text-gray-800"
+  //       fill="none"
+  //       stroke="currentColor"
+  //       strokeWidth={2.5}
+  //       viewBox="0 0 24 24"
+  //     >
+  //       <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+  //     </svg>
+  //   </div>
+  // );
 
-  const PrevArrow = ({ onClick }: { onClick?: () => void }) => (
-    <div
-      onClick={onClick}
-      className="absolute top-1/2 left-2 transform -translate-y-1/2 z-10 bg-white/60 bg-opacity-50 hover:bg-opacity-70 w-10 h-10 rounded-full flex items-center justify-center cursor-pointer"
-    >
-      <svg
-        className="w-5 h-5 text-gray-800"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth={2.5}
-        viewBox="0 0 24 24"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          d="M15 19l-7-7 7-7"
-        />
-      </svg>
-    </div>
-  );
+  // const PrevArrow = ({ onClick }: { onClick?: () => void }) => (
+  //   <div
+  //     onClick={onClick}
+  //     className="absolute top-1/2 left-2 transform -translate-y-1/2 z-10 bg-white/60 bg-opacity-50 hover:bg-opacity-70 w-10 h-10 rounded-full flex items-center justify-center cursor-pointer"
+  //   >
+  //     <svg
+  //       className="w-5 h-5 text-gray-800"
+  //       fill="none"
+  //       stroke="currentColor"
+  //       strokeWidth={2.5}
+  //       viewBox="0 0 24 24"
+  //     >
+  //       <path
+  //         strokeLinecap="round"
+  //         strokeLinejoin="round"
+  //         d="M15 19l-7-7 7-7"
+  //       />
+  //     </svg>
+  //   </div>
+  // );
 
   return (
     <div className="flex flex-col w-full px-4 md:px-0 pb-32">

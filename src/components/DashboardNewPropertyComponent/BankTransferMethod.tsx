@@ -1,22 +1,18 @@
-import React, { useState } from "react";
 import Button from "../Button";
 import { useModalStore } from "../../zustand/useModalStore";
-import SelectPaymentMethod from "./SelectPaymentMethod";
 import CopyButton from "../CopyButton";
 import { useToastStore } from "../../zustand/useToastStore";
-import PaymentSuccessfull from "../PaymentSuccessfull";
 import { RiUpload2Line } from "react-icons/ri";
 import InputField from "../InputField";
 import { Form, Formik } from "formik";
 import {
   useCreatePropertyPlan,
-  useFundWallet,
   usePropertyPlanRepayment,
 } from "../../data/hooks";
 import { usePaymentBreakDownStore } from "../../zustand/PaymentBreakDownStore";
 import { useNavigate } from "react-router-dom";
 import PaymentPending from "../PaymentPending";
-
+import { ApiError } from "../DashboardHomeComponents/SelectPaymentMethod";
 const BankTransfer = ({
   goBack,
   amount,
@@ -26,7 +22,7 @@ const BankTransfer = ({
   amount: number;
   isBuyNow?: boolean;
 }) => {
-  const initialValues = { proof: null, sender_name: "" };
+  const initialValues = { proof: null as File | null, sender_name: "" };
   const navigate = useNavigate();
   const { mutate } = useCreatePropertyPlan();
   const { mutate: makeRepayment } = usePropertyPlanRepayment();
@@ -43,9 +39,9 @@ const BankTransfer = ({
   } = usePaymentBreakDownStore();
   const { showToast } = useToastStore();
   const { closeModal, openModal } = useModalStore();
-  const GoToSelectPaymentMethod = () => {
-    openModal(<SelectPaymentMethod goBack={goBack} amount={amount} />);
-  };
+  // const GoToSelectPaymentMethod = () => {
+  //   openModal(<SelectPaymentMethod goBack={goBack} amount={amount} />);
+  // };
   const handlePaymentSuccess = (values: typeof initialValues) => {
     console.log("values", values);
     if (values.sender_name && values.proof) {
@@ -83,12 +79,13 @@ const BankTransfer = ({
               openModal(
                 <PaymentPending text="Your payment is being confrimed by Admin" />
               );
-              navigate(`/my-property/${data.plan.id}`);
+              navigate(`/my-property/${data.plan?.id}`);
             },
-            onError: (error: any) => {
-              // Customize this based on your error shape
+            onError: (error: ApiError) => {
               const message =
-                error?.response?.data?.message || "Something went wrong";
+                error?.response?.data?.message ||
+                error?.message ||
+                "Something went wrong";
               showToast(message, "error");
             },
           }
@@ -109,10 +106,11 @@ const BankTransfer = ({
               console.log("data", res);
               // navigate(`/my-property/${res.plan.id}`);
             },
-            onError: (error: any) => {
-              // Customize this based on your error shape
+            onError: (error: ApiError) => {
               const message =
-                error?.response?.data?.message || "Something went wrong";
+                error?.response?.data?.message ||
+                error?.message ||
+                "Something went wrong";
               showToast(message, "error");
             },
           }
