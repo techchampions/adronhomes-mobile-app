@@ -1,4 +1,3 @@
-import React from "react";
 import UserProfileCard from "../components/MyProfile/UserProfileCard";
 import Button from "../components/Button";
 import { useModalStore } from "../zustand/useModalStore";
@@ -13,8 +12,7 @@ const MyProfileScreen = () => {
   const { openModal } = useModalStore();
   const navigate = useNavigate();
   const { data, isLoading, isError } = useGetUser();
-  const { data: planData, isLoading: isLoadingPlanData } =
-    useGetUserPropertiesPlan();
+  const { data: planData } = useGetUserPropertiesPlan();
   const userData = data?.user;
   if (isLoading) return <Loader />;
   if (isError) return <ApiErrorBlock />;
@@ -23,20 +21,24 @@ const MyProfileScreen = () => {
     <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
       <div className="col-span-2 md:col-span-3">
         <UserProfileCard
-          firstName={userData.first_name}
-          lastName={userData.last_name}
-          email={userData.email}
-          joinedDate={userData.created_at}
-          location={`${userData.address}, ${userData.lga}, ${userData.state}`}
-          imageUrl={userData.profile_picture}
+          firstName={userData?.first_name || ""}
+          lastName={userData?.last_name || ""}
+          email={userData?.email || ""}
+          joinedDate={userData?.created_at || ""}
+          location={`${userData?.address}, ${userData?.lga}, ${userData?.state}`}
+          imageUrl={userData?.profile_picture || ""}
         />
       </div>
       <div className="p-4 bg-white rounded-3xl flex flex-col items-center h-fit col-span-2 md:col-span-1">
         <p className="text-gray-400 text-sm">total Properties</p>
         <div className=" flex w-fit mx-auto font-bold rounded-full justify-between items-center gap-2 ">
-          <span>{planData?.total_property?.breakdown[1]?.count} Houses</span>
+          <span>
+            {planData?.total_property?.breakdown[1]?.count || 0} Houses
+          </span>
           <span className="">•</span>
-          <span>{planData?.total_property?.breakdown[0]?.count} Lands</span>
+          <span>
+            {planData?.total_property?.breakdown[0]?.count || 0} Lands
+          </span>
         </div>
       </div>
       <div className="p-4 bg-white rounded-3xl flex flex-col items-center h-fit">

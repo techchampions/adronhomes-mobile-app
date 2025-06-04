@@ -1,6 +1,5 @@
 import axios from "axios";
 import { useUserStore } from "../zustand/UserStore";
-import https from "https";
 export const baseURL = import.meta.env.VITE_BASE_URL;
 export const identifier = import.meta.env.VITE_IDENTIFIER;
 
@@ -10,7 +9,7 @@ export const identifier = import.meta.env.VITE_IDENTIFIER;
 // Create an Axios instance
 const apiClient = axios.create({
   // baseURL: baseURL, // Replace with your actual API URL
-  baseURL: "http://adron.microf10.sg-host.com/api", // Replace with your actual API URL
+  baseURL: "https://adron.microf10.sg-host.com/api", // Replace with your actual API URL
   headers: {
     "Content-Type": "application/json",
     identifier: identifier,

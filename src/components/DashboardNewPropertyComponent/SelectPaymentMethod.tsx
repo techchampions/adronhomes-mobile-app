@@ -1,9 +1,13 @@
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "../Button";
 import { useModalStore } from "../../zustand/useModalStore";
 import BankTransfer from "./BankTransferMethod";
 import { FaWallet } from "react-icons/fa";
-import { useCreatePropertyPlan, useGetUserWalletdata } from "../../data/hooks";
+import {
+  useCreatePropertyPlan,
+  useGetUserWalletdata,
+  usePropertyPlanRepayment,
+} from "../../data/hooks";
 import { formatPrice } from "../../data/utils";
 import { useToastStore } from "../../zustand/useToastStore";
 import { usePaymentBreakDownStore } from "../../zustand/PaymentBreakDownStore";
@@ -12,13 +16,16 @@ import SmallLoader from "../SmallLoader";
 import { useNavigate } from "react-router-dom";
 import { usePaystackPayment } from "../../hooks/usePaystackPayment";
 import { useUserStore } from "../../zustand/UserStore";
+import { ApiError } from "../DashboardHomeComponents/SelectPaymentMethod";
 
 const SelectPaymentMethod = ({
   goBack,
   amount,
+  isBuyNow = true,
 }: {
   goBack: () => void;
   amount: number;
+  isBuyNow?: boolean;
 }) => {
   const { showToast } = useToastStore();
   const { user } = useUserStore();
@@ -29,7 +36,9 @@ const SelectPaymentMethod = ({
     string | null
   >(null);
   const { openModal } = useModalStore();
-  const { mutate, isPending } = useCreatePropertyPlan();
+  const { mutate: makePayment, isPending: isPaying } = useCreatePropertyPlan();
+  const { mutate: makeRepayment, isPending: isRepaying } =
+    usePropertyPlanRepayment();
   const {
     totalAmount,
     startDate,
@@ -39,58 +48,194 @@ const SelectPaymentMethod = ({
     paymentSchedule,
     propertyId,
     marketerId,
+    planId,
   } = usePaymentBreakDownStore();
+
+  console.log("Payment details", planId);
+
+  useEffect(() => {
+    const check = () => {
+      if (totalAmount <= 0) {
+        navigate(`/`);
+      }
+    };
+
+    check();
+  }, [navigate, totalAmount]);
 
   const handleContinue = () => {
     if (selectedPaymentMethod == "Bank Transfer") {
-      openModal(<BankTransfer goBack={goBack} amount={amount} />);
+      openModal(
+        <BankTransfer goBack={goBack} amount={amount} isBuyNow={isBuyNow} />
+      );
     } else if (selectedPaymentMethod == "Paystack") {
-      paystack({
-        email: user?.email || "",
-        amount: totalAmount, // in Naira
-        onSuccess: (ref) => {
-          console.log("Payment successful!", ref);
-          // TODO: call your backend API to confirm payment
-        },
-        onClose: () => {
-          showToast("Payment popup closed", "error");
-        },
-      });
-    } else if (selectedPaymentMethod == "Virtual Wallet") {
-      if (userWalletData?.wallet_balance > amount) {
-        mutate(
+      if (isBuyNow) {
+        makePayment(
           {
-            payment_method: "virtual_wallet",
-            payment_type: 1,
-            monthly_duration: Number(paymentDuration),
-            property_id: Number(propertyId),
-            start_date: startDate,
-            end_date: endDate,
-            repayment_schedule: paymentSchedule,
-            paid_amount: totalAmount,
-            marketer_code: marketerId,
+            ...(paymentType == "One Time"
+              ? {
+                  payment_method: "paystack",
+                  payment_type: 1,
+                  property_id: Number(propertyId),
+                  paid_amount: totalAmount,
+                  marketer_code: marketerId,
+                }
+              : {
+                  payment_method: "paystack",
+                  payment_type: 2,
+                  monthly_duration: Number(paymentDuration),
+                  property_id: Number(propertyId),
+                  start_date: startDate,
+                  end_date: endDate,
+                  repayment_schedule: paymentSchedule,
+                  paid_amount: totalAmount,
+                  marketer_code: marketerId,
+                }),
           },
           {
-            onSuccess: (data) => {
-              openModal(
-                <PaymentSuccessfull text="Payment received successfully." />
-              );
-              navigate(`/my-property/${data.plan.id}`);
+            onSuccess: (res) => {
+              paystack({
+                email: user?.email || "",
+                amount: totalAmount, // in Naira
+                reference: res.payment.reference,
+                onSuccess: (ref) => {
+                  openModal(
+                    <PaymentSuccessfull text="Payment received successfully." />
+                  );
+                  console.log("Payment successful!", ref);
+                  navigate(`/my-property/${res.plan?.id}`);
+
+                  // TODO: call your backend API to confirm payment
+                },
+                onClose: () => {
+                  showToast("Payment popup closed", "error");
+                },
+              });
             },
-            onError: (error: any) => {
-              // Customize this based on your error shape
+            onError: (error: ApiError) => {
               const message =
-                error?.response?.data?.message || "Something went wrong";
+                error?.response?.data?.message ||
+                error?.message ||
+                "Something went wrong";
               showToast(message, "error");
             },
           }
         );
       } else {
-        showToast("Insufficient balance", "error");
+        makeRepayment(
+          {
+            payment_method: "paystack",
+            paid_amount: totalAmount,
+            plan_id: Number(planId),
+          },
+          {
+            onSuccess: (res) => {
+              paystack({
+                email: user?.email || "",
+                amount: totalAmount, // in Naira
+                reference: "wonder",
+                onSuccess: (ref) => {
+                  openModal(
+                    <PaymentSuccessfull text="Payment received successfully." />
+                  );
+                  console.log("Payment successful!", ref);
+                  // TODO: call your backend API to confirm payment
+                },
+                onClose: () => {
+                  showToast("Payment popup closed", "error");
+                },
+              });
+
+              console.log("data", res);
+              // navigate(`/my-property/${res.plan.id}`);
+            },
+            onError: (error: ApiError) => {
+              const message =
+                error?.response?.data?.message ||
+                error?.message ||
+                "Something went wrong";
+              showToast(message, "error");
+            },
+          }
+        );
+      }
+    } else if (selectedPaymentMethod == "Virtual Wallet") {
+      // Check if payment is to buy property or Recuring payment
+      if (isBuyNow) {
+        if (userWalletData?.wallet_balance || 0 > amount) {
+          makePayment(
+            {
+              ...(paymentType == "One Time"
+                ? {
+                    payment_method: "virtual_wallet",
+                    payment_type: 1,
+                    property_id: Number(propertyId),
+                    paid_amount: totalAmount,
+                    marketer_code: marketerId,
+                  }
+                : {
+                    payment_method: "virtual_wallet",
+                    payment_type: 2,
+                    monthly_duration: Number(paymentDuration),
+                    property_id: Number(propertyId),
+                    start_date: startDate,
+                    end_date: endDate,
+                    repayment_schedule: paymentSchedule,
+                    paid_amount: totalAmount,
+                    marketer_code: marketerId,
+                  }),
+            },
+            {
+              onSuccess: (res) => {
+                openModal(
+                  <PaymentSuccessfull text="Payment received successfully." />
+                );
+                navigate(`/my-property/${res.plan?.id}`);
+              },
+              onError: (error: ApiError) => {
+                const message =
+                  error?.response?.data?.message ||
+                  error?.message ||
+                  "Something went wrong";
+                showToast(message, "error");
+              },
+            }
+          );
+        } else {
+          showToast("Insufficient balance", "error");
+        }
+      } else {
+        if (userWalletData?.wallet_balance || 0 > amount) {
+          console.log("Plan ID", planId);
+          makeRepayment(
+            {
+              payment_method: "virtual_wallet",
+              paid_amount: totalAmount,
+              plan_id: Number(planId),
+            },
+            {
+              onSuccess: (res) => {
+                openModal(
+                  <PaymentSuccessfull text="Payment received successfully." />
+                );
+                console.log("data", res);
+              },
+              onError: (error: ApiError) => {
+                const message =
+                  error?.response?.data?.message ||
+                  error?.message ||
+                  "Something went wrong";
+                showToast(message, "error");
+              },
+            }
+          );
+        } else {
+          showToast("Insufficient balance", "error");
+        }
       }
     }
   };
-  if (isPending) {
+  if (isPaying || isRepaying) {
     return <SmallLoader />;
   }
 
@@ -132,7 +277,8 @@ const SelectPaymentMethod = ({
             </div>
           </div>
 
-          <div
+          {/* Virtual Bank Transfer */}
+          {/* <div
             className={`flex items-center gap-4 p-4 rounded-xl cursor-pointer transition-all ${
               selectedPaymentMethod === "Virtual Bank Transfer"
                 ? "bg-adron-green text-white border-none "
@@ -157,7 +303,7 @@ const SelectPaymentMethod = ({
                 Transfer to generated Virtual bank account
               </p>
             </div>
-          </div>
+          </div> */}
 
           <div
             className={`flex items-center gap-4 p-4 rounded-xl cursor-pointer transition-all ${
@@ -194,7 +340,7 @@ const SelectPaymentMethod = ({
             }`}
             onClick={() => setSelectedPaymentMethod("Virtual Wallet")}
           >
-            <div className="p-2 rounded-full bg-white">
+            <div className="p-2 rounded-full bg-adron-green-100">
               <FaWallet className="h-5 w-5 text-adron-green" />
             </div>
             <div className="flex justify-between flex-1 items-center">
@@ -249,7 +395,7 @@ const SelectPaymentMethod = ({
                       : `text-gray-500`
                   } `}
                 >
-                  {userWalletData?.wallet_balance > amount
+                  {userWalletData?.wallet_balance || 0 > amount
                     ? `Available Balance`
                     : `Insufficient Balance`}
                 </p>
@@ -266,9 +412,10 @@ const SelectPaymentMethod = ({
           />
           <Button
             label="Continue"
+            isLoading={isPaying || isRepaying}
             className="!w-fit px-12 py-2 text-xs bg-black text-white"
             onClick={handleContinue}
-            disabled={!selectedPaymentMethod}
+            disabled={!selectedPaymentMethod || isPaying || isRepaying}
           />
         </div>
       </div>

@@ -1,6 +1,5 @@
 import AuthNavbar from "../components/AuthComponents/AuthNav";
 import Slideshow from "../components/AuthComponents/NewShildeshow";
-import FadeSlideshow from "../components/AuthComponents/Slideshow";
 import { useOnboardingStore } from "../zustand/OnboardingStore";
 import { useUserStore } from "../zustand/UserStore";
 import ForgotPassword from "./ForgotPassword";

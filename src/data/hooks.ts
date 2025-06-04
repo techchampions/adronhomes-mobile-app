@@ -12,9 +12,16 @@ import {
   getPropertyByID,
   getPropertyPlanByID,
   getTransactionByID,
+  getUser,
   getUserPropertiesPlan,
+  getUserPropertiesPlanPaymentHistory,
   getUserTransactions,
   getUserWallet,
+  infrastructurePayment,
+  PropertyFilters,
+  propertyPlanRepayment,
+  SearchParam,
+  searchProperties,
   toggleSaveProperty,
 } from "./api";
 import { PropertiesResponse } from "./types/propertiesPageTypes";
@@ -31,15 +38,49 @@ import { PlanPropertiesDetailResponse } from "./types/PropertyPlanDetailTypes";
 import { NotificationsResponse } from "./types/notificationTypes";
 import { TransactionByIDResponse } from "./types/userTransactionByIDTypes";
 import { NotificationByIDResponse } from "./types/NotificationByIDTypes";
+import { PropertyPlanPaymentResponse } from "./types/PropertyPlanPaymentListTypes";
+import { PropertiesSearchResultResponse } from "./types/SearchPropertiesResultTypes";
+import { useEffect } from "react";
+import { SavedPropertiesResponse } from "./types/SavedPropertiesResponse";
 
 //Query hook for User profile
 export const useGetUser = () => {
-  const { getUser } = useUserStore();
-  return useQuery<GetUserResponse>({
+  const { setUser, setIsLoggedIn } = useUserStore();
+  const queryResult = useQuery<GetUserResponse, Error>({
     queryKey: ["user-profile"],
     queryFn: getUser,
   });
+
+  useEffect(() => {
+    if (queryResult.data?.success) {
+      setUser(queryResult.data.user);
+      setIsLoggedIn(true);
+    }
+  }, [queryResult.data, setUser, setIsLoggedIn]);
+
+  return queryResult;
 };
+// export const useGetUser = () => {
+//   const { setUser, setIsLoggedIn } = useUserStore();
+//   return useQuery<GetUserResponse, Error, GetUserResponse, ["user-profile"]>({
+//     queryKey: ["user-profile"],
+//     queryFn: getUser,
+//     onSettled: (data: GetUserResponse) => {
+//       if (data.success) {
+//         setUser(data.user);
+//         setIsLoggedIn(true);
+//       }
+//     },
+//   });
+//   useEffect(() => {
+//     if (queryResult.data?.success) {
+//       setUser(queryResult.data.user);
+//       setIsLoggedIn(true);
+//     }
+//   }, [queryResult.data, setUser, setIsLoggedIn]);
+
+//   return queryResult;
+// };
 
 // Query hook for homepage data with
 export const useGetUserDashboardData = () => {
@@ -72,6 +113,15 @@ export const useGetPropertyPlanByID = (id: number | string) => {
   });
 };
 
+// Query hook for user properties plan payment history
+export const useGetUserPropertiesPlanPaymentHistory = (id: number | string) => {
+  return useQuery<PropertyPlanPaymentResponse>({
+    queryKey: ["user-properties-plan-payment-history", id],
+    queryFn: () => getUserPropertiesPlanPaymentHistory(id),
+    enabled: !!id,
+  });
+};
+
 //Query hook to get user notifications
 export const useGetNotifications = () => {
   return useQuery<NotificationsResponse>({
@@ -79,9 +129,12 @@ export const useGetNotifications = () => {
     queryFn: getNotifications,
   });
 };
+
+// Query hook for properties and filtering
 export const usePropertiespage = (
   page: number,
-  filters?: Record<string, any>
+  // filters?: Record<string, any>
+  filters?: PropertyFilters // Use the defined type instead of `Record<string, any>`
 ) => {
   return useQuery<PropertiesResponse>({
     queryKey: ["properties-page", page, filters],
@@ -89,16 +142,24 @@ export const usePropertiespage = (
   });
 };
 
+// Query hook to search Properties
+export const useSearchProperties = (filters?: SearchParam) => {
+  return useQuery<PropertiesSearchResultResponse>({
+    queryKey: ["search-properties-results"],
+    queryFn: () => searchProperties(filters),
+  });
+};
+
 // Query hook to get user Saved property
 export const useGetSavedProperties = () => {
-  return useQuery<PropertiesResponse>({
+  return useQuery<SavedPropertiesResponse>({
     queryKey: ["saved-properties"],
     queryFn: fetchSavedProperties,
   });
 };
 
 // Query hook for properties page data with
-export const useGetPropertyByID = (id: number | string) => {
+export const useGetPropertyByID = (id?: number | string) => {
   return useQuery<GetPropertyByIdResponse>({
     queryKey: ["property", id], // include id in the key to avoid collisions
     queryFn: () => getPropertyByID(id),
@@ -199,6 +260,64 @@ export const useCreatePropertyPlan = () => {
       });
       queryClient.invalidateQueries({
         queryKey: ["user-transactions"],
+      });
+    },
+  });
+};
+
+// Query hook for a property plan repayment
+export const usePropertyPlanRepayment = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: propertyPlanRepayment,
+    onSuccess: () => {
+      // Refetch relevant data if needed
+      queryClient.invalidateQueries({
+        queryKey: ["property-plan-details"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["user-properties-plan"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["dashboard-data"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["user-wallet"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["user-transactions"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["user-properties-plan-payment-history"],
+      });
+    },
+  });
+};
+
+//Hook for Infrastructure Payment
+export const useInfrastructurePayment = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: infrastructurePayment,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["property-plan-details"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["user-properties-plan"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["dashboard-data"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["user-wallet"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["user-transactions"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["user-properties-plan-payment-history"],
       });
     },
   });

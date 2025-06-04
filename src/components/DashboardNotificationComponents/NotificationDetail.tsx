@@ -1,11 +1,10 @@
-import React from "react";
 import Button from "../Button";
 import { useGetNotificationByID } from "../../data/hooks";
 import ApiErrorBlock from "../ApiErrorBlock";
 import SmallLoader from "../SmallLoader";
 import { formatDate, formatPrice } from "../../data/utils";
 
-const NotificationDetail = ({ id }) => {
+const NotificationDetail = ({ id }: { id: number }) => {
   const { data, isLoading, isError } = useGetNotificationByID(id);
   if (isError) {
     return <ApiErrorBlock />;
@@ -23,14 +22,14 @@ const NotificationDetail = ({ id }) => {
       </div>
       <div className="mt-10 text-sm space-y-4">
         <p className="">{data?.notification.content}</p>
-        <ul className="text-gray-500 list-disc ml-5">
+        {/* <ul className="text-gray-500 list-disc ml-5">
           <li>Spacious living room with natural light</li>
           <li>Modern kitchen with stainless steel appliances</li>
           <li>Master suite with en-suite bathroom</li>
           <li>Large backyard perfect for entertaining</li>
           <li>2-car garage</li>
           <li>Close to schools, shopping, and parks!</li>
-        </ul>
+        </ul> */}
         <p className="font-bold">
           Price: {formatPrice(data?.notification.property?.price ?? 0)}
         </p>

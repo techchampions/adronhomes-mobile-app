@@ -1,12 +1,8 @@
 import React, { useState } from "react";
 import { useModalStore } from "../../zustand/useModalStore";
 import NotificationDetail from "./NotificationDetail";
-import {
-  Notification,
-  NotificationStatus,
-} from "../../data/types/notificationTypes";
+import { Notification } from "../../data/types/notificationTypes";
 import { formatDate } from "../../data/utils";
-import Loader from "../Loader";
 import ApiErrorBlock from "../ApiErrorBlock";
 import NotFound from "../NotFound";
 import SmallLoader from "../SmallLoader";
@@ -88,7 +84,7 @@ const NotificationList: React.FC<Props> = ({ data, isError, isLoading }) => {
             </button>
           ))}
         </div>
-        <div>
+        {/* <div>
           <button className="border border-gray-300 text-xs px-4 py-1 rounded-3xl flex items-center gap-1">
             Latest
             <svg
@@ -105,7 +101,7 @@ const NotificationList: React.FC<Props> = ({ data, isError, isLoading }) => {
               />
             </svg>
           </button>
-        </div>
+        </div> */}
       </div>
 
       {/* List */}

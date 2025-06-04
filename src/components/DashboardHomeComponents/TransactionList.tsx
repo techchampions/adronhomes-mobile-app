@@ -3,6 +3,9 @@ import { useModalStore } from "../../zustand/useModalStore";
 import TransactionDetail from "../DashboardTransactionComponents/TransactionDetail";
 import { Transaction } from "../../data/types/userTransactionsTypes";
 import { formatDate, formatPrice } from "../../data/utils";
+import SmallLoader from "../SmallLoader";
+import ApiErrorBlock from "../ApiErrorBlock";
+import NotFound from "../NotFound";
 // types.ts
 type Props = {
   data: Transaction[];
@@ -12,15 +15,8 @@ type Props = {
 
 const TransactionsList: React.FC<Props> = ({ data, isLoading, isError }) => {
   const { openModal } = useModalStore();
-  return (
-    <div className="bg-white p-6 rounded-3xl w-full">
-      <div className="flex items-center justify-between mb-6">
-        <h4 className="text-lg text-gray-400">Transactions</h4>
-        <button className="text-xs px-4 py-1.5 text-adron-green font-bold">
-          View All
-        </button>
-      </div>
-
+  const renderList = () => {
+    return (
       <ul className="space-y-2">
         {data.map((t) => (
           <li
@@ -44,6 +40,40 @@ const TransactionsList: React.FC<Props> = ({ data, isLoading, isError }) => {
           </li>
         ))}
       </ul>
+    );
+  };
+  const renderContent = () => {
+    if (isLoading) {
+      return <SmallLoader />;
+    }
+
+    if (isError) {
+      return (
+        <div className="text-center py-4">
+          <ApiErrorBlock />
+        </div>
+      );
+    }
+
+    if (data.length === 0) {
+      return (
+        <div className="text-center py-4">
+          <NotFound />
+        </div>
+      );
+    }
+
+    return renderList();
+  };
+  return (
+    <div className="bg-white p-6 rounded-3xl w-full">
+      <div className="flex items-center justify-between mb-6">
+        <h4 className="text-lg text-gray-400">Transactions</h4>
+        {/* <button className="text-xs px-4 py-1.5 text-adron-green font-bold">
+          View All
+        </button> */}
+      </div>
+      {renderContent()}
     </div>
   );
 };

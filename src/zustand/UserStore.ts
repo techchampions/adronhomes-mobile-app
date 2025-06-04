@@ -117,8 +117,9 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import apiClient from "../utils/AxiosInstance";
 
-type User = {
+export type User = {
   id: number;
+  contract_id?: number | null;
   email: string;
   phone_number: string;
   referral_code: string;
@@ -141,11 +142,12 @@ type User = {
 
 type UserState = {
   user: User | null;
+
   token: string;
   isLoggedIn: boolean;
   setToken: (token: string) => void;
   setIsLoggedIn: (status: boolean) => void;
-  getUser: () => Promise<void>;
+  setUser: (user: User) => void; // 👈 add this  getUser: () => Promise<void>;
   reset: () => void;
 };
 
@@ -158,6 +160,7 @@ export const useUserStore = create<UserState>()(
 
       setToken: (token) => set({ token }),
       setIsLoggedIn: (status) => set({ isLoggedIn: status }),
+      setUser: (user) => set({ user }), // 👈 add this below setIsLoggedIn
 
       getUser: async () => {
         try {
@@ -168,6 +171,7 @@ export const useUserStore = create<UserState>()(
             set({
               user: {
                 id: userData.id,
+                contract_id: userData.contract_id,
                 email: userData.email,
                 phone_number: userData.phone_number,
                 referral_code: userData.referral_code,

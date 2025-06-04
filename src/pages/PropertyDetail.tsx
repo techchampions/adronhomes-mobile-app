@@ -1,19 +1,14 @@
-import Slider from "react-slick";
-import { useRef, useState } from "react";
 import { Form, Formik } from "formik";
 import { FaHeart, FaMapMarker } from "react-icons/fa";
-import { IoIosCheckmarkCircleOutline, IoLogoWhatsapp } from "react-icons/io";
+import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 import { useNavigate, useParams } from "react-router-dom";
 import InputField from "../components/InputField";
 import Button from "../components/Button";
-import SelectField from "../components/SelectField";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { GiStreetLight } from "react-icons/gi";
-import PropertyList from "../components/PropertyList";
 import { useGetPropertyByID } from "../data/hooks";
 import { formatPrice } from "../data/utils";
 import ApiErrorBlock from "../components/ApiErrorBlock";
@@ -34,43 +29,43 @@ const PropertyDetail = () => {
     navigate(`/invest-property/${id}`);
   };
 
-  const NextArrow = ({ onClick }: { onClick?: () => void }) => (
-    <div
-      onClick={onClick}
-      className="absolute top-1/2 right-2 transform -translate-y-1/2 z-10 bg-white/60 bg-opacity-50 hover:bg-opacity-70 w-10 h-10 rounded-full flex items-center justify-center cursor-pointer"
-    >
-      <svg
-        className="w-5 h-5 text-gray-800"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth={2.5}
-        viewBox="0 0 24 24"
-      >
-        <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-      </svg>
-    </div>
-  );
+  // const NextArrow = ({ onClick }: { onClick?: () => void }) => (
+  //   <div
+  //     onClick={onClick}
+  //     className="absolute top-1/2 right-2 transform -translate-y-1/2 z-10 bg-white/60 bg-opacity-50 hover:bg-opacity-70 w-10 h-10 rounded-full flex items-center justify-center cursor-pointer"
+  //   >
+  //     <svg
+  //       className="w-5 h-5 text-gray-800"
+  //       fill="none"
+  //       stroke="currentColor"
+  //       strokeWidth={2.5}
+  //       viewBox="0 0 24 24"
+  //     >
+  //       <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+  //     </svg>
+  //   </div>
+  // );
 
-  const PrevArrow = ({ onClick }: { onClick?: () => void }) => (
-    <div
-      onClick={onClick}
-      className="absolute top-1/2 left-2 transform -translate-y-1/2 z-10 bg-white/60 bg-opacity-50 hover:bg-opacity-70 w-10 h-10 rounded-full flex items-center justify-center cursor-pointer"
-    >
-      <svg
-        className="w-5 h-5 text-gray-800"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth={2.5}
-        viewBox="0 0 24 24"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          d="M15 19l-7-7 7-7"
-        />
-      </svg>
-    </div>
-  );
+  // const PrevArrow = ({ onClick }: { onClick?: () => void }) => (
+  //   <div
+  //     onClick={onClick}
+  //     className="absolute top-1/2 left-2 transform -translate-y-1/2 z-10 bg-white/60 bg-opacity-50 hover:bg-opacity-70 w-10 h-10 rounded-full flex items-center justify-center cursor-pointer"
+  //   >
+  //     <svg
+  //       className="w-5 h-5 text-gray-800"
+  //       fill="none"
+  //       stroke="currentColor"
+  //       strokeWidth={2.5}
+  //       viewBox="0 0 24 24"
+  //     >
+  //       <path
+  //         strokeLinecap="round"
+  //         strokeLinejoin="round"
+  //         d="M15 19l-7-7 7-7"
+  //       />
+  //     </svg>
+  //   </div>
+  // );
 
   return (
     <div className="flex flex-col w-full px-4 md:px-0 pb-32">
@@ -242,101 +237,70 @@ const PropertyDetail = () => {
                     </div>
                   </div>
                 </div>
+
+                {/* New Additional details */}
                 <div className="flex flex-col gap-2">
                   <h4 className="font-bold text-md">Additional Details</h4>
+
                   <div className="grid grid-cols-2 gap-2">
-                    <div className="relative overflow-x-hidden">
-                      <table className="w-full text-sm text-left rtl:text-right text-gray-500">
-                        <tbody>
-                          <tr className="bg-white border-b border-gray-200">
-                            <th
-                              scope="row"
-                              className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap "
-                            >
-                              Legal Documentation Fees
-                            </th>
-                            <td className="px-6 py-4">10000000</td>
-                          </tr>
+                    {/* Split details in half for two tables */}
+                    {item?.details && item.details.length > 0 ? (
+                      <>
+                        <div className="relative overflow-x-hidden">
+                          <table className="w-full text-sm text-left rtl:text-right text-gray-500">
+                            <tbody>
+                              {item.details
+                                .slice(0, Math.ceil(item.details.length / 2))
+                                .map((detail) => (
+                                  <tr
+                                    key={detail.id}
+                                    className="bg-white border-b border-gray-200"
+                                  >
+                                    <th
+                                      scope="row"
+                                      className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
+                                    >
+                                      {detail.name.trim()}
+                                    </th>
+                                    <td className="px-6 py-4">
+                                      {formatPrice(detail.value)}
+                                    </td>
+                                  </tr>
+                                ))}
+                            </tbody>
+                          </table>
+                        </div>
 
-                          <tr className="bg-white border-b border-gray-200">
-                            <th
-                              scope="row"
-                              className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap "
-                            >
-                              Survey plan
-                            </th>
-                            <td className="px-6 py-4">1000000 </td>
-                          </tr>
-                          <tr className="bg-white border-b border-gray-200">
-                            <th
-                              scope="row"
-                              className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap "
-                            >
-                              Architectural Drawing fee
-                            </th>
-                            <td className="px-6 py-4">10000000 </td>
-                          </tr>
-
-                          <tr className="bg-white border-b border-gray-200">
-                            <th
-                              scope="row"
-                              className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap "
-                            >
-                              Structure Drawing fee
-                            </th>
-                            <td className="px-6 py-4">1000000 </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-                    <div className="relative overflow-x-hidden">
-                      <table className="w-full text-sm text-left rtl:text-right text-gray-500">
-                        <tbody>
-                          <tr className="bg-white border-b border-gray-200">
-                            <th
-                              scope="row"
-                              className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
-                            >
-                              M & E Drawing
-                            </th>
-                            <td className="px-6 py-4">100000 </td>
-                          </tr>
-
-                          <tr className="bg-white border-b border-gray-200">
-                            <th
-                              scope="row"
-                              className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
-                            >
-                              Certification fee
-                            </th>
-                            <td className="px-6 py-4 line-clamp-1 truncate">
-                              1000000{" "}
-                            </td>
-                          </tr>
-                          <tr className="bg-white border-b border-gray-200">
-                            <th
-                              scope="row"
-                              className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
-                            >
-                              Total
-                            </th>
-                            <td className="px-6 py-4">10000000 </td>
-                          </tr>
-
-                          <tr className="bg-white border-b border-gray-200">
-                            <th
-                              scope="row"
-                              className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
-                            >
-                              Developmental fee
-                            </th>
-                            <td className="px-6 py-4 line-clamp-1 truncate">
-                              1000000{" "}
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
+                        <div className="relative overflow-x-hidden">
+                          <table className="w-full text-sm text-left rtl:text-right text-gray-500">
+                            <tbody>
+                              {item.details
+                                .slice(Math.ceil(item.details.length / 2))
+                                .map((detail) => (
+                                  <tr
+                                    key={detail.id}
+                                    className="bg-white border-b border-gray-200"
+                                  >
+                                    <th
+                                      scope="row"
+                                      className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
+                                    >
+                                      {detail.name.trim()}
+                                    </th>
+                                    <td className="px-6 py-4">
+                                      {detail.value.toLocaleString()}
+                                    </td>
+                                  </tr>
+                                ))}
+                            </tbody>
+                          </table>
+                        </div>
+                      </>
+                    ) : (
+                      <p className="text-gray-500 text-sm col-span-2">
+                        No additional details available.
+                      </p>
+                    )}
                   </div>
                 </div>
               </div>

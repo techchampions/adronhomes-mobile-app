@@ -2,22 +2,21 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { UserProperty } from "../../data/types/dashboardHomeTypes";
 import { formatPrice } from "../../data/utils";
+import SmallLoader from "../SmallLoader";
+import ApiErrorBlock from "../ApiErrorBlock";
+import NotFound from "../NotFound";
 // types.ts
 type Props = {
   plans: UserProperty[];
+  isLoading: boolean;
+  isError: boolean;
 };
 
-const PropertyPlanList: React.FC<Props> = ({ plans }) => {
+const PropertyPlanList: React.FC<Props> = ({ plans, isError, isLoading }) => {
   const navigate = useNavigate();
-  return (
-    <div className="bg-white p-6 rounded-3xl w-full">
-      <div className="flex items-center justify-between mb-6">
-        <h4 className="text-lg text-gray-400">My Property Plans</h4>
-        <button className="text-xs px-4 py-1.5 border rounded-full border-gray-300 text-gray-600 hover:bg-gray-100">
-          In Progress <span className="ml-1">▼</span>
-        </button>
-      </div>
 
+  const renderList = () => {
+    return (
       <ul className="space-y-2">
         {plans.map((plan) => (
           <li
@@ -45,6 +44,44 @@ const PropertyPlanList: React.FC<Props> = ({ plans }) => {
           </li>
         ))}
       </ul>
+    );
+  };
+
+  const renderContent = () => {
+    if (isLoading) {
+      return <SmallLoader />;
+    }
+
+    if (isError) {
+      return (
+        <div className="text-center py-4">
+          <ApiErrorBlock />
+        </div>
+      );
+    }
+
+    if (plans.length === 0) {
+      return (
+        <div className="text-center py-4">
+          <NotFound />
+        </div>
+      );
+    }
+
+    return renderList();
+  };
+
+  return (
+    <div className="bg-white p-6 rounded-3xl w-full">
+      <div className="flex items-center justify-between mb-6">
+        <h4 className="text-lg text-gray-400">My Property Plans</h4>
+        {/* <button className="text-xs px-4 py-1.5 border rounded-full border-gray-300 text-gray-600 hover:bg-gray-100">
+          In Progress <span className="ml-1">▼</span>
+        </button> */}
+      </div>
+
+      {/* LIST */}
+      {renderContent()}
     </div>
   );
 };

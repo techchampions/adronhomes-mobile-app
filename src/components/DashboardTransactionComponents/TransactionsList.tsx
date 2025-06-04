@@ -5,7 +5,6 @@ import {
   Transaction,
   TransactionStatus,
 } from "../../data/types/userTransactionsTypes";
-import Loader from "../Loader";
 import { formatDate, formatPrice } from "../../data/utils";
 import NotFound from "../NotFound";
 import ApiErrorBlock from "../ApiErrorBlock";
@@ -29,12 +28,12 @@ const TransactionsList: React.FC<Props> = ({ data, isLoading, isError }) => {
       TransactionStatus,
       { label: string; style: string }
     > = {
-      0: {
+      1: {
         label: "Completed",
         style: "bg-green-100 text-green-600 border-green-400",
       },
-      1: { label: "Failed", style: "bg-red-100 text-red-600 border-red-400" },
-      2: {
+      2: { label: "Failed", style: "bg-red-100 text-red-600 border-red-400" },
+      0: {
         label: "Pending",
         style: "bg-gray-100 text-gray-600 border-gray-400",
       },
@@ -55,9 +54,9 @@ const TransactionsList: React.FC<Props> = ({ data, isLoading, isError }) => {
     activeTab === "All"
       ? data
       : data.filter((item) => {
-          if (activeTab === "Failed") return item.status === 1;
-          if (activeTab === "Completed") return item.status === 0;
-          if (activeTab === "Pending") return item.status === 2;
+          if (activeTab === "Failed") return item.status === 2;
+          if (activeTab === "Completed") return item.status === 1;
+          if (activeTab === "Pending") return item.status === 0;
           return false;
         });
   const renderList = () => {
@@ -75,7 +74,7 @@ const TransactionsList: React.FC<Props> = ({ data, isLoading, isError }) => {
             {formatDate(item.created_at || "")}
           </div>
         </div>
-        {renderStatusBadge(item.status)}
+        {renderStatusBadge(item.status || 0)}
         <div className="text-sm font-semibold text-end">
           {formatPrice(item.amount)}
         </div>
@@ -123,7 +122,7 @@ const TransactionsList: React.FC<Props> = ({ data, isLoading, isError }) => {
             </button>
           ))}
         </div>
-        <div>
+        {/* <div>
           <button className="border border-gray-300 text-xs px-4 py-1 rounded-3xl flex items-center gap-1">
             Latest
             <svg
@@ -140,7 +139,7 @@ const TransactionsList: React.FC<Props> = ({ data, isLoading, isError }) => {
               />
             </svg>
           </button>
-        </div>
+        </div> */}
       </div>
 
       {/* List */}

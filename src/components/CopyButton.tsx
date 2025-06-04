@@ -3,7 +3,7 @@ import { IoCopy } from "react-icons/io5";
 import { useToastStore } from "../zustand/useToastStore";
 
 type CopyButtonProps = {
-  text: string;
+  text?: string | number | null;
   className?: string;
 };
 
@@ -13,7 +13,7 @@ const CopyButton: React.FC<CopyButtonProps> = ({ text, className = "" }) => {
 
   const handleCopy = async () => {
     try {
-      await navigator.clipboard.writeText(text);
+      await navigator.clipboard.writeText(String(text));
       showToast("Copied to clipboard", "success");
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);

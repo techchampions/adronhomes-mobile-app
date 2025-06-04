@@ -1,8 +1,41 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import Button from "../Button";
 import { useModalStore } from "../../zustand/useModalStore";
 import BankTransfer from "./BankTransferMethod";
 import VirtualBankTransfer from "./VirtualBankTransferMethod";
+import { usePaystackPayment } from "../../hooks/usePaystackPayment";
+import { useUserStore } from "../../zustand/UserStore";
+import { useToastStore } from "../../zustand/useToastStore";
+import { useFundWallet } from "../../data/hooks";
+import ApiErrorBlock from "../ApiErrorBlock";
+import SmallLoader from "../SmallLoader";
+
+export interface ApiError {
+  response?: {
+    data?: {
+      message?: string;
+    };
+  };
+  message?: string;
+}
+
+export type FundWalletResponse = {
+  success: boolean;
+  message: string;
+  payment: {
+    user_id: number;
+    property_id: number | null;
+    property_plan_id: number | null;
+    amount_paid: string;
+    reference: string;
+    payment_type: "Paystack" | string;
+    purpose: "fund" | string;
+    proof_of_payment: string | null;
+    updated_at: string; // ISO date string
+    created_at: string; // ISO date string
+    id: number;
+  };
+};
 
 const SelectPaymentMethod = ({
   goBack,
@@ -14,7 +47,12 @@ const SelectPaymentMethod = ({
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<
     string | null
   >(null);
-  const { openModal } = useModalStore();
+  const { openModal, closeModal } = useModalStore();
+  const { showToast } = useToastStore();
+  const paystack = usePaystackPayment();
+  const { mutate: fundWallet, isPending: isFunding } = useFundWallet();
+
+  const { user } = useUserStore();
 
   const handleContinue = () => {
     if (selectedPaymentMethod == "Bank Transfer") {
@@ -22,7 +60,39 @@ const SelectPaymentMethod = ({
     } else if (selectedPaymentMethod == "Virtual Bank Transfer") {
       openModal(<VirtualBankTransfer goBack={goBack} amount={amount} />);
     } else if (selectedPaymentMethod == "Paystack") {
-      alert("Credit/Debit Card selected");
+      fundWallet(
+        {
+          amount: amount || 0,
+          payment_method: "paystack",
+        },
+        {
+          onSuccess(res) {
+            paystack({
+              email: user?.email || "",
+              amount: Number(amount), // in Naira
+              reference: res.payment.reference,
+              onSuccess: (ref) => {
+                showToast("Payment successful!", "success");
+                console.log("Payment successful!", ref);
+                // TODO: call your backend API to confirm payment
+              },
+              onClose: () => {
+                showToast("Payment Canceled", "error");
+              },
+            });
+
+            closeModal();
+          },
+          onError: (error: ApiError) => {
+            const message =
+              error?.response?.data?.message ||
+              error?.message ||
+              "Something went wrong";
+            showToast(message, "error");
+            openModal(<ApiErrorBlock />);
+          },
+        }
+      );
     }
   };
 
@@ -126,10 +196,11 @@ const SelectPaymentMethod = ({
             onClick={goBack}
           />
           <Button
-            label="Continue"
+            label={isFunding ? "Loading" : "Continue"}
+            isLoading={isFunding}
             className="!w-fit px-12 py-2 text-xs bg-black text-white"
             onClick={handleContinue}
-            disabled={!selectedPaymentMethod}
+            disabled={!selectedPaymentMethod || isFunding}
           />
         </div>
       </div>

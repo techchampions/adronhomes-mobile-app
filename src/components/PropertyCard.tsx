@@ -3,7 +3,20 @@ import { HiOutlineLocationMarker } from "react-icons/hi";
 import { MdOutlinePower } from "react-icons/md";
 import Button from "./Button";
 import { useNavigate } from "react-router-dom";
-
+type PropertyProps = {
+  id: number;
+  image: string;
+  title: string;
+  price: number;
+  state: string;
+  country: string;
+  lga: string;
+  streetAddress: string;
+  squareFeet: string;
+  hasLights: boolean;
+  hasGym: boolean;
+  isLand: boolean;
+};
 const PropertyCard = ({
   id,
   image,
@@ -14,7 +27,6 @@ const PropertyCard = ({
   country,
   streetAddress,
   squareFeet,
-  features,
 }: PropertyProps) => {
   const formattedPrice = new Intl.NumberFormat("en-NG", {
     style: "currency",

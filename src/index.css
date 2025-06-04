@@ -58,7 +58,6 @@ button {
   }
 } */
 @import "tailwindcss";
-/* styles/globals.css */
 @import "swiper/css";
 @import "swiper/css/navigation";
 
@@ -124,6 +123,24 @@ input:-webkit-autofill:active {
   /* Chrome, Safari, Opera */
 }
 
+@layer utilities {
+  @keyframes pulse-dot {
+    0%, 100% {
+      transform: scale(0);
+      opacity: 0.5;
+    }
+
+    50% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  .animate-pulse-dot {
+    animation: pulse-dot 1s ease-in-out infinite;
+  }
+}
+
 
 @theme inline {
   --color-background: var(--background);
@@ -133,6 +150,7 @@ input:-webkit-autofill:active {
   --color-adron-body: #f5f5f5;
   --color-adron-black: #272727;
   --color-adron-green: #79B833;
+  --color-adron-green-100: #e7ffcc;
   --color-adron-green-200: #EFFFDE;
   --color-adron-green-300: #CCFF93;
   --color-adron-red: #D70E0E;

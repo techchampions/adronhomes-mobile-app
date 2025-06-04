@@ -24,11 +24,24 @@ const VirtualBankTransfer = ({
     closeModal();
 
     showToast("Payment Recieved Successfully", "success");
-    fundWallet({
-      amount: amount || 0,
-      payment_method: "virtual_wallet",
-    });
-    openModal(<PaymentSuccessfull text={"Payment received successfully."} />);
+    fundWallet(
+      {
+        amount: amount || 0,
+        payment_method: "virtual_wallet",
+      },
+      {
+        onSuccess() {
+          openModal(
+            <PaymentSuccessfull text={"Payment received successfully."} />
+          );
+        },
+        onError: (error: any) => {
+          const message =
+            error?.response?.data?.message || "Something went wrong";
+          showToast(message, "error");
+        },
+      }
+    );
   };
 
   return (

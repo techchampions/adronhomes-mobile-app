@@ -10,13 +10,16 @@ export const calculatePaymentDetails = (
   },
   property?: Property
 ) => {
-  const fees = 5000;
+  const propertyFees =
+    property?.details.reduce((sum, detail) => sum + detail.value, 0) ?? 0;
+  const fees = propertyFees || 0;
   const initialDeposit =
     values.paymentType === "One Time"
       ? property?.price || 0
       : property?.initial_deposit || 0;
 
   const remPrice = (property?.price || 0) - (property?.initial_deposit || 0);
+  console.log(remPrice);
 
   const weeklyAmount =
     values.paymentSchedule === "Monthly"
@@ -25,7 +28,9 @@ export const calculatePaymentDetails = (
       ? remPrice / (Number(values.paymentDuration || 1) / 3)
       : 0;
 
-  const totalAmount = initialDeposit + fees;
+  const totalAmount =
+    // values.paymentType === "One Time" ? initialDeposit :
+    initialDeposit;
 
   return {
     fees,

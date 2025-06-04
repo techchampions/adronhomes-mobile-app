@@ -9,7 +9,7 @@ interface Props {
   email: string;
   joinedDate: string;
   location: string;
-  imageUrl: string;
+  imageUrl?: string;
 }
 
 const UserProfileCard: React.FC<Props> = ({

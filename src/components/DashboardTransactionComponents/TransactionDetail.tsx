@@ -6,7 +6,7 @@ import { formatPrice } from "../../data/utils";
 import { TransactionStatus } from "../../data/types/userTransactionsTypes";
 import SmallLoader from "../SmallLoader";
 
-const TransactionDetail = ({ id }) => {
+const TransactionDetail = ({ id }: { id: number }) => {
   const { data, isLoading, isError } = useGetTransactionByID(id);
   if (isLoading) {
     return <SmallLoader />;
@@ -20,12 +20,12 @@ const TransactionDetail = ({ id }) => {
       TransactionStatus,
       { label: string; style: string }
     > = {
-      0: {
+      1: {
         label: "Completed",
         style: "bg-adron-green",
       },
-      1: { label: "Failed", style: "bg-red-600" },
-      2: {
+      2: { label: "Failed", style: "bg-red-600" },
+      0: {
         label: "Pending",
         style: "bg-gray-600",
       },
@@ -50,8 +50,10 @@ const TransactionDetail = ({ id }) => {
         <div className="flex justify-between items-center py-3">
           <div className="flex flex-col">
             <p className="text-gray-400 text-xs">From</p>
-            <p className="font-bold text-xs">Chuks Federick Bomboclatt</p>
-            <p className="font-bold text-xs">(Polaris Bank)</p>
+            <p className="font-bold text-xs">
+              {data?.user_transaction.transaction_method}
+            </p>
+            {/* <p className="font-bold text-xs">(Polaris Bank)</p> */}
           </div>
           <img src="/mika.png" alt="" className="h-7 w-7" />
         </div>
@@ -77,7 +79,9 @@ const TransactionDetail = ({ id }) => {
         <div className="flex justify-between items-start py-3">
           <div className="flex flex-col">
             <p className="text-gray-400 text-xs">Payment Method</p>
-            <p className="font-bold text-xs">Local Fund Transfer</p>
+            <p className="font-bold text-xs">
+              {data?.user_transaction.transaction_method}
+            </p>
           </div>
           <div className="flex flex-col text-left">
             <p className="text-gray-400 text-xs">Fees</p>

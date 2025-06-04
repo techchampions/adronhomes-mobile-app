@@ -1,5 +1,6 @@
 export interface PropertyPlanPayload {
   property_id?: number;
+  plan_id?: number;
   payment_type?: number;
   monthly_duration?: number;
   repayment_schedule?: string;

@@ -1,10 +1,9 @@
-import React from "react";
-import SwiperPropertyList from "../components/DashboardNewPropertyComponent/SwiperPropertyList";
+import SavedSwiperPropertyList from "../components/DashboardNewPropertyComponent/SavedSwiperPropertyList";
 import { useGetSavedProperties } from "../data/hooks";
 
 const SavedPropertyScreen = () => {
   const { data, isLoading, isError } = useGetSavedProperties();
-  const properties = data?.saved_property?.data || [];
+  const properties = data?.saved_property.data || [];
   return (
     <div className="">
       <div className="flex flex-col justify-center mx-auto text-center space-y-2 my-7">
@@ -13,11 +12,10 @@ const SavedPropertyScreen = () => {
         </p>
       </div>
 
-      <SwiperPropertyList
+      <SavedSwiperPropertyList
         properties={properties}
         isError={isError}
         isLoading={isLoading}
-        isSavePropertyList={true}
       />
     </div>
   );

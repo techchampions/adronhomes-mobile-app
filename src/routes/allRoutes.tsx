@@ -25,6 +25,7 @@ import PropertyPaymentMethod from "../pages/PropertyPaymentMethod";
 import MyPropertyDetail from "../pages/MyPropertyDetail";
 import MyPropertyPaymentList from "../pages/MyPropertyPaymentList";
 import FAQAccordion from "../pages/FAQScreen";
+import PropertySearchResultScreen from "../pages/PropertySearchResult";
 
 const DashboardScreen = lazy(() => import("../pages/DashboardScreen"));
 
@@ -58,6 +59,10 @@ const AllRoutes = () => {
                 <Route path="/my-properties" element={<MyPropertyScreen />} />
                 <Route path="/new-properties" element={<NewPropertyScreen />} />
                 <Route
+                  path="/search-properties"
+                  element={<PropertySearchResultScreen />}
+                />
+                <Route
                   path="/saved-properties"
                   element={<SavedPropertyScreen />}
                 />
@@ -82,7 +87,7 @@ const AllRoutes = () => {
                 />{" "}
                 <Route path="/my-property/:id" element={<MyPropertyDetail />} />
                 <Route
-                  path="/my-property/:id/payment-list"
+                  path="/my-property/payment-list/:id"
                   element={<MyPropertyPaymentList />}
                 />
                 <Route path="/FAQs" element={<FAQAccordion />} />
@@ -105,7 +110,8 @@ const AllRoutes = () => {
             {/* <Route path="*" element={<Navigate to="/auth" />} /> */}
           </Routes>
         </Suspense>
-        <Toast message={message} type={type} onClose={hideToast} />
+        {/* <Toast message={message} type={type} onClose={hideToast} /> */}
+        <Toast />
         <Modal />
       </BrowserRouter>
     </>

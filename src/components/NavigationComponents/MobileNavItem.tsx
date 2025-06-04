@@ -1,4 +1,5 @@
 import { NavLink } from "react-router-dom";
+import { JSX } from "react/jsx-runtime";
 
 interface NavItemProps {
   label: string;

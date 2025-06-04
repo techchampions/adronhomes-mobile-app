@@ -1,10 +1,9 @@
 // import React, { useState } from "react";
 import Button from "../Button";
 import { useModalStore } from "../../zustand/useModalStore";
-import SelectPaymentMethod from "./SelectPaymentMethod";
+import SelectPaymentMethod, { ApiError } from "./SelectPaymentMethod";
 import CopyButton from "../CopyButton";
 import { useToastStore } from "../../zustand/useToastStore";
-import PaymentSuccessfull from "../PaymentSuccessfull";
 import { RiUpload2Line } from "react-icons/ri";
 import { useFundWallet } from "../../data/hooks";
 import PaymentPending from "../PaymentPending";
@@ -18,21 +17,38 @@ const BankTransfer = ({
   goBack: () => void;
   amount: number | null;
 }) => {
-  const { closeModal, openModal } = useModalStore();
+  const { openModal } = useModalStore();
+  const initialValues = { proof: null as File | null, sender_name: "" };
   const { mutate: fundWallet } = useFundWallet();
 
   const { showToast } = useToastStore();
   const GoToSelectPaymentMethod = () => {
     openModal(<SelectPaymentMethod goBack={goBack} amount={amount} />);
   };
-  const handlePaymentSuccess = () => {
-    closeModal();
-    fundWallet({
-      amount: amount || 0,
-      payment_method: "bank_transfer",
-    });
-    // showToast("Payment Recieved Successfully", "success");
-    openModal(<PaymentPending text={"Payment is being confirmed by Admin."} />);
+  const handlePaymentSuccess = (values: typeof initialValues) => {
+    console.log(values);
+    fundWallet(
+      {
+        amount: amount || 0,
+        payment_method: "bank_transfer",
+        sender_name: values.sender_name,
+        proof_of_payment: values.proof ?? undefined,
+      },
+      {
+        onSuccess() {
+          openModal(
+            <PaymentPending text={"Payment is being confirmed by Admin."} />
+          );
+        },
+        onError: (error: ApiError) => {
+          const message =
+            error?.response?.data?.message ||
+            error?.message ||
+            "Something went wrong";
+          showToast(message, "error");
+        },
+      }
+    );
   };
 
   return (
@@ -78,37 +94,47 @@ const BankTransfer = ({
             </div>
           </div>
         </div>
-        <Formik
-          initialValues={{ proof: "", sender_name: "" }}
-          onSubmit={() => {}}
-        >
-          <Form className="flex flex-col gap-2">
-            <InputField
-              name="sender_name"
-              placeholder="Enter your Account name"
-              className="mt-4"
-            />
-            <label className="mt-4">
-              <label className="block text-xs">Proof of Payment</label>
-              <div className="flex justify-between w-full px-4 py-2 bg-adron-body rounded-3xl items-center">
-                <input type="file" name="proof" className="text-xs w-[70%]" />
-                <RiUpload2Line className="text-gray-500 h-5 w-5 hover:text-black" />
-              </div>
-            </label>
+        <Formik initialValues={initialValues} onSubmit={handlePaymentSuccess}>
+          {({ setFieldValue }) => (
+            <Form className="flex flex-col gap-2">
+              <InputField
+                name="sender_name"
+                placeholder="Enter your Account name"
+                className="mt-4"
+              />
+              <label className="mt-4">
+                <label className="block text-xs">Proof of Payment</label>
+                <div className="flex justify-between w-full px-4 py-2 bg-adron-body rounded-lg items-center">
+                  <input
+                    type="file"
+                    name="proof"
+                    className="text-xs w-[70%]"
+                    onChange={(event) => {
+                      const file = event.target.files?.[0];
+                      if (file) {
+                        setFieldValue("proof", file);
+                      }
+                    }}
+                  />
+                  <RiUpload2Line className="text-gray-500 h-5 w-5 hover:text-black" />
+                </div>
+              </label>
 
-            <div className="flex justify-between w-full gap-4 mt-4">
-              <Button
-                label="Back"
-                className="!w-fit px-12 py-2 text-xs bg-transparent !text-black font-bold"
-                onClick={GoToSelectPaymentMethod}
-              />
-              <Button
-                label="Done"
-                className="!w-fit px-12 py-2 text-xs bg-black text-white"
-                onClick={handlePaymentSuccess}
-              />
-            </div>
-          </Form>
+              <div className="flex justify-between w-full gap-4 mt-4">
+                <Button
+                  label="Back"
+                  className="!w-fit px-12 py-2 text-xs bg-transparent !text-black font-bold"
+                  onClick={GoToSelectPaymentMethod}
+                />
+                <Button
+                  label="Done"
+                  className="!w-fit px-12 py-2 text-xs bg-black text-white"
+                  type="submit"
+                  // onClick={handlePaymentSuccess}
+                />
+              </div>
+            </Form>
+          )}
         </Formik>
       </div>
     </div>

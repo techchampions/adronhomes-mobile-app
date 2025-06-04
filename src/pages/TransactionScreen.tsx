@@ -1,5 +1,3 @@
-// pages/TransactionsPage.tsx
-import React from "react";
 import { useGetUserTransactions } from "../data/hooks";
 import { Transaction } from "../data/types/userTransactionsTypes";
 import TransactionsList from "../components/DashboardTransactionComponents/TransactionsList";

@@ -1,8 +1,6 @@
 import { FaHome, FaStore, FaPlus } from "react-icons/fa";
-import { MdOutlineInventory } from "react-icons/md";
 import { RiAppsLine } from "react-icons/ri";
 import MobileNavItem from "./MobileNavItem";
-import { useState } from "react";
 import { FaArrowRightArrowLeft } from "react-icons/fa6";
 
 const BottomNav = () => {

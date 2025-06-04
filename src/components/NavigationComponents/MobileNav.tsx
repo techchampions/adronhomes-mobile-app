@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { FaUserAlt, FaUserCircle } from "react-icons/fa";
 import { FaArrowRightArrowLeft } from "react-icons/fa6";
 import { MdAddHome, MdDashboardCustomize, MdOutlineHelp } from "react-icons/md";
@@ -14,10 +14,9 @@ import { Menu, X } from "lucide-react"; // or use any icon you prefer
 import NavItem from "./NavItem";
 import NavbarAddorder from "./NavbarAddorder";
 import Auth from "../../utils/Auth";
-import Button from "../Button";
-import { Input } from "@headlessui/react";
 import { useUserStore } from "../../zustand/UserStore";
 import { useNavigate } from "react-router-dom";
+import CopyButton from "../CopyButton";
 
 const MobileNav = () => {
   const { user } = useUserStore();
@@ -40,12 +39,20 @@ const MobileNav = () => {
           <img src="/logo.png" alt="" className="h-[30px] w-[100px]" />
         </div>
         <div className="flex items-center gap-4">
-          <Button label="View Property" className="text-xs px-4" />
-          {!user?.profile_picture ? (
+          <div className="border border-gray-300 rounded-xl px-4 py-1 gap-1 flex flex-col">
+            <div className="flex justify-between w-full gap-4">
+              <p className="text-[10px] text-gray-400">Contract ID</p>
+              <CopyButton text={user?.contract_id} />
+            </div>
+            <p className="text-xs">{user?.contract_id || "No contract ID"}</p>
+          </div>
+
+          {/* <Button label="View Property" className="text-xs px-4" /> */}
+          {user?.profile_picture ? (
             <img
-              src={user?.profile_picture ?? "/mika.png"}
+              src={user?.profile_picture || ""}
               alt=""
-              className="h-7 w-7"
+              className="h-7 w-7 rounded-full"
               onClick={goTpProfile}
             />
           ) : (

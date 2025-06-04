@@ -18,14 +18,15 @@ import SelectField from "../SelectField";
 import InputField from "../InputField";
 import Button from "../Button";
 import Modal from "../Modal";
-import { useSearchParams } from "react-router-dom";
+import { PropertyFilters } from "../../data/api";
 
 export default function FilterBar({
   onFilter,
   initialFilters,
 }: {
-  onFilter: (filters: any) => void;
-  initialFilters: Record<string, any>;
+  onFilter: (filters: PropertyFilters) => void;
+  // initialFilters: Record<string, any>;
+  initialFilters: PropertyFilters;
 }) {
   const {
     data: PropertyTypeData,
@@ -35,7 +36,6 @@ export default function FilterBar({
 
   const { data: locations, isLoading: isloadingLocations } =
     useGetAllPropertyLocations();
-  const searchParams = useSearchParams();
   const location = "";
   const [showModal, setShowModal] = useState(false);
   const propertyTypes = isLoadingPropertyTypes
@@ -50,11 +50,11 @@ export default function FilterBar({
     <Formik
       initialValues={{
         state: location || initialFilters.state || "",
-        propertyType: initialFilters.type || "",
+        propertyType: initialFilters.propertyType || "",
         bedrooms: initialFilters.bedrooms || "",
         status: initialFilters.status || "",
-        min: initialFilters.minPrice || "",
-        max: initialFilters.maxPrice || "",
+        min: initialFilters.min || "",
+        max: initialFilters.max || "",
       }}
       enableReinitialize
       onSubmit={(values) => {
@@ -62,7 +62,7 @@ export default function FilterBar({
         onFilter(values);
       }}
     >
-      {({ values }) => (
+      {({ isValid }) => (
         <>
           <Form className="hidden md:block">
             <div
@@ -158,11 +158,13 @@ export default function FilterBar({
               </div>
               <div className="flex flex-col justify-between gap-4">
                 <div className=""></div>
-                <Button
-                  label="Apply"
-                  type="submit"
-                  className="bg-adron-green py-3 text-xs"
-                />
+                {isValid && (
+                  <Button
+                    label="Apply"
+                    type="submit"
+                    className="bg-adron-green py-3 text-xs"
+                  />
+                )}
               </div>
             </div>
           </Form>

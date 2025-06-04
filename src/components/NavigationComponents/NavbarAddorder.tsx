@@ -1,6 +1,3 @@
-import React from "react";
-import { FaPlus } from "react-icons/fa";
-import Button from "../Button";
 import { useModalStore } from "../../zustand/useModalStore";
 import ReferAndEarn from "../ReferAndEarn";
 

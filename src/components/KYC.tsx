@@ -1,7 +1,6 @@
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
 
-import React from "react";
 import SelectField from "./SelectField";
 import InputField from "./InputField";
 import { RiUpload2Line } from "react-icons/ri";
@@ -35,7 +34,7 @@ const KYC = () => {
       validationSchema={validationSchema}
       onSubmit={submit}
     >
-      {({ values, setFieldValue }) => (
+      {({ setFieldValue }) => (
         <Form className="space-y-10">
           <div className="bg-white p-6 rounded-3xl space-y-6">
             <h4 className="text-lg font-bold">Customer Verification</h4>

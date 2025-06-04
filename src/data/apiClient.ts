@@ -10,7 +10,7 @@ type ApiResponse<T = any> = {
 
 const apiClient: AxiosInstance = axios.create({
   // baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
-  baseURL: "http://adron.microf10.sg-host.com/api/",
+  baseURL: "https://adron.microf10.sg-host.com/api/",
   headers: {
     "Content-Type": "application/json",
     // "identifier": process.env.NEXT_PUBLIC_IDENTIFIER || "",

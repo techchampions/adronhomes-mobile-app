@@ -1,6 +1,5 @@
 import { Outlet, useLocation } from "react-router-dom";
 import NavigationContainer from "../components/NavigationComponents/NavigationContainer";
-import MobileNavContainer from "../components/NavigationComponents/MobileNavContainer";
 import Header from "../components/Header";
 import MobileNav from "../components/NavigationComponents/MobileNav";
 import { useGetUser } from "../data/hooks";
@@ -19,7 +18,7 @@ const routeTitles = {
   "/settings": "Account Settings",
   "/support": "Support",
 };
-function getPageTitle(pathname) {
+function getPageTitle(pathname: string) {
   if (pathname.startsWith("/my-properties/")) {
     return "My Property";
   }
@@ -33,12 +32,15 @@ function getPageTitle(pathname) {
     return "My Property";
   }
 
-  return routeTitles[pathname] || "Dashboard";
+  // return routeTitles[pathname] || "Dashboard";
+  return (routeTitles as Record<string, string>)[pathname] || "Dashboard";
 }
 function DashboardScreen() {
   const location = useLocation();
   const pageTitle = getPageTitle(location.pathname);
-  const { data, isLoading, isError } = useGetUser();
+  // const { showToast } = useToastStore();
+  const { isError } = useGetUser();
+  if (isError) console.log("error");
   return (
     <div className="fixed inset-0 z-50 flex h-screen w-screen">
       {/* Sidebar */}
