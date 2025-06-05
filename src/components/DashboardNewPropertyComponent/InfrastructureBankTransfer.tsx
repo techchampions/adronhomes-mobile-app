@@ -15,10 +15,12 @@ const InfrastructureBankTransfer = ({
   goBack,
   amount,
   planID,
+  purpose,
 }: {
   goBack: () => void;
   amount?: number;
   planID?: number | undefined;
+  purpose?: string;
 }) => {
   const initialValues = { proof: null as File | null, sender_name: "" };
   const navigate = useNavigate();
@@ -34,6 +36,7 @@ const InfrastructureBankTransfer = ({
           plan_id: planID,
           paid_amount: amount,
           proof_of_payment: values.proof,
+          purpose: purpose,
         },
         {
           onSuccess: (data) => {

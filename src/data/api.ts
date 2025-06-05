@@ -344,6 +344,7 @@ export const infrastructurePayment = async (
     formData.append("payment_method", payload.payment_method);
   if (payload.paid_amount !== undefined)
     formData.append("paid_amount", payload.paid_amount.toString());
+  if (payload.purpose) formData.append("purpose", payload.purpose);
   if (payload.proof_of_payment)
     formData.append("proof_of_payment", payload.proof_of_payment);
   const res = await apiClient.post("/user/pay-for-infrastructure", formData, {

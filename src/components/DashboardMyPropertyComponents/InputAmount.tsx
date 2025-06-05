@@ -11,10 +11,12 @@ const InputInfrastructureAmount = ({
   goBack,
   infrastructureAmount,
   planID,
+  purpose,
 }: {
   goBack: () => void;
   infrastructureAmount?: number;
   planID?: number | string;
+  purpose?: string;
 }) => {
   const { openModal, closeModal } = useModalStore();
   const { setPaymentDetails } = usePaymentBreakDownStore();
@@ -49,6 +51,7 @@ const InputInfrastructureAmount = ({
                 amount={values.amount}
                 goBack={goBack}
                 planID={Number(planID)}
+                purpose={purpose}
               />
             );
           }}

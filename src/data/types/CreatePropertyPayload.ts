@@ -9,5 +9,6 @@ export interface PropertyPlanPayload {
   paid_amount?: number;
   payment_method?: string;
   marketer_code?: string;
+  purpose?: string;
   proof_of_payment?: File; // Add this
 }
