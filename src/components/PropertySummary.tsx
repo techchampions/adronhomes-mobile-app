@@ -24,14 +24,9 @@ const PropertySummary: React.FC<Prop> = ({ id }) => {
           alt=""
         />
         <div className="w-full md:w-auto space-y-2 md:space-y-0">
-          <h4 className="text-xl font-semibold">
-            {property?.name}
-            Treasure Parks and Gardens
-          </h4>
+          <h4 className="text-xl font-semibold">{property?.name}</h4>
           <p className="text-sm text-gray-500 flex items-center gap-1">
             <FaMapMarkerAlt className="h-4 w-4" />
-            {/* 34, Shimawa, Ogun
-                  State, Nigeria */}
             {property?.street_address}, {property?.lga}, {property?.state},{" "}
             {property?.country}
           </p>

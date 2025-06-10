@@ -22,6 +22,7 @@ const PropertyDetail = () => {
   if (isError) return <ApiErrorBlock />;
   if (isLoading) return <Loader />;
   const item = data?.data.properties[0];
+  const features = item?.features || [];
 
   const address = `${data?.data.properties[0].street_address}, ${data?.data.properties[0].lga}, ${data?.data.properties[0].state} ${data?.data.properties[0].country}`;
 
@@ -173,7 +174,7 @@ const PropertyDetail = () => {
                 <div className="flex flex-col gap-2">
                   <h4 className="font-bold text-md">Features</h4>
                   <div className="text-md ml-5 grid grid-cols-3 text-gray-500 space-y-2">
-                    {item?.features?.map((list) => (
+                    {features.map((list) => (
                       <div key={list} className="flex gap-2 items-center">
                         <IoIosCheckmarkCircleOutline /> <div>{list}</div>
                       </div>

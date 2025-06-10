@@ -196,6 +196,15 @@ export default function InvestmentForm() {
                     </span>
                   </p>
                 </div>
+                <h4 className="font-semibold mb-4">Other Fees</h4>
+                <div className="space-y-4 mb-4 text-sm">
+                  <p className="text-black flex justify-between gap-4">
+                    ₦{fees.toLocaleString()}
+                    <span className="text-xs text-gray-400 text-right">
+                      Fees & Charges
+                    </span>
+                  </p>
+                </div>
 
                 <h4 className="font-semibold mb-4">Payment Breakdown</h4>
                 <div className="space-y-4 text-sm">
