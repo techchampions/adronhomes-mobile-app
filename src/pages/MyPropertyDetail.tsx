@@ -73,6 +73,10 @@ const MyPropertyDetail = () => {
   const transactions: Transaction[] = data?.transactions ?? [];
   const infrastructureBreakDown = data?.infrastructure_break_down || [];
   const OtherFeesBreakDown = data?.others_fee_break_down || [];
+  const paymentProgress = data?.plan_properties.payment_percentage || 0;
+  const infrastructureProgress =
+    data?.plan_properties.infrastructure_percentage || 0;
+  const otherFeeProgress = data?.plan_properties.other_percentage || 0;
   console.log("other", OtherFeesBreakDown);
   const handleViewProperty = () => {
     navigate(`/properties/${data?.plan_properties.property.id}`);
@@ -172,21 +176,20 @@ const MyPropertyDetail = () => {
                   ></div>
                 </div>
               </div>
-              {data?.plan_properties.payment_percentage === 100 ? (
-                requested ? (
-                  <div className="flex items-center text-white gap-4">
-                    <div className="flex items-center">
-                      <FaCheckCircle className="text-white" />
-                      <span className="text-sm text-white/50">
-                        Documents Received
-                      </span>
-                    </div>
-                    <a href="">Download</a>
-                  </div>
-                ) : (
+              {paymentProgress >= 100 ? (
+                infrastructureProgress >= 100 && otherFeeProgress >= 100 ? (
                   <div className="flex items-center mb-5 gap-2 text-white">
                     <InlineLoader />
                     <p className="text-sm">Documents are being prepared</p>
+                  </div>
+                ) : (
+                  <div className="flex items-center text-white gap-4">
+                    <div className="flex items-center gap-1">
+                      <FaCheckCircle className="text-white" />
+                      <span className="text-sm text-white/50">
+                        Payment Complete
+                      </span>
+                    </div>
                   </div>
                 )
               ) : (
@@ -235,7 +238,9 @@ const MyPropertyDetail = () => {
                     </span>
                     /
                     <span className="text-white/50 text-sm md:text-md">
-                      {formatPrice(data?.total_infrastructure_fee || 0)}
+                      {formatPrice(
+                        data?.plan_properties.infrastructure_amount || 0
+                      )}
                     </span>
                   </div>
                   <div className="w-full h-2.5 bg-green-900/50 rounded-full overflow-hidden">
@@ -249,23 +254,20 @@ const MyPropertyDetail = () => {
                     ></div>
                   </div>
                 </div>
-                {data?.plan_properties.infrastructure_percentage === 100 ? (
-                  requested ? (
-                    <div className="flex items-center text-white gap-4">
-                      <div className="flex items-center">
-                        <FaCheckCircle className="text-white" />
-                        <span className="text-sm text-white/50">
-                          Documents Received
-                        </span>
-                      </div>
-                      <a href="https://lovely-melba-60c6a6.netlify.app/logo.png">
-                        Download
-                      </a>
-                    </div>
-                  ) : (
+                {infrastructureProgress >= 100 ? (
+                  paymentProgress >= 100 && otherFeeProgress >= 100 ? (
                     <div className="flex items-center mb-5 gap-2 text-white">
                       <InlineLoader />
                       <p className="text-sm">Documents are being prepared</p>
+                    </div>
+                  ) : (
+                    <div className="flex items-center text-white gap-4">
+                      <div className="flex items-center gap-1">
+                        <FaCheckCircle className="text-white" />
+                        <span className="text-sm text-white/50">
+                          Payment Complete
+                        </span>
+                      </div>
                     </div>
                   )
                 ) : (
@@ -323,23 +325,20 @@ const MyPropertyDetail = () => {
                     ></div>
                   </div>
                 </div>
-                {data?.plan_properties.other_percentage === 100 ? (
-                  requested ? (
-                    <div className="flex items-center text-white gap-4">
-                      <div className="flex items-center">
-                        <FaCheckCircle className="text-white" />
-                        <span className="text-sm text-white/50">
-                          Documents Received
-                        </span>
-                      </div>
-                      <a href="https://lovely-melba-60c6a6.netlify.app/logo.png">
-                        Download
-                      </a>
-                    </div>
-                  ) : (
+                {otherFeeProgress >= 100 ? (
+                  infrastructureProgress >= 100 && paymentProgress >= 100 ? (
                     <div className="flex items-center mb-5 gap-2 text-white">
                       <InlineLoader />
                       <p className="text-sm">Documents are being prepared</p>
+                    </div>
+                  ) : (
+                    <div className="flex items-center text-white gap-4">
+                      <div className="flex items-center gap-1">
+                        <FaCheckCircle className="text-white" />
+                        <span className="text-sm text-white/50">
+                          Payment Complete
+                        </span>
+                      </div>
                     </div>
                   )
                 ) : (
@@ -406,7 +405,9 @@ const MyPropertyDetail = () => {
                         className="brightness-200"
                       />
 
-                      <span className="mr-1">648 Sq M</span>
+                      <span className="mr-1">
+                        {data?.plan_properties.property.size} Sq M
+                      </span>
                     </div>
 
                     <div className="flex items-center">
@@ -456,7 +457,9 @@ const MyPropertyDetail = () => {
                   <p className="text-sm font-bold ">Total:</p>
                   <p className="text-md font-bold">
                     {" "}
-                    {formatPrice(data?.total_infrastructure_fee || 0)}{" "}
+                    {formatPrice(
+                      data?.plan_properties.infrastructure_amount || 0
+                    )}{" "}
                   </p>
                 </div>
               </div>
@@ -478,7 +481,7 @@ const MyPropertyDetail = () => {
                   <p className="text-sm font-bold ">Total:</p>
                   <p className="text-md font-bold">
                     {" "}
-                    {formatPrice(data?.total_infrastructure_fee || 0)}{" "}
+                    {formatPrice(data?.plan_properties.other_amount || 0)}{" "}
                   </p>
                 </div>
               </div>

@@ -24,8 +24,9 @@ const BankTransfer = ({
 }) => {
   const initialValues = { proof: null as File | null, sender_name: "" };
   const navigate = useNavigate();
-  const { mutate } = useCreatePropertyPlan();
-  const { mutate: makeRepayment } = usePropertyPlanRepayment();
+  const { mutate, isPending: isPendingPayment } = useCreatePropertyPlan();
+  const { mutate: makeRepayment, isPending: isPendingRepayment } =
+    usePropertyPlanRepayment();
   const {
     paymentDuration,
     paymentSchedule,
@@ -200,6 +201,8 @@ const BankTransfer = ({
                   <Button
                     label="Done"
                     type="submit"
+                    isLoading={isPendingPayment || isPendingRepayment}
+                    disabled={isPendingPayment || isPendingRepayment}
                     className="!w-fit px-12 py-2 text-xs bg-black text-white"
                     // onClick={handlePaymentSuccess}
                   />

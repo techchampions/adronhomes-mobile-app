@@ -24,7 +24,7 @@ const InfrastructureBankTransfer = ({
 }) => {
   const initialValues = { proof: null as File | null, sender_name: "" };
   const navigate = useNavigate();
-  const { mutate: makePayment } = useInfrastructurePayment();
+  const { mutate: makePayment, isPending } = useInfrastructurePayment();
   const { showToast } = useToastStore();
   const { openModal } = useModalStore();
   const handlePaymentSuccess = (values: typeof initialValues) => {
@@ -136,6 +136,8 @@ const InfrastructureBankTransfer = ({
                   <Button
                     label="Done"
                     type="submit"
+                    isLoading={isPending}
+                    disabled={isPending}
                     className="!w-fit px-12 py-2 text-xs bg-black text-white"
                     // onClick={handlePaymentSuccess}
                   />

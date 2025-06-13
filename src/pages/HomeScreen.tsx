@@ -92,7 +92,7 @@ const HomeScreen = () => {
           {/* Total Invoice */}
           <div className="bg-white rounded-3xl p-6 h-fit w-full">
             <p className="text-gray-500 font-semibold mb-2">Total Invoice</p>
-            <p className="text-xl font-bold">
+            <p className="text-xl font-bold truncate">
               {formatPrice(data?.total_invoice ?? 0)}
             </p>
           </div>
@@ -100,7 +100,7 @@ const HomeScreen = () => {
           {/* Amount Paid */}
           <div className="bg-white rounded-3xl p-6 h-fit w-full">
             <p className="text-gray-500 font-semibold mb-2">Amount Paid</p>
-            <p className="text-xl font-bold">
+            <p className="text-xl font-bold truncate">
               {formatPrice(data?.total_amount_paid ?? 0)}
             </p>
           </div>

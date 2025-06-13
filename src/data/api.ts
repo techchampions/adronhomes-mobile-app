@@ -354,3 +354,21 @@ export const infrastructurePayment = async (
   });
   return res.data;
 };
+export interface StatementPayload {
+  start_date: string;
+  end_date: string;
+}
+
+export interface StatementResponse {
+  success: boolean;
+  message: string;
+  file: string;
+}
+export const requestStatement = async (
+  payload: Partial<StatementPayload>
+): Promise<StatementResponse> => {
+  const res = await apiClient.post("/user/send-account-statement", payload, {
+    headers: { "Content-Type": "application/json" },
+  });
+  return res.data;
+};

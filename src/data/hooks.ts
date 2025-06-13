@@ -20,8 +20,11 @@ import {
   infrastructurePayment,
   PropertyFilters,
   propertyPlanRepayment,
+  requestStatement,
   SearchParam,
   searchProperties,
+  StatementPayload,
+  StatementResponse,
   toggleSaveProperty,
 } from "./api";
 import { PropertiesResponse } from "./types/propertiesPageTypes";
@@ -320,5 +323,11 @@ export const useInfrastructurePayment = () => {
         queryKey: ["user-properties-plan-payment-history"],
       });
     },
+  });
+};
+
+export const useRequestStatement = () => {
+  return useMutation<StatementResponse, unknown, Partial<StatementPayload>>({
+    mutationFn: requestStatement,
   });
 };

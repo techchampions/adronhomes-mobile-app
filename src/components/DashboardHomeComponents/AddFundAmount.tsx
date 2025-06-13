@@ -4,6 +4,7 @@ import SelectPaymentMethod from "./SelectPaymentMethod";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import InputField from "../InputField";
+import AmountInputField from "../AmountInput";
 
 const AddFundAmount = ({ goBack }: { goBack: () => void }) => {
   const { openModal, closeModal } = useModalStore();
@@ -12,7 +13,7 @@ const AddFundAmount = ({ goBack }: { goBack: () => void }) => {
   const validationSchema = Yup.object().shape({
     amount: Yup.number()
       .typeError("Amount must be a number")
-      .min(1001, "Amount must be greater than ₦1000")
+      .min(1001, "Amount must be greater than ₦1,000")
       .required("Amount is required"),
   });
 
@@ -26,15 +27,18 @@ const AddFundAmount = ({ goBack }: { goBack: () => void }) => {
       </div>
       <div className="flex flex-col justify-between mt-10">
         <Formik
-          initialValues={{ amount: null }}
+          initialValues={{ amount: "" }}
           validationSchema={validationSchema}
           onSubmit={(values) =>
             openModal(
-              <SelectPaymentMethod goBack={goBack} amount={values.amount} />
+              <SelectPaymentMethod
+                goBack={goBack}
+                amount={Number(values.amount)}
+              />
             )
           }
         >
-          {({ isValid, dirty }) => (
+          {({ isValid, dirty, setFieldValue, values, touched, errors }) => (
             <Form className="flex flex-col justify-between min-h-[400px]">
               <div className="flex flex-col gap-4">
                 <InputField
@@ -43,9 +47,7 @@ const AddFundAmount = ({ goBack }: { goBack: () => void }) => {
                   placeholder="₦0.00"
                   className="text-2xl font-bold"
                 />
-                <p className="text-xs text-gray-400 w-[80%]">
-                  Please note that a 1% transaction fee will be charged.
-                </p>
+                <p className="text-xs text-gray-400 w-[80%]"></p>
               </div>
               <div className="flex justify-between w-full gap-4 mt-4">
                 <Button
