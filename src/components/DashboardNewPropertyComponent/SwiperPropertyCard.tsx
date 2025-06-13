@@ -29,6 +29,7 @@ import { PropertyType } from "../../data/types/propertiesPageTypes";
 interface Props {
   property: {
     id: number;
+    size: number;
     name: string;
     street_address: string;
     lga: string;
@@ -40,12 +41,19 @@ interface Props {
     type: PropertyType;
     is_saved: boolean;
     is_bought: boolean;
+    is_discount: boolean;
+    discount_percentage: string | number;
   };
 }
 
 export default function SwiperPropertyCard({ property }: Props) {
   const navigate = useNavigate();
   const { showToast } = useToastStore();
+  const features = property.features;
+  const allowedFeatures = ["Gym", "Light"];
+  const displayFeatures = features.filter((item) =>
+    allowedFeatures.includes(item)
+  );
   // const { mutate: toggleSavePropertyHook, isLoading } = useToggleSaveProperty();
 
   const prevRef = useRef<HTMLButtonElement>(null);
@@ -149,6 +157,11 @@ export default function SwiperPropertyCard({ property }: Props) {
         >
           <FaChevronRight size={30} />
         </button>
+        {property.is_discount && (
+          <div className="bg-red-600 text-white text-xs px-3 py-1 rounded-full absolute top-2 right-5 z-50">
+            {property.discount_percentage}% off
+          </div>
+        )}
       </div>
 
       {/* Property Info */}
@@ -161,8 +174,10 @@ export default function SwiperPropertyCard({ property }: Props) {
           {/* {`${property.street_address}, ${property.lga}, ${property.state} ${property.country}`} */}
         </p>
 
-        <p className="text-lg font-black text-adron-black mt-4 flex justify-between">
-          {formatPrice(property.price ?? 0)}
+        <div className="text-lg font-black text-adron-black mt-4 flex justify-between">
+          <span className="w-[70%] truncate">
+            {formatPrice(property.price ?? 0)}
+          </span>
           <div className="mr-2" onClick={toggleSaveProperty}>
             {isSaved ? (
               <FaHeart className="text-adron-green" size={20} />
@@ -170,24 +185,37 @@ export default function SwiperPropertyCard({ property }: Props) {
               <FaRegHeart className="text-gray-500" size={20} />
             )}
           </div>
-        </p>
+        </div>
 
         <div className="flex justify-between items-center">
           <div className="flex items-center text-[10px] font-bold text-gray-500 gap-2">
             <span className="flex items-center gap-1 truncate">
               {/* <TfiRulerAlt2 />  */}
               <img src="/ruler.svg" width={14} height={14} alt="dumbbell" />
-
-              {property.features[0]}
+              {property.size} Sm q
             </span>
-            <span className="flex items-center gap-1 truncate">
+            {displayFeatures.map((feature, index) => (
+              <span className="flex items-center gap-1 truncate">
+                {feature === "Gym" ? (
+                  <GiStreetLight />
+                ) : (
+                  <img
+                    src="/dumbbell.svg"
+                    width={14}
+                    height={14}
+                    alt="dumbbell"
+                  />
+                )}{" "}
+                {feature}
+              </span>
+            ))}
+            {/* <span className="flex items-center gap-1 truncate">
               <GiStreetLight /> {property.features[1]}
             </span>
             <span className="flex items-center gap-1 truncate">
-              {/* <FaDumbbell /> */}
               <img src="/dumbbell.svg" width={14} height={14} alt="dumbbell" />
               {property.features[2]}
-            </span>
+            </span> */}
           </div>
           <div className="text-gray-400 flex items-center gap-1 text-xs">
             {property.type.name}

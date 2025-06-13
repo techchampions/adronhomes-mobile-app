@@ -8,8 +8,9 @@ import { formatPrice } from "../data/utils";
 
 type Prop = {
   id?: number | string;
+  units?: number;
 };
-const PropertySummary: React.FC<Prop> = ({ id }) => {
+const PropertySummary: React.FC<Prop> = ({ id, units }) => {
   const { data, isError, isLoading } = useGetPropertyByID(id);
   const property = data?.data.properties[0];
   if (isLoading) return <Loader />;
@@ -24,14 +25,9 @@ const PropertySummary: React.FC<Prop> = ({ id }) => {
           alt=""
         />
         <div className="w-full md:w-auto space-y-2 md:space-y-0">
-          <h4 className="text-xl font-semibold">
-            {property?.name}
-            Treasure Parks and Gardens
-          </h4>
+          <h4 className="text-xl font-semibold">{property?.name}</h4>
           <p className="text-sm text-gray-500 flex items-center gap-1">
             <FaMapMarkerAlt className="h-4 w-4" />
-            {/* 34, Shimawa, Ogun
-                  State, Nigeria */}
             {property?.street_address}, {property?.lga}, {property?.state},{" "}
             {property?.country}
           </p>
@@ -57,8 +53,12 @@ const PropertySummary: React.FC<Prop> = ({ id }) => {
           </div>
         </div>
       </div>
-      <div className="text-right text-2xl font-bold">
+      <div className="text-right text-2xl font-bold flex items-center gap-1">
         {formatPrice(property?.price ?? 0)}
+
+        {units && units > 1 && (
+          <span className="text-[10px] text-gray-400"> × {units} units</span>
+        )}
       </div>
     </div>
   );

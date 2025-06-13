@@ -93,9 +93,11 @@ const TransactionDetail = ({ id }: { id: number }) => {
         <div className="flex justify-between items-center py-3">
           <div className="flex flex-col">
             <p className="text-gray-400 text-xs">Transaction Reference</p>
-            <p className="font-bold text-xs">01hws5tdgy677782hdgeg3</p>
+            <p className="font-bold text-xs">
+              {data?.user_transaction.reference}
+            </p>
           </div>
-          <CopyButton text="01hws5tdgy677782hdgeg3" />
+          <CopyButton text={data?.user_transaction.reference} />
         </div>
         <div className="flex justify-between items-center py-3">
           <div className="flex flex-col">

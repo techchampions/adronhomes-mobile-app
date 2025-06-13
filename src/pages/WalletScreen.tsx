@@ -8,6 +8,7 @@ import { formatPrice } from "../data/utils";
 import TransactionsList from "../components/DashboardTransactionComponents/TransactionsList";
 import ApiErrorBlock from "../components/ApiErrorBlock";
 import SmallLoader from "../components/SmallLoader";
+import { IoInformationCircle } from "react-icons/io5";
 
 const WalletScreen = () => {
   const openModal = useModalStore((state) => state.openModal);
@@ -66,18 +67,24 @@ const WalletScreen = () => {
             </p>
             <p className="text-[9px] text-gray-400">Account Name</p>
           </div>
+          <div className="flex items-center gap-1 ">
+            <IoInformationCircle className="text-gray-400" />
+            <span className="text-xs text-gray-400">
+              Note: withdrawals from virtual account cannot be made.
+            </span>
+          </div>
         </div>
         <div className="flex gap-4 row-span-1 col-span-2 h-fit">
           <div className="p-4 bg-white rounded-3xl flex flex-col items-center h-fit w-full">
             <p className="text-gray-400 text-sm">Total Invoice</p>
-            <p className="font-bold">
+            <p className="font-bold truncate">
               {" "}
               {formatPrice(data?.total_invoice ?? 0)}{" "}
             </p>
           </div>
           <div className="p-4 bg-white rounded-3xl flex flex-col items-center h-fit w-full">
             <p className="text-gray-400 text-sm">Amount Paid</p>
-            <p className="font-bold">
+            <p className="font-bold truncate">
               {formatPrice(data?.total_amount_paid ?? 0)}
             </p>
           </div>

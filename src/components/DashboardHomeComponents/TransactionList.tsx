@@ -20,7 +20,7 @@ const TransactionsList: React.FC<Props> = ({ data, isLoading, isError }) => {
       <ul className="space-y-2">
         {data.map((t) => (
           <li
-            className="p-4 cursor-pointer rounded-3xl flex justify-between items-center even:bg-gray-100"
+            className="p-4 gap-2 cursor-pointer rounded-3xl flex justify-between items-center even:bg-gray-100"
             onClick={() => openModal(<TransactionDetail id={t.id} />)}
           >
             <div className="w-[70%]">
@@ -32,8 +32,8 @@ const TransactionsList: React.FC<Props> = ({ data, isLoading, isError }) => {
                 {formatDate(t.created_at ?? "")}
               </p>
             </div>
-            <div className="text-right">
-              <p className="font-bold text-black text-sm">
+            <div className="text-right w-[27%]">
+              <p className="font-bold text-black text-sm truncate">
                 {formatPrice(t.amount)}
               </p>
             </div>
@@ -66,7 +66,7 @@ const TransactionsList: React.FC<Props> = ({ data, isLoading, isError }) => {
     return renderList();
   };
   return (
-    <div className="bg-white p-6 rounded-3xl w-full">
+    <div className="bg-white p-4 md:p-6 rounded-3xl w-full">
       <div className="flex items-center justify-between mb-6">
         <h4 className="text-lg text-gray-400">Transactions</h4>
         {/* <button className="text-xs px-4 py-1.5 text-adron-green font-bold">

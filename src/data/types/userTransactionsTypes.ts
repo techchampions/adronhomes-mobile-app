@@ -19,6 +19,7 @@ export interface Transaction {
   description: string;
   transaction_type: string;
   transaction_method: string;
+  reference: string;
   created_at: string | null;
   updated_at: string | null;
   status: TransactionStatus | null;

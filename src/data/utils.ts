@@ -4,6 +4,12 @@ export const formatPrice = (amount: number): string => {
     currency: "NGN",
   }).format(amount);
 };
+export const formatAmouunt = (amount: number): string => {
+  return new Intl.NumberFormat("en-NG", {
+    style: "currency",
+    currency: "NGN",
+  }).format(amount);
+};
 export const formatDate = (dateString: string): string => {
   const date = new Date(dateString);
 

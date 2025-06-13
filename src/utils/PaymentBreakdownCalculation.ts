@@ -7,16 +7,25 @@ export const calculatePaymentDetails = (
     paymentType: string;
     paymentDuration: string;
     paymentSchedule: string;
+    units: number;
   },
   property?: Property
 ) => {
   const propertyFees =
     property?.details.reduce((sum, detail) => sum + detail.value, 0) ?? 0;
   const fees = propertyFees || 0;
+  const units = values.units ? values.units : 1;
+  const oneTimePrice = property?.price || 0;
+  const oneTimeTotal = oneTimePrice * units;
+
+  const installmentPrice = property?.initial_deposit || 0;
+  const installmentPriceTotal = installmentPrice * units;
   const initialDeposit =
     values.paymentType === "One Time"
-      ? property?.price || 0
-      : property?.initial_deposit || 0;
+      ? oneTimeTotal
+      : // ? property?.price || 0 * values.units
+        installmentPriceTotal;
+  // property?.initial_deposit || 0 * values.units;
 
   const remPrice = (property?.price || 0) - (property?.initial_deposit || 0);
   console.log(remPrice);

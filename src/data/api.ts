@@ -344,12 +344,31 @@ export const infrastructurePayment = async (
     formData.append("payment_method", payload.payment_method);
   if (payload.paid_amount !== undefined)
     formData.append("paid_amount", payload.paid_amount.toString());
+  if (payload.purpose) formData.append("purpose", payload.purpose);
   if (payload.proof_of_payment)
     formData.append("proof_of_payment", payload.proof_of_payment);
   const res = await apiClient.post("/user/pay-for-infrastructure", formData, {
     headers: {
       "Content-Type": "multipart/form-data",
     },
+  });
+  return res.data;
+};
+export interface StatementPayload {
+  start_date: string;
+  end_date: string;
+}
+
+export interface StatementResponse {
+  success: boolean;
+  message: string;
+  file: string;
+}
+export const requestStatement = async (
+  payload: Partial<StatementPayload>
+): Promise<StatementResponse> => {
+  const res = await apiClient.post("/user/send-account-statement", payload, {
+    headers: { "Content-Type": "application/json" },
   });
   return res.data;
 };

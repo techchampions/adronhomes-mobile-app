@@ -11,10 +11,12 @@ const InputInfrastructureAmount = ({
   goBack,
   infrastructureAmount,
   planID,
+  purpose,
 }: {
   goBack: () => void;
   infrastructureAmount?: number;
   planID?: number | string;
+  purpose?: string;
 }) => {
   const { openModal, closeModal } = useModalStore();
   const { setPaymentDetails } = usePaymentBreakDownStore();
@@ -49,12 +51,13 @@ const InputInfrastructureAmount = ({
                 amount={values.amount}
                 goBack={goBack}
                 planID={Number(planID)}
+                purpose={purpose}
               />
             );
           }}
         >
           {({ isValid }) => (
-            <Form className="flex flex-col justify-between min-h-[350px]">
+            <Form className="flex flex-col justify-between min-h-[200px]">
               <div className="flex flex-col gap-4">
                 <InputField
                   name="amount"
@@ -62,39 +65,7 @@ const InputInfrastructureAmount = ({
                   placeholder="₦0.00"
                   className="text-2xl font-bold"
                 />
-                <p className="text-xs text-gray-400 w-[80%]">
-                  Please note that a 1% transaction fee will be charged.
-                </p>
-                <div className="flex border border-gray-200 rounded-lg p-4 flex-col gap-3">
-                  <div className="flex justify-between items-center">
-                    <p className="text-xs ">Development Fee:</p>
-                    <p className="text-sm font-bold">
-                      {" "}
-                      {formatPrice(infrastructureAmount || 0)}{" "}
-                    </p>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <p className="text-xs ">Survery Fee:</p>
-                    <p className="text-sm font-bold">
-                      {" "}
-                      {formatPrice(infrastructureAmount || 0)}{" "}
-                    </p>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <p className="text-xs ">Plan and Architect Fee:</p>
-                    <p className="text-sm font-bold">
-                      {" "}
-                      {formatPrice(infrastructureAmount || 0)}{" "}
-                    </p>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <p className="text-sm font-bold ">Total:</p>
-                    <p className="text-md font-bold">
-                      {" "}
-                      {formatPrice(infrastructureAmount || 0)}{" "}
-                    </p>
-                  </div>
-                </div>
+                <p className="text-xs text-gray-400 w-[80%]"></p>
               </div>
               <div className="flex justify-between w-full gap-4 mt-4">
                 <Button

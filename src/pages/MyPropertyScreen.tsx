@@ -25,11 +25,13 @@ const MyPropertyScreen = () => {
         </div>
         <div className="p-4 bg-white rounded-3xl flex flex-col items-center h-fit">
           <p className="text-gray-400 text-sm">Total Invoice</p>
-          <p className="font-bold">{formatPrice(data?.total_invoice ?? 0)}</p>
+          <p className="font-bold truncate">
+            {formatPrice(data?.total_invoice ?? 0)}
+          </p>
         </div>
         <div className="p-4 bg-white rounded-3xl flex flex-col items-center h-fit">
           <p className="text-gray-400 text-sm">Amount Paid</p>
-          <p className="font-bold">
+          <p className="font-bold truncate">
             {formatPrice(data?.total_amount_paid ?? 0)}
           </p>
         </div>

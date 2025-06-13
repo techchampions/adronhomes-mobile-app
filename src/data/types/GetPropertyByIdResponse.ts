@@ -60,7 +60,13 @@ export interface Property {
   total_amount: number | null;
   is_bought: boolean;
   is_saved: boolean;
+  is_discount: boolean;
+  discount_name: string;
+  discount_percentage: number | string;
   no_of_bedroom: number;
+  number_of_bathroom: number;
+  year_built: string | number;
+  parking_space: string | number;
   area: string;
   property_map: string | null;
   property_video: string | null;

@@ -1,6 +1,6 @@
 import { Form, Formik } from "formik";
 import { FaHeart, FaMapMarker } from "react-icons/fa";
-import { IoIosCheckmarkCircleOutline } from "react-icons/io";
+import { IoIosCheckmarkCircleOutline, IoMdBed } from "react-icons/io";
 import { useNavigate, useParams } from "react-router-dom";
 import InputField from "../components/InputField";
 import Button from "../components/Button";
@@ -13,7 +13,9 @@ import { useGetPropertyByID } from "../data/hooks";
 import { formatPrice } from "../data/utils";
 import ApiErrorBlock from "../components/ApiErrorBlock";
 import Loader from "../components/Loader";
-
+import { LiaToiletSolid } from "react-icons/lia";
+import { TbBed } from "react-icons/tb";
+import { IoCarSportOutline, IoConstructOutline } from "react-icons/io5";
 const PropertyDetail = () => {
   const params = useParams();
   const navigate = useNavigate();
@@ -22,6 +24,7 @@ const PropertyDetail = () => {
   if (isError) return <ApiErrorBlock />;
   if (isLoading) return <Loader />;
   const item = data?.data.properties[0];
+  const features = item?.features || [];
 
   const address = `${data?.data.properties[0].street_address}, ${data?.data.properties[0].lga}, ${data?.data.properties[0].state} ${data?.data.properties[0].country}`;
 
@@ -135,8 +138,7 @@ const PropertyDetail = () => {
                 <span className="flex items-center gap-1 truncate">
                   {/* <TfiRulerAlt2 />  */}
                   <img src="/ruler.svg" width={14} height={14} alt="dumbbell" />
-
-                  {item?.size}
+                  {item?.size}Sq M
                 </span>
                 <span className="flex items-center gap-1 truncate">
                   <GiStreetLight /> Str Light
@@ -152,17 +154,60 @@ const PropertyDetail = () => {
                   Gym
                 </span>
                 <div className="flex items-center gap-1 text-sm">
-                  {/* {item?.type} */}
+                  {item?.type.name}
                 </div>
               </div>
-              <div className=" flex items-center gap-1 text-2xl font-bold mt-3 md:mt-0">
-                {formatPrice(item?.price ?? 0)}
+              <div className="flex flex-col items-end mt-3 md:mt-0">
+                <div className="flex items-center gap-2">
+                  {item?.is_discount && (
+                    <div className="bg-red-700 text-white text-xs px-2 py-1 rounded-full">
+                      {item.discount_percentage}% off
+                    </div>
+                  )}
+                  <div className="text-2xl font-bold ">
+                    {formatPrice(item?.price ?? 0)}
+                  </div>
+                </div>
+                {item?.initial_deposit && (
+                  <div className="flex items-center text-gray-700 text-xs bg-[#CFFFCF] p-2 rounded-full">
+                    Initial Deposit{" "}
+                    <span className="text-bold text-adron-green text-sm ml-2">
+                      {formatPrice(item?.initial_deposit || 0)}
+                    </span>
+                  </div>
+                )}
               </div>
             </div>
             <div className="flex flex-col md:flex-row gap-4">
               <div className="flex flex-col w-full md:w-[70%] gap-10">
                 <div className="flex flex-col gap-2">
                   <h4 className="font-bold text-md">Overview</h4>
+                  <div className="text-sm flex ml-5 divide-adron-gray-300 divide-x-1">
+                    {item?.no_of_bedroom != null && (
+                      <li className="flex items-center gap-2 px-2">
+                        <TbBed />
+                        <span>{item?.no_of_bedroom} Bedrooms</span>
+                      </li>
+                    )}
+                    {item?.number_of_bathroom != null && (
+                      <li className="flex items-center gap-2 px-2">
+                        <LiaToiletSolid />
+                        <span>{item?.number_of_bathroom} Bathroom</span>
+                      </li>
+                    )}
+                    {item?.parking_space != null && (
+                      <li className="flex items-center gap-2 px-2">
+                        <IoCarSportOutline />
+                        <span>{item?.parking_space} Vehicle Parking Space</span>
+                      </li>
+                    )}
+                    {item?.year_built != null && (
+                      <li className="flex items-center gap-2 px-2">
+                        <IoConstructOutline />
+                        <span>Built Year {item?.year_built}</span>
+                      </li>
+                    )}
+                  </div>
                   <p className="text-sm ml-5">{item?.overview}</p>
                 </div>
 
@@ -173,7 +218,7 @@ const PropertyDetail = () => {
                 <div className="flex flex-col gap-2">
                   <h4 className="font-bold text-md">Features</h4>
                   <div className="text-md ml-5 grid grid-cols-3 text-gray-500 space-y-2">
-                    {item?.features?.map((list) => (
+                    {features.map((list) => (
                       <div key={list} className="flex gap-2 items-center">
                         <IoIosCheckmarkCircleOutline /> <div>{list}</div>
                       </div>
@@ -301,6 +346,40 @@ const PropertyDetail = () => {
                         No additional details available.
                       </p>
                     )}
+                  </div>
+                </div>
+
+                {/* Payment Structure */}
+                <div className="flex flex-col gap-4">
+                  <h4 className="textxl font-bold">Payment Structure</h4>
+                  <div className="flex justify-between items-center">
+                    <div className="flex-flex-col">
+                      <p className="text-xs text-gray-500">Payment type</p>
+                      <p className="text-sm">Interval Payment</p>
+                    </div>
+                    <div className="flex-flex-col">
+                      <p className="text-xs text-gray-500">
+                        Payment Duration Limit
+                      </p>
+                      <p className="text-sm">
+                        Maximum of{" "}
+                        {data?.data.properties[0].property_duration_limit}{" "}
+                        Months
+                      </p>
+                    </div>
+                    <div className="flex-flex-col">
+                      <p className="text-xs text-gray-500">Payment Schedule</p>
+                      <p className="text-sm">Weekly, Monthly</p>
+                    </div>
+                    <div className="flex-flex-col bg-[#CFFFCF] rounded-xl p-4">
+                      <p className="text-xs text-gray-500">Fees & Charges</p>
+                      <p className="text-sm">
+                        {" "}
+                        {formatPrice(
+                          data?.data.properties[0].details[0].value || 0
+                        )}{" "}
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>

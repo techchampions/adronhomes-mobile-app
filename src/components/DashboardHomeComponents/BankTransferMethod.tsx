@@ -19,7 +19,7 @@ const BankTransfer = ({
 }) => {
   const { openModal } = useModalStore();
   const initialValues = { proof: null as File | null, sender_name: "" };
-  const { mutate: fundWallet } = useFundWallet();
+  const { mutate: fundWallet, isPending: fundingWallet } = useFundWallet();
 
   const { showToast } = useToastStore();
   const GoToSelectPaymentMethod = () => {
@@ -130,6 +130,8 @@ const BankTransfer = ({
                   label="Done"
                   className="!w-fit px-12 py-2 text-xs bg-black text-white"
                   type="submit"
+                  isLoading={fundingWallet}
+                  disabled={fundingWallet}
                   // onClick={handlePaymentSuccess}
                 />
               </div>

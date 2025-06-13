@@ -15,7 +15,7 @@ const VirtualBankTransfer = ({
   amount: number | null;
 }) => {
   const { closeModal, openModal } = useModalStore();
-  const { mutate: fundWallet } = useFundWallet();
+  const { mutate: fundWallet, isPending: fundingWallet } = useFundWallet();
   const { showToast } = useToastStore();
   const GoToSelectPaymentMethod = () => {
     openModal(<SelectPaymentMethod goBack={goBack} amount={amount} />);
@@ -100,6 +100,8 @@ const VirtualBankTransfer = ({
             label="Done"
             className="!w-fit px-12 py-2 text-xs bg-black text-white"
             onClick={handlePaymentSuccess}
+            isLoading={fundingWallet}
+            disabled={fundingWallet}
           />
         </div>
       </div>
