@@ -80,6 +80,7 @@ export interface Property {
   details: PropertyDetail[];
   saved_property: SavedProperty | null;
   bought_property: BoughtProperty | null;
+  number_of_unit: number;
 }
 
 export interface PropertyType {

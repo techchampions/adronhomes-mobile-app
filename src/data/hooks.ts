@@ -4,6 +4,7 @@ import {
   fetchPropertiesPageData,
   fetchSavedProperties,
   fundWallet,
+  getAllAccountDetails,
   getAllPropertyLocations,
   getAllPropertyType,
   getDashboardHomeData,
@@ -45,6 +46,7 @@ import { PropertyPlanPaymentResponse } from "./types/PropertyPlanPaymentListType
 import { PropertiesSearchResultResponse } from "./types/SearchPropertiesResultTypes";
 import { useEffect } from "react";
 import { SavedPropertiesResponse } from "./types/SavedPropertiesResponse";
+import { AccountDetailsResponse } from "./types/AccountDetailsTypes";
 
 //Query hook for User profile
 export const useGetUser = () => {
@@ -84,6 +86,21 @@ export const useGetUser = () => {
 
 //   return queryResult;
 // };
+
+export const useGetAccounts = () => {
+  const { setAccounts } = useUserStore();
+  const queryResult = useQuery<AccountDetailsResponse>({
+    queryKey: ["Accounts"],
+    queryFn: getAllAccountDetails,
+  });
+  useEffect(() => {
+    if (queryResult.data?.status) {
+      setAccounts(queryResult.data.data);
+    }
+  }, [queryResult.data, setAccounts]);
+
+  return queryResult;
+};
 
 // Query hook for homepage data with
 export const useGetUserDashboardData = () => {

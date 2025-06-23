@@ -18,6 +18,7 @@ import { FundWalletPayload } from "./types/FundWalletPayloadTypes";
 import { PropertiesSearchResultResponse } from "./types/SearchPropertiesResultTypes";
 import { SavedPropertiesResponse } from "./types/SavedPropertiesResponse";
 import { FundWalletResponse } from "../components/DashboardHomeComponents/SelectPaymentMethod";
+import { AccountDetailsResponse } from "./types/AccountDetailsTypes";
 
 export type ApiError = {
   response?: {
@@ -297,6 +298,9 @@ export const createPropertyPlan = async (
   if (payload.marketer_code)
     formData.append("marketer_code", payload.marketer_code);
 
+  if (payload.number_of_unit)
+    formData.append("number_of_unit", payload.number_of_unit.toString());
+
   if (payload.proof_of_payment)
     formData.append("proof_of_payment", payload.proof_of_payment);
 
@@ -372,3 +376,10 @@ export const requestStatement = async (
   });
   return res.data;
 };
+
+//Get All Account Details
+export const getAllAccountDetails =
+  async (): Promise<AccountDetailsResponse> => {
+    const response = await apiClient.get("/account-details");
+    return response.data;
+  };

@@ -18,6 +18,7 @@ import { useParams } from "react-router-dom";
 import { paymentTypeWatcher } from "../utils/PaymentTypeWatcher";
 import InputField from "../components/InputField";
 import { formatPrice } from "../data/utils";
+import NoPropertyFound from "../components/NoPropertyFound";
 
 export default function InvestmentForm() {
   const { openModal } = useModalStore();
@@ -26,9 +27,17 @@ export default function InvestmentForm() {
   const { setPaymentDetails } = usePaymentBreakDownStore();
   const [selectedPaymentType, setSelectedPaymentType] = useState("");
   const { data, isError, isLoading } = useGetPropertyByID(id || 0);
+  const number_of_unit = data?.data.properties[0].number_of_unit || 0;
   const property = data?.data.properties[0];
   if (isLoading) return <SmallLoader />;
   if (isError) return <ApiErrorBlock />;
+  if (number_of_unit < 1)
+    return (
+      <NoPropertyFound
+        msg="No units left"
+        description="Oops... All units have been purchased"
+      />
+    );
 
   const PropertyDurationLimit =
     data?.data.properties[0].property_duration_limit;
@@ -60,7 +69,9 @@ export default function InvestmentForm() {
         }
       : {
           paymentType: Yup.string().required("Required"),
-          units: Yup.number().required("Required"),
+          units: Yup.number()
+            .max(data?.data.properties[0].number_of_unit || 0)
+            .required("Required"),
         }),
 
     // marketerId: Yup.string().required("Required"),
@@ -93,6 +104,7 @@ export default function InvestmentForm() {
       weeklyAmount,
       fees,
       totalAmount,
+      numberOfUnits: values.units,
       propertyId: id ? Number(id) : null, // Convert string ID to number
     };
 

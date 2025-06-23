@@ -37,6 +37,7 @@ const BankTransfer = ({
     propertyId,
     paymentType,
     planId,
+    numberOfUnits,
   } = usePaymentBreakDownStore();
   const { showToast } = useToastStore();
   const { closeModal, openModal } = useModalStore();
@@ -61,6 +62,7 @@ const BankTransfer = ({
                   paid_amount: totalAmount,
                   marketer_code: marketerId,
                   proof_of_payment: values.proof,
+                  number_of_unit: numberOfUnits,
                 }
               : {
                   payment_method: "bank_transfer",
@@ -73,6 +75,7 @@ const BankTransfer = ({
                   paid_amount: totalAmount,
                   marketer_code: marketerId,
                   proof_of_payment: values.proof,
+                  number_of_unit: numberOfUnits,
                 }),
           },
           {

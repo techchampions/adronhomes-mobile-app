@@ -13,6 +13,7 @@ type PaymentBreakDownStore = {
   paymentType: string;
   paymentDuration: number | null;
   paymentSchedule: string;
+  numberOfUnits: number;
   startDate: string;
   endDate: string;
   setPaymentDetails: (
@@ -34,6 +35,7 @@ export const usePaymentBreakDownStore = create<PaymentBreakDownStore>(
     propertyPrice: 0,
     propertyName: "",
     marketerId: "",
+    numberOfUnits: 1,
     paymentType: "",
     paymentDuration: null,
     paymentSchedule: "",
@@ -51,6 +53,7 @@ export const usePaymentBreakDownStore = create<PaymentBreakDownStore>(
         propertyId: null,
         planId: null,
         propertyPrice: 0,
+        numberOfUnits: 1,
         propertyName: "",
         marketerId: "",
         paymentType: "",

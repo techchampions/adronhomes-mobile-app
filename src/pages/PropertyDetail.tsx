@@ -376,7 +376,7 @@ const PropertyDetail = () => {
                       <p className="text-sm">
                         {" "}
                         {formatPrice(
-                          data?.data.properties[0].details[0].value || 0
+                          data?.data.properties[0].details[0]?.value || 0
                         )}{" "}
                       </p>
                     </div>

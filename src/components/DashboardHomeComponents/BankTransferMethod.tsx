@@ -9,6 +9,7 @@ import { useFundWallet } from "../../data/hooks";
 import PaymentPending from "../PaymentPending";
 import { Form, Formik } from "formik";
 import InputField from "../InputField";
+import { useUserStore } from "../../zustand/UserStore";
 
 const BankTransfer = ({
   goBack,
@@ -18,6 +19,8 @@ const BankTransfer = ({
   amount: number | null;
 }) => {
   const { openModal } = useModalStore();
+  const { accounts } = useUserStore();
+  const fundAccount = accounts.find((item) => item.type === "fund");
   const initialValues = { proof: null as File | null, sender_name: "" };
   const { mutate: fundWallet, isPending: fundingWallet } = useFundWallet();
 
@@ -75,19 +78,19 @@ const BankTransfer = ({
           <div className="flex flex-col w-full gap-4 mt-4">
             <div className="flex justify-between items-center w-full">
               <div className="flex flex-col">
-                <p className="text-sm">8394839302</p>
+                <p className="text-sm">{fundAccount?.account_number}</p>
                 <p className="text-xs font-adron-thin text-gray-400">
                   Account Number
                 </p>
               </div>
-              <CopyButton text="8394839302" />
+              <CopyButton text={fundAccount?.account_number} />
             </div>
             <div className="flex flex-col">
-              <p className="text-sm">Providus Bank</p>
+              <p className="text-sm">{fundAccount?.bank_name}</p>
               <p className="text-xs font-adron-thin text-gray-400">Bank Name</p>
             </div>
             <div className="flex flex-col">
-              <p className="text-sm">Bimbo Adeleke</p>
+              <p className="text-sm">{fundAccount?.account_name}</p>
               <p className="text-xs font-adron-thin text-gray-400">
                 Account Name
               </p>

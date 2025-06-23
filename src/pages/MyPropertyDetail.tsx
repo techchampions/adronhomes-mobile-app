@@ -59,7 +59,11 @@ const MyPropertyDetail = () => {
   const id = params?.id;
   const { data, isLoading, isError } = useGetPropertyPlanByID(id ?? "");
   useEffect(() => {
-    if (data?.plan_properties.payment_percentage === 100) {
+    if (
+      data?.plan_properties.payment_percentage === 100 &&
+      data?.plan_properties.infrastructure_percentage === 100 &&
+      data?.plan_properties.other_percentage === 100
+    ) {
       openModal(<RequestDocument />);
     }
   }, [data?.plan_properties.payment_percentage, openModal]);
@@ -104,7 +108,7 @@ const MyPropertyDetail = () => {
       <InputInfrastructureAmount
         goBack={makeInfrastructurePayment}
         planID={data?.plan_properties.id}
-        infrastructureAmount={data?.next_repayment.amount}
+        // infrastructureAmount={0}
         purpose="infrastructure"
       />
     );
@@ -118,8 +122,8 @@ const MyPropertyDetail = () => {
       <InputInfrastructureAmount
         goBack={makeInfrastructurePayment}
         planID={data?.plan_properties.id}
-        infrastructureAmount={data?.next_repayment.amount}
-        purpose="others"
+        // infrastructureAmount={0}
+        purpose="other"
       />
     );
   };
@@ -154,7 +158,12 @@ const MyPropertyDetail = () => {
             <div className="flex flex-col flex-[0_0_100%] w-full gap-4 px-4 md:px-14 py-8">
               {/* Progress Bar */}
               <div className="mt-5 space-y-4">
-                <p className="text-xs text-white/80">Property Payment</p>
+                <div className="flex w-full justify-between items-center">
+                  <p className="text-xs text-white/80">Property Payment</p>
+                  <div className="py-1 px-3 rounded-lg bg-white/20 text-sm text-white">
+                    {data?.plan_properties.number_of_unit} units
+                  </div>
+                </div>
 
                 <div className="flex justify-between items-baseline text-sm mt-2 w-fit text-white">
                   <span className="text-white text-2xl md:text-4xl">

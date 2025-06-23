@@ -49,6 +49,7 @@ const SelectPaymentMethod = ({
     propertyId,
     marketerId,
     planId,
+    numberOfUnits,
   } = usePaymentBreakDownStore();
 
   console.log("Payment details", planId);
@@ -79,6 +80,7 @@ const SelectPaymentMethod = ({
                   property_id: Number(propertyId),
                   paid_amount: totalAmount,
                   marketer_code: marketerId,
+                  number_of_unit: numberOfUnits,
                 }
               : {
                   payment_method: "paystack",
@@ -90,6 +92,7 @@ const SelectPaymentMethod = ({
                   repayment_schedule: paymentSchedule,
                   paid_amount: totalAmount,
                   marketer_code: marketerId,
+                  number_of_unit: numberOfUnits,
                 }),
           },
           {
@@ -172,6 +175,7 @@ const SelectPaymentMethod = ({
                     property_id: Number(propertyId),
                     paid_amount: totalAmount,
                     marketer_code: marketerId,
+                    number_of_unit: numberOfUnits,
                   }
                 : {
                     payment_method: "virtual_wallet",
@@ -183,6 +187,7 @@ const SelectPaymentMethod = ({
                     repayment_schedule: paymentSchedule,
                     paid_amount: totalAmount,
                     marketer_code: marketerId,
+                    number_of_unit: numberOfUnits,
                   }),
             },
             {
