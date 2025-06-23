@@ -21,7 +21,7 @@ const BankTransfer = ({
   const { openModal } = useModalStore();
   const { accounts } = useUserStore();
   const fundAccount = accounts.find((item) => item.type === "fund");
-  const initialValues = { proof: null as File | null, sender_name: "" };
+  const initialValues = { proof: null as File | null, bank_name: "" };
   const { mutate: fundWallet, isPending: fundingWallet } = useFundWallet();
 
   const { showToast } = useToastStore();
@@ -34,7 +34,7 @@ const BankTransfer = ({
       {
         amount: amount || 0,
         payment_method: "bank_transfer",
-        sender_name: values.sender_name,
+        bank_name: values.bank_name,
         proof_of_payment: values.proof ?? undefined,
       },
       {
@@ -101,7 +101,7 @@ const BankTransfer = ({
           {({ setFieldValue }) => (
             <Form className="flex flex-col gap-2">
               <InputField
-                name="sender_name"
+                name="bank_name"
                 placeholder="Enter your Account name"
                 className="mt-4"
               />

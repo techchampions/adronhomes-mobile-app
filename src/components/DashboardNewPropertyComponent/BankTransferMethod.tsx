@@ -22,7 +22,7 @@ const BankTransfer = ({
   amount: number;
   isBuyNow?: boolean;
 }) => {
-  const initialValues = { proof: null as File | null, sender_name: "" };
+  const initialValues = { proof: null as File | null, bank_name: "" };
   const navigate = useNavigate();
   const { mutate, isPending: isPendingPayment } = useCreatePropertyPlan();
   const { mutate: makeRepayment, isPending: isPendingRepayment } =
@@ -46,7 +46,7 @@ const BankTransfer = ({
   // };
   const handlePaymentSuccess = (values: typeof initialValues) => {
     console.log("values", values);
-    if (values.sender_name && values.proof) {
+    if (values.bank_name && values.proof) {
       if (isBuyNow) {
         mutate(
           {
@@ -63,6 +63,7 @@ const BankTransfer = ({
                   marketer_code: marketerId,
                   proof_of_payment: values.proof,
                   number_of_unit: numberOfUnits,
+                  bank_name: values.bank_name,
                 }
               : {
                   payment_method: "bank_transfer",
@@ -76,6 +77,7 @@ const BankTransfer = ({
                   marketer_code: marketerId,
                   proof_of_payment: values.proof,
                   number_of_unit: numberOfUnits,
+                  bank_name: values.bank_name,
                 }),
           },
           {
@@ -174,7 +176,7 @@ const BankTransfer = ({
             return (
               <Form className="flex flex-col gap-2">
                 <InputField
-                  name="sender_name"
+                  name="bank_name"
                   placeholder="Enter your Account name"
                   className="mt-4"
                 />

@@ -211,8 +211,8 @@ export const fundWallet = async (
   if (payload.payment_method !== undefined)
     formData.append("payment_method", payload.payment_method);
 
-  if (payload.sender_name !== undefined)
-    formData.append("sender_name", payload.sender_name);
+  if (payload.bank_name !== undefined)
+    formData.append("bank_name", payload.bank_name);
 
   if (payload.amount !== undefined)
     formData.append("amount", payload.amount.toString());
@@ -298,6 +298,8 @@ export const createPropertyPlan = async (
   if (payload.marketer_code)
     formData.append("marketer_code", payload.marketer_code);
 
+  if (payload.bank_name) formData.append("bank_name", payload.bank_name);
+
   if (payload.number_of_unit)
     formData.append("number_of_unit", payload.number_of_unit.toString());
 
@@ -327,6 +329,8 @@ export const propertyPlanRepayment = async (
   if (payload.paid_amount !== undefined)
     formData.append("amount", payload.paid_amount.toString());
 
+  if (payload.bank_name) formData.append("bank_name", payload.bank_name);
+
   if (payload.proof_of_payment)
     formData.append("proof_of_payment", payload.proof_of_payment);
 
@@ -349,6 +353,8 @@ export const infrastructurePayment = async (
   if (payload.paid_amount !== undefined)
     formData.append("paid_amount", payload.paid_amount.toString());
   if (payload.purpose) formData.append("purpose", payload.purpose);
+  if (payload.bank_name) formData.append("bank_name", payload.bank_name);
+
   if (payload.proof_of_payment)
     formData.append("proof_of_payment", payload.proof_of_payment);
   const res = await apiClient.post("/user/pay-for-infrastructure", formData, {
