@@ -81,6 +81,7 @@ export interface Property {
   saved_property: SavedProperty | null;
   bought_property: BoughtProperty | null;
   number_of_unit: number;
+  property_agreement: string;
 }
 
 export interface PropertyType {
@@ -94,6 +95,7 @@ export interface PropertyDetail {
   id: number;
   name: string;
   value: number;
+  type: string;
   property_id: number;
   created_at: string;
   updated_at: string;

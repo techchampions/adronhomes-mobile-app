@@ -40,6 +40,7 @@ const InfrastructureBankTransfer = ({
           paid_amount: amount,
           proof_of_payment: values.proof,
           purpose: purpose,
+          bank_name: values.sender_name,
         },
         {
           onSuccess: (data) => {

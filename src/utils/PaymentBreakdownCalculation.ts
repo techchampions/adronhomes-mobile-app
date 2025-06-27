@@ -11,12 +11,22 @@ export const calculatePaymentDetails = (
   },
   property?: Property
 ) => {
-  const propertyFees =
-    property?.details.reduce((sum, detail) => sum + detail.value, 0) ?? 0;
-  const fees = propertyFees || 0;
+  const feesList = property?.details || [];
+  const otherFeesData = feesList.filter((item) => item.type === "others");
+  const infrastructureData = feesList.filter(
+    (item) => item.type === "infrastructure"
+  );
+
+  let otherFees =
+    otherFeesData.reduce((sum, detail) => sum + detail.value, 0) ?? 0;
+  let infrastructureFees =
+    infrastructureData.reduce((sum, detail) => sum + detail.value, 0) ?? 0;
+  // const fees = propertyFees || 0;
   const units = values.units ? values.units : 1;
   const oneTimePrice = property?.price || 0;
   const oneTimeTotal = oneTimePrice * units;
+  otherFees = otherFees * units;
+  infrastructureFees = infrastructureFees * units;
 
   const installmentPrice = property?.initial_deposit || 0;
   const installmentPriceTotal = installmentPrice * units;
@@ -30,7 +40,7 @@ export const calculatePaymentDetails = (
   const remPrice = (property?.price || 0) - (property?.initial_deposit || 0);
   console.log(remPrice);
 
-  const weeklyAmount =
+  let weeklyAmount =
     values.paymentSchedule === "Monthly"
       ? remPrice / Number(values.paymentDuration || 1)
       : values.paymentSchedule === "Quarterly"
@@ -40,9 +50,10 @@ export const calculatePaymentDetails = (
   const totalAmount =
     // values.paymentType === "One Time" ? initialDeposit :
     initialDeposit;
-
+  weeklyAmount = weeklyAmount * units;
   return {
-    fees,
+    otherFees,
+    infrastructureFees,
     initialDeposit,
     remPrice,
     weeklyAmount,

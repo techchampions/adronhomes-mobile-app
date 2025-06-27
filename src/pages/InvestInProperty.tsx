@@ -77,8 +77,13 @@ export default function InvestmentForm() {
     // marketerId: Yup.string().required("Required"),
   });
   const submit = (values: typeof initialValues) => {
-    const { initialDeposit, weeklyAmount, fees, totalAmount } =
-      calculatePaymentDetails(values, property);
+    const {
+      initialDeposit,
+      weeklyAmount,
+      infrastructureFees,
+      otherFees,
+      totalAmount,
+    } = calculatePaymentDetails(values, property);
     // const planDetails = {
     //   paymentType: values.paymentType,
     //   paymentDuration: values.paymentDuration,
@@ -100,10 +105,11 @@ export default function InvestmentForm() {
       paymentSchedule: values.paymentSchedule,
       startDate: values.startDate,
       endDate: values.endDate,
-      initialDeposit,
-      weeklyAmount,
-      fees,
-      totalAmount,
+      initialDeposit: initialDeposit,
+      weeklyAmount: weeklyAmount,
+      totalAmount: totalAmount,
+      infrastructureFees: infrastructureFees,
+      otherFees: otherFees,
       numberOfUnits: values.units,
       propertyId: id ? Number(id) : null, // Convert string ID to number
     };
@@ -140,8 +146,13 @@ export default function InvestmentForm() {
       onSubmit={submit}
     >
       {({ values, isValid }) => {
-        const { fees, initialDeposit, weeklyAmount, totalAmount } =
-          calculatePaymentDetails(values, property);
+        const {
+          infrastructureFees,
+          otherFees,
+          initialDeposit,
+          weeklyAmount,
+          totalAmount,
+        } = calculatePaymentDetails(values, property);
         const { SelectedPaymentType } = paymentTypeWatcher(values);
         setSelectedPaymentType(SelectedPaymentType);
 
@@ -224,7 +235,7 @@ export default function InvestmentForm() {
                 <h4 className="font-semibold mb-4">Infrastructure Fees</h4>
                 <div className="space-y-4 mb-4 text-sm">
                   <p className="text-black flex justify-between gap-4">
-                    {formatPrice(fees)}
+                    {formatPrice(infrastructureFees)}
                     <span className="text-xs text-gray-400 text-right">
                       Fees & Charges
                     </span>
@@ -233,7 +244,7 @@ export default function InvestmentForm() {
                 <h4 className="font-semibold mb-4">Other Fees</h4>
                 <div className="space-y-4 mb-4 text-sm">
                   <p className="text-black flex justify-between gap-4">
-                    {formatPrice(fees)}
+                    {formatPrice(otherFees)}
                     <span className="text-xs text-gray-400 text-right">
                       Fees & Charges
                     </span>

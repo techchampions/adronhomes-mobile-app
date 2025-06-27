@@ -51,8 +51,10 @@ const SelectPaymentMethod = ({
     planId,
     numberOfUnits,
   } = usePaymentBreakDownStore();
-
-  console.log("Payment details", planId);
+  const walletBalance = userWalletData?.wallet_balance || 0;
+  console.log("total amount state", totalAmount);
+  console.log("total amount", amount);
+  console.log("wallet balance", walletBalance > totalAmount);
 
   useEffect(() => {
     const check = () => {
@@ -400,7 +402,7 @@ const SelectPaymentMethod = ({
                       : `text-gray-500`
                   } `}
                 >
-                  {userWalletData?.wallet_balance || 0 > amount
+                  {walletBalance > amount
                     ? `Available Balance`
                     : `Insufficient Balance`}
                 </p>

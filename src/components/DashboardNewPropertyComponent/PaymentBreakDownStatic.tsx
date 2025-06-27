@@ -20,7 +20,8 @@ const PaymentBreakDown2 = () => {
   const {
     paymentSchedule,
     initialDeposit,
-    fees,
+    infrastructureFees,
+    otherFees,
     weeklyAmount,
     totalAmount,
     paymentType,
@@ -39,10 +40,14 @@ const PaymentBreakDown2 = () => {
           </span>
         </p>
         <p className="text-black flex justify-between gap-4">
-          ₦{fees.toLocaleString()}
+          ₦{infrastructureFees.toLocaleString()}
           <span className="text-xs text-gray-400 text-right">
-            Fees & Charges
+            Infrastructure Fees
           </span>
+        </p>
+        <p className="text-black flex justify-between gap-4">
+          ₦{otherFees.toLocaleString()}
+          <span className="text-xs text-gray-400 text-right">Other Fees</span>
         </p>
         {paymentType === "Installment" && weeklyAmount > 0 && (
           <p className="text-black flex justify-between gap-4">

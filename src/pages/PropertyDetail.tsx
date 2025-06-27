@@ -9,18 +9,23 @@ import { Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import { GiStreetLight } from "react-icons/gi";
-import { useGetPropertyByID } from "../data/hooks";
+import { useEnquireProperty, useGetPropertyByID } from "../data/hooks";
 import { formatPrice } from "../data/utils";
 import ApiErrorBlock from "../components/ApiErrorBlock";
 import Loader from "../components/Loader";
 import { LiaToiletSolid } from "react-icons/lia";
 import { TbBed } from "react-icons/tb";
 import { IoCarSportOutline, IoConstructOutline } from "react-icons/io5";
+import { useUserStore } from "../zustand/UserStore";
+import { useToastStore } from "../zustand/useToastStore";
 const PropertyDetail = () => {
   const params = useParams();
+  const { user } = useUserStore();
   const navigate = useNavigate();
   const id = params?.id;
+  const { showToast } = useToastStore();
   const { data, isError, isLoading } = useGetPropertyByID(id ?? "");
+  const { mutate: enquire, isPending } = useEnquireProperty();
   if (isError) return <ApiErrorBlock />;
   if (isLoading) return <Loader />;
   const item = data?.data.properties[0];
@@ -387,10 +392,27 @@ const PropertyDetail = () => {
               <div className="w-full md:w-[30%]">
                 <Formik
                   initialValues={{
-                    message: "",
+                    description: "",
+                    interest_option: item?.type.name,
+                    property_id: item?.id,
+                    name: user?.first_name,
+                    email: user?.email,
+                    phone: user?.phone_number,
                   }}
                   onSubmit={(values) => {
-                    console.log("Filter values:", values);
+                    console.log("Request values:", values);
+                    if (values.description) {
+                      enquire(values, {
+                        onSuccess(data, variables, context) {
+                          showToast("Message sent successfully", "success");
+                        },
+                        onError(error, variables, context) {
+                          showToast("Failed to send message", "error");
+                        },
+                      });
+                    } else {
+                      showToast("Your message is Empty", "error");
+                    }
                   }}
                 >
                   <Form className="bg-white rounded-4xl p-5">
@@ -404,7 +426,7 @@ const PropertyDetail = () => {
                       </p>
                       <div className="flex flex-col gap-2">
                         <label
-                          htmlFor="location"
+                          htmlFor="description"
                           className="flex gap-1 items-center text-[10px] text-adron-gray-300"
                         >
                           Message
@@ -414,7 +436,7 @@ const PropertyDetail = () => {
                           className="py-3 rounded-lg h-[75px]"
                           placeholder="I am interested in this property"
                           type="textarea"
-                          name="message"
+                          name="description"
                         />
                       </div>
                     </div>
@@ -422,6 +444,8 @@ const PropertyDetail = () => {
                       <Button
                         label="Submit Form"
                         type="submit"
+                        isLoading={isPending}
+                        disabled={isPending}
                         className="border bg-transparent !text-black border-adron-black mt-8 flex-1 py-1"
                       />
                     </div>

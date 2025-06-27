@@ -5,6 +5,7 @@ import { useModalStore } from "../../zustand/useModalStore";
 import DatePickerInput from "../DatePickerInput";
 import { useUserStore } from "../../zustand/UserStore";
 import { useRequestStatement } from "../../data/hooks";
+import { formatDate } from "../../data/utils";
 
 const StatementRequest = () => {
   const { mutate: requestStatement, isPending, data } = useRequestStatement();
@@ -35,8 +36,8 @@ const StatementRequest = () => {
         onSubmit={(values) => {
           requestStatement(
             {
-              start_date: values.startDate,
-              end_date: values.endDate,
+              start_date: formatDate(values.startDate),
+              end_date: formatDate(values.endDate),
             },
             {
               onSuccess: (data) => {

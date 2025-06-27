@@ -12,7 +12,7 @@ const MyProfileScreen = () => {
   const { openModal } = useModalStore();
   const navigate = useNavigate();
   const { data, isLoading, isError } = useGetUser();
-  const { data: planData } = useGetUserPropertiesPlan();
+  const { data: planData } = useGetUserPropertiesPlan(1);
   const userData = data?.user;
   if (isLoading) return <Loader />;
   if (isError) return <ApiErrorBlock />;

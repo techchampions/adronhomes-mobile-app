@@ -58,6 +58,7 @@ const MyPropertyDetail = () => {
   const params = useParams();
   const id = params?.id;
   const { data, isLoading, isError } = useGetPropertyPlanByID(id ?? "");
+  const boughtUnits = data?.plan_properties.number_of_unit || 0;
   useEffect(() => {
     if (
       data?.plan_properties.payment_percentage === 100 &&
@@ -456,9 +457,14 @@ const MyPropertyDetail = () => {
                 {infrastructureBreakDown.map((item) => (
                   <div className="flex justify-between items-center">
                     <p className="text-xs">{item.name}:</p>
-                    <p className="text-sm font-bold">
+                    <p className="text-sm font-bold flex items-center gap-1">
                       {" "}
-                      {formatPrice(item.value || 0)}{" "}
+                      {formatPrice(item.value || 0)}
+                      {boughtUnits > 1 && (
+                        <span className="bg-white/20 p-1 rounded-full text-[9px]">
+                          x {boughtUnits}
+                        </span>
+                      )}
                     </p>
                   </div>
                 ))}
@@ -480,9 +486,14 @@ const MyPropertyDetail = () => {
                 {OtherFeesBreakDown.map((item) => (
                   <div className="flex justify-between items-center">
                     <p className="text-xs">{item.name}:</p>
-                    <p className="text-sm font-bold">
+                    <p className="text-sm font-bold flex items-center gap-1">
                       {" "}
-                      {formatPrice(item.value || 0)}{" "}
+                      {formatPrice(item.value || 0)}
+                      {boughtUnits > 1 && (
+                        <span className="bg-white/20 p-1 rounded-full text-[9px]">
+                          x {boughtUnits}
+                        </span>
+                      )}
                     </p>
                   </div>
                 ))}

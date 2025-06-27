@@ -13,6 +13,7 @@ import { usePaymentBreakDownStore } from "../../zustand/PaymentBreakDownStore";
 import { useNavigate } from "react-router-dom";
 import PaymentPending from "../PaymentPending";
 import { ApiError } from "../DashboardHomeComponents/SelectPaymentMethod";
+import { useUserStore } from "../../zustand/UserStore";
 const BankTransfer = ({
   goBack,
   amount,
@@ -23,6 +24,9 @@ const BankTransfer = ({
   isBuyNow?: boolean;
 }) => {
   const initialValues = { proof: null as File | null, bank_name: "" };
+  const { accounts } = useUserStore();
+  const propertyAccount = accounts.find((item) => item.type === "property");
+
   const navigate = useNavigate();
   const { mutate, isPending: isPendingPayment } = useCreatePropertyPlan();
   const { mutate: makeRepayment, isPending: isPendingRepayment } =
@@ -149,21 +153,21 @@ const BankTransfer = ({
           <div className="flex flex-col w-full gap-4 mt-7">
             <div className="flex justify-between items-start w-full">
               <div className="flex flex-col">
-                <p className="text-md">8394839302</p>
+                <p className="text-md">{propertyAccount?.account_number}</p>
                 <p className="text-[12px] font-adron-thin text-gray-400">
                   Account Number
                 </p>
               </div>
-              <CopyButton text="8394839302" />
+              <CopyButton text={propertyAccount?.account_number} />
             </div>
             <div className="flex flex-col">
-              <p className="text-md">Providus Bank</p>
+              <p className="text-md">{propertyAccount?.bank_name}</p>
               <p className="text-[12px] font-adron-thin text-gray-400">
                 Bank Name
               </p>
             </div>
             <div className="flex flex-col">
-              <p className="text-md">Bimbo Adeleke</p>
+              <p className="text-md">{propertyAccount?.account_name}</p>
               <p className="text-[12px] font-adron-thin text-gray-400">
                 Account Name
               </p>
