@@ -31,6 +31,7 @@ const PropertyList: React.FC<PropertyListProps> = ({
           <PropertyCardProgress
             key={plan.id}
             id={plan.id}
+            units={plan.number_of_unit}
             imageUrl={plan.property.display_image}
             title={plan.property.name}
             lga={plan.property.lga}

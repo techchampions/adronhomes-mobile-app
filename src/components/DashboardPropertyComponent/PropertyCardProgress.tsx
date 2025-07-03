@@ -12,6 +12,7 @@ type PropertyCardProps = {
   progress: number;
   raisedAmount: number;
   targetAmount: number;
+  units: number;
 };
 
 const PropertyCard: React.FC<PropertyCardProps> = ({
@@ -23,6 +24,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
   progress,
   raisedAmount,
   targetAmount,
+  units,
 }) => {
   const navigate = useNavigate();
   // const progressPercent = Math.min(
@@ -33,15 +35,24 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
     navigate(`/my-property/${id}`);
   };
   const location = `${lga}, ${state}`;
+  if (units > 1) {
+    raisedAmount = raisedAmount * units;
+    targetAmount = targetAmount * units;
+  }
 
   return (
     <div className="bg-white rounded-3xl p-6 w-full">
       <div className="flex flex-col items-start gap-4">
-        <img
-          src={imageUrl}
-          alt={title}
-          className="w-12 h-12 rounded-lg object-cover"
-        />
+        <div className="flex gap-2 items-start">
+          <img
+            src={imageUrl}
+            alt={title}
+            className="w-12 h-12 rounded-lg object-cover"
+          />
+          <div className="bg-adron-body rounded-lg px-2 py-1  text-gray-400 text-xs ">
+            x {units} units
+          </div>
+        </div>
         <div className="w-full">
           <h4 className="text-lg md:text-2xl text-adron-black leading-tight w-full line-clamp-2">
             {title}

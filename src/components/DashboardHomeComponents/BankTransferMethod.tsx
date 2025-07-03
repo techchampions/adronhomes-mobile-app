@@ -111,6 +111,7 @@ const BankTransfer = ({
                   <input
                     type="file"
                     name="proof"
+                    accept="image/*"
                     className="text-xs w-[70%]"
                     onChange={(event) => {
                       const file = event.target.files?.[0];

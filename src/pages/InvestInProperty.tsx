@@ -97,14 +97,21 @@ export default function InvestmentForm() {
     //   // marketerId: values.marketerId,
     //   propertyId: id,
     // };
+    const originalStartDateStr = values.startDate;
+    const date = new Date(originalStartDateStr);
+    const formatedStartDate = date.toISOString();
+    const originalEndDateStr = values.endDate;
+    const enddate = new Date(originalEndDateStr);
+    const formatedEndDate = enddate.toISOString();
+
     const planDetails = {
       paymentType: values.paymentType,
       paymentDuration: values.paymentDuration
         ? Number(values.paymentDuration)
         : null,
       paymentSchedule: values.paymentSchedule,
-      startDate: values.startDate,
-      endDate: values.endDate,
+      startDate: formatedStartDate,
+      endDate: formatedEndDate,
       initialDeposit: initialDeposit,
       weeklyAmount: weeklyAmount,
       totalAmount: totalAmount,

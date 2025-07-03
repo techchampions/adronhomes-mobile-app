@@ -190,6 +190,7 @@ const BankTransfer = ({
                     <input
                       type="file"
                       name="proof"
+                      accept="image/*"
                       onChange={(e) => {
                         if (e.target.files) {
                           values.proof = e.target.files[0];

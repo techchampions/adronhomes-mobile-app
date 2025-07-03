@@ -17,15 +17,17 @@ const InfrastructureBankTransfer = ({
   amount,
   planID,
   purpose,
+  type,
 }: {
   goBack: () => void;
   amount?: number;
   planID?: number | undefined;
   purpose?: string;
+  type?: string;
 }) => {
   const initialValues = { proof: null as File | null, sender_name: "" };
   const { accounts } = useUserStore();
-  const accountDetails = accounts.find((item) => item.type === purpose);
+  const accountDetails = accounts.find((item) => item.type === type);
   const navigate = useNavigate();
   const { mutate: makePayment, isPending } = useInfrastructurePayment();
   const { showToast } = useToastStore();
@@ -120,6 +122,7 @@ const InfrastructureBankTransfer = ({
                     <input
                       type="file"
                       name="proof"
+                      accept="image/*"
                       onChange={(e) => {
                         if (e.target.files) {
                           values.proof = e.target.files[0];

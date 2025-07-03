@@ -52,9 +52,8 @@ const SelectPaymentMethod = ({
     numberOfUnits,
   } = usePaymentBreakDownStore();
   const walletBalance = userWalletData?.wallet_balance || 0;
-  console.log("total amount state", totalAmount);
-  console.log("total amount", amount);
-  console.log("wallet balance", walletBalance > totalAmount);
+  console.log("end date", endDate);
+  console.log("start date", startDate);
 
   useEffect(() => {
     const check = () => {

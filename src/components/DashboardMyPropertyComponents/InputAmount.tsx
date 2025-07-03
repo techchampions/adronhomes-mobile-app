@@ -9,12 +9,12 @@ import InfrastructureBankTransfer from "../DashboardNewPropertyComponent/Infrast
 
 const InputInfrastructureAmount = ({
   goBack,
-  // infrastructureAmount,
+  type,
   planID,
   purpose,
 }: {
   goBack: () => void;
-  // infrastructureAmount?: number;
+  type?: string;
   planID?: number | string;
   purpose?: string;
 }) => {
@@ -52,6 +52,7 @@ const InputInfrastructureAmount = ({
                 goBack={goBack}
                 planID={Number(planID)}
                 purpose={purpose}
+                type={type}
               />
             );
           }}

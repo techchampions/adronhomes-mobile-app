@@ -28,7 +28,8 @@ export interface Notification {
   created_at: string | null;
   updated_at: string | null;
   property_id: number;
-  user_id: number;
+  property_ids: number[];
+  user_ids: number[];
   plan_id: number;
   property: Property;
   plan: Plan;

@@ -399,12 +399,15 @@ const PropertyDetail = () => {
                     email: user?.email,
                     phone: user?.phone_number,
                   }}
-                  onSubmit={(values) => {
+                  onSubmit={(values, { setFieldValue, resetForm }) => {
                     console.log("Request values:", values);
+                    showToast("sent", "success");
                     if (values.description) {
                       enquire(values, {
                         onSuccess(data, variables, context) {
                           showToast("Message sent successfully", "success");
+                          resetForm();
+                          // setFieldValue("description", "");
                         },
                         onError(error, variables, context) {
                           showToast("Failed to send message", "error");

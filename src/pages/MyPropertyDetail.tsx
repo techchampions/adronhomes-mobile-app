@@ -109,7 +109,7 @@ const MyPropertyDetail = () => {
       <InputInfrastructureAmount
         goBack={makeInfrastructurePayment}
         planID={data?.plan_properties.id}
-        // infrastructureAmount={0}
+        type="infrastructure"
         purpose="infrastructure"
       />
     );
@@ -123,8 +123,8 @@ const MyPropertyDetail = () => {
       <InputInfrastructureAmount
         goBack={makeInfrastructurePayment}
         planID={data?.plan_properties.id}
-        // infrastructureAmount={0}
-        purpose="other"
+        type="other"
+        purpose="others"
       />
     );
   };
