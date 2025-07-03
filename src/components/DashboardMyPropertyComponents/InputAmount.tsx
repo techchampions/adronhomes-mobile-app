@@ -9,12 +9,12 @@ import InfrastructureBankTransfer from "../DashboardNewPropertyComponent/Infrast
 
 const InputInfrastructureAmount = ({
   goBack,
-  infrastructureAmount,
+  type,
   planID,
   purpose,
 }: {
   goBack: () => void;
-  infrastructureAmount?: number;
+  type?: string;
   planID?: number | string;
   purpose?: string;
 }) => {
@@ -39,7 +39,7 @@ const InputInfrastructureAmount = ({
       </div>
       <div className="flex flex-col justify-between mt-10">
         <Formik
-          initialValues={{ amount: infrastructureAmount }}
+          initialValues={{ amount: null }}
           validationSchema={validationSchema}
           onSubmit={(values) => {
             // resetPaymentDetails();
@@ -48,10 +48,11 @@ const InputInfrastructureAmount = ({
             });
             openModal(
               <InfrastructureBankTransfer
-                amount={values.amount}
+                amount={values.amount || 0}
                 goBack={goBack}
                 planID={Number(planID)}
                 purpose={purpose}
+                type={type}
               />
             );
           }}

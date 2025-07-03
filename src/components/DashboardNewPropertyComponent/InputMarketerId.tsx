@@ -14,7 +14,7 @@ const InputMarketerId = () => {
 
   // Validation schema
   const validationSchema = Yup.object().shape({
-    marketerId: Yup.string().required("MarketerID is required"),
+    // marketerId: Yup.string().required("MarketerID is required"),
   });
 
   return (
@@ -54,7 +54,7 @@ const InputMarketerId = () => {
                   label="Proceed"
                   className="bg-black px-12 py-2 text-xs"
                   type="submit"
-                  disabled={!isValid || !dirty}
+                  // disabled={!isValid || !dirty}
                   rightIcon={<FaArrowRight />}
                 />
               </div>

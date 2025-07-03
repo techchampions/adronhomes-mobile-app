@@ -29,7 +29,7 @@ import { PropertyType } from "../../data/types/propertiesPageTypes";
 interface Props {
   property: {
     id: number;
-    size: number;
+    size: number | string;
     name: string;
     street_address: string;
     lga: string;

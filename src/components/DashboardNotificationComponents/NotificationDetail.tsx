@@ -3,6 +3,9 @@ import { useGetNotificationByID } from "../../data/hooks";
 import ApiErrorBlock from "../ApiErrorBlock";
 import SmallLoader from "../SmallLoader";
 import { formatDate, formatPrice } from "../../data/utils";
+import PropertySummary from "../PropertySummary";
+import NotificationPropertySummary from "./NotificationPropertySummary";
+import { IoArrowDown } from "react-icons/io5";
 
 const NotificationDetail = ({ id }: { id: number }) => {
   const { data, isLoading, isError } = useGetNotificationByID(id);
@@ -12,6 +15,15 @@ const NotificationDetail = ({ id }: { id: number }) => {
   if (isLoading) {
     return <SmallLoader />;
   }
+  const propertyIDs = data?.notification.property_ids || [];
+  console.log("IDs", propertyIDs);
+  const viewProperty = () => {
+    if (propertyIDs.length == 1) {
+      window.location.href = `/properties/${propertyIDs[0]}`;
+    } else {
+      window.location.href = `/new-properties/`;
+    }
+  };
   return (
     <div className="space-y-5">
       <div className="absolute top-4 left-9 ">
@@ -20,23 +32,33 @@ const NotificationDetail = ({ id }: { id: number }) => {
           {formatDate(data?.notification.created_at ?? "")}
         </p>
       </div>
-      <div className="mt-10 text-sm space-y-4">
+      <div className="mt-10 text-sm space-y-4 max-h-[300px] overflow-y-scroll scrollbar-hide">
         <p className="">{data?.notification.content}</p>
-        {/* <ul className="text-gray-500 list-disc ml-5">
-          <li>Spacious living room with natural light</li>
-          <li>Modern kitchen with stainless steel appliances</li>
-          <li>Master suite with en-suite bathroom</li>
-          <li>Large backyard perfect for entertaining</li>
-          <li>2-car garage</li>
-          <li>Close to schools, shopping, and parks!</li>
-        </ul> */}
-        <p className="font-bold">
-          Price: {formatPrice(data?.notification.property?.price ?? 0)}
-        </p>
+        {propertyIDs.length >= 1 && (
+          <>
+            {propertyIDs.slice(0, 5).map((item) => (
+              <div className="" key={item}>
+                {/* <PropertySummary id={item} /> */}
+                <NotificationPropertySummary id={item} />
+              </div>
+            ))}
+            <p className="text-sm text-gray-400 flex justify-center items-center gap-3 text-right w-full mx-auto">
+              {propertyIDs.length - 5} more <IoArrowDown />
+            </p>
+          </>
+        )}
       </div>
-      <div className="flex justify-between">
-        <Button label="View Property" className="bg-black px-6 text-xs" />
-      </div>
+      {propertyIDs.length >= 1 && (
+        <div className="flex justify-between">
+          <Button
+            label={
+              propertyIDs.length > 1 ? `View All Properties` : `View Property`
+            }
+            className="bg-black px-6 text-xs"
+            onClick={viewProperty}
+          />
+        </div>
+      )}
     </div>
   );
 };

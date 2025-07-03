@@ -106,13 +106,6 @@ const NotificationList: React.FC<Props> = ({ data, isError, isLoading }) => {
 
       {/* List */}
       {renderContent()}
-
-      {/* Pagination Dots (Static for now) */}
-      <div className="flex justify-center mt-4 gap-2">
-        <div className="w-2 h-2 bg-gray-300 rounded-full"></div>
-        <div className="w-2 h-2 bg-gray-300 rounded-full"></div>
-        <div className="w-2 h-2 bg-gray-600 rounded-full"></div>
-      </div>
     </div>
   );
 };

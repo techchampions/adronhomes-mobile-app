@@ -18,6 +18,9 @@ import { FundWalletPayload } from "./types/FundWalletPayloadTypes";
 import { PropertiesSearchResultResponse } from "./types/SearchPropertiesResultTypes";
 import { SavedPropertiesResponse } from "./types/SavedPropertiesResponse";
 import { FundWalletResponse } from "../components/DashboardHomeComponents/SelectPaymentMethod";
+import { AccountDetailsResponse } from "./types/AccountDetailsTypes";
+import { EnquirePayload } from "./types/EnquirePayload";
+import { PropertiesRequestResponse } from "./types/PropertyRequestTypes";
 
 export type ApiError = {
   response?: {
@@ -41,11 +44,12 @@ export const getDashboardHomeData =
   };
 
 //Get user Transactions
-export const getUserTransactions =
-  async (): Promise<UserTransactionResponse> => {
-    const response = await apiClient.get("/user/transactions");
-    return response.data;
-  };
+export const getUserTransactions = async (
+  page: number
+): Promise<UserTransactionResponse> => {
+  const response = await apiClient.get(`/user/transactions?page=${page}`);
+  return response.data;
+};
 
 // Get wallet data
 export const getUserWallet = async (): Promise<UserWalletResponse> => {
@@ -53,11 +57,12 @@ export const getUserWallet = async (): Promise<UserWalletResponse> => {
   return response.data;
 };
 // Get user Properties data
-export const getUserPropertiesPlan =
-  async (): Promise<UserPropertyPlanResponse> => {
-    const response = await apiClient.get("/user/plan-properties");
-    return response.data;
-  };
+export const getUserPropertiesPlan = async (
+  page: number
+): Promise<UserPropertyPlanResponse> => {
+  const response = await apiClient.get(`/user/plan-properties?page=${page}`);
+  return response.data;
+};
 
 //Get Properties Plan Datails by ID Data
 export const getPropertyPlanByID = async (
@@ -84,8 +89,10 @@ export const getTransactionByID = async (
 };
 
 //get Notifications
-export const getNotifications = async (): Promise<NotificationsResponse> => {
-  const response = await apiClient.get("/notifications");
+export const getNotifications = async (
+  page: number
+): Promise<NotificationsResponse> => {
+  const response = await apiClient.get(`/notifications?page=${page}`);
   return response.data;
 };
 // Get Transaction by ID
@@ -210,8 +217,8 @@ export const fundWallet = async (
   if (payload.payment_method !== undefined)
     formData.append("payment_method", payload.payment_method);
 
-  if (payload.sender_name !== undefined)
-    formData.append("sender_name", payload.sender_name);
+  if (payload.bank_name !== undefined)
+    formData.append("bank_name", payload.bank_name);
 
   if (payload.amount !== undefined)
     formData.append("amount", payload.amount.toString());
@@ -297,6 +304,11 @@ export const createPropertyPlan = async (
   if (payload.marketer_code)
     formData.append("marketer_code", payload.marketer_code);
 
+  if (payload.bank_name) formData.append("bank_name", payload.bank_name);
+
+  if (payload.number_of_unit)
+    formData.append("number_of_unit", payload.number_of_unit.toString());
+
   if (payload.proof_of_payment)
     formData.append("proof_of_payment", payload.proof_of_payment);
 
@@ -323,6 +335,8 @@ export const propertyPlanRepayment = async (
   if (payload.paid_amount !== undefined)
     formData.append("amount", payload.paid_amount.toString());
 
+  if (payload.bank_name) formData.append("bank_name", payload.bank_name);
+
   if (payload.proof_of_payment)
     formData.append("proof_of_payment", payload.proof_of_payment);
 
@@ -345,6 +359,8 @@ export const infrastructurePayment = async (
   if (payload.paid_amount !== undefined)
     formData.append("paid_amount", payload.paid_amount.toString());
   if (payload.purpose) formData.append("purpose", payload.purpose);
+  if (payload.bank_name) formData.append("bank_name", payload.bank_name);
+
   if (payload.proof_of_payment)
     formData.append("proof_of_payment", payload.proof_of_payment);
   const res = await apiClient.post("/user/pay-for-infrastructure", formData, {
@@ -372,3 +388,36 @@ export const requestStatement = async (
   });
   return res.data;
 };
+
+//Get All Account Details
+export const getAllAccountDetails =
+  async (): Promise<AccountDetailsResponse> => {
+    const response = await apiClient.get("/account-details");
+    return response.data;
+  };
+
+export const makeEnquire = async (payload: Partial<EnquirePayload>) => {
+  const formData = new FormData();
+  if (payload.name !== undefined)
+    formData.append("name", payload.name.toString());
+  if (payload.email !== undefined)
+    formData.append("email", payload.email.toString());
+  if (payload.phone !== undefined)
+    formData.append("phone", payload.phone.toString());
+  if (payload.interest_option !== undefined)
+    formData.append("interest_option", payload.interest_option.toString());
+  if (payload.property_id !== undefined)
+    formData.append("property_id", payload.property_id.toString());
+  if (payload.description !== undefined)
+    formData.append("description", payload.description.toString());
+
+  const response = await apiClient.post("/enquiry-request", formData, {
+    headers: { "Content-Type": "application/json" },
+  });
+};
+
+export const getPropertyRequests =
+  async (): Promise<PropertiesRequestResponse> => {
+    const response = await apiClient.get("/properties-requests");
+    return response.data;
+  };

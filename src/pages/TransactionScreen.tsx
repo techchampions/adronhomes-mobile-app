@@ -2,9 +2,14 @@ import { useGetUserTransactions } from "../data/hooks";
 import { Transaction } from "../data/types/userTransactionsTypes";
 import TransactionsList from "../components/DashboardTransactionComponents/TransactionsList";
 import { formatPrice } from "../data/utils";
+import { useState } from "react";
+import Pagination from "../components/Pagination";
 
 const TransactionsPage = () => {
-  const { data, isLoading, isError } = useGetUserTransactions();
+  const [page, setPage] = useState(1);
+
+  const { data, isLoading, isError } = useGetUserTransactions(page);
+  const totalPages = data?.user_transactions.last_page || 0;
   const transactions: Transaction[] = data?.user_transactions?.data ?? [];
   return (
     <div className="space-y-4">
@@ -33,6 +38,13 @@ const TransactionsPage = () => {
         data={transactions}
         isLoading={isLoading}
         isError={isError}
+      />
+      <Pagination
+        currentPage={page}
+        totalPages={totalPages}
+        onPageChange={setPage}
+        hasPrev={!!data?.user_transactions.prev_page_url}
+        hasNext={!!data?.user_transactions.next_page_url}
       />
     </div>
   );

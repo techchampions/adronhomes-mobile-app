@@ -116,6 +116,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import apiClient from "../utils/AxiosInstance";
+import { AccountDetail } from "../data/types/AccountDetailsTypes";
 
 export type User = {
   id: number;
@@ -142,12 +143,15 @@ export type User = {
 
 type UserState = {
   user: User | null;
+  accounts: AccountDetail[];
 
   token: string;
   isLoggedIn: boolean;
   setToken: (token: string) => void;
   setIsLoggedIn: (status: boolean) => void;
   setUser: (user: User) => void; // 👈 add this  getUser: () => Promise<void>;
+  setAccounts: (accounts: AccountDetail[]) => void;
+
   reset: () => void;
 };
 
@@ -199,6 +203,11 @@ export const useUserStore = create<UserState>()(
           console.error("Failed to load user data:", error);
           throw error; // Rethrow the error to handle it in the component
         }
+      },
+
+      accounts: [],
+      setAccounts(accounts) {
+        set({ accounts });
       },
 
       reset: () =>

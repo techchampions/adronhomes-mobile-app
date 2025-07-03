@@ -22,7 +22,7 @@ const HomeScreen = () => {
     // data: transRes,
     isLoading: isLoadingTransaction,
     isError: isErrorTransaction,
-  } = useGetUserTransactions();
+  } = useGetUserTransactions(1);
   if (isLoading) {
     return <SmallLoader />;
   }

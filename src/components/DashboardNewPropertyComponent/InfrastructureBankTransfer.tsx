@@ -10,19 +10,24 @@ import { useNavigate } from "react-router-dom";
 import PaymentPending from "../PaymentPending";
 import { ApiError } from "../DashboardHomeComponents/SelectPaymentMethod";
 import StatusFailed from "../StatusFailed";
+import { useUserStore } from "../../zustand/UserStore";
 
 const InfrastructureBankTransfer = ({
   goBack,
   amount,
   planID,
   purpose,
+  type,
 }: {
   goBack: () => void;
   amount?: number;
   planID?: number | undefined;
   purpose?: string;
+  type?: string;
 }) => {
   const initialValues = { proof: null as File | null, sender_name: "" };
+  const { accounts } = useUserStore();
+  const accountDetails = accounts.find((item) => item.type === type);
   const navigate = useNavigate();
   const { mutate: makePayment, isPending } = useInfrastructurePayment();
   const { showToast } = useToastStore();
@@ -37,6 +42,7 @@ const InfrastructureBankTransfer = ({
           paid_amount: amount,
           proof_of_payment: values.proof,
           purpose: purpose,
+          bank_name: values.sender_name,
         },
         {
           onSuccess: (data) => {
@@ -79,21 +85,21 @@ const InfrastructureBankTransfer = ({
           <div className="flex flex-col w-full gap-4 mt-7">
             <div className="flex justify-between items-start w-full">
               <div className="flex flex-col">
-                <p className="text-md">8394839302</p>
+                <p className="text-md">{accountDetails?.account_number}</p>
                 <p className="text-[12px] font-adron-thin text-gray-400">
                   Account Number
                 </p>
               </div>
-              <CopyButton text="8394839302" />
+              <CopyButton text={accountDetails?.account_number} />
             </div>
             <div className="flex flex-col">
-              <p className="text-md">Providus Bank</p>
+              <p className="text-md">{accountDetails?.bank_name}</p>
               <p className="text-[12px] font-adron-thin text-gray-400">
                 Bank Name
               </p>
             </div>
             <div className="flex flex-col">
-              <p className="text-md">Bimbo Adeleke</p>
+              <p className="text-md">{accountDetails?.account_name}</p>
               <p className="text-[12px] font-adron-thin text-gray-400">
                 Account Name
               </p>
@@ -116,6 +122,7 @@ const InfrastructureBankTransfer = ({
                     <input
                       type="file"
                       name="proof"
+                      accept="image/*"
                       onChange={(e) => {
                         if (e.target.files) {
                           values.proof = e.target.files[0];

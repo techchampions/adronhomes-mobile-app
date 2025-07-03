@@ -4,6 +4,7 @@ import {
   fetchPropertiesPageData,
   fetchSavedProperties,
   fundWallet,
+  getAllAccountDetails,
   getAllPropertyLocations,
   getAllPropertyType,
   getDashboardHomeData,
@@ -18,6 +19,7 @@ import {
   getUserTransactions,
   getUserWallet,
   infrastructurePayment,
+  makeEnquire,
   PropertyFilters,
   propertyPlanRepayment,
   requestStatement,
@@ -45,6 +47,8 @@ import { PropertyPlanPaymentResponse } from "./types/PropertyPlanPaymentListType
 import { PropertiesSearchResultResponse } from "./types/SearchPropertiesResultTypes";
 import { useEffect } from "react";
 import { SavedPropertiesResponse } from "./types/SavedPropertiesResponse";
+import { AccountDetailsResponse } from "./types/AccountDetailsTypes";
+import { EnquirePayload } from "./types/EnquirePayload";
 
 //Query hook for User profile
 export const useGetUser = () => {
@@ -85,6 +89,21 @@ export const useGetUser = () => {
 //   return queryResult;
 // };
 
+export const useGetAccounts = () => {
+  const { setAccounts } = useUserStore();
+  const queryResult = useQuery<AccountDetailsResponse>({
+    queryKey: ["Accounts"],
+    queryFn: getAllAccountDetails,
+  });
+  useEffect(() => {
+    if (queryResult.data?.status) {
+      setAccounts(queryResult.data.data);
+    }
+  }, [queryResult.data, setAccounts]);
+
+  return queryResult;
+};
+
 // Query hook for homepage data with
 export const useGetUserDashboardData = () => {
   return useQuery<UserDashboardResponseData>({
@@ -100,10 +119,10 @@ export const useGetUserWalletdata = () => {
   });
 };
 // Query hook for user property plan data with
-export const useGetUserPropertiesPlan = () => {
+export const useGetUserPropertiesPlan = (page: number) => {
   return useQuery<UserPropertyPlanResponse>({
-    queryKey: ["user-properties-plan"],
-    queryFn: getUserPropertiesPlan,
+    queryKey: ["user-properties-plan", page],
+    queryFn: () => getUserPropertiesPlan(page),
   });
 };
 
@@ -126,10 +145,10 @@ export const useGetUserPropertiesPlanPaymentHistory = (id: number | string) => {
 };
 
 //Query hook to get user notifications
-export const useGetNotifications = () => {
+export const useGetNotifications = (page: number) => {
   return useQuery<NotificationsResponse>({
-    queryKey: ["user-notifications"],
-    queryFn: getNotifications,
+    queryKey: ["user-notifications", page],
+    queryFn: () => getNotifications(page),
   });
 };
 
@@ -204,10 +223,10 @@ export const useGetAllPropertyTypes = () => {
 };
 
 // Query hook for getting user transactions
-export const useGetUserTransactions = () => {
+export const useGetUserTransactions = (page: number) => {
   return useQuery<UserTransactionResponse>({
-    queryKey: ["user-transactions"],
-    queryFn: getUserTransactions,
+    queryKey: ["user-transactions", page],
+    queryFn: () => getUserTransactions(page),
   });
 };
 
@@ -329,5 +348,10 @@ export const useInfrastructurePayment = () => {
 export const useRequestStatement = () => {
   return useMutation<StatementResponse, unknown, Partial<StatementPayload>>({
     mutationFn: requestStatement,
+  });
+};
+export const useEnquireProperty = () => {
+  return useMutation({
+    mutationFn: makeEnquire,
   });
 };

@@ -16,6 +16,7 @@ export interface UserProperty {
   total_amount: number;
   paid_amount: number;
   remaining_balance: number;
+  number_of_unit: number;
   status: number;
   payment_percentage: number;
   payment_completed_at: string | null;

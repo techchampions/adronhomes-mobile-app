@@ -18,6 +18,7 @@ import { useParams } from "react-router-dom";
 import { paymentTypeWatcher } from "../utils/PaymentTypeWatcher";
 import InputField from "../components/InputField";
 import { formatPrice } from "../data/utils";
+import NoPropertyFound from "../components/NoPropertyFound";
 
 export default function InvestmentForm() {
   const { openModal } = useModalStore();
@@ -26,9 +27,17 @@ export default function InvestmentForm() {
   const { setPaymentDetails } = usePaymentBreakDownStore();
   const [selectedPaymentType, setSelectedPaymentType] = useState("");
   const { data, isError, isLoading } = useGetPropertyByID(id || 0);
+  const number_of_unit = data?.data.properties[0].number_of_unit || 0;
   const property = data?.data.properties[0];
   if (isLoading) return <SmallLoader />;
   if (isError) return <ApiErrorBlock />;
+  if (number_of_unit < 1)
+    return (
+      <NoPropertyFound
+        msg="No units left"
+        description="Oops... All units have been purchased"
+      />
+    );
 
   const PropertyDurationLimit =
     data?.data.properties[0].property_duration_limit;
@@ -60,14 +69,21 @@ export default function InvestmentForm() {
         }
       : {
           paymentType: Yup.string().required("Required"),
-          units: Yup.number().required("Required"),
+          units: Yup.number()
+            .max(data?.data.properties[0].number_of_unit || 0)
+            .required("Required"),
         }),
 
     // marketerId: Yup.string().required("Required"),
   });
   const submit = (values: typeof initialValues) => {
-    const { initialDeposit, weeklyAmount, fees, totalAmount } =
-      calculatePaymentDetails(values, property);
+    const {
+      initialDeposit,
+      weeklyAmount,
+      infrastructureFees,
+      otherFees,
+      totalAmount,
+    } = calculatePaymentDetails(values, property);
     // const planDetails = {
     //   paymentType: values.paymentType,
     //   paymentDuration: values.paymentDuration,
@@ -81,18 +97,27 @@ export default function InvestmentForm() {
     //   // marketerId: values.marketerId,
     //   propertyId: id,
     // };
+    const originalStartDateStr = values.startDate;
+    const date = new Date(originalStartDateStr);
+    const formatedStartDate = date.toISOString();
+    const originalEndDateStr = values.endDate;
+    const enddate = new Date(originalEndDateStr);
+    const formatedEndDate = enddate.toISOString();
+
     const planDetails = {
       paymentType: values.paymentType,
       paymentDuration: values.paymentDuration
         ? Number(values.paymentDuration)
         : null,
       paymentSchedule: values.paymentSchedule,
-      startDate: values.startDate,
-      endDate: values.endDate,
-      initialDeposit,
-      weeklyAmount,
-      fees,
-      totalAmount,
+      startDate: formatedStartDate,
+      endDate: formatedEndDate,
+      initialDeposit: initialDeposit,
+      weeklyAmount: weeklyAmount,
+      totalAmount: totalAmount,
+      infrastructureFees: infrastructureFees,
+      otherFees: otherFees,
+      numberOfUnits: values.units,
       propertyId: id ? Number(id) : null, // Convert string ID to number
     };
 
@@ -128,8 +153,13 @@ export default function InvestmentForm() {
       onSubmit={submit}
     >
       {({ values, isValid }) => {
-        const { fees, initialDeposit, weeklyAmount, totalAmount } =
-          calculatePaymentDetails(values, property);
+        const {
+          infrastructureFees,
+          otherFees,
+          initialDeposit,
+          weeklyAmount,
+          totalAmount,
+        } = calculatePaymentDetails(values, property);
         const { SelectedPaymentType } = paymentTypeWatcher(values);
         setSelectedPaymentType(SelectedPaymentType);
 
@@ -212,7 +242,7 @@ export default function InvestmentForm() {
                 <h4 className="font-semibold mb-4">Infrastructure Fees</h4>
                 <div className="space-y-4 mb-4 text-sm">
                   <p className="text-black flex justify-between gap-4">
-                    {formatPrice(fees)}
+                    {formatPrice(infrastructureFees)}
                     <span className="text-xs text-gray-400 text-right">
                       Fees & Charges
                     </span>
@@ -221,7 +251,7 @@ export default function InvestmentForm() {
                 <h4 className="font-semibold mb-4">Other Fees</h4>
                 <div className="space-y-4 mb-4 text-sm">
                   <p className="text-black flex justify-between gap-4">
-                    {formatPrice(fees)}
+                    {formatPrice(otherFees)}
                     <span className="text-xs text-gray-400 text-right">
                       Fees & Charges
                     </span>

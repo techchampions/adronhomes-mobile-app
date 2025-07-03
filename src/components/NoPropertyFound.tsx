@@ -1,6 +1,10 @@
+import React from "react";
 import { BsExclamationCircle } from "react-icons/bs";
-
-const NoPropertyFound = () => {
+interface Props {
+  msg?: string;
+  description?: string;
+}
+const NoPropertyFound: React.FC<Props> = ({ msg, description }) => {
   return (
     <div className="flex flex-col items-center justify-center w-[300px] h-[40vh] mx-auto bg-red relative">
       <img
@@ -11,11 +15,13 @@ const NoPropertyFound = () => {
         className="w-[300px] h-[300px] object-cover"
       />
       <div className="">
-        <div className="text-xl font-bold text-red-500 text-center flex items-center gap-2">
-          <BsExclamationCircle className="inline-block text-red-500" /> No
-          Property Found
+        <div className="text-xl font-bold text-red-500 text-center justify-center mx-auto flex items-center gap-2">
+          <BsExclamationCircle className="inline-block text-red-500" />{" "}
+          {msg || "No Property Found"}
         </div>
-        <p className="text-center">Please try again later.</p>
+        <p className="text-center">
+          {description || "Please try again later."}
+        </p>
       </div>
     </div>
   );

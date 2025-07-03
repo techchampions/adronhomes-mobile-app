@@ -48,6 +48,7 @@ type PlanProperty = {
   payment_completed_at: string | null;
   created_at: string;
   updated_at: string;
+  number_of_unit: number;
   monthly_duration: string;
   payment_type: string;
   end_date: string | null;
