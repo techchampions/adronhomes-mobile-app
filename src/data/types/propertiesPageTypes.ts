@@ -76,6 +76,9 @@ export interface Property {
   hasGym: boolean;
   isLand: boolean;
   is_bought: boolean;
+  is_discount: boolean;
+  discount_name: string;
+  discount_percentage: string | number;
   total_amount: number;
 }
 

@@ -49,9 +49,11 @@ const SelectPaymentMethod = ({
     propertyId,
     marketerId,
     planId,
+    numberOfUnits,
   } = usePaymentBreakDownStore();
-
-  console.log("Payment details", planId);
+  const walletBalance = userWalletData?.wallet_balance || 0;
+  console.log("end date", endDate);
+  console.log("start date", startDate);
 
   useEffect(() => {
     const check = () => {
@@ -79,6 +81,7 @@ const SelectPaymentMethod = ({
                   property_id: Number(propertyId),
                   paid_amount: totalAmount,
                   marketer_code: marketerId,
+                  number_of_unit: numberOfUnits,
                 }
               : {
                   payment_method: "paystack",
@@ -90,6 +93,7 @@ const SelectPaymentMethod = ({
                   repayment_schedule: paymentSchedule,
                   paid_amount: totalAmount,
                   marketer_code: marketerId,
+                  number_of_unit: numberOfUnits,
                 }),
           },
           {
@@ -172,6 +176,7 @@ const SelectPaymentMethod = ({
                     property_id: Number(propertyId),
                     paid_amount: totalAmount,
                     marketer_code: marketerId,
+                    number_of_unit: numberOfUnits,
                   }
                 : {
                     payment_method: "virtual_wallet",
@@ -183,6 +188,7 @@ const SelectPaymentMethod = ({
                     repayment_schedule: paymentSchedule,
                     paid_amount: totalAmount,
                     marketer_code: marketerId,
+                    number_of_unit: numberOfUnits,
                   }),
             },
             {
@@ -395,7 +401,7 @@ const SelectPaymentMethod = ({
                       : `text-gray-500`
                   } `}
                 >
-                  {userWalletData?.wallet_balance || 0 > amount
+                  {walletBalance > amount
                     ? `Available Balance`
                     : `Insufficient Balance`}
                 </p>

@@ -4,14 +4,17 @@ import Button from "../Button";
 import { useModalStore } from "../../zustand/useModalStore";
 import DatePickerInput from "../DatePickerInput";
 import { useUserStore } from "../../zustand/UserStore";
+import { useRequestStatement } from "../../data/hooks";
+import { formatDate } from "../../data/utils";
 
 const StatementRequest = () => {
+  const { mutate: requestStatement, isPending, data } = useRequestStatement();
   const { closeModal } = useModalStore();
   const { user } = useUserStore();
   const today = new Date();
   const initialValues = {
-    startDate: null,
-    endDate: null,
+    startDate: "",
+    endDate: "",
   };
   const validationSchema = Yup.object({
     startDate: Yup.date()
@@ -30,7 +33,27 @@ const StatementRequest = () => {
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
-        onSubmit={() => console.log("submiting")}
+        onSubmit={(values) => {
+          requestStatement(
+            {
+              start_date: formatDate(values.startDate),
+              end_date: formatDate(values.endDate),
+            },
+            {
+              onSuccess: (data) => {
+                if (data?.file) {
+                  const link = document.createElement("a");
+                  link.href = data.file;
+                  link.download = "account-statement.pdf";
+                  document.body.appendChild(link);
+                  link.click();
+                  document.body.removeChild(link);
+                  closeModal(); // Optionally close the modal after download
+                }
+              },
+            }
+          );
+        }}
       >
         {({ isSubmitting }) => (
           <Form className="mt-14 space-y-4">
@@ -55,7 +78,8 @@ const StatementRequest = () => {
               <Button
                 label="Get"
                 type="submit"
-                isLoading={isSubmitting}
+                isLoading={isSubmitting || isPending}
+                disabled={isPending || isSubmitting}
                 className="bg-black px-6 text-sm"
               />
             </div>

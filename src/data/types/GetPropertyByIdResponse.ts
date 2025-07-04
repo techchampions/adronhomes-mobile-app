@@ -60,7 +60,13 @@ export interface Property {
   total_amount: number | null;
   is_bought: boolean;
   is_saved: boolean;
+  is_discount: boolean;
+  discount_name: string;
+  discount_percentage: number | string;
   no_of_bedroom: number;
+  number_of_bathroom: number;
+  year_built: string | number;
+  parking_space: string | number;
   area: string;
   property_map: string | null;
   property_video: string | null;
@@ -69,11 +75,14 @@ export interface Property {
   status: string;
   property_duration_limit: number;
   payment_schedule: string | null;
+  payment_type: string;
   is_sold: number;
   is_active: number;
   details: PropertyDetail[];
   saved_property: SavedProperty | null;
   bought_property: BoughtProperty | null;
+  number_of_unit: number;
+  property_agreement: string;
 }
 
 export interface PropertyType {
@@ -87,6 +96,7 @@ export interface PropertyDetail {
   id: number;
   name: string;
   value: number;
+  type: string;
   property_id: number;
   created_at: string;
   updated_at: string;

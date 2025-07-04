@@ -2,7 +2,8 @@ import { Outlet, useLocation } from "react-router-dom";
 import NavigationContainer from "../components/NavigationComponents/NavigationContainer";
 import Header from "../components/Header";
 import MobileNav from "../components/NavigationComponents/MobileNav";
-import { useGetUser } from "../data/hooks";
+import { useGetAccounts, useGetUser } from "../data/hooks";
+import { useToastStore } from "../zustand/useToastStore";
 
 const routeTitles = {
   "/": "Dashboard",
@@ -38,9 +39,13 @@ function getPageTitle(pathname: string) {
 function DashboardScreen() {
   const location = useLocation();
   const pageTitle = getPageTitle(location.pathname);
-  // const { showToast } = useToastStore();
+  const { showToast } = useToastStore();
   const { isError } = useGetUser();
+  const { isError: AccountDetailsError } = useGetAccounts();
   if (isError) console.log("error");
+  if (AccountDetailsError) {
+    showToast("Error fetching account details", "error");
+  }
   return (
     <div className="fixed inset-0 z-50 flex h-screen w-screen">
       {/* Sidebar */}

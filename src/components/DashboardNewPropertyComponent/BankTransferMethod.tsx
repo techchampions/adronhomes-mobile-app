@@ -13,6 +13,7 @@ import { usePaymentBreakDownStore } from "../../zustand/PaymentBreakDownStore";
 import { useNavigate } from "react-router-dom";
 import PaymentPending from "../PaymentPending";
 import { ApiError } from "../DashboardHomeComponents/SelectPaymentMethod";
+import { useUserStore } from "../../zustand/UserStore";
 const BankTransfer = ({
   goBack,
   amount,
@@ -22,10 +23,14 @@ const BankTransfer = ({
   amount: number;
   isBuyNow?: boolean;
 }) => {
-  const initialValues = { proof: null as File | null, sender_name: "" };
+  const initialValues = { proof: null as File | null, bank_name: "" };
+  const { accounts } = useUserStore();
+  const propertyAccount = accounts.find((item) => item.type === "property");
+
   const navigate = useNavigate();
-  const { mutate } = useCreatePropertyPlan();
-  const { mutate: makeRepayment } = usePropertyPlanRepayment();
+  const { mutate, isPending: isPendingPayment } = useCreatePropertyPlan();
+  const { mutate: makeRepayment, isPending: isPendingRepayment } =
+    usePropertyPlanRepayment();
   const {
     paymentDuration,
     paymentSchedule,
@@ -36,6 +41,7 @@ const BankTransfer = ({
     propertyId,
     paymentType,
     planId,
+    numberOfUnits,
   } = usePaymentBreakDownStore();
   const { showToast } = useToastStore();
   const { closeModal, openModal } = useModalStore();
@@ -44,7 +50,7 @@ const BankTransfer = ({
   // };
   const handlePaymentSuccess = (values: typeof initialValues) => {
     console.log("values", values);
-    if (values.sender_name && values.proof) {
+    if (values.bank_name && values.proof) {
       if (isBuyNow) {
         mutate(
           {
@@ -60,6 +66,8 @@ const BankTransfer = ({
                   paid_amount: totalAmount,
                   marketer_code: marketerId,
                   proof_of_payment: values.proof,
+                  number_of_unit: numberOfUnits,
+                  bank_name: values.bank_name,
                 }
               : {
                   payment_method: "bank_transfer",
@@ -72,6 +80,8 @@ const BankTransfer = ({
                   paid_amount: totalAmount,
                   marketer_code: marketerId,
                   proof_of_payment: values.proof,
+                  number_of_unit: numberOfUnits,
+                  bank_name: values.bank_name,
                 }),
           },
           {
@@ -143,21 +153,21 @@ const BankTransfer = ({
           <div className="flex flex-col w-full gap-4 mt-7">
             <div className="flex justify-between items-start w-full">
               <div className="flex flex-col">
-                <p className="text-md">8394839302</p>
+                <p className="text-md">{propertyAccount?.account_number}</p>
                 <p className="text-[12px] font-adron-thin text-gray-400">
                   Account Number
                 </p>
               </div>
-              <CopyButton text="8394839302" />
+              <CopyButton text={propertyAccount?.account_number} />
             </div>
             <div className="flex flex-col">
-              <p className="text-md">Providus Bank</p>
+              <p className="text-md">{propertyAccount?.bank_name}</p>
               <p className="text-[12px] font-adron-thin text-gray-400">
                 Bank Name
               </p>
             </div>
             <div className="flex flex-col">
-              <p className="text-md">Bimbo Adeleke</p>
+              <p className="text-md">{propertyAccount?.account_name}</p>
               <p className="text-[12px] font-adron-thin text-gray-400">
                 Account Name
               </p>
@@ -170,7 +180,7 @@ const BankTransfer = ({
             return (
               <Form className="flex flex-col gap-2">
                 <InputField
-                  name="sender_name"
+                  name="bank_name"
                   placeholder="Enter your Account name"
                   className="mt-4"
                 />
@@ -180,6 +190,7 @@ const BankTransfer = ({
                     <input
                       type="file"
                       name="proof"
+                      accept="image/*"
                       onChange={(e) => {
                         if (e.target.files) {
                           values.proof = e.target.files[0];
@@ -200,6 +211,8 @@ const BankTransfer = ({
                   <Button
                     label="Done"
                     type="submit"
+                    isLoading={isPendingPayment || isPendingRepayment}
+                    disabled={isPendingPayment || isPendingRepayment}
                     className="!w-fit px-12 py-2 text-xs bg-black text-white"
                     // onClick={handlePaymentSuccess}
                   />

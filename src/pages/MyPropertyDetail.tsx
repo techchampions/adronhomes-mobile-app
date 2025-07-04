@@ -29,12 +29,15 @@ const MyPropertyDetail = () => {
     loop: false,
     slidesToScroll: 1,
   });
+  const [selectedIndex, setSelectedIndex] = useState(0);
+
   const [canScrollPrev, setCanScrollPrev] = useState(false);
   const [canScrollNext, setCanScrollNext] = useState(false);
 
   useEffect(() => {
     if (!embla) return;
     const updateButtons = () => {
+      setSelectedIndex(embla.selectedScrollSnap());
       setCanScrollPrev(embla.canScrollPrev());
       setCanScrollNext(embla.canScrollNext());
     };
@@ -55,8 +58,13 @@ const MyPropertyDetail = () => {
   const params = useParams();
   const id = params?.id;
   const { data, isLoading, isError } = useGetPropertyPlanByID(id ?? "");
+  const boughtUnits = data?.plan_properties.number_of_unit || 0;
   useEffect(() => {
-    if (data?.plan_properties.payment_percentage === 100) {
+    if (
+      data?.plan_properties.payment_percentage === 100 &&
+      data?.plan_properties.infrastructure_percentage === 100 &&
+      data?.plan_properties.other_percentage === 100
+    ) {
       openModal(<RequestDocument />);
     }
   }, [data?.plan_properties.payment_percentage, openModal]);
@@ -68,7 +76,13 @@ const MyPropertyDetail = () => {
     return <ApiErrorBlock />;
   }
   const transactions: Transaction[] = data?.transactions ?? [];
-
+  const infrastructureBreakDown = data?.infrastructure_break_down || [];
+  const OtherFeesBreakDown = data?.others_fee_break_down || [];
+  const paymentProgress = data?.plan_properties.payment_percentage || 0;
+  const infrastructureProgress =
+    data?.plan_properties.infrastructure_percentage || 0;
+  const otherFeeProgress = data?.plan_properties.other_percentage || 0;
+  console.log("other", OtherFeesBreakDown);
   const handleViewProperty = () => {
     navigate(`/properties/${data?.plan_properties.property.id}`);
   };
@@ -95,7 +109,22 @@ const MyPropertyDetail = () => {
       <InputInfrastructureAmount
         goBack={makeInfrastructurePayment}
         planID={data?.plan_properties.id}
-        infrastructureAmount={data?.next_repayment.amount}
+        type="infrastructure"
+        purpose="infrastructure"
+      />
+    );
+  };
+  const makeOtherFeesPayment = () => {
+    resetPaymentDetails();
+    // setPaymentDetails({
+    //   planId: data?.plan_properties.id,
+    // });
+    openModal(
+      <InputInfrastructureAmount
+        goBack={makeInfrastructurePayment}
+        planID={data?.plan_properties.id}
+        type="other"
+        purpose="others"
       />
     );
   };
@@ -130,7 +159,12 @@ const MyPropertyDetail = () => {
             <div className="flex flex-col flex-[0_0_100%] w-full gap-4 px-4 md:px-14 py-8">
               {/* Progress Bar */}
               <div className="mt-5 space-y-4">
-                <p className="text-xs text-white/80">Property Payment</p>
+                <div className="flex w-full justify-between items-center">
+                  <p className="text-xs text-white/80">Property Payment</p>
+                  <div className="py-1 px-3 rounded-lg bg-white/20 text-sm text-white">
+                    {data?.plan_properties.number_of_unit} units
+                  </div>
+                </div>
 
                 <div className="flex justify-between items-baseline text-sm mt-2 w-fit text-white">
                   <span className="text-white text-2xl md:text-4xl">
@@ -152,28 +186,20 @@ const MyPropertyDetail = () => {
                   ></div>
                 </div>
               </div>
-              {data?.plan_properties.payment_percentage === 100 ? (
-                requested ? (
-                  <div className="flex items-center text-white gap-4">
-                    <div className="flex items-center">
-                      <FaCheckCircle className="text-white" />
-                      <span className="text-sm text-white/50">
-                        Documents Received
-                      </span>
-                    </div>
-                    <a href="">Download</a>
-                  </div>
-                ) : (
-                  // <Button
-                  //   label="Request Documents"
-                  //   className="text-sm !w-fit px-6 bg-white !text-adron-green"
-                  //   onClick={() => {
-                  //     setRequested(true);
-                  //   }}
-                  // />
+              {paymentProgress >= 100 ? (
+                infrastructureProgress >= 100 && otherFeeProgress >= 100 ? (
                   <div className="flex items-center mb-5 gap-2 text-white">
                     <InlineLoader />
                     <p className="text-sm">Documents are being prepared</p>
+                  </div>
+                ) : (
+                  <div className="flex items-center text-white gap-4">
+                    <div className="flex items-center gap-1">
+                      <FaCheckCircle className="text-white" />
+                      <span className="text-sm text-white/50">
+                        Payment Complete
+                      </span>
+                    </div>
                   </div>
                 )
               ) : (
@@ -209,157 +235,155 @@ const MyPropertyDetail = () => {
                 </div>
               </div>
             </div>
-            <div className="flex flex-col flex-[0_0_100%] w-full gap-4 px-4 md:px-14 p-8">
-              {/* Progress Bar */}
-              <div className="mt-5 space-y-4">
-                <p className="text-xs text-white/80">
-                  Infrastructure and other fees
-                </p>
-                <div className="flex justify-between items-baseline text-sm mt-2 w-fit text-white">
-                  <span className="text-white text-2xl md:text-4xl">
-                    {formatPrice(data?.plan_properties.paid_amount ?? 0)}
-                  </span>
-                  /
-                  <span className="text-white/50 text-sm md:text-md">
-                    {formatPrice(
-                      data?.plan_properties.total_infrastructure_fee ?? 0
-                    )}
-                  </span>
+            {infrastructureBreakDown && (
+              <div className="flex flex-col flex-[0_0_100%] w-full gap-4 px-4 md:px-14 p-8">
+                {/* Progress Bar */}
+                <div className="mt-5 space-y-4">
+                  <p className="text-xs text-white/80">Infrastructure Fees</p>
+                  <div className="flex justify-between items-baseline text-sm mt-2 w-fit text-white">
+                    <span className="text-white text-2xl md:text-4xl">
+                      {formatPrice(
+                        data?.plan_properties.paid_infrastructure_amount ?? 0
+                      )}
+                    </span>
+                    /
+                    <span className="text-white/50 text-sm md:text-md">
+                      {formatPrice(
+                        data?.plan_properties.infrastructure_amount || 0
+                      )}
+                    </span>
+                  </div>
+                  <div className="w-full h-2.5 bg-green-900/50 rounded-full overflow-hidden">
+                    <div
+                      className="h-full bg-white rounded-3xl"
+                      style={{
+                        width: `${
+                          data?.plan_properties.infrastructure_percentage ?? 0
+                        }%`,
+                      }}
+                    ></div>
+                  </div>
                 </div>
-                <div className="w-full h-2.5 bg-green-900/50 rounded-full overflow-hidden">
-                  <div
-                    className="h-full bg-white rounded-3xl"
-                    style={{
-                      width: `${
-                        data?.plan_properties.payment_percentage ?? 0
-                      }%`,
-                    }}
-                  ></div>
-                </div>
-              </div>
-              {data?.plan_properties.payment_percentage === 100 ? (
-                requested ? (
-                  <div className="flex items-center text-white gap-4">
-                    <div className="flex items-center">
-                      <FaCheckCircle className="text-white" />
-                      <span className="text-sm text-white/50">
-                        Documents Received
-                      </span>
+                {infrastructureProgress >= 100 ? (
+                  paymentProgress >= 100 && otherFeeProgress >= 100 ? (
+                    <div className="flex items-center mb-5 gap-2 text-white">
+                      <InlineLoader />
+                      <p className="text-sm">Documents are being prepared</p>
                     </div>
-                    <a href="https://lovely-melba-60c6a6.netlify.app/logo.png">
-                      Download
-                    </a>
-                  </div>
-                ) : (
-                  <div className="flex items-center mb-5 gap-2 text-white">
-                    <InlineLoader />
-                    <p className="text-sm">Documents are being prepared</p>
-                  </div>
-                )
-              ) : (
-                <Button
-                  onClick={makeInfrastructurePayment}
-                  label="Make Payment"
-                  className="mt-5 bg-white !text-adron-green !w-fit px-6 text-sm"
-                />
-              )}
-              <div className="flex bg-white/10 invisible justify-between p-4 rounded-2xl">
-                <div className="flex flex-col gap-2">
-                  <p className="text-sm text-white">
-                    {data?.plan_properties.payment_percentage === 100
-                      ? "Payment Complete"
-                      : "View Payment Breakdown"}
-                  </p>
-                </div>
-                <div className="flex flex-col gap-2 text-right">
-                  <p className="text-sm text-white">
-                    {data?.plan_properties.payment_percentage === 100
-                      ? "Payment Complete"
-                      : formatDate(
-                          data?.plan_properties.start_date ?? "Loading..."
-                        )}
-                  </p>
-                  <p className="text-xs text-white">Last Payment</p>
-                </div>
-              </div>
-            </div>
-            <div className="flex flex-col flex-[0_0_100%] w-full gap-4 px-4 md:px-14 p-8">
-              {/* Progress Bar */}
-              <div className="mt-5 space-y-4">
-                <p className="text-xs text-white/80">
-                  Development and other fees
-                </p>
-                <div className="flex justify-between items-baseline text-sm mt-2 w-fit text-white">
-                  <span className="text-white text-2xl md:text-4xl">
-                    {formatPrice(data?.plan_properties.paid_amount ?? 0)}
-                  </span>
-                  /
-                  <span className="text-white/50 text-sm md:text-md">
-                    {formatPrice(data?.plan_properties.total_others_fee ?? 0)}
-                  </span>
-                </div>
-                <div className="w-full h-2.5 bg-green-900/50 rounded-full overflow-hidden">
-                  <div
-                    className="h-full bg-white rounded-3xl"
-                    style={{
-                      width: `${
-                        data?.plan_properties.payment_percentage ?? 0
-                      }%`,
-                    }}
-                  ></div>
-                </div>
-              </div>
-              {data?.plan_properties.payment_percentage === 100 ? (
-                requested ? (
-                  <div className="flex items-center text-white gap-4">
-                    <div className="flex items-center">
-                      <FaCheckCircle className="text-white" />
-                      <span className="text-sm text-white/50">
-                        Documents Received
-                      </span>
+                  ) : (
+                    <div className="flex items-center text-white gap-4">
+                      <div className="flex items-center gap-1">
+                        <FaCheckCircle className="text-white" />
+                        <span className="text-sm text-white/50">
+                          Payment Complete
+                        </span>
+                      </div>
                     </div>
-                    <a href="https://lovely-melba-60c6a6.netlify.app/logo.png">
-                      Download
-                    </a>
-                  </div>
+                  )
                 ) : (
-                  <div className="flex items-center mb-5 gap-2 text-white">
-                    <InlineLoader />
-                    <p className="text-sm">Documents are being prepared</p>
+                  <Button
+                    onClick={makeInfrastructurePayment}
+                    label="Make Payment"
+                    className="mt-5 bg-white !text-adron-green !w-fit px-6 text-sm"
+                  />
+                )}
+                <div className="flex bg-white/10 invisible justify-between p-4 rounded-2xl">
+                  <div className="flex flex-col gap-2">
+                    <p className="text-sm text-white">
+                      {data?.plan_properties.infrastructure_percentage === 100
+                        ? "Payment Complete"
+                        : "View Payment Breakdown"}
+                    </p>
                   </div>
-                )
-              ) : (
-                <Button
-                  onClick={makeInfrastructurePayment}
-                  label="Make Payment"
-                  className="mt-5 bg-white !text-adron-green !w-fit px-6 text-sm"
-                />
-              )}
-              <div className="flex bg-white/10 invisible justify-between p-4 rounded-2xl">
-                <div className="flex flex-col gap-2">
-                  <p className="text-sm text-white">
-                    {data?.plan_properties.payment_percentage === 100
-                      ? "Payment Complete"
-                      : "View Payment Breakdown"}
-                  </p>
-                </div>
-                <div className="flex flex-col gap-2 text-right">
-                  <p className="text-sm text-white">
-                    {data?.plan_properties.payment_percentage === 100
-                      ? "Payment Complete"
-                      : formatDate(
-                          data?.plan_properties.start_date ?? "Loading..."
-                        )}
-                  </p>
-                  <p className="text-xs text-white">Last Payment</p>
+                  <div className="flex flex-col gap-2 text-right">
+                    <p className="text-sm text-white">
+                      {data?.plan_properties.infrastructure_percentage === 100
+                        ? "Payment Complete"
+                        : formatDate(
+                            data?.plan_properties.start_date ?? "Loading..."
+                          )}
+                    </p>
+                    <p className="text-xs text-white">Last Payment</p>
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
+            {OtherFeesBreakDown && (
+              <div className="flex flex-col flex-[0_0_100%] w-full gap-4 px-4 md:px-14 p-8">
+                {/* Progress Bar */}
+                <div className="mt-5 space-y-4">
+                  <p className="text-xs text-white/80">Other Fees</p>
+                  <div className="flex justify-between items-baseline text-sm mt-2 w-fit text-white">
+                    <span className="text-white text-2xl md:text-4xl">
+                      {formatPrice(
+                        data?.plan_properties.paid_other_amount ?? 0
+                      )}
+                    </span>
+                    /
+                    <span className="text-white/50 text-sm md:text-md">
+                      {formatPrice(data?.plan_properties.other_amount ?? 0)}
+                    </span>
+                  </div>
+                  <div className="w-full h-2.5 bg-green-900/50 rounded-full overflow-hidden">
+                    <div
+                      className="h-full bg-white rounded-3xl"
+                      style={{
+                        width: `${
+                          data?.plan_properties.other_percentage ?? 0
+                        }%`,
+                      }}
+                    ></div>
+                  </div>
+                </div>
+                {otherFeeProgress >= 100 ? (
+                  infrastructureProgress >= 100 && paymentProgress >= 100 ? (
+                    <div className="flex items-center mb-5 gap-2 text-white">
+                      <InlineLoader />
+                      <p className="text-sm">Documents are being prepared</p>
+                    </div>
+                  ) : (
+                    <div className="flex items-center text-white gap-4">
+                      <div className="flex items-center gap-1">
+                        <FaCheckCircle className="text-white" />
+                        <span className="text-sm text-white/50">
+                          Payment Complete
+                        </span>
+                      </div>
+                    </div>
+                  )
+                ) : (
+                  <Button
+                    onClick={makeOtherFeesPayment}
+                    label="Make Payment"
+                    className="mt-5 bg-white !text-adron-green !w-fit px-6 text-sm"
+                  />
+                )}
+                <div className="flex bg-white/10 invisible justify-between p-4 rounded-2xl">
+                  <div className="flex flex-col gap-2">
+                    <p className="text-sm text-white">
+                      {data?.plan_properties.other_percentage === 100
+                        ? "Payment Complete"
+                        : "View Payment Breakdown"}
+                    </p>
+                  </div>
+                  <div className="flex flex-col gap-2 text-right">
+                    <p className="text-sm text-white">
+                      {data?.plan_properties.other_percentage === 100
+                        ? "Payment Complete"
+                        : formatDate(
+                            data?.plan_properties.start_date ?? "Loading..."
+                          )}
+                    </p>
+                    <p className="text-xs text-white">Last Payment</p>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
         <div className="flex relative w-full md:w-[40%] bg-[#44691B] rounded-3xl md:rounded-none p-4 md:p-2">
-          {canScrollNext ? (
+          {selectedIndex === 0 ? (
             <div className="w-full max-w-[472px] mx-auto overflow-hidden relative z-10">
               <div className="relative w-[50%] h-[120px] p-6 md:h-[150px] overflow-hidden">
                 <img
@@ -391,7 +415,9 @@ const MyPropertyDetail = () => {
                         className="brightness-200"
                       />
 
-                      <span className="mr-1">648 Sq M</span>
+                      <span className="mr-1">
+                        {data?.plan_properties.property.size} Sq M
+                      </span>
                     </div>
 
                     <div className="flex items-center">
@@ -422,36 +448,60 @@ const MyPropertyDetail = () => {
                 </div>
               </div>
             </div>
-          ) : (
+          ) : selectedIndex === 1 ? (
             <div className="w-full mx-auto overflow-hidden relative z-10 flex items-center">
-              <div className="flex p-4 flex-col gap-3 w-full text-white">
-                <p className="text-lg text-white">Payment Breakdown</p>
-                <div className="flex justify-between items-center">
-                  <p className="text-xs ">Development Fee:</p>
-                  <p className="text-sm font-bold">
-                    {" "}
-                    {formatPrice(data?.plan_properties.paid_amount || 0)}{" "}
-                  </p>
-                </div>
-                <div className="flex justify-between items-center">
-                  <p className="text-xs ">Survery Fee:</p>
-                  <p className="text-sm font-bold">
-                    {" "}
-                    {formatPrice(data?.plan_properties.paid_amount || 0)}{" "}
-                  </p>
-                </div>
-                <div className="flex justify-between items-center">
-                  <p className="text-xs ">Plan and Architect Fee:</p>
-                  <p className="text-sm font-bold">
-                    {" "}
-                    {formatPrice(data?.plan_properties.paid_amount || 0)}{" "}
-                  </p>
-                </div>
+              <div className="flex max-h-[300px] overflow-y-scroll scrollbar-hide p-4 flex-col gap-3 w-full text-white">
+                <p className="text-lg text-white">
+                  Infrastructure Fees Breakdown
+                </p>
+                {infrastructureBreakDown.map((item) => (
+                  <div className="flex justify-between items-center">
+                    <p className="text-xs">{item.name}:</p>
+                    <p className="text-sm font-bold flex items-center gap-1">
+                      {" "}
+                      {formatPrice(item.value || 0)}
+                      {boughtUnits > 1 && (
+                        <span className="bg-white/20 p-1 rounded-full text-[9px]">
+                          x {boughtUnits}
+                        </span>
+                      )}
+                    </p>
+                  </div>
+                ))}
                 <div className="flex justify-between items-center bg-white/30 text-white py-5 px-5 rounded-3xl mt-5">
                   <p className="text-sm font-bold ">Total:</p>
                   <p className="text-md font-bold">
                     {" "}
-                    {formatPrice(data?.plan_properties.paid_amount || 0)}{" "}
+                    {formatPrice(
+                      data?.plan_properties.infrastructure_amount || 0
+                    )}{" "}
+                  </p>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="w-full mx-auto overflow-hidden relative z-10 flex items-center">
+              <div className="flex max-h-[300px] overflow-y-scroll scrollbar-hide p-4 flex-col gap-3 w-full text-white">
+                <p className="text-lg text-white">Other Fees Breakdown</p>
+                {OtherFeesBreakDown.map((item) => (
+                  <div className="flex justify-between items-center">
+                    <p className="text-xs">{item.name}:</p>
+                    <p className="text-sm font-bold flex items-center gap-1">
+                      {" "}
+                      {formatPrice(item.value || 0)}
+                      {boughtUnits > 1 && (
+                        <span className="bg-white/20 p-1 rounded-full text-[9px]">
+                          x {boughtUnits}
+                        </span>
+                      )}
+                    </p>
+                  </div>
+                ))}
+                <div className="flex justify-between items-center bg-white/30 text-white py-5 px-5 rounded-3xl mt-5">
+                  <p className="text-sm font-bold ">Total:</p>
+                  <p className="text-md font-bold">
+                    {" "}
+                    {formatPrice(data?.plan_properties.other_amount || 0)}{" "}
                   </p>
                 </div>
               </div>

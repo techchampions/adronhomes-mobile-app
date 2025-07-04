@@ -9,6 +9,7 @@ import { useFundWallet } from "../../data/hooks";
 import PaymentPending from "../PaymentPending";
 import { Form, Formik } from "formik";
 import InputField from "../InputField";
+import { useUserStore } from "../../zustand/UserStore";
 
 const BankTransfer = ({
   goBack,
@@ -18,8 +19,10 @@ const BankTransfer = ({
   amount: number | null;
 }) => {
   const { openModal } = useModalStore();
-  const initialValues = { proof: null as File | null, sender_name: "" };
-  const { mutate: fundWallet } = useFundWallet();
+  const { accounts } = useUserStore();
+  const fundAccount = accounts.find((item) => item.type === "fund");
+  const initialValues = { proof: null as File | null, bank_name: "" };
+  const { mutate: fundWallet, isPending: fundingWallet } = useFundWallet();
 
   const { showToast } = useToastStore();
   const GoToSelectPaymentMethod = () => {
@@ -31,7 +34,7 @@ const BankTransfer = ({
       {
         amount: amount || 0,
         payment_method: "bank_transfer",
-        sender_name: values.sender_name,
+        bank_name: values.bank_name,
         proof_of_payment: values.proof ?? undefined,
       },
       {
@@ -75,19 +78,19 @@ const BankTransfer = ({
           <div className="flex flex-col w-full gap-4 mt-4">
             <div className="flex justify-between items-center w-full">
               <div className="flex flex-col">
-                <p className="text-sm">8394839302</p>
+                <p className="text-sm">{fundAccount?.account_number}</p>
                 <p className="text-xs font-adron-thin text-gray-400">
                   Account Number
                 </p>
               </div>
-              <CopyButton text="8394839302" />
+              <CopyButton text={fundAccount?.account_number} />
             </div>
             <div className="flex flex-col">
-              <p className="text-sm">Providus Bank</p>
+              <p className="text-sm">{fundAccount?.bank_name}</p>
               <p className="text-xs font-adron-thin text-gray-400">Bank Name</p>
             </div>
             <div className="flex flex-col">
-              <p className="text-sm">Bimbo Adeleke</p>
+              <p className="text-sm">{fundAccount?.account_name}</p>
               <p className="text-xs font-adron-thin text-gray-400">
                 Account Name
               </p>
@@ -98,7 +101,7 @@ const BankTransfer = ({
           {({ setFieldValue }) => (
             <Form className="flex flex-col gap-2">
               <InputField
-                name="sender_name"
+                name="bank_name"
                 placeholder="Enter your Account name"
                 className="mt-4"
               />
@@ -108,6 +111,7 @@ const BankTransfer = ({
                   <input
                     type="file"
                     name="proof"
+                    accept="image/*"
                     className="text-xs w-[70%]"
                     onChange={(event) => {
                       const file = event.target.files?.[0];
@@ -130,6 +134,8 @@ const BankTransfer = ({
                   label="Done"
                   className="!w-fit px-12 py-2 text-xs bg-black text-white"
                   type="submit"
+                  isLoading={fundingWallet}
+                  disabled={fundingWallet}
                   // onClick={handlePaymentSuccess}
                 />
               </div>

@@ -22,19 +22,19 @@ const PropertyPlanList: React.FC<Props> = ({ plans, isError, isLoading }) => {
           <li
             onClick={() => navigate(`/my-property/${plan.id}`)}
             key={plan.id}
-            className={`p-4 cursor-pointer rounded-3xl even:bg-gray-100 flex justify-between items-center`}
+            className={`p-4 cursor-pointer rounded-3xl gap-2 even:bg-gray-100 flex justify-between items-center`}
           >
             <div className="w-[70%]">
               <p className="font-semibold text-gray-500 text-xs md:text-sm truncate">
                 {plan.property.name}
               </p>
-              <p className="text-xs text-gray-500">{plan.property.size}</p>
+              <p className="text-xs text-gray-500">{plan.property.size} SQ m</p>
             </div>
-            <div className="text-right">
-              <p className="font-bold text-black text-sm">
+            <div className="text-right w-[27%]">
+              <p className="font-bold text-black text-sm truncate">
                 {formatPrice(plan.property.price)}
               </p>
-              <div className="mt-1 h-1 bg-adron-green-200 rounded-full w-full">
+              <div className="mt-1 h-1 bg-adron-green-200 rounded-full w-full overflow-hidden">
                 <div
                   className="bg-adron-green h-full rounded-full"
                   style={{ width: `${plan.payment_percentage}%` }}
@@ -72,7 +72,7 @@ const PropertyPlanList: React.FC<Props> = ({ plans, isError, isLoading }) => {
   };
 
   return (
-    <div className="bg-white p-6 rounded-3xl w-full">
+    <div className="bg-white p-4 md:p-6 rounded-3xl w-full">
       <div className="flex items-center justify-between mb-6">
         <h4 className="text-lg text-gray-400">My Property Plans</h4>
         {/* <button className="text-xs px-4 py-1.5 border rounded-full border-gray-300 text-gray-600 hover:bg-gray-100">

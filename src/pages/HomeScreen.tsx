@@ -4,7 +4,11 @@ import PropertyPlanList from "../components/DashboardHomeComponents/PropertyList
 import TransactionsList from "../components/DashboardHomeComponents/TransactionList";
 import { useModalStore } from "../zustand/useModalStore";
 import AddFundAmount from "../components/DashboardHomeComponents/AddFundAmount";
-import { useGetUserDashboardData, useGetUserTransactions } from "../data/hooks";
+import {
+  useGetSlidersByType,
+  useGetUserDashboardData,
+  useGetUserTransactions,
+} from "../data/hooks";
 import { Transaction } from "../data/types/userTransactionsTypes";
 // import Loader from "../components/Loader";
 import ApiErrorBlock from "../components/ApiErrorBlock";
@@ -18,11 +22,13 @@ const HomeScreen = () => {
     openModal(<AddFundAmount goBack={startFundWallet} />);
   };
   const { data, isError, isLoading } = useGetUserDashboardData();
+  const { data: dashboardSlider, isLoading: sliderLoading } =
+    useGetSlidersByType("dashboard");
   const {
     // data: transRes,
     isLoading: isLoadingTransaction,
     isError: isErrorTransaction,
-  } = useGetUserTransactions();
+  } = useGetUserTransactions(1);
   if (isLoading) {
     return <SmallLoader />;
   }
@@ -36,7 +42,8 @@ const HomeScreen = () => {
     <div className="flex flex-col w-full gap-6">
       <div className="w-full">
         <img
-          src="/images/Lemon-Friday-hor.png"
+          // src="/images/Lemon-Friday-hor.png"
+          src={dashboardSlider?.data[0].image || ""}
           alt=""
           className="h-[180px] w-full object-cover rounded-3xl"
         />
@@ -92,7 +99,7 @@ const HomeScreen = () => {
           {/* Total Invoice */}
           <div className="bg-white rounded-3xl p-6 h-fit w-full">
             <p className="text-gray-500 font-semibold mb-2">Total Invoice</p>
-            <p className="text-xl font-bold">
+            <p className="text-xl font-bold truncate">
               {formatPrice(data?.total_invoice ?? 0)}
             </p>
           </div>
@@ -100,7 +107,7 @@ const HomeScreen = () => {
           {/* Amount Paid */}
           <div className="bg-white rounded-3xl p-6 h-fit w-full">
             <p className="text-gray-500 font-semibold mb-2">Amount Paid</p>
-            <p className="text-xl font-bold">
+            <p className="text-xl font-bold truncate">
               {formatPrice(data?.total_amount_paid ?? 0)}
             </p>
           </div>

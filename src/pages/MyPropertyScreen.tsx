@@ -2,12 +2,13 @@ import PropertyList from "../components/DashboardPropertyComponent/PropertyList"
 import { useGetUserPropertiesPlan } from "../data/hooks";
 import ApiErrorBlock from "../components/ApiErrorBlock";
 import { formatPrice } from "../data/utils";
+import { useState } from "react";
+import Pagination from "../components/Pagination";
 
 const MyPropertyScreen = () => {
-  const { data, isLoading, isError } = useGetUserPropertiesPlan();
-  // if (isLoading) {
-  //   return <SmallLoader />;
-  // }
+  const [page, setPage] = useState(1);
+  const { data, isLoading, isError } = useGetUserPropertiesPlan(page);
+  const totalPages = data?.user_properties.last_page || 0;
   if (isError) {
     return <ApiErrorBlock />;
   }
@@ -25,11 +26,13 @@ const MyPropertyScreen = () => {
         </div>
         <div className="p-4 bg-white rounded-3xl flex flex-col items-center h-fit">
           <p className="text-gray-400 text-sm">Total Invoice</p>
-          <p className="font-bold">{formatPrice(data?.total_invoice ?? 0)}</p>
+          <p className="font-bold truncate">
+            {formatPrice(data?.total_invoice ?? 0)}
+          </p>
         </div>
         <div className="p-4 bg-white rounded-3xl flex flex-col items-center h-fit">
           <p className="text-gray-400 text-sm">Amount Paid</p>
-          <p className="font-bold">
+          <p className="font-bold truncate">
             {formatPrice(data?.total_amount_paid ?? 0)}
           </p>
         </div>
@@ -38,6 +41,13 @@ const MyPropertyScreen = () => {
         properties={properties}
         isError={isError}
         isloading={isLoading}
+      />
+      <Pagination
+        currentPage={page}
+        totalPages={totalPages}
+        onPageChange={setPage}
+        hasPrev={!!data?.user_properties.prev_page_url}
+        hasNext={!!data?.user_properties.next_page_url}
       />
     </div>
   );

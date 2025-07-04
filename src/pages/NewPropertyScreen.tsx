@@ -3,6 +3,9 @@ import SwiperPropertyList from "../components/DashboardNewPropertyComponent/Swip
 import FilterBar from "../components/DashboardNewPropertyComponent/FilterBar";
 import { usePropertiespage } from "../data/hooks";
 import { PropertyFilters } from "../data/api";
+import Button from "../components/Button";
+import { IoArrowBack, IoArrowForward } from "react-icons/io5";
+import Pagination from "../components/Pagination";
 
 const NewPropertyScreen = () => {
   const [page, setPage] = useState(1);
@@ -10,6 +13,14 @@ const NewPropertyScreen = () => {
   const [filters, setFilters] = useState<PropertyFilters>({});
 
   const { data, isLoading, isError } = usePropertiespage(page, filters);
+  const totalPages = data?.properties.last_page || 0;
+  const handleNext = () => {
+    setPage(page + 1);
+  };
+  const handlePrev = () => {
+    setPage(page - 1);
+  };
+
   const properties =
     filters && Object.values(filters).some((v) => v !== "")
       ? data?.data || []
@@ -50,6 +61,53 @@ const NewPropertyScreen = () => {
         isLoading={isLoading}
         isSavePropertyList={false}
       />
+
+      {/* Pagination */}
+      <Pagination
+        currentPage={page}
+        totalPages={totalPages}
+        onPageChange={setPage}
+        hasPrev={!!data?.properties.prev_page_url}
+        hasNext={!!data?.properties.next_page_url}
+      />
+      {/* <div className="flex w-full justify-center gap-2 items-center mt-10">
+        <Button
+          label="Prev"
+          icon={<IoArrowBack />}
+          onClick={handlePrev}
+          className="!w-fit px-3 text-xs"
+          disabled={!data?.properties.prev_page_url}
+        />
+        {Array.from({ length: totalPages }, (_, i) => i + 1)
+          .filter(
+            (p) =>
+              p === page || // current
+              p === page - 1 ||
+              p === page - 2 ||
+              p === page + 1 ||
+              p === page + 2
+          )
+          .map((p) => (
+            <button
+              key={p}
+              onClick={() => setPage(p)}
+              className={`w-8 h-8 flex items-center justify-center rounded-full text-xs ${
+                p === page
+                  ? "bg-black text-white"
+                  : "bg-gray-200 text-black hover:bg-gray-300"
+              }`}
+            >
+              {p}
+            </button>
+          ))}
+        <Button
+          label="Next"
+          rightIcon={<IoArrowForward />}
+          onClick={handleNext}
+          disabled={!data?.properties.next_page_url}
+          className="!w-fit px-3 text-xs"
+        />
+      </div> */}
     </div>
   );
 };

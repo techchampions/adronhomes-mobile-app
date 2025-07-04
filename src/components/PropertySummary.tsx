@@ -5,13 +5,21 @@ import { useGetPropertyByID } from "../data/hooks";
 import Loader from "./Loader";
 import ApiErrorBlock from "./ApiErrorBlock";
 import { formatPrice } from "../data/utils";
+import { IoGiftOutline } from "react-icons/io5";
 
 type Prop = {
   id?: number | string;
+  units?: number;
 };
-const PropertySummary: React.FC<Prop> = ({ id }) => {
+const PropertySummary: React.FC<Prop> = ({ id, units }) => {
   const { data, isError, isLoading } = useGetPropertyByID(id);
   const property = data?.data.properties[0];
+  const features = data?.data.properties[0].features || [];
+  const allowedFeatures = ["Gym", "Light"];
+  const displayFeatures = features.filter((item) =>
+    allowedFeatures.includes(item)
+  );
+
   if (isLoading) return <Loader />;
   if (isError) return <ApiErrorBlock />;
   return (
@@ -24,14 +32,9 @@ const PropertySummary: React.FC<Prop> = ({ id }) => {
           alt=""
         />
         <div className="w-full md:w-auto space-y-2 md:space-y-0">
-          <h4 className="text-xl font-semibold">
-            {property?.name}
-            Treasure Parks and Gardens
-          </h4>
+          <h4 className="text-xl font-semibold">{property?.name}</h4>
           <p className="text-sm text-gray-500 flex items-center gap-1">
             <FaMapMarkerAlt className="h-4 w-4" />
-            {/* 34, Shimawa, Ogun
-                  State, Nigeria */}
             {property?.street_address}, {property?.lga}, {property?.state},{" "}
             {property?.country}
           </p>
@@ -42,23 +45,35 @@ const PropertySummary: React.FC<Prop> = ({ id }) => {
               {/* 648 Sq M */}
               {property?.size}
             </span>
-            <span className="flex items-center gap-1 truncate">
-              <GiStreetLight />
-              Str Light
-            </span>
-            <span className="flex items-center gap-1 truncate">
-              {/* <FaDumbbell /> */}
-              <img src="/dumbbell.svg" width={18} height={18} alt="dumbbell" />
-              Gym
-            </span>
+            {displayFeatures.map((feature, index) => (
+              <span className="flex items-center gap-1 truncate">
+                {feature === "Gym" ? (
+                  <img
+                    src="/dumbbell.svg"
+                    width={14}
+                    height={14}
+                    alt="dumbbell"
+                  />
+                ) : feature === "Light" ? (
+                  <GiStreetLight />
+                ) : (
+                  <IoGiftOutline />
+                )}{" "}
+                {feature}{" "}
+              </span>
+            ))}
             <div className="flex items-center gap-1 text-xs ">
               {/* {property?.type} */}
             </div>
           </div>
         </div>
       </div>
-      <div className="text-right text-2xl font-bold">
+      <div className="text-right text-2xl font-bold flex items-center gap-1">
         {formatPrice(property?.price ?? 0)}
+
+        {units && units > 1 && (
+          <span className="text-[10px] text-gray-400"> × {units} units</span>
+        )}
       </div>
     </div>
   );

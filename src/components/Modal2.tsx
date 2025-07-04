@@ -28,7 +28,7 @@ const Modal = () => {
       onClick={closeModal}
     >
       <div
-        className="bg-white p-10 rounded-[25px] shadow-lg w-full max-w-[400px] relative"
+        className="bg-white p-10 rounded-[25px] shadow-lg w-full max-w-[500px] relative"
         onClick={(e) => e.stopPropagation()}
       >
         <button
