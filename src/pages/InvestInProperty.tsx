@@ -29,6 +29,12 @@ export default function InvestmentForm() {
   const { data, isError, isLoading } = useGetPropertyByID(id || 0);
   const number_of_unit = data?.data.properties[0].number_of_unit || 0;
   const property = data?.data.properties[0];
+  let paymentTypeOptions = [];
+  if (data?.data.properties[0].payment_type === "full") {
+    paymentTypeOptions = ["One Time"];
+  } else {
+    paymentTypeOptions = ["One Time", "Installment"];
+  }
   if (isLoading) return <SmallLoader />;
   if (isError) return <ApiErrorBlock />;
   if (number_of_unit < 1)
@@ -84,46 +90,54 @@ export default function InvestmentForm() {
       otherFees,
       totalAmount,
     } = calculatePaymentDetails(values, property);
-    // const planDetails = {
-    //   paymentType: values.paymentType,
-    //   paymentDuration: values.paymentDuration,
-    //   paymentSchedule: values.paymentSchedule,
-    //   startDate: values.startDate,
-    //   endDate: values.endDate,
-    //   initialDeposit: initialDeposit,
-    //   weeklyAmount: weeklyAmount,
-    //   fees,
-    //   totalAmount,
-    //   // marketerId: values.marketerId,
-    //   propertyId: id,
-    // };
-    const originalStartDateStr = values.startDate;
-    const date = new Date(originalStartDateStr);
-    const formatedStartDate = date.toISOString();
-    const originalEndDateStr = values.endDate;
-    const enddate = new Date(originalEndDateStr);
-    const formatedEndDate = enddate.toISOString();
+    if (values.paymentType === "Installment") {
+      const originalStartDateStr = values.startDate || "";
+      const date = new Date(originalStartDateStr);
+      const formatedStartDate = date.toISOString();
+      const originalEndDateStr = values.endDate || "";
+      const enddate = new Date(originalEndDateStr);
+      const formatedEndDate = enddate.toISOString();
 
-    const planDetails = {
-      paymentType: values.paymentType,
-      paymentDuration: values.paymentDuration
-        ? Number(values.paymentDuration)
-        : null,
-      paymentSchedule: values.paymentSchedule,
-      startDate: formatedStartDate,
-      endDate: formatedEndDate,
-      initialDeposit: initialDeposit,
-      weeklyAmount: weeklyAmount,
-      totalAmount: totalAmount,
-      infrastructureFees: infrastructureFees,
-      otherFees: otherFees,
-      numberOfUnits: values.units,
-      propertyId: id ? Number(id) : null, // Convert string ID to number
-    };
-
-    setPaymentDetails(planDetails);
-    console.log("planDetails", planDetails);
-    openModal(<InputMarketerId />);
+      const planDetails = {
+        paymentType: values.paymentType,
+        paymentDuration: values.paymentDuration
+          ? Number(values.paymentDuration)
+          : null,
+        paymentSchedule: values.paymentSchedule,
+        startDate: formatedStartDate,
+        endDate: formatedEndDate,
+        initialDeposit: initialDeposit,
+        weeklyAmount: weeklyAmount,
+        totalAmount: totalAmount,
+        infrastructureFees: infrastructureFees,
+        otherFees: otherFees,
+        numberOfUnits: values.units,
+        propertyId: id ? Number(id) : null, // Convert string ID to number
+      };
+      setPaymentDetails(planDetails);
+      console.log("planDetails", planDetails);
+      openModal(<InputMarketerId />);
+    } else {
+      const planDetails = {
+        paymentType: values.paymentType,
+        paymentDuration: values.paymentDuration
+          ? Number(values.paymentDuration)
+          : null,
+        paymentSchedule: values.paymentSchedule,
+        startDate: values.startDate,
+        endDate: values.endDate,
+        initialDeposit: initialDeposit,
+        weeklyAmount: weeklyAmount,
+        totalAmount: totalAmount,
+        infrastructureFees: infrastructureFees,
+        otherFees: otherFees,
+        numberOfUnits: values.units,
+        propertyId: id ? Number(id) : null, // Convert string ID to number
+      };
+      setPaymentDetails(planDetails);
+      console.log("planDetails", planDetails);
+      openModal(<InputMarketerId />);
+    }
   };
 
   // 👇 Component to auto-calculate endDate
@@ -179,7 +193,7 @@ export default function InvestmentForm() {
                     <SelectField
                       name="paymentType"
                       placeholder="Select Payment Type"
-                      options={["One Time", "Installment"]}
+                      options={paymentTypeOptions}
                       onchange={(value: string) => {
                         setSelectedPaymentType(value);
                       }}

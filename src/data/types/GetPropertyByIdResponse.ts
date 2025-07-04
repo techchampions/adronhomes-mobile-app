@@ -75,6 +75,7 @@ export interface Property {
   status: string;
   property_duration_limit: number;
   payment_schedule: string | null;
+  payment_type: string;
   is_sold: number;
   is_active: number;
   details: PropertyDetail[];

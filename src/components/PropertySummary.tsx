@@ -5,6 +5,7 @@ import { useGetPropertyByID } from "../data/hooks";
 import Loader from "./Loader";
 import ApiErrorBlock from "./ApiErrorBlock";
 import { formatPrice } from "../data/utils";
+import { IoGiftOutline } from "react-icons/io5";
 
 type Prop = {
   id?: number | string;
@@ -13,6 +14,12 @@ type Prop = {
 const PropertySummary: React.FC<Prop> = ({ id, units }) => {
   const { data, isError, isLoading } = useGetPropertyByID(id);
   const property = data?.data.properties[0];
+  const features = data?.data.properties[0].features || [];
+  const allowedFeatures = ["Gym", "Light"];
+  const displayFeatures = features.filter((item) =>
+    allowedFeatures.includes(item)
+  );
+
   if (isLoading) return <Loader />;
   if (isError) return <ApiErrorBlock />;
   return (
@@ -38,15 +45,23 @@ const PropertySummary: React.FC<Prop> = ({ id, units }) => {
               {/* 648 Sq M */}
               {property?.size}
             </span>
-            <span className="flex items-center gap-1 truncate">
-              <GiStreetLight />
-              Str Light
-            </span>
-            <span className="flex items-center gap-1 truncate">
-              {/* <FaDumbbell /> */}
-              <img src="/dumbbell.svg" width={18} height={18} alt="dumbbell" />
-              Gym
-            </span>
+            {displayFeatures.map((feature, index) => (
+              <span className="flex items-center gap-1 truncate">
+                {feature === "Gym" ? (
+                  <img
+                    src="/dumbbell.svg"
+                    width={14}
+                    height={14}
+                    alt="dumbbell"
+                  />
+                ) : feature === "Light" ? (
+                  <GiStreetLight />
+                ) : (
+                  <IoGiftOutline />
+                )}{" "}
+                {feature}{" "}
+              </span>
+            ))}
             <div className="flex items-center gap-1 text-xs ">
               {/* {property?.type} */}
             </div>
