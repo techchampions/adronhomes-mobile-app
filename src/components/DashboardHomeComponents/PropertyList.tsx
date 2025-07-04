@@ -28,7 +28,7 @@ const PropertyPlanList: React.FC<Props> = ({ plans, isError, isLoading }) => {
               <p className="font-semibold text-gray-500 text-xs md:text-sm truncate">
                 {plan.property.name}
               </p>
-              <p className="text-xs text-gray-500">{plan.property.size}</p>
+              <p className="text-xs text-gray-500">{plan.property.size} SQ m</p>
             </div>
             <div className="text-right w-[27%]">
               <p className="font-bold text-black text-sm truncate">
