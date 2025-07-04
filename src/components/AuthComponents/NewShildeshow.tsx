@@ -1,25 +1,29 @@
 // src/components/Slideshow.tsx
 import { useEffect, useState } from "react";
+import { useGetSlidersByType } from "../../data/hooks";
 
-const images = ["/images/lemon-friday.png", "/treasure-park-bg.png"];
+// const images = ["/images/lemon-friday.png", "/treasure-park-bg.png"];
 
 const Slideshow = () => {
   const [current, setCurrent] = useState(0);
+  const { data: loginSlidesData, isLoading: isLoadingLogin } =
+    useGetSlidersByType("login");
+  const slides = loginSlidesData?.data || [];
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setCurrent((prev) => (prev + 1) % images.length);
-    }, 4000);
+      setCurrent((prev) => (prev + 1) % slides.length);
+    }, 2000);
 
     return () => clearInterval(timer);
   }, []);
 
   return (
     <div className="relative w-full h-full overflow-hidden">
-      {images.map((img, index) => (
+      {slides.map((slide, index) => (
         <img
           key={index}
-          src={img}
+          src={slide.image}
           alt={`Slide ${index}`}
           className={`
             absolute inset-0 w-full h-full object-cover transition-opacity duration-1000

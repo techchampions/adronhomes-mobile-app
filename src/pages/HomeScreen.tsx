@@ -4,7 +4,11 @@ import PropertyPlanList from "../components/DashboardHomeComponents/PropertyList
 import TransactionsList from "../components/DashboardHomeComponents/TransactionList";
 import { useModalStore } from "../zustand/useModalStore";
 import AddFundAmount from "../components/DashboardHomeComponents/AddFundAmount";
-import { useGetUserDashboardData, useGetUserTransactions } from "../data/hooks";
+import {
+  useGetSlidersByType,
+  useGetUserDashboardData,
+  useGetUserTransactions,
+} from "../data/hooks";
 import { Transaction } from "../data/types/userTransactionsTypes";
 // import Loader from "../components/Loader";
 import ApiErrorBlock from "../components/ApiErrorBlock";
@@ -18,6 +22,8 @@ const HomeScreen = () => {
     openModal(<AddFundAmount goBack={startFundWallet} />);
   };
   const { data, isError, isLoading } = useGetUserDashboardData();
+  const { data: dashboardSlider, isLoading: sliderLoading } =
+    useGetSlidersByType("dashboard");
   const {
     // data: transRes,
     isLoading: isLoadingTransaction,
@@ -36,7 +42,8 @@ const HomeScreen = () => {
     <div className="flex flex-col w-full gap-6">
       <div className="w-full">
         <img
-          src="/images/Lemon-Friday-hor.png"
+          // src="/images/Lemon-Friday-hor.png"
+          src={dashboardSlider?.data[0].image || ""}
           alt=""
           className="h-[180px] w-full object-cover rounded-3xl"
         />

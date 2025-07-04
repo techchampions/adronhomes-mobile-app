@@ -21,6 +21,7 @@ import { FundWalletResponse } from "../components/DashboardHomeComponents/Select
 import { AccountDetailsResponse } from "./types/AccountDetailsTypes";
 import { EnquirePayload } from "./types/EnquirePayload";
 import { PropertiesRequestResponse } from "./types/PropertyRequestTypes";
+import { SliderByTypeResponse } from "./types/SliderByTypeTypes";
 
 export type ApiError = {
   response?: {
@@ -421,3 +422,12 @@ export const getPropertyRequests =
     const response = await apiClient.get("/properties-requests");
     return response.data;
   };
+
+//Get Sliders By Type
+export const getSliderByType = async (
+  type: string
+): Promise<SliderByTypeResponse> => {
+  const endpoint = `/sliders?type=${type.toString()}`;
+  const response = await apiClient.get(endpoint);
+  return response.data;
+};
