@@ -24,6 +24,7 @@ import { formatPrice } from "../../data/utils";
 import apiClient from "../../data/apiClient";
 import { useToastStore } from "../../zustand/useToastStore";
 import { PropertyType } from "../../data/types/propertiesPageTypes";
+import { IoGiftOutline } from "react-icons/io5";
 // import { useToggleSaveProperty } from "../../data/hooks";
 
 interface Props {
@@ -197,14 +198,16 @@ export default function SwiperPropertyCard({ property }: Props) {
             {displayFeatures.map((feature, index) => (
               <span className="flex items-center gap-1 truncate">
                 {feature === "Gym" ? (
-                  <GiStreetLight />
-                ) : (
                   <img
                     src="/dumbbell.svg"
                     width={14}
                     height={14}
                     alt="dumbbell"
                   />
+                ) : feature === "Light" ? (
+                  <GiStreetLight />
+                ) : (
+                  <IoGiftOutline />
                 )}{" "}
                 {feature}
               </span>

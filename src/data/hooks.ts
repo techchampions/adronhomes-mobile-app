@@ -12,6 +12,7 @@ import {
   getNotifications,
   getPropertyByID,
   getPropertyPlanByID,
+  getSliderByType,
   getTransactionByID,
   getUser,
   getUserPropertiesPlan,
@@ -49,6 +50,7 @@ import { useEffect } from "react";
 import { SavedPropertiesResponse } from "./types/SavedPropertiesResponse";
 import { AccountDetailsResponse } from "./types/AccountDetailsTypes";
 import { EnquirePayload } from "./types/EnquirePayload";
+import { SliderByTypeResponse } from "./types/SliderByTypeTypes";
 
 //Query hook for User profile
 export const useGetUser = () => {
@@ -102,6 +104,14 @@ export const useGetAccounts = () => {
   }, [queryResult.data, setAccounts]);
 
   return queryResult;
+};
+
+// Query hook for Sliders
+export const useGetSlidersByType = (type: string) => {
+  return useQuery<SliderByTypeResponse>({
+    queryKey: ["Sliders", type],
+    queryFn: () => getSliderByType(type),
+  });
 };
 
 // Query hook for homepage data with
