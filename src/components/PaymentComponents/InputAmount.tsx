@@ -13,7 +13,7 @@ const InputAmount = ({
   dueDate,
 }: {
   goBack: () => void;
-  repaymentAmount?: number;
+  repaymentAmount: number;
   dueDate?: string;
 }) => {
   const { openModal, closeModal } = useModalStore();
@@ -23,7 +23,10 @@ const InputAmount = ({
   const validationSchema = Yup.object().shape({
     amount: Yup.number()
       .typeError("Amount must be a number")
-      .min(1001, "Amount must be greater than ₦1000")
+      .min(
+        repaymentAmount,
+        `Amount must be greater than ${formatPrice(repaymentAmount)}`
+      )
       .required("Amount is required"),
   });
 
