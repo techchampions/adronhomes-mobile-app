@@ -32,6 +32,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.22.0",
+    "@netlify/plugin-nextjs": "^5.11.4",
     "@types/react": "^19.1.6",
     "@types/react-dom": "^19.1.5",
     "@types/swiper": "^6.0.0",
