@@ -72,8 +72,9 @@ const PaymentList: React.FC<Props> = ({ data, isLoading, isError }) => {
       </span>
     );
   };
-  const makePayment = () => {
-    openModal(<InputAmount goBack={makePayment} />);
+  const goBack = () => {
+    // openModal(<InputAmount goBack={makePayment} />);
+    console.log("back");
   };
 
   const renderList = () => {
@@ -114,7 +115,7 @@ const PaymentList: React.FC<Props> = ({ data, isLoading, isError }) => {
 
                       openModal(
                         <InputAmount
-                          goBack={makePayment}
+                          goBack={goBack}
                           repaymentAmount={item.amount}
                           dueDate={item.due_date}
                         />

@@ -6,16 +6,13 @@ import InputField from "../InputField";
 import SelectPaymentMethod from "../DashboardNewPropertyComponent/SelectPaymentMethod";
 import { usePaymentBreakDownStore } from "../../zustand/PaymentBreakDownStore";
 import { formatDate, formatPrice } from "../../data/utils";
-
-const InputAmount = ({
-  goBack,
-  repaymentAmount,
-  dueDate,
-}: {
+import React from "react";
+type Props = {
   goBack: () => void;
   repaymentAmount: number;
   dueDate?: string;
-}) => {
+};
+const InputAmount: React.FC<Props> = ({ goBack, repaymentAmount, dueDate }) => {
   const { openModal, closeModal } = useModalStore();
   const { setPaymentDetails } = usePaymentBreakDownStore();
 
