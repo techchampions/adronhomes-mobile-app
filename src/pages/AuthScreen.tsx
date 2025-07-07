@@ -1,5 +1,7 @@
 import AuthNavbar from "../components/AuthComponents/AuthNav";
 import Slideshow from "../components/AuthComponents/NewShildeshow";
+import SmallLoader from "../components/SmallLoader";
+import { useGetSlidersByType } from "../data/hooks";
 import { useOnboardingStore } from "../zustand/OnboardingStore";
 import { useUserStore } from "../zustand/UserStore";
 import ForgotPassword from "./ForgotPassword";
@@ -10,6 +12,10 @@ import SignUp from "./SignUp";
 
 const OnboardingScreen = () => {
   const { step } = useOnboardingStore();
+  const { data: loginSlidesData, isLoading: isLoadingLogin } =
+    useGetSlidersByType("login");
+  const slides = loginSlidesData?.data || [];
+
   const stepContainer = () => {
     switch (step) {
       case "signup":
@@ -52,7 +58,11 @@ const OnboardingScreen = () => {
         onClick={handleReset}
       >
         {/* <FadeSlideshow /> */}
-        <Slideshow />
+        {isLoadingLogin ? (
+          <SmallLoader />
+        ) : (
+          <Slideshow slides={slides} isloading={isLoadingLogin} />
+        )}
         {/* <img
           src="/images/lemon-friday.png"
           alt="Lemon Friday Promo"
