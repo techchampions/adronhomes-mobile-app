@@ -20,7 +20,7 @@ const Header = ({ pageTitle }: { pageTitle: string }) => {
     navigate(-1);
   };
   return (
-    <div className="hidden md:flex justify-between items-center bg-white rounded-3xl p-8 mb-5">
+    <div className="hidden lg:flex justify-between items-center bg-white rounded-3xl p-8 mb-5">
       <FaArrowLeft className="cursor-pointer" onClick={goBack} />
       <div className="text-2xl">{pageTitle}</div>
       <div className="">

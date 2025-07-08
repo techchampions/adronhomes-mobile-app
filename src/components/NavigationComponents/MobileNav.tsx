@@ -29,9 +29,9 @@ const MobileNav = () => {
 
   return (
     <>
-      <nav className="flex justify-between fixed top-0 left-0 right-0 z-[60] bg-adron-body p-4 md:hidden">
+      <nav className="flex justify-between fixed top-0 left-0 right-0 z-[60] bg-adron-body p-4 lg:hidden">
         <div className="flex items-center gap-4">
-          <div className="md:hidden">
+          <div className="lg:hidden">
             <button onClick={() => setIsMobileMenuOpen(true)}>
               <Menu size={28} />
             </button>
@@ -62,7 +62,7 @@ const MobileNav = () => {
       </nav>
       {/* Hamburger Button */}
       <div
-        className={`fixed left-0 top-0 z-[60] transition-transform duration-300 h-screen md:hidden ${
+        className={`fixed left-0 top-0 z-[60] transition-transform duration-300 h-screen lg:hidden ${
           isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
         } flex`}
       >

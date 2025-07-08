@@ -49,15 +49,15 @@ function DashboardScreen() {
   return (
     <div className="fixed inset-0 z-50 flex h-screen w-screen">
       {/* Sidebar */}
-      <aside className="hidden w-[300px] bg-adron-body text-adron-black md:flex flex-col">
+      <aside className="md:hidden lg:w-[300px] bg-adron-body text-adron-black lg:flex flex-col">
         <NavigationContainer />
       </aside>
-      <aside className="flex flex-col md:hidden">
+      <aside className="flex flex-col lg:hidden">
         <MobileNav />
       </aside>
 
       {/* Main Content */}
-      <main className="pt-[70px] md:pt-0 flex-1 bg-adron-body overflow-y-auto mb-0 py-5 px-4 md:px-0 md:pr-4 scrollbar-hide">
+      <main className="pt-[70px] md:pt-24 lg:pt-2 flex-1 bg-adron-body overflow-y-auto mb-0 py-5 px-4 md:px-2 lg:pr-4 scrollbar-hide">
         <Header pageTitle={pageTitle} />
         <Outlet />
       </main>

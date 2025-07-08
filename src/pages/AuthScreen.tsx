@@ -82,7 +82,7 @@ const OnboardingScreen = () => {
           />
           <h1 className="text-3xl font-medium mt-4">Welcome to Adron Homes</h1>
         </div>
-        <div className="px-0 md:px-24 py-4">{stepContainer()}</div>
+        <div className="px-0 lg:px-24 py-4">{stepContainer()}</div>
         <div className="w-full">
           <AuthNavbar />
         </div>
