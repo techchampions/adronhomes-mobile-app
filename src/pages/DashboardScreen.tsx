@@ -49,7 +49,7 @@ function DashboardScreen() {
   return (
     <div className="fixed inset-0 z-50 flex h-screen w-screen">
       {/* Sidebar */}
-      <aside className="md:hidden lg:w-[300px] bg-adron-body text-adron-black lg:flex flex-col">
+      <aside className="hidden lg:w-[300px] bg-adron-body text-adron-black lg:flex flex-col">
         <NavigationContainer />
       </aside>
       <aside className="flex flex-col lg:hidden">
