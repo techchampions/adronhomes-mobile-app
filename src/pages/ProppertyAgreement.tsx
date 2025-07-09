@@ -20,7 +20,11 @@ const ProppertyAgreement = () => {
       </div>
       <div className="flex flex-col gap-7 mt-20">
         <h4 className="text-2xl">Property Agreement</h4>
-        {viewerUrl ? (
+        <p className="text-gray-500 bg-white p-6 rounded-2xl">
+          {data?.data.properties[0].property_agreement || ""}
+        </p>
+
+        {/* {viewerUrl ? (
           <div className="w-full overflow-hidden scrollbar-hide">
             <embed
               src={viewerUrl}
@@ -33,7 +37,7 @@ const ProppertyAgreement = () => {
             {data?.data.properties[0].property_agreement || ""}
           </p>
           // <p className="text-red-500">PDF not available.</p>
-        )}
+        )} */}
 
         <div className="flex justify-end">
           <div className="w-full md:w-1/2">{/* <SignaturePad /> */}</div>
