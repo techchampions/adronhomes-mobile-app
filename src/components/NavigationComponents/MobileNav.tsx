@@ -143,14 +143,14 @@ const MobileNav = () => {
               />
 
               <NavItem
-                label="Surport"
+                label="Support"
                 icon={<MdOutlineHelp className=" w-4 h-4" />}
                 path="/support"
               />
             </nav>
-            <div className="px-4 py-20">
+            {/* <div className="px-4 py-20">
               <NavbarAddorder />
-            </div>
+            </div> */}
             <nav className="space-y-2 p-2">
               <button
                 onClick={() => {

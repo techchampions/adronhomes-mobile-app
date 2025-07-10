@@ -76,7 +76,7 @@ function NavigationContainer() {
           />
 
           <NavItem
-            label="Surport"
+            label="Support"
             icon={<MdOutlineHelp className=" w-4 h-4" />}
             path="/support"
           />

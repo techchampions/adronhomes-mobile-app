@@ -20,7 +20,7 @@ const InputMarketerId = () => {
   return (
     <div className="flex flex-col">
       <div className="flex flex-col">
-        <div className="text-2xl font-bold">Input Market ID</div>
+        <div className="text-2xl font-bold">Input Marketer ID</div>
         <p className="text-gray-400 text-xs w-[80%]"></p>
       </div>
       <div className="flex flex-col justify-between mt-7">
