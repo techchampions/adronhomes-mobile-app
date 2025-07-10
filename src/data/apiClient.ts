@@ -1,5 +1,6 @@
 import axios, { AxiosInstance, AxiosResponse, AxiosError } from "axios";
 import { useUserStore } from "../zustand/UserStore";
+import { ApiError } from "./api";
 
 type ApiResponse<T = any> = {
   success: boolean;
@@ -9,26 +10,29 @@ type ApiResponse<T = any> = {
 };
 
 const apiClient: AxiosInstance = axios.create({
-  // baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
   baseURL: "https://adron.microf10.sg-host.com/api/",
   headers: {
     "Content-Type": "application/json",
-    // "identifier": process.env.NEXT_PUBLIC_IDENTIFIER || "",
     identifier: "dMNOcdMNOPefFGHIlefFGHIJKLmno",
-    // "device_id": process.env.NEXT_PUBLIC_X_DEVICE_ID || "",
     device_id: 1234567,
   },
 });
 
-apiClient.interceptors.response.use(
-  (response: AxiosResponse<ApiResponse>) => {
-    return response;
-  },
-  (error: AxiosError<ApiResponse>) => {
-    console.error("API Error:", error.response?.data || error.message);
-    return Promise.reject(error);
-  }
-);
+// apiClient.interceptors.response.use(
+//   (response: AxiosResponse<ApiResponse>) => {
+//     return response;
+//   },
+//   (error: ApiError) => {
+//     const errorMessage =
+//       error?.response?.data?.message ||
+//       error?.message ||
+//       "Something went wrong";
+
+//     console.error("API Error:", errorMessage);
+//     console.error("API Error2:", error);
+//     return Promise.reject(error);
+//   }
+// );
 
 // Interceptor to attach token if available
 apiClient.interceptors.request.use((config) => {

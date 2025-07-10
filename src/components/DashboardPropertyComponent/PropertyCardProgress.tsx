@@ -41,11 +41,11 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
   }
 
   return (
-    <div className="bg-white rounded-3xl p-6 w-full">
+    <div className="bg-white rounded-3xl p-6 w-full shadow">
       <div className="flex flex-col items-start gap-4">
         <div className="flex gap-2 items-start">
           <img
-            src={imageUrl}
+            src={imageUrl || "/treasure-park-bg.png"}
             alt={title}
             className="w-12 h-12 rounded-lg object-cover"
           />

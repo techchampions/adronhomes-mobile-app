@@ -52,8 +52,6 @@ const SelectPaymentMethod = ({
     numberOfUnits,
   } = usePaymentBreakDownStore();
   const walletBalance = userWalletData?.wallet_balance || 0;
-  console.log("end date", endDate);
-  console.log("start date", startDate);
 
   useEffect(() => {
     const check = () => {
@@ -106,7 +104,6 @@ const SelectPaymentMethod = ({
                   openModal(
                     <PaymentSuccessfull text="Payment received successfully." />
                   );
-                  console.log("Payment successful!", ref);
                   navigate(`/my-property/${res.plan?.id}`);
 
                   // TODO: call your backend API to confirm payment
@@ -142,7 +139,6 @@ const SelectPaymentMethod = ({
                   openModal(
                     <PaymentSuccessfull text="Payment received successfully." />
                   );
-                  console.log("Payment successful!", ref);
                   // TODO: call your backend API to confirm payment
                 },
                 onClose: () => {
@@ -150,7 +146,6 @@ const SelectPaymentMethod = ({
                 },
               });
 
-              console.log("data", res);
               // navigate(`/my-property/${res.plan.id}`);
             },
             onError: (error: ApiError) => {
@@ -212,7 +207,6 @@ const SelectPaymentMethod = ({
         }
       } else {
         if (userWalletData?.wallet_balance || 0 > amount) {
-          console.log("Plan ID", planId);
           makeRepayment(
             {
               payment_method: "virtual_wallet",
@@ -224,7 +218,6 @@ const SelectPaymentMethod = ({
                 openModal(
                   <PaymentSuccessfull text="Payment received successfully." />
                 );
-                console.log("data", res);
               },
               onError: (error: ApiError) => {
                 const message =

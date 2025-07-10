@@ -14,6 +14,7 @@ import { useNavigate } from "react-router-dom";
 import PaymentPending from "../PaymentPending";
 import { ApiError } from "../DashboardHomeComponents/SelectPaymentMethod";
 import { useUserStore } from "../../zustand/UserStore";
+import StatusFailed from "../StatusFailed";
 const BankTransfer = ({
   goBack,
   amount,
@@ -28,7 +29,8 @@ const BankTransfer = ({
   const propertyAccount = accounts.find((item) => item.type === "property");
 
   const navigate = useNavigate();
-  const { mutate, isPending: isPendingPayment } = useCreatePropertyPlan();
+  const { mutate: createPlan, isPending: isPendingPayment } =
+    useCreatePropertyPlan();
   const { mutate: makeRepayment, isPending: isPendingRepayment } =
     usePropertyPlanRepayment();
   const {
@@ -45,61 +47,58 @@ const BankTransfer = ({
   } = usePaymentBreakDownStore();
   const { showToast } = useToastStore();
   const { closeModal, openModal } = useModalStore();
-  // const GoToSelectPaymentMethod = () => {
-  //   openModal(<SelectPaymentMethod goBack={goBack} amount={amount} />);
-  // };
+
   const handlePaymentSuccess = (values: typeof initialValues) => {
-    console.log("values", values);
     if (values.bank_name && values.proof) {
       if (isBuyNow) {
-        mutate(
-          {
-            ...(paymentType === "One Time"
-              ? {
-                  payment_method: "bank_transfer",
-                  payment_type: 1,
-                  monthly_duration: Number(paymentDuration),
-                  property_id: Number(propertyId),
-                  start_date: startDate,
-                  end_date: endDate,
-                  repayment_schedule: paymentSchedule,
-                  paid_amount: totalAmount,
-                  marketer_code: marketerId,
-                  proof_of_payment: values.proof,
-                  number_of_unit: numberOfUnits,
-                  bank_name: values.bank_name,
-                }
-              : {
-                  payment_method: "bank_transfer",
-                  payment_type: 1,
-                  monthly_duration: Number(paymentDuration),
-                  property_id: Number(propertyId),
-                  start_date: startDate,
-                  end_date: endDate,
-                  repayment_schedule: paymentSchedule,
-                  paid_amount: totalAmount,
-                  marketer_code: marketerId,
-                  proof_of_payment: values.proof,
-                  number_of_unit: numberOfUnits,
-                  bank_name: values.bank_name,
-                }),
+        let payload = {};
+        if (paymentType === "One Time") {
+          payload = {
+            payment_method: "bank_transfer",
+            payment_type: 1,
+            monthly_duration: Number(paymentDuration),
+            property_id: Number(propertyId),
+            start_date: startDate,
+            end_date: endDate,
+            repayment_schedule: paymentSchedule,
+            paid_amount: totalAmount,
+            marketer_code: marketerId,
+            proof_of_payment: values.proof,
+            number_of_unit: numberOfUnits,
+            bank_name: values.bank_name,
+          };
+        } else {
+          payload = {
+            payment_method: "bank_transfer",
+            payment_type: 1,
+            monthly_duration: Number(paymentDuration),
+            property_id: Number(propertyId),
+            start_date: startDate,
+            end_date: endDate,
+            repayment_schedule: paymentSchedule,
+            paid_amount: totalAmount,
+            marketer_code: marketerId,
+            proof_of_payment: values.proof,
+            number_of_unit: numberOfUnits,
+            bank_name: values.bank_name,
+          };
+        }
+        createPlan(payload, {
+          onSuccess(data) {
+            openModal(
+              <PaymentPending text="Your Payment is being confrimed by Admin" />
+            );
+            navigate(`/my-property/${data.plan?.id}`);
           },
-          {
-            onSuccess: (data) => {
-              openModal(
-                <PaymentPending text="Your payment is being confrimed by Admin" />
-              );
-              navigate(`/my-property/${data.plan?.id}`);
-            },
-            onError: (error: ApiError) => {
-              const message =
-                error?.response?.data?.message ||
-                error?.message ||
-                "Something went wrong";
-              showToast(message, "error");
-            },
-          }
-        );
+          onError(error: ApiError) {
+            openModal(<StatusFailed text="Oops... there's been an Error!" />);
+            const message =
+              error?.response?.data?.message ||
+              error?.message ||
+              "Something went wrong";
+            showToast(message, "error");
+          },
+        });
       } else {
         makeRepayment(
           {
@@ -113,8 +112,6 @@ const BankTransfer = ({
               openModal(
                 <PaymentPending text="Payment will be processed within 24Hrs." />
               );
-              console.log("data", res);
-              // navigate(`/my-property/${res.plan.id}`);
             },
             onError: (error: ApiError) => {
               const message =
@@ -126,12 +123,6 @@ const BankTransfer = ({
           }
         );
       }
-
-      closeModal();
-      // showToast("Payment Recieved Successfully", "success");
-      openModal(
-        <PaymentPending text="Your payment is being confrimed by Admin" />
-      );
     }
   };
 
@@ -214,7 +205,6 @@ const BankTransfer = ({
                     isLoading={isPendingPayment || isPendingRepayment}
                     disabled={isPendingPayment || isPendingRepayment}
                     className="!w-fit px-12 py-2 text-xs bg-black text-white"
-                    // onClick={handlePaymentSuccess}
                   />
                 </div>
               </Form>

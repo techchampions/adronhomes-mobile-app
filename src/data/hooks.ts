@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
+  ApiError,
   createPropertyPlan,
   fetchPropertiesPageData,
   fetchSavedProperties,
@@ -20,6 +21,7 @@ import {
   getUserTransactions,
   getUserWallet,
   infrastructurePayment,
+  InitiatePropertyPurchaseResponse,
   makeEnquire,
   PropertyFilters,
   propertyPlanRepayment,
@@ -51,6 +53,9 @@ import { SavedPropertiesResponse } from "./types/SavedPropertiesResponse";
 import { AccountDetailsResponse } from "./types/AccountDetailsTypes";
 import { EnquirePayload } from "./types/EnquirePayload";
 import { SliderByTypeResponse } from "./types/SliderByTypeTypes";
+import { PropertyPlanPayload } from "./types/CreatePropertyPayload";
+import { useToastStore } from "../zustand/useToastStore";
+import { useModalStore } from "../zustand/useModalStore";
 
 //Query hook for User profile
 export const useGetUser = () => {
@@ -276,25 +281,42 @@ export const useFundWallet = () => {
 // Query hook for creating a new property plan
 export const useCreatePropertyPlan = () => {
   const queryClient = useQueryClient();
+  const { showToast } = useToastStore();
+  const { openModal } = useModalStore();
 
-  return useMutation({
-    mutationFn: createPropertyPlan,
-    onSuccess: () => {
-      // Refetch relevant data if needed
-      queryClient.invalidateQueries({
-        queryKey: ["user-properties-plan"],
-      });
-      queryClient.invalidateQueries({
-        queryKey: ["dashboard-data"],
-      });
-      queryClient.invalidateQueries({
-        queryKey: ["user-wallet"],
-      });
-      queryClient.invalidateQueries({
-        queryKey: ["user-transactions"],
-      });
-    },
-  });
+  return useMutation(
+    // <
+    //   InitiatePropertyPurchaseResponse,
+    //   ApiError,
+    //   Partial<PropertyPlanPayload>
+    // >
+    {
+      mutationFn: createPropertyPlan,
+      onSuccess: () => {
+        // Refetch relevant data if needed
+        queryClient.invalidateQueries({
+          queryKey: ["user-properties-plan"],
+        });
+        queryClient.invalidateQueries({
+          queryKey: ["dashboard-data"],
+        });
+        queryClient.invalidateQueries({
+          queryKey: ["user-wallet"],
+        });
+        queryClient.invalidateQueries({
+          queryKey: ["user-transactions"],
+        });
+      },
+      // onError(error, variables, context) {
+      //   // openModal(<StatusFailed text="Oops... there's been an Error!" />);
+      //   const message =
+      //     error?.response?.data?.message ||
+      //     error?.message ||
+      //     "Something went wrong";
+      //   showToast(message, "error");
+      // },
+    }
+  );
 };
 
 // Query hook for a property plan repayment

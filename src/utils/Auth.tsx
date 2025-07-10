@@ -33,7 +33,7 @@ const login = async (
   { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void }
 ) => {
   try {
-    const response = await apiClient.post("/login", {
+    const response = await apiClient.post("/login/", {
       email: values.email,
       password: values.password,
     });

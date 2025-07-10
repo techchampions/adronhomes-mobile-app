@@ -30,6 +30,8 @@ export type ApiError = {
       message?: string;
     };
   };
+  status: number;
+  message?: string;
 };
 // Get User Profile
 export const getUser = async (): Promise<GetUserResponse> => {
@@ -312,13 +314,24 @@ export const createPropertyPlan = async (
 
   if (payload.proof_of_payment)
     formData.append("proof_of_payment", payload.proof_of_payment);
-
   const res = await apiClient.post("/user/buy-property", formData, {
     headers: {
       "Content-Type": "multipart/form-data",
     },
   });
   return res.data;
+  // try {
+  //   const res = await apiClient.post("/user/buy-property", formData, {
+  //     headers: {
+  //       "Content-Type": "multipart/form-data",
+  //     },
+  //   });
+  //   return res.data;
+  // } catch (error) {
+  //   console.log("create plan error", error);
+  //   // This ensures errors are properly propagated
+  //   throw error;
+  // }
 };
 
 // Propperty Plan Repayment

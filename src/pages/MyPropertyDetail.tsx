@@ -79,7 +79,7 @@ const MyPropertyDetail = () => {
   const infrastructureBreakDown = data?.infrastructure_break_down || [];
   const OtherFeesBreakDown = data?.others_fee_break_down || [];
   const paymentProgress = data?.plan_properties.payment_percentage || 0;
-  const repaymentAmt = data?.next_repayment.amount || 0;
+  const repaymentAmt = data?.next_repayment?.amount || 0;
   const infrastructureProgress =
     data?.plan_properties.infrastructure_percentage || 0;
   const otherFeeProgress = data?.plan_properties.other_percentage || 0;

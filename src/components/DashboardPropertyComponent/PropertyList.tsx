@@ -30,15 +30,15 @@ const PropertyList: React.FC<PropertyListProps> = ({
         {properties.map((plan) => (
           <PropertyCardProgress
             key={plan.id}
-            id={plan.id}
-            units={plan.number_of_unit}
-            imageUrl={plan.property.display_image}
-            title={plan.property.name}
-            lga={plan.property.lga}
-            state={plan.property.state}
-            raisedAmount={plan.paid_amount}
-            targetAmount={plan.property.price}
-            progress={plan.payment_percentage}
+            id={plan.plan_id}
+            units={plan.plan?.number_of_unit || 1}
+            imageUrl={plan.property?.display_image || "/treasure-park-bg.png"}
+            title={plan.property?.name || ""}
+            lga={plan.property?.lga || ""}
+            state={plan.property?.state || ""}
+            raisedAmount={plan.plan?.paid_amount || 0}
+            targetAmount={plan.property?.price || 0}
+            progress={plan.plan?.payment_percentage || 0}
           />
         ))}
       </div>

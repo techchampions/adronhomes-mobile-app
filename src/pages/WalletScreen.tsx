@@ -26,7 +26,7 @@ const WalletScreen = () => {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 grid-rows-2 md:grid-rows-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="md:row-span-2 col-span-2 md:col-span-1 p-6 rounded-3xl flex flex-col gap-4 justify-between items-center">
           <p className="text-xs">My Wallet</p>
           <p className="text-3xl font-bold">
@@ -43,7 +43,7 @@ const WalletScreen = () => {
             {data?.total_property} active plans
           </p>
         </div>
-        <div className="row-span-1 md:row-span-2 col-span-2 md:col-span-1 p-10 bg-white rounded-3xl flex flex-col gap-4 justify-between">
+        <div className="row-span- md:row-span-2 col-span-2 md:col-span-1 p-10 bg-white rounded-3xl flex flex-col gap-4 justify-between">
           <p className="text-md font-semibold">Wallet Details</p>
           <div className="flex justify-between items-start w-full">
             <div className="flex flex-col">
@@ -74,7 +74,7 @@ const WalletScreen = () => {
             </span>
           </div>
         </div>
-        <div className="flex gap-4 row-span-1 col-span-2 h-fit">
+        {/* <div className="flex gap-4 row-span-1 col-span-2 h-fit">
           <div className="p-4 bg-white rounded-3xl flex flex-col items-center h-fit w-full">
             <p className="text-gray-400 text-sm">Total Invoice</p>
             <p className="font-bold truncate">
@@ -88,7 +88,7 @@ const WalletScreen = () => {
               {formatPrice(data?.total_amount_paid ?? 0)}
             </p>
           </div>
-        </div>
+        </div> */}
       </div>
       <TransactionsList
         data={transactions}

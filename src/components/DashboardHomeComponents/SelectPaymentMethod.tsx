@@ -13,6 +13,7 @@ import SmallLoader from "../SmallLoader";
 export interface ApiError {
   response?: {
     data?: {
+      errors?: Record<string, string[]>;
       message?: string;
     };
   };
