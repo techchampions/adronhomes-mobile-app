@@ -16,6 +16,7 @@ export interface Transaction {
   user_id: number;
   plan_id: number;
   amount: number;
+  amount_paid: number;
   description: string;
   transaction_type: string;
   transaction_method: string;

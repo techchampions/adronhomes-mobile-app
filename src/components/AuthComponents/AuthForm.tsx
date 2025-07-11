@@ -151,12 +151,12 @@ const AuthForm = ({
               className="input"
               rightIcon={
                 showPassword ? (
-                  <FaEyeSlash
+                  <FaEye
                     className="text-gray-500 w-5 h-5 cursor-pointer"
                     onClick={togglePasswordVisibility}
                   />
                 ) : (
-                  <FaEye
+                  <FaEyeSlash
                     className="text-gray-500 w-5 h-5 cursor-pointer"
                     onClick={togglePasswordVisibility}
                   />

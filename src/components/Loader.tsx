@@ -9,7 +9,7 @@ const Loader: React.FC<LoaderProps> = ({ className = "" }) => {
       <svg
         aria-hidden="true"
         role="status"
-        className={`inline w-16 h-16 me-3 text-white animate-spin ${className} `}
+        className={`inline w-16 h-16 me-3 text-green-50 animate-spin ${className} `}
         viewBox="0 0 100 101"
         fill="#79B833"
         xmlns="http://www.w3.org/2000/svg"

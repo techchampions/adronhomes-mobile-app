@@ -1,3 +1,4 @@
+import { PaginatedData } from "./PropertyRequestTypes";
 import { Transaction } from "./userTransactionsTypes";
 
 export interface Property {
@@ -37,6 +38,7 @@ export interface Property {
 // }
 type PlanProperty = {
   id: number;
+  contract_id: number;
   property_id: number;
   user_id: number;
   property_type: number;
@@ -105,5 +107,5 @@ export interface PlanPropertiesDetailResponse {
   total_others_fee: number;
   infrastructure_break_down: FeeBreakdown[];
   others_fee_break_down: FeeBreakdown[];
-  transactions: Transaction[];
+  transactions: PaginatedData<Transaction>;
 }

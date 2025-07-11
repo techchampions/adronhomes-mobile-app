@@ -76,7 +76,7 @@ const TransactionsList: React.FC<Props> = ({ data, isLoading, isError }) => {
         </div>
         {renderStatusBadge(item.status || 0)}
         <div className="text-sm font-semibold text-end">
-          {formatPrice(item.amount)}
+          {formatPrice(item.amount || item.amount_paid)}
         </div>
       </div>
     ));

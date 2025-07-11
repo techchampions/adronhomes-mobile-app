@@ -37,6 +37,14 @@ const HomeScreen = () => {
   }
   const transactions: Transaction[] = data?.user_transactions ?? [];
   const plans: UserProperty[] = data?.user_properties ?? [];
+  const landData = data?.total_property.breakdown.find(
+    (item) => item.type_name === "Land"
+  );
+  const numberofLands = landData?.count;
+  const houseData = data?.total_property.breakdown.find(
+    (item) => item.type_name === "Residential"
+  );
+  const numberofHouses = houseData?.count;
 
   return (
     <div className="flex flex-col w-full gap-6">
@@ -76,16 +84,9 @@ const HomeScreen = () => {
           <div className="">
             <p className="text-6xl font-bold">{data?.total_property.total}</p>
             <div className="md:bg-adron-body flex w-full md:w-fit mx-auto rounded-full md:px-4 my-1 text-xs justify-between items-center gap-2 mb-4 md:mb-0">
-              <span>
-                {" "}
-                {data?.total_property.breakdown[1]?.count ?? 0} Houses
-              </span>
+              <span> {numberofHouses ?? 0} Houses</span>
               <span className="text-lg">•</span>
-              <span>
-                {" "}
-                {data?.total_property.breakdown[0]?.count ?? 0}{" "}
-                {data?.total_property?.breakdown[0]?.type_name || "Lands"}{" "}
-              </span>
+              <span> {numberofLands} Lands</span>
             </div>
           </div>
           <a

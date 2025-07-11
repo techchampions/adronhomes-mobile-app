@@ -44,6 +44,7 @@ const BankTransfer = ({
     paymentType,
     planId,
     numberOfUnits,
+    resetPaymentDetails,
   } = usePaymentBreakDownStore();
   const { showToast } = useToastStore();
   const { closeModal, openModal } = useModalStore();
@@ -89,6 +90,7 @@ const BankTransfer = ({
               <PaymentPending text="Your Payment is being confrimed by Admin" />
             );
             navigate(`/my-property/${data.plan?.id}`);
+            resetPaymentDetails();
           },
           onError(error: ApiError) {
             openModal(<StatusFailed text="Oops... there's been an Error!" />);
