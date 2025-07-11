@@ -17,10 +17,16 @@ import Auth from "../../utils/Auth";
 import { useUserStore } from "../../zustand/UserStore";
 import { useNavigate } from "react-router-dom";
 import CopyButton from "../CopyButton";
+import { useGetNotifications } from "../../data/hooks";
 
 const MobileNav = () => {
   const { user } = useUserStore();
   const navigate = useNavigate();
+  const { data: notificationData } = useGetNotifications(1);
+  let unRead = notificationData?.notifications.data.filter(
+    (item) => item.is_read === 0
+  );
+  const unReadCount = unRead?.length;
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const goTpProfile = () => {
@@ -39,13 +45,13 @@ const MobileNav = () => {
           <img src="/logo.png" alt="" className="h-[30px] w-[100px]" />
         </div>
         <div className="flex items-center gap-4">
-          <div className="border border-gray-300 rounded-xl px-4 py-1 gap-1 flex flex-col">
+          {/* <div className="border border-gray-300 rounded-xl px-4 py-1 gap-1 flex flex-col">
             <div className="flex justify-between w-full gap-4">
               <p className="text-[10px] text-gray-400">Contract ID</p>
               <CopyButton text={user?.contract_id} />
             </div>
             <p className="text-xs">{user?.contract_id || "No contract ID"}</p>
-          </div>
+          </div> */}
 
           {/* <Button label="View Property" className="text-xs px-4" /> */}
           {user?.profile_picture ? (
@@ -108,6 +114,7 @@ const MobileNav = () => {
                 label="Notifications"
                 icon={<RiNotificationBadgeFill className=" w-4 h-4" />}
                 path="/notifications"
+                badge={unReadCount || 0}
               />
               <h4 className="text-adron-gray-400 font-bold px-7 mt-7 text-[13px]">
                 LISTINGS

@@ -4,12 +4,19 @@ import { FaChevronDown } from "react-icons/fa";
 
 interface NavItemProps {
   label: string;
+  badge?: number;
   icon: JSX.Element;
   path?: string;
   children?: { label: string; path: string }[];
 }
 
-const NavItem: React.FC<NavItemProps> = ({ label, icon, path, children }) => {
+const NavItem: React.FC<NavItemProps> = ({
+  label,
+  icon,
+  path,
+  children,
+  badge,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -30,6 +37,11 @@ const NavItem: React.FC<NavItemProps> = ({ label, icon, path, children }) => {
           <div className="flex items-center space-x-2">
             {icon}
             <span className=" text-[12px]">{label}</span>
+            {badge != undefined && (
+              <div className="w-4 h-4 rounded-full bg-red-600 text-white text-[9px] flex items-center justify-center text-center">
+                {badge}
+              </div>
+            )}
           </div>
         </NavLink>
       ) : (

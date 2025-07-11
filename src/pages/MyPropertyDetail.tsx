@@ -19,6 +19,7 @@ import useEmblaCarousel from "embla-carousel-react";
 import RequestDocument from "../components/DashboardNewPropertyComponent/RequestDocument";
 import { FaCheckCircle, FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import InputInfrastructureAmount from "../components/DashboardMyPropertyComponents/InputAmount";
+import CopyButton from "../components/CopyButton";
 
 const MyPropertyDetail = () => {
   // const { data, isLoading, isError } = useGetUserTransactions();
@@ -75,7 +76,7 @@ const MyPropertyDetail = () => {
   if (isError) {
     return <ApiErrorBlock />;
   }
-  const transactions: Transaction[] = data?.transactions ?? [];
+  const transactions: Transaction[] = data?.transactions.data ?? [];
   const infrastructureBreakDown = data?.infrastructure_break_down || [];
   const OtherFeesBreakDown = data?.others_fee_break_down || [];
   const paymentProgress = data?.plan_properties.payment_percentage || 0;
@@ -162,8 +163,20 @@ const MyPropertyDetail = () => {
               <div className="mt-5 space-y-4">
                 <div className="flex w-full justify-between items-center">
                   <p className="text-xs text-white/80">Property Payment</p>
-                  <div className="py-1 px-3 rounded-lg bg-white/20 text-sm text-white">
+                  {/* <div className="py-1 px-3 rounded-lg bg-white/20 text-sm text-white">
                     {data?.plan_properties.number_of_unit} units
+                  </div> */}
+                  <div className="bg-white/20 rounded-xl px-4 py-1 gap-1 flex flex-col">
+                    <div className="flex justify-between w-full gap-4">
+                      <p className="text-[10px] text-white">Contract ID</p>
+                      <CopyButton
+                        text={data?.plan_properties.contract_id}
+                        className="text-white"
+                      />
+                    </div>
+                    <p className="text-xs text-white">
+                      {data?.plan_properties.contract_id || "No contract ID"}
+                    </p>
                   </div>
                 </div>
 
@@ -386,12 +399,19 @@ const MyPropertyDetail = () => {
         <div className="flex relative w-full md:w-[40%] bg-[#44691B] rounded-3xl md:rounded-none p-4 md:p-2">
           {selectedIndex === 0 ? (
             <div className="w-full max-w-[472px] mx-auto overflow-hidden relative z-10">
-              <div className="relative w-[50%] h-[120px] p-6 md:h-[150px] overflow-hidden">
-                <img
-                  src={data?.plan_properties.property.display_image}
-                  alt="s"
-                  className="object-cover w-full h-full rounded-2xl"
-                />
+              <div className="flex flex-row items-start justify-between">
+                <div className="relative w-[50%] h-[120px] p-6 md:h-[150px] overflow-hidden">
+                  <img
+                    src={data?.plan_properties.property.display_image}
+                    alt="s"
+                    className="object-cover w-full h-full rounded-2xl"
+                  />
+                </div>
+                <div className="p-6">
+                  <div className="py-1 px-3 rounded-lg bg-white/20 text-sm text-white">
+                    x {data?.plan_properties.number_of_unit} units
+                  </div>
+                </div>
               </div>
 
               <div className="w-full px-6 text-white space-y-5 flex flex-col h-auto">

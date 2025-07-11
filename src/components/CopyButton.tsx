@@ -27,7 +27,7 @@ const CopyButton: React.FC<CopyButtonProps> = ({ text, className = "" }) => {
       onClick={handleCopy}
       className={`${className} flex gap-1 text-[9px] items-center text-gray-400`}
     >
-      <IoCopy className="h-4 w-4 text-gray-400" />
+      <IoCopy className="h-4 w-4" />
       {copied ? "Copied" : "Copy"}
     </button>
   );

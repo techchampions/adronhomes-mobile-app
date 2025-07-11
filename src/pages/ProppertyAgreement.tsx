@@ -2,12 +2,14 @@ import Button from "../components/Button";
 import { useNavigate, useParams } from "react-router-dom";
 import PropertySummary from "../components/PropertySummary";
 import { useGetPropertyByID } from "../data/hooks";
+import { usePaymentBreakDownStore } from "../zustand/PaymentBreakDownStore";
 
 const ProppertyAgreement = () => {
   const navigate = useNavigate();
   const params = useParams();
   const id = params?.id;
   const { data, isError, isLoading } = useGetPropertyByID(id);
+  const { numberOfUnits } = usePaymentBreakDownStore();
   const agreementUrl = data?.data?.properties?.[0]?.property_agreement;
   const viewerUrl = agreementUrl
     ? `${agreementUrl}#toolbar=0&navpanes=0&scrollbar=0`
@@ -16,7 +18,7 @@ const ProppertyAgreement = () => {
   return (
     <div>
       <div className=" ">
-        <PropertySummary id={id} />
+        <PropertySummary id={id} units={numberOfUnits} />
       </div>
       <div className="flex flex-col gap-7 mt-20">
         <h4 className="text-2xl">Property Agreement</h4>

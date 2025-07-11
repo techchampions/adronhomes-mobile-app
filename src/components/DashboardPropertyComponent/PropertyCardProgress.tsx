@@ -35,10 +35,10 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
     navigate(`/my-property/${id}`);
   };
   const location = `${lga}, ${state}`;
-  if (units > 1) {
-    raisedAmount = raisedAmount * units;
-    targetAmount = targetAmount * units;
-  }
+  // if (units > 1) {
+  //   raisedAmount = raisedAmount * units;
+  //   targetAmount = targetAmount * units;
+  // }
 
   return (
     <div className="bg-white rounded-3xl p-6 w-full shadow">
