@@ -90,7 +90,6 @@ const BankTransfer = ({
               <PaymentPending text="Your Payment is being confrimed by Admin" />
             );
             navigate(`/my-property/${data.plan?.id}`);
-            resetPaymentDetails();
           },
           onError(error: ApiError) {
             openModal(<StatusFailed text="Oops... there's been an Error!" />);
@@ -204,6 +203,7 @@ const BankTransfer = ({
                   <Button
                     label="Done"
                     type="submit"
+                    loadingText="Sending"
                     isLoading={isPendingPayment || isPendingRepayment}
                     disabled={isPendingPayment || isPendingRepayment}
                     className="!w-fit px-12 py-2 text-xs bg-black text-white"

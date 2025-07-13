@@ -34,7 +34,7 @@ const TransactionsList: React.FC<Props> = ({ data, isLoading, isError }) => {
             </div>
             <div className="text-right w-[27%]">
               <p className="font-bold text-black text-sm truncate">
-                {formatPrice(t.amount)}
+                {formatPrice(t.amount || t.amount_paid)}
               </p>
             </div>
           </li>
