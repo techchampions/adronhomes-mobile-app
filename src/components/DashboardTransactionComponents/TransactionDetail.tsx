@@ -69,7 +69,7 @@ const TransactionDetail = ({ id }: { id: number }) => {
         </div>
         <div className="flex justify-between items-start py-3">
           <div className="flex flex-col">
-            <p className="text-gray-400 text-xs">Transaction Type</p>
+            <p className="text-gray-400 text-xs">Payment Method</p>
             <p className="font-bold text-xs">
               {/* {data?.user_transaction.transaction_type == "1"
                 ? "Scheduled Payment"
@@ -80,15 +80,17 @@ const TransactionDetail = ({ id }: { id: number }) => {
         </div>
         <div className="flex justify-between items-start py-3">
           <div className="flex flex-col">
-            <p className="text-gray-400 text-xs">Payment Method</p>
+            <p className="text-gray-400 text-xs">Payment Type</p>
             <p className="font-bold text-xs">
-              {data?.user_transaction.transaction_method}
+              {!data?.user_transaction.transaction_type
+                ? "Debit"
+                : data.user_transaction.transaction_type}
             </p>
           </div>
           <div className="flex flex-col text-left">
-            <p className="text-gray-400 text-xs">Fees</p>
+            <p className="text-gray-400 text-xs">Amount Paid</p>
             <p className="font-bold text-xs">
-              {formatPrice(data?.user_transaction.amount ?? 0)}
+              {formatPrice(data?.user_transaction.amount_paid ?? 0)}
             </p>
           </div>
         </div>

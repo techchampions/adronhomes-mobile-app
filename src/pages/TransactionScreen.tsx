@@ -37,6 +37,7 @@ const TransactionsPage = () => {
       <TransactionsList
         data={transactions}
         isLoading={isLoading}
+        type="payment"
         isError={isError}
       />
       <Pagination

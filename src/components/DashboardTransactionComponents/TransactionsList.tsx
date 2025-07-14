@@ -12,6 +12,7 @@ import SmallLoader from "../SmallLoader";
 
 type Props = {
   data: Transaction[];
+  type: "payment" | "transaction";
   isLoading: boolean;
   isError: boolean;
 };
@@ -19,7 +20,12 @@ type Props = {
 const tabs = ["All", "Completed", "Pending", "Failed"] as const;
 type Tab = (typeof tabs)[number];
 
-const TransactionsList: React.FC<Props> = ({ data, isLoading, isError }) => {
+const TransactionsList: React.FC<Props> = ({
+  data,
+  isLoading,
+  isError,
+  type,
+}) => {
   const [activeTab, setActiveTab] = useState<Tab>("All");
   const { openModal } = useModalStore();
 
@@ -75,14 +81,18 @@ const TransactionsList: React.FC<Props> = ({ data, isLoading, isError }) => {
           </div>
         </div>
         {renderStatusBadge(item.status || 0)}
+
         <span
           className={`text-xs text-center capitalize py-1 rounded-2xl w-24 border-1 ${
             item.transaction_type === "credit"
               ? `text-adron-green border-adron-green bg-adron-green-100`
-              : `text-red-500 border-red-500 bg-red-200`
+              : `text-red-500 border-red-500 bg-red-100`
           }`}
         >
-          {item.transaction_type}
+          {type === "transaction" || item.transaction_type
+            ? item.transaction_type
+            : "Debit"}
+          {/* {item.transaction_type} */}
         </span>
         <div
           className={`text-sm font-semibold text-end ${

@@ -92,6 +92,7 @@ const WalletScreen = () => {
       </div>
       <TransactionsList
         data={transactions}
+        type="transaction"
         isLoading={isLoading}
         isError={isError}
       />

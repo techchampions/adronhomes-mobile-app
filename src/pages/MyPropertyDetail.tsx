@@ -20,6 +20,7 @@ import RequestDocument from "../components/DashboardNewPropertyComponent/Request
 import { FaCheckCircle, FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import InputInfrastructureAmount from "../components/DashboardMyPropertyComponents/InputAmount";
 import CopyButton from "../components/CopyButton";
+import { BsFillExclamationCircleFill } from "react-icons/bs";
 
 const MyPropertyDetail = () => {
   // const { data, isLoading, isError } = useGetUserTransactions();
@@ -216,12 +217,19 @@ const MyPropertyDetail = () => {
                     </div>
                   </div>
                 )
-              ) : (
+              ) : data?.plan_properties.status === 1 ? (
                 <Button
                   onClick={makePaymentForProperty}
                   label="Make Payment"
                   className="mt-5 bg-white !text-adron-green !w-fit px-6 text-sm"
                 />
+              ) : (
+                <div className="flex items-center gap-1 text-white/50">
+                  <BsFillExclamationCircleFill />
+                  <span className="text-xs">
+                    Please wait... Payment is being confirmed.
+                  </span>
+                </div>
               )}
               <div className="flex bg-white/20 justify-between p-4 rounded-2xl">
                 <div className="flex flex-col gap-2">
@@ -560,6 +568,7 @@ const MyPropertyDetail = () => {
       <TransactionsList
         data={transactions}
         isLoading={isLoading}
+        type="payment"
         isError={isError}
       />
     </div>
