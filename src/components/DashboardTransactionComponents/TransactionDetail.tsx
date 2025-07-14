@@ -51,11 +51,13 @@ const TransactionDetail = ({ id }: { id: number }) => {
           <div className="flex flex-col">
             <p className="text-gray-400 text-xs">From</p>
             <p className="font-bold text-xs">
-              {data?.user_transaction.transaction_method}
+              {data?.user_transaction.payment_type === "Bank Transfer"
+                ? data.user_transaction.bank_name
+                : data?.user_transaction.payment_type}
             </p>
             {/* <p className="font-bold text-xs">(Polaris Bank)</p> */}
           </div>
-          <img src="/mika.png" alt="" className="h-7 w-7" />
+          {/* <img src="/mika.png" alt="" className="h-7 w-7" /> */}
         </div>
         <div className="flex justify-between items-start py-3">
           <div className="flex flex-col">
@@ -72,7 +74,7 @@ const TransactionDetail = ({ id }: { id: number }) => {
               {/* {data?.user_transaction.transaction_type == "1"
                 ? "Scheduled Payment"
                 : "Wallet Funding"} */}
-              {data?.user_transaction.transaction_type}
+              {data?.user_transaction.payment_type}
             </p>
           </div>
         </div>

@@ -19,12 +19,14 @@ export interface Transaction {
   amount_paid: number;
   description: string;
   transaction_type: string;
+  payment_type: string;
   transaction_method: string;
   reference: string;
   created_at: string | null;
   updated_at: string | null;
   status: TransactionStatus | null;
   property: Property;
+  bank_name: string;
 }
 
 export interface PaginationLink {

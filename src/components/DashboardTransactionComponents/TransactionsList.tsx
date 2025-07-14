@@ -64,7 +64,7 @@ const TransactionsList: React.FC<Props> = ({ data, isLoading, isError }) => {
       <div
         key={item.id}
         onClick={() => openModal(<TransactionDetail id={item.id} />)}
-        className="cursor-pointer grid grid-cols-2 md:grid-cols-3 justify-between items-center p-4 even:bg-gray-100 rounded-3xl"
+        className="cursor-pointer grid grid-cols-3 md:grid-cols-4 justify-between items-center p-4 even:bg-gray-100 rounded-3xl"
       >
         <div>
           <div className="font-medium text-xs md:text-sm truncate">
@@ -75,7 +75,23 @@ const TransactionsList: React.FC<Props> = ({ data, isLoading, isError }) => {
           </div>
         </div>
         {renderStatusBadge(item.status || 0)}
-        <div className="text-sm font-semibold text-end">
+        <span
+          className={`text-xs text-center capitalize py-1 rounded-2xl w-24 border-1 ${
+            item.transaction_type === "credit"
+              ? `text-adron-green border-adron-green bg-adron-green-100`
+              : `text-red-500 border-red-500 bg-red-200`
+          }`}
+        >
+          {item.transaction_type}
+        </span>
+        <div
+          className={`text-sm font-semibold text-end ${
+            item.transaction_type === "credit"
+              ? `text-adron-green`
+              : `text-red-500`
+          } `}
+        >
+          {item.transaction_type === "credit" ? `+` : `-`}
           {formatPrice(item.amount || item.amount_paid)}
         </div>
       </div>
