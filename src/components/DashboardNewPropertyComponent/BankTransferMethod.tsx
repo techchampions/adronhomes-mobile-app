@@ -71,7 +71,7 @@ const BankTransfer = ({
         } else {
           payload = {
             payment_method: "bank_transfer",
-            payment_type: 1,
+            payment_type: 2,
             monthly_duration: Number(paymentDuration),
             property_id: Number(propertyId),
             start_date: startDate,

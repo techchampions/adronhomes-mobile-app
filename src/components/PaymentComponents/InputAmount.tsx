@@ -63,7 +63,8 @@ const InputAmount: React.FC<Props> = ({ goBack, repaymentAmount, dueDate }) => {
                   className="text-2xl font-bold"
                 />
                 <p className="text-xs text-gray-400 w-[80%]">
-                  Please note that a 1% transaction fee will be charged.
+                  Please note that excess amount will be deposited into your
+                  virtual wallet{" "}
                 </p>
                 <div className="flex border border-gray-200 rounded-lg p-4 flex-col gap-3">
                   <div className="flex justify-between items-center">
