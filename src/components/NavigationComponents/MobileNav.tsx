@@ -106,9 +106,9 @@ const MobileNav = () => {
                 path="/wallet"
               />
               <NavItem
-                label="Transactions"
+                label="Payments"
                 icon={<FaArrowRightArrowLeft className=" w-4 h-4" />}
-                path="/transactions"
+                path="/payments"
               />
               <NavItem
                 label="Notifications"

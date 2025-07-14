@@ -54,7 +54,7 @@ const AllRoutes = () => {
               <Route element={<DashboardScreen />}>
                 <Route index element={<HomeScreen />} />
                 <Route path="/wallet" element={<WalletScreen />} />
-                <Route path="/transactions" element={<TransactionsPage />} />
+                <Route path="/payments" element={<TransactionsPage />} />
                 <Route path="/notifications" element={<NotificationsPage />} />
                 <Route path="/my-properties" element={<MyPropertyScreen />} />
                 <Route path="/new-properties" element={<NewPropertyScreen />} />

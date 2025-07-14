@@ -37,7 +37,7 @@ const PropertyList: React.FC<PropertyListProps> = ({
             lga={plan.property?.lga || ""}
             state={plan.property?.state || ""}
             raisedAmount={plan.plan?.paid_amount || 0}
-            targetAmount={plan.property?.price || 0}
+            targetAmount={plan.property?.total_amount || 0}
             progress={plan.plan?.payment_percentage || 0}
           />
         ))}
