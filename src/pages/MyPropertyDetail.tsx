@@ -22,6 +22,7 @@ import InputInfrastructureAmount from "../components/DashboardMyPropertyComponen
 import CopyButton from "../components/CopyButton";
 import { BsFillExclamationCircleFill } from "react-icons/bs";
 import MyPlanPaymentHistory from "../components/DashboardMyPropertyComponents/MyPropertyPaymentHistory";
+import SelectPaymentMethod from "../components/DashboardMyPropertyComponents/SelectPaymentMethod";
 
 const MyPropertyDetail = () => {
   // const { data, isLoading, isError } = useGetUserTransactions();
@@ -56,7 +57,7 @@ const MyPropertyDetail = () => {
   const [requested, setRequested] = useState(false);
   const { setPaymentDetails, resetPaymentDetails, planId } =
     usePaymentBreakDownStore();
-  const { openModal } = useModalStore();
+  const { openModal, closeModal } = useModalStore();
   const navigate = useNavigate();
   const params = useParams();
   const id = params?.id;
@@ -89,6 +90,21 @@ const MyPropertyDetail = () => {
   console.log("other", OtherFeesBreakDown);
   const handleViewProperty = () => {
     navigate(`/properties/${data?.plan_properties.property.id}`);
+  };
+  const completeInitialPropertyPayment = () => {
+    resetPaymentDetails();
+    setPaymentDetails({
+      planId: data?.plan_properties.id,
+    });
+    console.log("plan ID", data?.plan_properties.id, "Plan ID state", planId);
+    openModal(
+      <SelectPaymentMethod
+        amount={data?.plan_properties.paid_amount || 0}
+        user_property_id={data?.plan_properties.id || 0}
+        payment_type={Number(data?.plan_properties.payment_type)}
+        goBack={closeModal}
+      />
+    );
   };
   const makePaymentForProperty = () => {
     resetPaymentDetails();
@@ -223,6 +239,12 @@ const MyPropertyDetail = () => {
                   onClick={makePaymentForProperty}
                   label="Make Payment"
                   className="mt-5 bg-white !text-adron-green !w-fit px-6 text-sm"
+                />
+              ) : data?.plan_properties.payment_method === "paystack" ? (
+                <Button
+                  onClick={completeInitialPropertyPayment}
+                  label="Complete Initial Payment"
+                  className="mt-0 bg-white !text-adron-green !w-fit px-6 text-sm"
                 />
               ) : (
                 <div className="flex items-center gap-1 text-white/50">

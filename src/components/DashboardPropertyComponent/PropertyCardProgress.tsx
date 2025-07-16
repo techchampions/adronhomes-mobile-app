@@ -7,6 +7,7 @@ import SelectPaymentMethod from "../DashboardMyPropertyComponents/SelectPaymentM
 
 type PropertyCardProps = {
   id: number;
+  user_property_id: number;
   imageUrl: string;
   title: string;
   state: string;
@@ -16,10 +17,13 @@ type PropertyCardProps = {
   targetAmount: number;
   units: number;
   status: number;
+  payment_method: string;
+  payment_type: number;
 };
 
 const PropertyCard: React.FC<PropertyCardProps> = ({
   id,
+  user_property_id,
   imageUrl,
   title,
   state,
@@ -29,6 +33,8 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
   targetAmount,
   units,
   status,
+  payment_method,
+  payment_type,
 }) => {
   const navigate = useNavigate();
   const { openModal, closeModal } = useModalStore();
@@ -41,7 +47,12 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
   };
   const makePayment = () => {
     openModal(
-      <SelectPaymentMethod goBack={closeModal} amount={raisedAmount} />
+      <SelectPaymentMethod
+        goBack={closeModal}
+        amount={raisedAmount}
+        user_property_id={user_property_id}
+        payment_type={payment_type}
+      />
     );
   };
   const location = `${lga}, ${state}`;
@@ -94,13 +105,13 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
       <div className="mt-4 flex items-center justify-between">
         <Button
           label="View Details"
-          className="!w-fit px-4 text-xs"
+          className="!w-fit px-4 text-[9px] md:text-xs"
           onClick={handleNavigation}
         />
-        {status === 0 && (
+        {status === 0 && payment_method === "paystack" && (
           <Button
             label="Make Payment"
-            className="!w-fit px-4 text-xs"
+            className="!w-fit px-4 text-[9px] md:text-xs !bg-transparent !text-adron-green border-1 border-adron-green"
             onClick={makePayment}
           />
         )}

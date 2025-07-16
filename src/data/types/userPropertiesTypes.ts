@@ -69,10 +69,10 @@ export interface Plan {
   created_at: string;
   updated_at: string;
   monthly_duration: string | null;
-  payment_type: string;
+  payment_type: number;
   end_date: string | null;
   start_date: string | null;
-  payment_method: string | null;
+  payment_method: string;
   repayment_schedule: string | null;
   next_payment_date: string | null;
   marketer_id: number | string | null;

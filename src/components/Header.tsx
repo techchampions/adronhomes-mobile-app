@@ -15,10 +15,7 @@ const Header = ({ pageTitle }: { pageTitle: string }) => {
   const { user } = useUserStore();
   const { setSearchResults, setLoading } = useSearchStore();
   const { data: notificationData } = useGetNotifications(1);
-  let unRead = notificationData?.notifications.data.filter(
-    (item) => item.is_read === 0
-  );
-  const unReadCount = unRead?.length;
+  const unReadCount = notificationData?.unread || 0;
   const queryClient = useQueryClient();
   const goToProfile = () => {
     navigate("/my-profile");

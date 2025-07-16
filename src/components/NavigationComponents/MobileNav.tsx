@@ -23,10 +23,7 @@ const MobileNav = () => {
   const { user } = useUserStore();
   const navigate = useNavigate();
   const { data: notificationData } = useGetNotifications(1);
-  let unRead = notificationData?.notifications.data.filter(
-    (item) => item.is_read === 0
-  );
-  const unReadCount = unRead?.length;
+  const unReadCount = notificationData?.unread || 0;
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const goTpProfile = () => {

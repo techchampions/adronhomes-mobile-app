@@ -24,6 +24,7 @@ import {
   infrastructurePayment,
   InitiatePropertyPurchaseResponse,
   makeEnquire,
+  makePendingPropertyPlanPayment,
   PropertyFilters,
   propertyPlanRepayment,
   requestStatement,
@@ -329,6 +330,29 @@ export const useCreatePropertyPlan = () => {
       // },
     }
   );
+};
+// Query hook for creating a new property plan
+export const useMakePropertyPlanPendingPayment = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: makePendingPropertyPlanPayment,
+    onSuccess: () => {
+      // Refetch relevant data if needed
+      queryClient.invalidateQueries({
+        queryKey: ["user-properties-plan"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["dashboard-data"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["user-wallet"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["user-transactions"],
+      });
+    },
+  });
 };
 
 // Query hook for a property plan repayment

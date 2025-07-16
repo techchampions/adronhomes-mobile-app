@@ -1,138 +1,145 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "../Button";
 import { useModalStore } from "../../zustand/useModalStore";
+import { FaWallet } from "react-icons/fa";
+import {
+  useCreatePropertyPlan,
+  useGetUserWalletdata,
+  useMakePropertyPlanPendingPayment,
+  usePropertyPlanRepayment,
+} from "../../data/hooks";
+import { formatPrice } from "../../data/utils";
+import { useToastStore } from "../../zustand/useToastStore";
+import { usePaymentBreakDownStore } from "../../zustand/PaymentBreakDownStore";
+import PaymentSuccessfull from "../PaymentSuccessfull";
+import SmallLoader from "../SmallLoader";
+import { useNavigate } from "react-router-dom";
 import { usePaystackPayment } from "../../hooks/usePaystackPayment";
 import { useUserStore } from "../../zustand/UserStore";
-import { useToastStore } from "../../zustand/useToastStore";
-import { useFundWallet } from "../../data/hooks";
-import ApiErrorBlock from "../ApiErrorBlock";
-import SmallLoader from "../SmallLoader";
-import BankTransfer from "../DashboardNewPropertyComponent/BankTransferMethod";
-import VirtualBankTransfer from "../DashboardHomeComponents/VirtualBankTransferMethod";
-
-export interface ApiError {
-  response?: {
-    data?: {
-      errors?: Record<string, string[]>;
-      message?: string;
-    };
-  };
-  message?: string;
-}
-
-export type FundWalletResponse = {
-  success: boolean;
-  message: string;
-  payment: {
-    user_id: number;
-    property_id: number | null;
-    property_plan_id: number | null;
-    amount_paid: string;
-    reference: string;
-    payment_type: "Paystack" | string;
-    purpose: "fund" | string;
-    proof_of_payment: string | null;
-    updated_at: string; // ISO date string
-    created_at: string; // ISO date string
-    id: number;
-  };
-};
+import { ApiError } from "../DashboardHomeComponents/SelectPaymentMethod";
+import BankTransfer from "./BankTransferMethod";
 
 const SelectPaymentMethod = ({
   goBack,
   amount,
+  payment_type,
+  user_property_id,
 }: {
   goBack: () => void;
   amount: number;
+  payment_type?: number;
+  user_property_id: number;
 }) => {
+  const { showToast } = useToastStore();
+  const { user } = useUserStore();
+  const paystack = usePaystackPayment();
+  const { data: userWalletData, isLoading, isError } = useGetUserWalletdata();
+  const navigate = useNavigate();
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<
     string | null
   >(null);
-  const { openModal, closeModal } = useModalStore();
-  const { showToast } = useToastStore();
-  const paystack = usePaystackPayment();
-  const { mutate: fundWallet, isPending: isFunding } = useFundWallet();
-
-  const { user } = useUserStore();
+  const { openModal } = useModalStore();
+  const { mutate: makePayment, isPending: isPaying } =
+    useMakePropertyPlanPendingPayment();
+  // const {
+  //   totalAmount,
+  //   startDate,
+  //   endDate,
+  //   paymentType,
+  //   paymentDuration,
+  //   paymentSchedule,
+  //   propertyId,
+  //   marketerId,
+  //   planId,
+  //   numberOfUnits,
+  // } = usePaymentBreakDownStore();
+  const walletBalance = userWalletData?.wallet_balance || 0;
+  let payload = {
+    user_property_id: user_property_id,
+    payment_type: payment_type,
+    payment_method: "",
+  };
 
   const handleContinue = () => {
     if (selectedPaymentMethod == "Bank Transfer") {
-      openModal(<BankTransfer goBack={goBack} amount={amount} />);
-    } else if (selectedPaymentMethod == "Virtual Bank Transfer") {
-      openModal(<VirtualBankTransfer goBack={goBack} amount={amount} />);
-    } else if (selectedPaymentMethod == "Paystack") {
-      fundWallet(
-        {
-          amount: amount || 0,
-          payment_method: "paystack",
-        },
-        {
-          onSuccess(res) {
-            paystack({
-              email: user?.email || "",
-              amount: Number(amount), // in Naira
-              reference: res.payment.reference,
-              onSuccess: (ref) => {
-                showToast("Payment successful!", "success");
-                console.log("Payment successful!", ref);
-                // TODO: call your backend API to confirm payment
-              },
-              onClose: () => {
-                showToast("Payment Canceled", "error");
-              },
-            });
-
-            closeModal();
-          },
-          onError: (error: ApiError) => {
-            const message =
-              error?.response?.data?.message ||
-              error?.message ||
-              "Something went wrong";
-            showToast(message, "error");
-            openModal(<ApiErrorBlock />);
-          },
-        }
+      openModal(
+        <BankTransfer
+          goBack={goBack}
+          amount={amount}
+          payment_type={payment_type}
+          user_property_id={user_property_id}
+        />
       );
+    } else if (selectedPaymentMethod == "Paystack") {
+      paystack({
+        email: user?.email || "",
+        amount: amount, // in Naira
+        reference: "ffh9f0e9fhe9f",
+        onSuccess: (ref) => {
+          payload = {
+            payment_type: payment_type,
+            user_property_id: user_property_id,
+            payment_method: "paystack",
+          };
+          makePayment(payload, {
+            onSuccess: (res) => {
+              <PaymentSuccessfull text="Payment received successfully." />;
+
+              navigate(`/my-property/${res.plan?.id}`);
+            },
+            onError: (error: ApiError) => {
+              const message =
+                error?.response?.data?.message ||
+                error?.message ||
+                "Something went wrong";
+              showToast(message, "error");
+            },
+          });
+        },
+        onClose: () => {
+          showToast("Payment popup closed", "error");
+        },
+      });
+    } else if (selectedPaymentMethod == "Virtual Wallet") {
+      // Check if payment is to buy property or Recuring payment
+      payload = {
+        payment_method: "virtual_wallet",
+        payment_type: payment_type,
+        user_property_id: user_property_id,
+      };
+      makePayment(payload, {
+        onSuccess: (res) => {
+          openModal(
+            <PaymentSuccessfull text="Payment received successfully." />
+          );
+          navigate(`/my-property/${res.plan?.id}`);
+        },
+        onError: (error: ApiError) => {
+          const message =
+            error?.response?.data?.message ||
+            error?.message ||
+            "Something went wrong";
+          showToast(message, "error");
+        },
+      });
     }
   };
+  if (isPaying) {
+    return <SmallLoader />;
+  }
 
   return (
     <div className="flex flex-col">
       <div className="flex flex-col">
-        <div className="text-2xl font-bold">Make Payment Again.</div>
+        <div className="text-2xl font-bold">Select Payment Method</div>
         <p className="text-gray-400 text-xs w-[80%]">
-          Select your preferred method.
+          Select your preferred payment method for your plan{" "}
+          <b className="text-black">({formatPrice(amount)})</b>.
         </p>
       </div>
-      <div className="flex flex-col gap-4 mt-4 min-h-[400px] justify-between">
+
+      <div className="flex flex-col gap-4 mt-4 min-h-[300px] justify-between">
         <div className="flex flex-col gap-2">
-          <div
-            className={`flex items-center gap-4 p-4 rounded-xl cursor-pointer transition-all ${
-              selectedPaymentMethod === "Virtual Bank Transfer"
-                ? "bg-adron-green text-white border-none "
-                : "bg-transparent border  border-gray-300"
-            }`}
-            onClick={() => setSelectedPaymentMethod("Virtual Bank Transfer")}
-          >
-            <img
-              src="/bank-transfer-icon.svg"
-              alt="bank transfer"
-              className="h-10 w-10"
-            />
-            <div>
-              <p className="font-adron-mid text-sm">Virtual Bank Transfer</p>
-              <p
-                className={`text-xs ${
-                  selectedPaymentMethod == "Virtual Bank Transfer"
-                    ? `text-white`
-                    : `text-gray-500`
-                } `}
-              >
-                Wallet will be funded instantly
-              </p>
-            </div>
-          </div>
           <div
             className={`flex items-center gap-4 p-4 rounded-xl cursor-pointer transition-all ${
               selectedPaymentMethod === "Bank Transfer"
@@ -147,9 +154,7 @@ const SelectPaymentMethod = ({
               className="h-10 w-10"
             />
             <div>
-              <p className="font-adron-mid text-sm">
-                Bank Transfer to Adron Homes
-              </p>
+              <p className="font-adron-mid text-sm">Bank Transfer</p>
               <p
                 className={`text-xs ${
                   selectedPaymentMethod == "Bank Transfer"
@@ -157,10 +162,38 @@ const SelectPaymentMethod = ({
                     : `text-gray-500`
                 } `}
               >
-                payment will be confrimed within 24 hours.
+                From your bank app or internet bank
               </p>
             </div>
           </div>
+
+          {/* Virtual Bank Transfer */}
+          {/* <div
+            className={`flex items-center gap-4 p-4 rounded-xl cursor-pointer transition-all ${
+              selectedPaymentMethod === "Virtual Bank Transfer"
+                ? "bg-adron-green text-white border-none "
+                : "bg-transparent border  border-gray-300"
+            }`}
+            onClick={() => setSelectedPaymentMethod("Virtual Bank Transfer")}
+          >
+            <img
+              src="/bank-transfer-icon.svg"
+              alt="Virtual bank transfer"
+              className="h-10 w-10"
+            />
+            <div>
+              <p className="font-adron-mid text-sm">Virtual Bank Transfer</p>
+              <p
+                className={`text-xs ${
+                  selectedPaymentMethod == "Virtual Bank Transfer"
+                    ? `text-white`
+                    : `text-gray-500`
+                } `}
+              >
+                Transfer to generated Virtual bank account
+              </p>
+            </div>
+          </div> */}
 
           <div
             className={`flex items-center gap-4 p-4 rounded-xl cursor-pointer transition-all ${
@@ -188,6 +221,77 @@ const SelectPaymentMethod = ({
               </p>
             </div>
           </div>
+
+          <div
+            className={`flex items-center gap-4 p-4 rounded-xl cursor-pointer transition-all ${
+              selectedPaymentMethod === "Virtual Wallet"
+                ? "bg-adron-green text-white border-none "
+                : "bg-transparent border  border-gray-300"
+            }`}
+            onClick={() => setSelectedPaymentMethod("Virtual Wallet")}
+          >
+            <div className="p-2 rounded-full bg-adron-green-100">
+              <FaWallet className="h-5 w-5 text-adron-green" />
+            </div>
+            <div className="flex justify-between flex-1 items-center">
+              <div className="flex flex-col ">
+                <p className="font-adron-mid text-sm">Virtual Wallet</p>
+                <p
+                  className={`text-xs ${
+                    selectedPaymentMethod == "Virtual Wallet"
+                      ? `text-white`
+                      : `text-gray-500`
+                  } `}
+                >
+                  Pay With Wallet
+                </p>
+              </div>
+              <div className="">
+                {isLoading ? (
+                  <svg
+                    aria-hidden="true"
+                    role="status"
+                    className="inline w-3 h-3 mx-auto text-white animate-spin"
+                    viewBox="0 0 100 101"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                      fill="#79B833"
+                    />
+                    <path
+                      d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                      fill="currentColor"
+                    />
+                  </svg>
+                ) : isError ? (
+                  <p className="text-red-500 text-xs">Error fetching wallet</p>
+                ) : (
+                  <p
+                    className={`text-xs ${
+                      selectedPaymentMethod == "Virtual Wallet"
+                        ? `text-white`
+                        : `text-gray-400`
+                    }`}
+                  >
+                    {formatPrice(userWalletData?.wallet_balance || 0)}
+                  </p>
+                )}
+                <p
+                  className={`text-xs ${
+                    selectedPaymentMethod == "Virtual Wallet"
+                      ? `text-white`
+                      : `text-gray-500`
+                  } `}
+                >
+                  {walletBalance > amount
+                    ? `Available Balance`
+                    : `Insufficient Balance`}
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div className="flex justify-between w-full gap-4 mt-4">
@@ -197,11 +301,11 @@ const SelectPaymentMethod = ({
             onClick={goBack}
           />
           <Button
-            label={isFunding ? "Loading" : "Continue"}
-            isLoading={isFunding}
+            label="Continue"
+            isLoading={isPaying}
             className="!w-fit px-12 py-2 text-xs bg-black text-white"
             onClick={handleContinue}
-            disabled={!selectedPaymentMethod || isFunding}
+            disabled={!selectedPaymentMethod || isPaying}
           />
         </div>
       </div>
