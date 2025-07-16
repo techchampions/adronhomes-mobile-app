@@ -74,7 +74,7 @@ const MobileNav = () => {
       >
         {/* Transparent dark overlay */}
         <div
-          className="flex-1 bg-black/50"
+          className="flex-1 bg-black/30"
           onClick={() => setIsMobileMenuOpen(false)}
         />
 
@@ -96,21 +96,25 @@ const MobileNav = () => {
           <div className="w-full py-1.5 h-[88%] overflow-y-scroll scrollbar-hide bg-white rounded-2xl">
             <nav className="space-y-2 p-2">
               <NavItem
+                onSlideBack={setIsMobileMenuOpen}
                 label="Dashboard"
                 icon={<MdDashboardCustomize className="w-4 h-4" />}
                 path="/"
               />
               <NavItem
+                onSlideBack={setIsMobileMenuOpen}
                 label="My Wallet"
                 icon={<RiWallet3Fill className=" w-4 h-4" />}
                 path="/wallet"
               />
               <NavItem
+                onSlideBack={setIsMobileMenuOpen}
                 label="Payments"
                 icon={<FaArrowRightArrowLeft className=" w-4 h-4" />}
                 path="/payments"
               />
               <NavItem
+                onSlideBack={setIsMobileMenuOpen}
                 label="Notifications"
                 icon={<RiNotificationBadgeFill className=" w-4 h-4" />}
                 path="/notifications"
@@ -120,16 +124,19 @@ const MobileNav = () => {
                 LISTINGS
               </h4>
               <NavItem
+                onSlideBack={setIsMobileMenuOpen}
                 label="My Properties"
                 icon={<MdAddHome className=" w-4 h-4" />}
                 path="/my-properties"
               />
               <NavItem
+                onSlideBack={setIsMobileMenuOpen}
                 label="New Properties"
                 icon={<MdAddHome className=" w-4 h-4" />}
                 path="/new-properties"
               />
               <NavItem
+                onSlideBack={setIsMobileMenuOpen}
                 label="Saved Properties"
                 icon={<RiHomeHeartFill className=" w-4 h-4" />}
                 path="/saved-properties"
@@ -139,17 +146,20 @@ const MobileNav = () => {
                 PROFILE
               </h4>
               <NavItem
+                onSlideBack={setIsMobileMenuOpen}
                 label="My Profile"
                 icon={<FaUserAlt className=" w-4 h-4" />}
                 path="/my-profile"
               />
               <NavItem
+                onSlideBack={setIsMobileMenuOpen}
                 label="Account Settings"
                 icon={<IoSettingsSharp className=" w-4 h-4" />}
                 path="/settings"
               />
 
               <NavItem
+                onSlideBack={setIsMobileMenuOpen}
                 label="Support"
                 icon={<MdOutlineHelp className=" w-4 h-4" />}
                 path="/support"

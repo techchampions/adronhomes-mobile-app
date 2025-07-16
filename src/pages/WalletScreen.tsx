@@ -9,6 +9,7 @@ import TransactionsList from "../components/DashboardTransactionComponents/Trans
 import ApiErrorBlock from "../components/ApiErrorBlock";
 import SmallLoader from "../components/SmallLoader";
 import { IoInformationCircle } from "react-icons/io5";
+import WalletHistoryList from "../components/DashboardWalletComponents/WalletHistoryList";
 
 const WalletScreen = () => {
   const openModal = useModalStore((state) => state.openModal);
@@ -90,7 +91,13 @@ const WalletScreen = () => {
           </div>
         </div> */}
       </div>
-      <TransactionsList
+      {/* <TransactionsList
+        data={transactions}
+        type="transaction"
+        isLoading={isLoading}
+        isError={isError}
+      /> */}
+      <WalletHistoryList
         data={transactions}
         type="transaction"
         isLoading={isLoading}

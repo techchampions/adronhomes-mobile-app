@@ -27,6 +27,8 @@ export interface Transaction {
   status: TransactionStatus | null;
   property: Property;
   bank_name: string;
+  beneficiary_name: string;
+  purpose: string;
 }
 
 export interface PaginationLink {

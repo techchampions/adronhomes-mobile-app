@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useModalStore } from "../../zustand/useModalStore";
-import TransactionDetail from "./TransactionDetail";
 import {
   Transaction,
   TransactionStatus,
@@ -9,10 +8,10 @@ import { formatDate, formatPrice } from "../../data/utils";
 import NotFound from "../NotFound";
 import ApiErrorBlock from "../ApiErrorBlock";
 import SmallLoader from "../SmallLoader";
+import TransactionDetail from "../DashboardTransactionComponents/TransactionDetail";
 
 type Props = {
   data: Transaction[];
-  type: "payment" | "transaction";
   isLoading: boolean;
   isError: boolean;
 };
@@ -20,11 +19,10 @@ type Props = {
 const tabs = ["All", "Completed", "Pending", "Failed"] as const;
 type Tab = (typeof tabs)[number];
 
-const TransactionsList: React.FC<Props> = ({
+const MyPlanPaymentHistory: React.FC<Props> = ({
   data,
   isLoading,
   isError,
-  type,
 }) => {
   const [activeTab, setActiveTab] = useState<Tab>("All");
   const { openModal } = useModalStore();
@@ -70,7 +68,7 @@ const TransactionsList: React.FC<Props> = ({
       <div
         key={item.id}
         onClick={() => openModal(<TransactionDetail id={item.id} />)}
-        className="cursor-pointer grid grid-cols-2 md:grid-cols-4 justify-between items-center p-4 even:bg-gray-100 rounded-3xl"
+        className="cursor-pointer grid grid-cols-2 md:grid-cols-3 justify-between items-center p-4 even:bg-gray-100 rounded-3xl"
       >
         <div>
           <div className="font-medium text-xs md:text-sm truncate">
@@ -82,26 +80,7 @@ const TransactionsList: React.FC<Props> = ({
         </div>
         {renderStatusBadge(item.status || 0)}
 
-        <span
-          className={`text-xs hidden md:block text-center capitalize py-1 rounded-2xl w-24 border-1 ${
-            item.transaction_type === "credit"
-              ? `text-adron-green border-adron-green bg-adron-green-100`
-              : `text-red-500 border-red-500 bg-red-100`
-          }`}
-        >
-          {type === "transaction" || item.transaction_type
-            ? item.transaction_type
-            : "Debit"}
-          {/* {item.transaction_type} */}
-        </span>
-        <div
-          className={`text-sm font-semibold text-end ${
-            item.transaction_type === "credit"
-              ? `text-adron-green`
-              : `text-red-500`
-          } `}
-        >
-          {item.transaction_type === "credit" ? `+` : `-`}
+        <div className={`text-sm font-semibold text-end`}>
           {formatPrice(item.amount || item.amount_paid)}
         </div>
       </div>
@@ -148,24 +127,6 @@ const TransactionsList: React.FC<Props> = ({
             </button>
           ))}
         </div>
-        {/* <div>
-          <button className="border border-gray-300 text-xs px-4 py-1 rounded-3xl flex items-center gap-1">
-            Latest
-            <svg
-              className="w-3 h-3"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M19 9l-7 7-7-7"
-              />
-            </svg>
-          </button>
-        </div> */}
       </div>
 
       {/* List */}
@@ -174,4 +135,4 @@ const TransactionsList: React.FC<Props> = ({
   );
 };
 
-export default TransactionsList;
+export default MyPlanPaymentHistory;

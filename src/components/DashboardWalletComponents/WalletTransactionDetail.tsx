@@ -1,13 +1,13 @@
 import CopyButton from "../CopyButton";
 import Button from "../Button";
-import { useGetTransactionByID } from "../../data/hooks";
+import { useGetWalletTransactionByID } from "../../data/hooks";
 import ApiErrorBlock from "../ApiErrorBlock";
 import { formatPrice } from "../../data/utils";
 import { TransactionStatus } from "../../data/types/userTransactionsTypes";
 import SmallLoader from "../SmallLoader";
 
-const TransactionDetail = ({ id }: { id: number }) => {
-  const { data, isLoading, isError } = useGetTransactionByID(id);
+const WalletTransactionDetail = ({ id }: { id: number }) => {
+  const { data, isLoading, isError } = useGetWalletTransactionByID(id);
   if (isLoading) {
     return <SmallLoader />;
   }
@@ -44,18 +44,14 @@ const TransactionDetail = ({ id }: { id: number }) => {
   return (
     <div className="space-y-5">
       <h4 className="absolute top-4 left-4 font-bold text-lg">
-        {`${
-          data?.user_transaction.purpose === "property"
-            ? `Payment Details`
-            : `Transaction Details`
-        }`}
+        Transaction Details
       </h4>
       <div className="flex flex-col divide-y divide-gray-200 mt-5">
         <div className="flex justify-between items-center py-3">
           <div className="flex flex-col">
             <p className="text-gray-400 text-xs">From</p>
             <p className="font-bold text-xs">
-              {data?.user_transaction.beneficiary_name}
+              {data?.data.beneficiary_name}
               {/* {data?.user_transaction.payment_type === "Bank Transfer"
                 ? data.user_transaction.bank_name
                 : data?.user_transaction.payment_type} */}
@@ -67,29 +63,24 @@ const TransactionDetail = ({ id }: { id: number }) => {
         <div className="flex justify-between items-start py-3">
           <div className="flex flex-col">
             <p className="text-gray-400 text-xs">Description</p>
-            <p className="font-bold text-xs">
-              {data?.user_transaction.description}
-            </p>
+            <p className="font-bold text-xs">{data?.data.description}</p>
           </div>
         </div>
-        <div className="flex justify-between items-start py-3">
+        {/* <div className="flex justify-between items-start py-3">
           <div className="flex flex-col">
             <p className="text-gray-400 text-xs">Payment Method</p>
             <p className="font-bold text-xs">
-              {/* {data?.user_transaction.transaction_type == "1"
-                ? "Scheduled Payment"
-                : "Wallet Funding"} */}
-              {data?.user_transaction.payment_type}
+              {data?.data.payment_type}
             </p>
           </div>
-        </div>
+        </div> */}
         <div className="flex justify-between items-start py-3">
           <div className="flex flex-col">
             <p className="text-gray-400 text-xs">Payment Type</p>
             <p className="font-bold text-xs">
-              {data?.user_transaction.transaction_type
-                ? data.user_transaction.transaction_type
-                : data?.user_transaction.purpose === "fund"
+              {data?.data.transaction_type
+                ? data.data.transaction_type
+                : data?.data.purpose === "fund"
                 ? "Credit"
                 : "Debit"}
             </p>
@@ -97,18 +88,16 @@ const TransactionDetail = ({ id }: { id: number }) => {
           <div className="flex flex-col text-left">
             <p className="text-gray-400 text-xs">Amount Paid</p>
             <p className="font-bold text-xs">
-              {formatPrice(data?.user_transaction.amount_paid ?? 0)}
+              {formatPrice(data?.data.amount ?? 0)}
             </p>
           </div>
         </div>
         <div className="flex justify-between items-center py-3">
           <div className="flex flex-col">
             <p className="text-gray-400 text-xs">Transaction Reference</p>
-            <p className="font-bold text-xs">
-              {data?.user_transaction.reference}
-            </p>
+            <p className="font-bold text-xs">{data?.data.reference}</p>
           </div>
-          <CopyButton text={data?.user_transaction.reference} />
+          <CopyButton text={data?.data.reference} />
         </div>
         <div className="flex justify-between items-center py-3">
           <div className="flex flex-col">
@@ -117,7 +106,7 @@ const TransactionDetail = ({ id }: { id: number }) => {
               {/* {" "}
               <span className="bg-adron-green h-2 w-2 rounded-full"></span>{" "}
               Completed */}
-              {renderStatusBadge(data?.user_transaction.status ?? 2)}
+              {renderStatusBadge(data?.data.status ?? 2)}
             </p>
           </div>
         </div>
@@ -133,4 +122,4 @@ const TransactionDetail = ({ id }: { id: number }) => {
   );
 };
 
-export default TransactionDetail;
+export default WalletTransactionDetail;

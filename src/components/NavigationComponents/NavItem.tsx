@@ -8,6 +8,7 @@ interface NavItemProps {
   icon: JSX.Element;
   path?: string;
   children?: { label: string; path: string }[];
+  onSlideBack?: (mobileOpen: boolean) => void;
 }
 
 const NavItem: React.FC<NavItemProps> = ({
@@ -16,8 +17,14 @@ const NavItem: React.FC<NavItemProps> = ({
   path,
   children,
   badge,
+  onSlideBack,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const closeNav = () => {
+    if (onSlideBack) {
+      onSlideBack(false);
+    }
+  };
 
   return (
     <div className="w-full">
@@ -34,7 +41,7 @@ const NavItem: React.FC<NavItemProps> = ({
             }`
           }
         >
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-2" onClick={closeNav}>
             {icon}
             <span className=" text-[12px]">{label}</span>
             {badge != undefined && (
