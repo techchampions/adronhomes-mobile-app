@@ -15,11 +15,7 @@ import { useGetNotifications } from "../../data/hooks";
 
 function NavigationContainer() {
   const { data: notificationData } = useGetNotifications(1);
-  let unRead = notificationData?.notifications.data.filter(
-    (item) => item.is_read === 0
-  );
-  const unReadCount = unRead?.length;
-
+  const unread = notificationData?.unread || 0;
   return (
     <div className="flex flex-col p-5 gap-5 h-screen justify-between overflow-y-auto scrollbar-hide">
       <img
@@ -49,7 +45,7 @@ function NavigationContainer() {
             label="Notifications"
             icon={<RiNotificationBadgeFill className=" w-4 h-4" />}
             path="/notifications"
-            badge={unReadCount || 0}
+            badge={unread}
           />
           <h4 className="text-adron-gray-400 font-bold px-7 mt-7 text-[13px]">
             LISTINGS

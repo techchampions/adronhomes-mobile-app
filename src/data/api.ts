@@ -15,7 +15,10 @@ import {
   WalletTransactionByIDResponse,
 } from "./types/userTransactionByIDTypes";
 import { NotificationByIDResponse } from "./types/NotificationByIDTypes";
-import { PropertyPlanPayload } from "./types/CreatePropertyPayload";
+import {
+  PendingPropertyPlanPayload,
+  PropertyPlanPayload,
+} from "./types/CreatePropertyPayload";
 import { PropertyPlanPaymentResponse } from "./types/PropertyPlanPaymentListTypes";
 import { FundWalletPayload } from "./types/FundWalletPayloadTypes";
 import { PropertiesSearchResultResponse } from "./types/SearchPropertiesResultTypes";
@@ -342,6 +345,27 @@ export const createPropertyPlan = async (
   //   // This ensures errors are properly propagated
   //   throw error;
   // }
+};
+export const makePendingPropertyPlanPayment = async (
+  payload: Partial<PendingPropertyPlanPayload>
+): Promise<InitiatePropertyPurchaseResponse> => {
+  const formData = new FormData();
+
+  if (payload.user_property_id !== undefined)
+    formData.append("user_property_id", payload.user_property_id.toString());
+
+  if (payload.payment_type !== undefined)
+    formData.append("payment_type", payload.payment_type.toString());
+
+  if (payload.payment_method)
+    formData.append("payment_method", payload.payment_method);
+
+  const res = await apiClient.post("/user/make-pending-payment", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+  return res.data;
 };
 
 // Propperty Plan Repayment

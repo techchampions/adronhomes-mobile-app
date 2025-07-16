@@ -109,7 +109,8 @@ const SelectPaymentMethod = ({
                   // TODO: call your backend API to confirm payment
                 },
                 onClose: () => {
-                  showToast("Payment popup closed", "error");
+                  showToast("Payment cancel...Please try again. ", "error");
+                  navigate(`/my-property/${res.plan?.id}`);
                 },
               });
             },

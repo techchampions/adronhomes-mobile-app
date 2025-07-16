@@ -35,5 +35,6 @@ export interface NotificationsData {
 
 export interface NotificationsResponse {
   success: boolean;
+  unread: number;
   notifications: NotificationsData;
 }

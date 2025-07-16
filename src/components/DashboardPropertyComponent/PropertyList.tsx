@@ -26,12 +26,16 @@ const PropertyList: React.FC<PropertyListProps> = ({
       return <ApiErrorBlock />;
     }
     return (
-      <div className="w-full grid grid-cols-1 md:grid-cols-3 justify-between items-center gap-4">
+      <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 justify-between items-center gap-4">
         {properties.map((plan) => (
           <PropertyCardProgress
+            payment_type={plan.plan.payment_type}
+            // transactionRef ={plan.plan.ref}
             key={plan.id}
+            user_property_id={plan.id}
             id={plan.plan_id}
             status={plan.status}
+            payment_method={plan.plan.payment_method}
             units={plan.plan?.number_of_unit || 1}
             imageUrl={plan.property?.display_image || "/treasure-park-bg.png"}
             title={plan.property?.name || ""}
