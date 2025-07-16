@@ -351,6 +351,9 @@ export const useMakePropertyPlanPendingPayment = () => {
       queryClient.invalidateQueries({
         queryKey: ["user-transactions"],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["property-plan-details"],
+      });
     },
   });
 };

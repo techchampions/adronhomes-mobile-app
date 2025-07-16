@@ -100,7 +100,7 @@ const MyPropertyDetail = () => {
     openModal(
       <SelectPaymentMethod
         amount={data?.plan_properties.paid_amount || 0}
-        user_property_id={data?.plan_properties.id || 0}
+        user_property_id={data?.user_property.id || 0}
         payment_type={Number(data?.plan_properties.payment_type)}
         goBack={closeModal}
       />
@@ -151,6 +151,116 @@ const MyPropertyDetail = () => {
   const viewPaymentList = () => {
     navigate(`/my-property/payment-list/${id}`);
   };
+
+  const renderButton = () => {
+    if (paymentProgress === 100) {
+      return (
+        <div className="flex items-center text-white gap-4">
+          <div className="flex items-center gap-1">
+            <FaCheckCircle className="text-white" />
+            <span className="text-sm text-white/50">Payment Complete</span>
+          </div>
+        </div>
+      );
+    } else if (
+      paymentProgress === 100 &&
+      infrastructureProgress === 100 &&
+      otherFeeProgress === 100
+    ) {
+      return (
+        <div className="flex items-center mb-5 gap-2 text-white">
+          <InlineLoader />
+          <p className="text-sm">Documents are being prepared</p>
+        </div>
+      );
+    } else if (
+      data?.payment.payment_type === "Bank Transfer" &&
+      data.payment.status === 0
+    ) {
+      return (
+        <div className="flex items-center gap-1 text-white/50">
+          <BsFillExclamationCircleFill />
+          <span className="text-xs">
+            Please wait... Payment is being confirmed.
+          </span>
+        </div>
+      );
+    } else if (
+      data?.payment.payment_type === "Bank Transfer" &&
+      data.payment.status === 2
+    ) {
+      return (
+        <div className="space-y-1">
+          <Button
+            onClick={completeInitialPropertyPayment}
+            label="Complete Initial Payment"
+            className="mt-0 bg-white !text-adron-green !w-fit px-6 text-sm"
+          />
+          <div className="flex items-center gap-1 text-white/50">
+            <BsFillExclamationCircleFill />
+            <span className="text-xs">
+              Sorry, Your Payment was disapproved... Try again.
+            </span>
+          </div>
+        </div>
+      );
+    } else if (
+      data?.payment.payment_type === "Paystack" &&
+      data.payment.status === 0
+    ) {
+      return (
+        <div className="space-y-1">
+          <Button
+            onClick={completeInitialPropertyPayment}
+            label="Complete Initial Payment"
+            className="mt-0 bg-white !text-adron-green !w-fit px-6 text-sm"
+          />
+          <div className="flex items-center gap-1 text-white/50">
+            <BsFillExclamationCircleFill />
+            <span className="text-xs">
+              Your Paystack Payment was not completed... Try again.
+            </span>
+          </div>
+        </div>
+      );
+    } else if (
+      data?.payment.payment_type === "Paystack" &&
+      data.payment.status === 2
+    ) {
+      return (
+        <div className="space-y-1">
+          <Button
+            onClick={completeInitialPropertyPayment}
+            label="Complete Initial Payment"
+            className="mt-0 bg-white !text-adron-green !w-fit px-6 text-sm"
+          />
+          <div className="flex items-center gap-1 text-white/50">
+            <BsFillExclamationCircleFill />
+            <span className="text-xs">
+              Your Paystack Payment Failed... Try again.
+            </span>
+          </div>
+        </div>
+      );
+    } else if (data?.payment.status === 1) {
+      return (
+        <Button
+          onClick={makePaymentForProperty}
+          label="Make Payment"
+          className="mt-5 bg-white !text-adron-green !w-fit px-6 text-sm"
+        />
+      );
+    } else {
+      return (
+        <Button
+          onClick={makePaymentForProperty}
+          label="Make Payment"
+          className="mt-5 bg-white !text-adron-green !w-fit px-6 text-sm"
+        />
+      );
+    }
+  };
+
   return (
     <div className="space-y-4">
       <div className="flex justify-between flex-col md:flex-row bg-adron-green rounded-3xl overflow-hidden">
@@ -218,7 +328,8 @@ const MyPropertyDetail = () => {
                   ></div>
                 </div>
               </div>
-              {paymentProgress >= 100 ? (
+              {renderButton()}
+              {/* {paymentProgress >= 100 ? (
                 infrastructureProgress >= 100 && otherFeeProgress >= 100 ? (
                   <div className="flex items-center mb-5 gap-2 text-white">
                     <InlineLoader />
@@ -253,7 +364,7 @@ const MyPropertyDetail = () => {
                     Please wait... Payment is being confirmed.
                   </span>
                 </div>
-              )}
+              )} */}
               <div className="flex bg-white/20 justify-between p-4 rounded-2xl">
                 <div className="flex flex-col gap-2">
                   <p className="text-sm text-white">
