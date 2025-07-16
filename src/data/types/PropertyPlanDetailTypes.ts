@@ -69,6 +69,26 @@ type PlanProperty = {
   paid_other_amount: number;
   property: Property;
 };
+
+interface UserProperty {
+  id: number;
+  property_id: number;
+  user_id: number;
+  type: number;
+  status: number;
+}
+
+interface PaymentDetail {
+  id: number;
+  property_id: number;
+  user_id: number;
+  property_plan_id: number;
+  amount_paid: number;
+  payment_type: string;
+  status: number;
+  reference: string;
+  purpose: string;
+}
 type Repayment = {
   id: number;
   property_id: number;
@@ -101,6 +121,8 @@ export interface InfrastructureBreakDown {
 
 export interface PlanPropertiesDetailResponse {
   success: boolean;
+  user_property: UserProperty;
+  payment: PaymentDetail;
   plan_properties: PlanProperty;
   next_repayment: Repayment;
   total_infrastructure_fee: number;
