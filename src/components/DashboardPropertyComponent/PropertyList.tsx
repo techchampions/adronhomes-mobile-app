@@ -31,6 +31,7 @@ const PropertyList: React.FC<PropertyListProps> = ({
           <PropertyCardProgress
             key={plan.id}
             id={plan.plan_id}
+            status={plan.status}
             units={plan.plan?.number_of_unit || 1}
             imageUrl={plan.property?.display_image || "/treasure-park-bg.png"}
             title={plan.property?.name || ""}

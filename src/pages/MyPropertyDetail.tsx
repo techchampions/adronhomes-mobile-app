@@ -21,6 +21,7 @@ import { FaCheckCircle, FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import InputInfrastructureAmount from "../components/DashboardMyPropertyComponents/InputAmount";
 import CopyButton from "../components/CopyButton";
 import { BsFillExclamationCircleFill } from "react-icons/bs";
+import MyPlanPaymentHistory from "../components/DashboardMyPropertyComponents/MyPropertyPaymentHistory";
 
 const MyPropertyDetail = () => {
   // const { data, isLoading, isError } = useGetUserTransactions();
@@ -565,10 +566,9 @@ const MyPropertyDetail = () => {
         </div>
       )}
 
-      <TransactionsList
+      <MyPlanPaymentHistory
         data={transactions}
         isLoading={isLoading}
-        type="payment"
         isError={isError}
       />
     </div>

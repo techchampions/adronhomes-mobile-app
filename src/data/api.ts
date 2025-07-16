@@ -10,7 +10,10 @@ import { UserWalletResponse } from "./types/userWalletTypes";
 import { UserPropertyPlanResponse } from "./types/userPropertiesTypes";
 import { PlanPropertiesDetailResponse } from "./types/PropertyPlanDetailTypes";
 import { NotificationsResponse } from "./types/notificationTypes";
-import { TransactionByIDResponse } from "./types/userTransactionByIDTypes";
+import {
+  TransactionByIDResponse,
+  WalletTransactionByIDResponse,
+} from "./types/userTransactionByIDTypes";
 import { NotificationByIDResponse } from "./types/NotificationByIDTypes";
 import { PropertyPlanPayload } from "./types/CreatePropertyPayload";
 import { PropertyPlanPaymentResponse } from "./types/PropertyPlanPaymentListTypes";
@@ -88,6 +91,13 @@ export const getTransactionByID = async (
   id: number | string
 ): Promise<TransactionByIDResponse> => {
   const res = await apiClient.get(`/user/transaction/${id}`);
+  return res.data;
+};
+// Get Wallet Transaction by ID
+export const getWalletTransactionByID = async (
+  id: number | string
+): Promise<WalletTransactionByIDResponse> => {
+  const res = await apiClient.get(`/user/wallet-transaction/${id}`);
   return res.data;
 };
 

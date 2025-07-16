@@ -20,6 +20,7 @@ import {
   getUserPropertiesPlanPaymentHistory,
   getUserTransactions,
   getUserWallet,
+  getWalletTransactionByID,
   infrastructurePayment,
   InitiatePropertyPurchaseResponse,
   makeEnquire,
@@ -44,7 +45,10 @@ import { UserWalletResponse } from "./types/userWalletTypes";
 import { UserPropertyPlanResponse } from "./types/userPropertiesTypes";
 import { PlanPropertiesDetailResponse } from "./types/PropertyPlanDetailTypes";
 import { NotificationsResponse } from "./types/notificationTypes";
-import { TransactionByIDResponse } from "./types/userTransactionByIDTypes";
+import {
+  TransactionByIDResponse,
+  WalletTransactionByIDResponse,
+} from "./types/userTransactionByIDTypes";
 import { NotificationByIDResponse } from "./types/NotificationByIDTypes";
 import { PropertyPlanPaymentResponse } from "./types/PropertyPlanPaymentListTypes";
 import { PropertiesSearchResultResponse } from "./types/SearchPropertiesResultTypes";
@@ -209,6 +213,14 @@ export const useGetTransactionByID = (id: number | string) => {
   return useQuery<TransactionByIDResponse>({
     queryKey: ["tranaction", id],
     queryFn: () => getTransactionByID(id),
+    enabled: !!id,
+  });
+};
+// Query hook for Wallet Transsaction by ID
+export const useGetWalletTransactionByID = (id: number | string) => {
+  return useQuery<WalletTransactionByIDResponse>({
+    queryKey: ["wallet-tranaction", id],
+    queryFn: () => getWalletTransactionByID(id),
     enabled: !!id,
   });
 };

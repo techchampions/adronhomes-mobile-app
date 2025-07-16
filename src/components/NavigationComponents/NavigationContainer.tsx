@@ -27,6 +27,7 @@ function NavigationContainer() {
         alt="Wash Track"
         className="w-[60%] mx-auto"
       />
+
       <div className="w-full py-1.5 bg-white rounded-2xl">
         <nav className="space-y-2 p-2">
           <NavItem

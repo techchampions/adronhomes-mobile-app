@@ -2,6 +2,8 @@ import React from "react";
 import { FaMapMarkerAlt } from "react-icons/fa";
 import Button from "../Button";
 import { useNavigate } from "react-router-dom";
+import { useModalStore } from "../../zustand/useModalStore";
+import SelectPaymentMethod from "../DashboardMyPropertyComponents/SelectPaymentMethod";
 
 type PropertyCardProps = {
   id: number;
@@ -13,6 +15,7 @@ type PropertyCardProps = {
   raisedAmount: number;
   targetAmount: number;
   units: number;
+  status: number;
 };
 
 const PropertyCard: React.FC<PropertyCardProps> = ({
@@ -25,14 +28,21 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
   raisedAmount,
   targetAmount,
   units,
+  status,
 }) => {
   const navigate = useNavigate();
+  const { openModal, closeModal } = useModalStore();
   // const progressPercent = Math.min(
   //   100,
   //   (raisedAmount / targetAmount) * 100
   // ).toFixed(1);
   const handleNavigation = () => {
     navigate(`/my-property/${id}`);
+  };
+  const makePayment = () => {
+    openModal(
+      <SelectPaymentMethod goBack={closeModal} amount={raisedAmount} />
+    );
   };
   const location = `${lga}, ${state}`;
   // if (units > 1) {
@@ -81,12 +91,19 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
       </div>
 
       {/* Button */}
-      <div className="mt-4">
+      <div className="mt-4 flex items-center justify-between">
         <Button
           label="View Details"
           className="!w-fit px-4 text-xs"
           onClick={handleNavigation}
         />
+        {status === 0 && (
+          <Button
+            label="Make Payment"
+            className="!w-fit px-4 text-xs"
+            onClick={makePayment}
+          />
+        )}
       </div>
     </div>
   );

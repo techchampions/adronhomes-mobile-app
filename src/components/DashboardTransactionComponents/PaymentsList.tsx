@@ -12,7 +12,6 @@ import SmallLoader from "../SmallLoader";
 
 type Props = {
   data: Transaction[];
-  type: "payment" | "transaction";
   isLoading: boolean;
   isError: boolean;
 };
@@ -20,12 +19,7 @@ type Props = {
 const tabs = ["All", "Completed", "Pending", "Failed"] as const;
 type Tab = (typeof tabs)[number];
 
-const TransactionsList: React.FC<Props> = ({
-  data,
-  isLoading,
-  isError,
-  type,
-}) => {
+const PaymentsList: React.FC<Props> = ({ data, isLoading, isError }) => {
   const [activeTab, setActiveTab] = useState<Tab>("All");
   const { openModal } = useModalStore();
 
@@ -70,7 +64,7 @@ const TransactionsList: React.FC<Props> = ({
       <div
         key={item.id}
         onClick={() => openModal(<TransactionDetail id={item.id} />)}
-        className="cursor-pointer grid grid-cols-2 md:grid-cols-4 justify-between items-center p-4 even:bg-gray-100 rounded-3xl"
+        className="cursor-pointer grid grid-cols-2 md:grid-cols-3 justify-between items-center p-4 even:bg-gray-100 rounded-3xl"
       >
         <div>
           <div className="font-medium text-xs md:text-sm truncate">
@@ -82,17 +76,14 @@ const TransactionsList: React.FC<Props> = ({
         </div>
         {renderStatusBadge(item.status || 0)}
 
-        <span
+        {/* <span
           className={`text-xs hidden md:block text-center capitalize py-1 rounded-2xl w-24 border-1 ${
-            item.transaction_type === "credit"
+            item.purpose === "fund"
               ? `text-adron-green border-adron-green bg-adron-green-100`
               : `text-red-500 border-red-500 bg-red-100`
           }`}
         >
-          {type === "transaction" || item.transaction_type
-            ? item.transaction_type
-            : "Debit"}
-          {/* {item.transaction_type} */}
+          {item.purpose === "fund" ? "Credit" : "Debit"}
         </span>
         <div
           className={`text-sm font-semibold text-end ${
@@ -102,6 +93,9 @@ const TransactionsList: React.FC<Props> = ({
           } `}
         >
           {item.transaction_type === "credit" ? `+` : `-`}
+          {formatPrice(item.amount || item.amount_paid)}
+        </div> */}
+        <div className={`text-sm font-semibold text-end`}>
           {formatPrice(item.amount || item.amount_paid)}
         </div>
       </div>
@@ -174,4 +168,4 @@ const TransactionsList: React.FC<Props> = ({
   );
 };
 
-export default TransactionsList;
+export default PaymentsList;

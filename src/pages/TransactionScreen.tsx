@@ -4,6 +4,7 @@ import TransactionsList from "../components/DashboardTransactionComponents/Trans
 import { formatPrice } from "../data/utils";
 import { useState } from "react";
 import Pagination from "../components/Pagination";
+import PaymentsList from "../components/DashboardTransactionComponents/PaymentsList";
 
 const TransactionsPage = () => {
   const [page, setPage] = useState(1);
@@ -34,10 +35,10 @@ const TransactionsPage = () => {
           </p>
         </div>
       </div>
-      <TransactionsList
+      <PaymentsList
         data={transactions}
         isLoading={isLoading}
-        type="payment"
+        // type="payment"
         isError={isError}
       />
       <Pagination
