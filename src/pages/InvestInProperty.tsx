@@ -115,7 +115,6 @@ export default function InvestmentForm() {
         propertyId: id ? Number(id) : null, // Convert string ID to number
       };
       setPaymentDetails(planDetails);
-      console.log("planDetails", planDetails);
       openModal(<InputMarketerId />);
     } else {
       const planDetails = {
@@ -135,7 +134,6 @@ export default function InvestmentForm() {
         propertyId: id ? Number(id) : null, // Convert string ID to number
       };
       setPaymentDetails(planDetails);
-      console.log("planDetails", planDetails);
       openModal(<InputMarketerId />);
     }
   };
@@ -148,7 +146,6 @@ export default function InvestmentForm() {
       // const { paymentDuration, startDate } = values;
 
       // Only calculate if both are available
-      console.log(selectedPaymentType);
       if (values.paymentDuration && values.startDate) {
         const months = parseInt(values.paymentDuration);
         if (!isNaN(months)) {
