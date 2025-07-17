@@ -33,7 +33,7 @@ const login = async (
   { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void }
 ) => {
   try {
-    const response = await apiClient.post("/login/", {
+    const response = await apiClient.post("/login", {
       email: values.email,
       password: values.password,
     });
@@ -41,7 +41,6 @@ const login = async (
     if (response.data.success && response.data.otpVerified) {
       showToast("User LoggedIn successfully!", "success");
       setToken(response.data.token); // Save token in store
-      // await getUser();
       setHasCompletedOnboarding(true); // Set onboarding state in store
       setIsLoggedIn(true); // Set logged-in state in store
       setStep("onboarding complete");

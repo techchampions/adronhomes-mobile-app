@@ -87,7 +87,6 @@ const MyPropertyDetail = () => {
   const infrastructureProgress =
     data?.plan_properties.infrastructure_percentage || 0;
   const otherFeeProgress = data?.plan_properties.other_percentage || 0;
-  console.log("other", OtherFeesBreakDown);
   const handleViewProperty = () => {
     navigate(`/properties/${data?.plan_properties.property.id}`);
   };
@@ -96,7 +95,6 @@ const MyPropertyDetail = () => {
     setPaymentDetails({
       planId: data?.plan_properties.id,
     });
-    console.log("plan ID", data?.plan_properties.id, "Plan ID state", planId);
     openModal(
       <SelectPaymentMethod
         amount={data?.plan_properties.paid_amount || 0}
@@ -111,7 +109,6 @@ const MyPropertyDetail = () => {
     setPaymentDetails({
       planId: data?.plan_properties.id,
     });
-    console.log("plan ID", data?.plan_properties.id, "Plan ID state", planId);
     openModal(
       <InputAmount
         goBack={makePaymentForProperty}

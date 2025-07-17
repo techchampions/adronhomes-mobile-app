@@ -38,7 +38,6 @@ export const calculatePaymentDetails = (
   // property?.initial_deposit || 0 * values.units;
 
   const remPrice = (property?.price || 0) - (property?.initial_deposit || 0);
-  console.log(remPrice);
 
   let weeklyAmount =
     values.paymentSchedule === "Monthly"
