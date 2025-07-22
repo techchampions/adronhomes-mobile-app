@@ -17,6 +17,7 @@ import { useNavigate } from "react-router-dom";
 import { usePaystackPayment } from "../../hooks/usePaystackPayment";
 import { useUserStore } from "../../zustand/UserStore";
 import { ApiError } from "../DashboardHomeComponents/SelectPaymentMethod";
+import { useContractDeatilStore } from "../../zustand/ContractDetailsStore";
 
 const SelectPaymentMethod = ({
   goBack,
@@ -29,6 +30,7 @@ const SelectPaymentMethod = ({
 }) => {
   const { showToast } = useToastStore();
   const { user } = useUserStore();
+  const contractDetails = useContractDeatilStore();
   const paystack = usePaystackPayment();
   const { data: userWalletData, isLoading, isError } = useGetUserWalletdata();
   const navigate = useNavigate();
@@ -63,6 +65,32 @@ const SelectPaymentMethod = ({
     check();
   }, [navigate, totalAmount]);
 
+  const contractDetailPayload = {
+    contract_business_type: contractDetails.contract_business_type,
+    contract_subscriber_name_1: contractDetails.contract_subscriber_name_1,
+    contract_subscriber_name_2: contractDetails.contract_subscriber_name_2,
+    contract_subscriber_name_3: contractDetails.contract_subscriber_name_3,
+    contract_additional_name: contractDetails.contract_additional_name,
+    contract_marital_status: contractDetails.contract_marital_status,
+    contract_gender: contractDetails.contract_gender,
+    contract_date_of_birth: contractDetails.contract_date_of_birth,
+    contract_nationality: contractDetails.contract_nationality,
+    contract_residential_address: contractDetails.contract_residential_address,
+    contract_town: contractDetails.contract_town,
+    contract_state: contractDetails.contract_state,
+    contract_country: contractDetails.contract_country,
+    contract_email: contractDetails.contract_email,
+    contract_sms: contractDetails.contract_sms,
+    contract_employer_address: contractDetails.contract_employer_address,
+    contract_occupation: contractDetails.contract_occupation,
+    contract_employer: contractDetails.contract_employer,
+    contract_next_of_kin_phone: contractDetails.contract_next_of_kin_phone,
+    contract_next_of_kin_address: contractDetails.contract_next_of_kin_address,
+    contract_next_of_kin: contractDetails.contract_next_of_kin,
+    contract_next_of_kin_relationship:
+      contractDetails.contract_next_of_kin_relationship,
+  };
+
   const handleContinue = () => {
     if (selectedPaymentMethod == "Bank Transfer") {
       openModal(
@@ -72,6 +100,7 @@ const SelectPaymentMethod = ({
       if (isBuyNow) {
         makePayment(
           {
+            ...contractDetailPayload,
             ...(paymentType == "One Time"
               ? {
                   payment_method: "paystack",
@@ -104,13 +133,13 @@ const SelectPaymentMethod = ({
                   openModal(
                     <PaymentSuccessfull text="Payment received successfully." />
                   );
-                  navigate(`/my-property/${res.plan?.id}`);
+                  navigate(`/my-property/${res.plan?.id}`, { replace: true });
 
                   // TODO: call your backend API to confirm payment
                 },
                 onClose: () => {
                   showToast("Payment cancel...Please try again. ", "error");
-                  navigate(`/my-property/${res.plan?.id}`);
+                  navigate(`/my-property/${res.plan?.id}`, { replace: true });
                 },
               });
             },
@@ -165,6 +194,7 @@ const SelectPaymentMethod = ({
         if (userWalletData?.wallet_balance || 0 > amount) {
           makePayment(
             {
+              ...contractDetailPayload,
               ...(paymentType == "One Time"
                 ? {
                     payment_method: "virtual_wallet",
@@ -192,7 +222,7 @@ const SelectPaymentMethod = ({
                 openModal(
                   <PaymentSuccessfull text="Payment received successfully." />
                 );
-                navigate(`/my-property/${res.plan?.id}`);
+                navigate(`/my-property/${res.plan?.id}`, { replace: true });
               },
               onError: (error: ApiError) => {
                 const message =

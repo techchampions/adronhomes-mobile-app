@@ -39,7 +39,7 @@ const AddFundAmount = ({ goBack }: { goBack: () => void }) => {
           }
         >
           {({ isValid, dirty, setFieldValue, values, touched, errors }) => (
-            <Form className="flex flex-col justify-between min-h-[400px]">
+            <Form className="flex flex-col justify-between min-h-[200px]">
               <div className="flex flex-col gap-4">
                 <InputField
                   name="amount"

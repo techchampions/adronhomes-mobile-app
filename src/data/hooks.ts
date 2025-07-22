@@ -294,42 +294,24 @@ export const useFundWallet = () => {
 // Query hook for creating a new property plan
 export const useCreatePropertyPlan = () => {
   const queryClient = useQueryClient();
-  const { showToast } = useToastStore();
-  const { openModal } = useModalStore();
-
-  return useMutation(
-    // <
-    //   InitiatePropertyPurchaseResponse,
-    //   ApiError,
-    //   Partial<PropertyPlanPayload>
-    // >
-    {
-      mutationFn: createPropertyPlan,
-      onSuccess: () => {
-        // Refetch relevant data if needed
-        queryClient.invalidateQueries({
-          queryKey: ["user-properties-plan"],
-        });
-        queryClient.invalidateQueries({
-          queryKey: ["dashboard-data"],
-        });
-        queryClient.invalidateQueries({
-          queryKey: ["user-wallet"],
-        });
-        queryClient.invalidateQueries({
-          queryKey: ["user-transactions"],
-        });
-      },
-      // onError(error, variables, context) {
-      //   // openModal(<StatusFailed text="Oops... there's been an Error!" />);
-      //   const message =
-      //     error?.response?.data?.message ||
-      //     error?.message ||
-      //     "Something went wrong";
-      //   showToast(message, "error");
-      // },
-    }
-  );
+  return useMutation({
+    mutationFn: createPropertyPlan,
+    onSuccess: () => {
+      // Refetch relevant data if needed
+      queryClient.invalidateQueries({
+        queryKey: ["user-properties-plan"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["dashboard-data"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["user-wallet"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["user-transactions"],
+      });
+    },
+  });
 };
 // Query hook for creating a new property plan
 export const useMakePropertyPlanPendingPayment = () => {

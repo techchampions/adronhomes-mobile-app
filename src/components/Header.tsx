@@ -9,10 +9,13 @@ import { useSearchStore } from "../zustand/SearchStore";
 import CopyButton from "./CopyButton";
 import { useGetNotifications } from "../data/hooks";
 import Button from "./Button";
+import { useModalStore } from "../zustand/useModalStore";
+import AddFundAmount from "./DashboardHomeComponents/AddFundAmount";
 
 const Header = ({ pageTitle }: { pageTitle: string }) => {
   const navigate = useNavigate();
   const { user } = useUserStore();
+  const { openModal } = useModalStore();
   const { setSearchResults, setLoading } = useSearchStore();
   const { data: notificationData } = useGetNotifications(1);
   const unReadCount = notificationData?.unread || 0;
@@ -22,6 +25,12 @@ const Header = ({ pageTitle }: { pageTitle: string }) => {
   };
   const goBack = () => {
     navigate(-1);
+  };
+  const handleFundWallet = () => {
+    return openModal(<AddFundAmount goBack={goBack} />);
+  };
+  const handleBuyProperty = () => {
+    navigate("/dashboard/new-property");
   };
   return (
     <div className="hidden lg:flex justify-between items-center bg-white rounded-3xl p-8 mb-5">
@@ -76,7 +85,16 @@ const Header = ({ pageTitle }: { pageTitle: string }) => {
           </span>
         </div>
         <div className="">
-          <Button label="Buy Property" className="px-6 text-sm" />
+          <Button
+            label="Fund Wallet"
+            className="px-6 text-sm"
+            onClick={handleFundWallet}
+          />
+          {/* <Button
+            label="Buy Property"
+            className="px-6 text-sm"
+            onClick={handleBuyProperty}
+          /> */}
         </div>
         {/* <div className="border border-adron-body rounded-xl px-4 py-1 gap-1 flex flex-col">
           <div className="flex justify-between w-full gap-4">
