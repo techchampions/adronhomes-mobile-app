@@ -16,6 +16,7 @@ import {
 } from "./types/userTransactionByIDTypes";
 import { NotificationByIDResponse } from "./types/NotificationByIDTypes";
 import {
+  NewPropertyPlanPayload,
   PendingPropertyPlanPayload,
   PropertyPlanPayload,
 } from "./types/CreatePropertyPayload";
@@ -291,7 +292,7 @@ export type InitiatePropertyPurchaseResponse = {
 
 // Create Property Plan
 export const createPropertyPlan = async (
-  payload: Partial<PropertyPlanPayload>
+  payload: Partial<NewPropertyPlanPayload>
 ): Promise<InitiatePropertyPurchaseResponse> => {
   const formData = new FormData();
 
@@ -327,24 +328,83 @@ export const createPropertyPlan = async (
 
   if (payload.proof_of_payment)
     formData.append("proof_of_payment", payload.proof_of_payment);
+
+  // Append contract details fields
+  if (payload.contract_business_type)
+    formData.append("contract_business_type", payload.contract_business_type);
+  if (payload.contract_subscriber_name_1)
+    formData.append(
+      "contract_subscriber_name_1",
+      payload.contract_subscriber_name_1
+    );
+  if (payload.contract_subscriber_name_2)
+    formData.append(
+      "contract_subscriber_name_2",
+      payload.contract_subscriber_name_2
+    );
+  if (payload.contract_subscriber_name_3)
+    formData.append(
+      "contract_subscriber_name_3",
+      payload.contract_subscriber_name_3
+    );
+  if (payload.contract_additional_name)
+    formData.append(
+      "contract_additional_name",
+      payload.contract_additional_name
+    );
+  if (payload.contract_marital_status)
+    formData.append("contract_marital_status", payload.contract_marital_status);
+  if (payload.contract_gender)
+    formData.append("contract_gender", payload.contract_gender);
+  if (payload.contract_date_of_birth)
+    formData.append("contract_date_of_birth", payload.contract_date_of_birth);
+  if (payload.contract_nationality)
+    formData.append("contract_nationality", payload.contract_nationality);
+  if (payload.contract_residential_address)
+    formData.append(
+      "contract_residential_address",
+      payload.contract_residential_address
+    );
+  if (payload.contract_town)
+    formData.append("contract_town", payload.contract_town);
+  if (payload.contract_state)
+    formData.append("contract_state", payload.contract_state);
+  if (payload.contract_country)
+    formData.append("contract_country", payload.contract_country);
+  if (payload.contract_email)
+    formData.append("contract_email", payload.contract_email);
+  if (payload.contract_sms)
+    formData.append("contract_sms", payload.contract_sms);
+  if (payload.contract_employer_address)
+    formData.append(
+      "contract_employer_address",
+      payload.contract_employer_address
+    );
+  if (payload.contract_occupation)
+    formData.append("contract_occupation", payload.contract_occupation);
+  if (payload.contract_employer)
+    formData.append("contract_employer", payload.contract_employer);
+  if (payload.contract_next_of_kin_phone)
+    formData.append("next_of_kin_phone", payload.contract_next_of_kin_phone);
+  if (payload.contract_next_of_kin_address)
+    formData.append(
+      "contract_next_of_kin_address",
+      payload.contract_next_of_kin_address
+    );
+  if (payload.contract_next_of_kin)
+    formData.append("contract_next_of_kin", payload.contract_next_of_kin);
+  if (payload.contract_next_of_kin_relationship)
+    formData.append(
+      "contract_next_of_kin_relationship",
+      payload.contract_next_of_kin_relationship
+    );
+
   const res = await apiClient.post("/user/buy-property", formData, {
     headers: {
       "Content-Type": "multipart/form-data",
     },
   });
   return res.data;
-  // try {
-  //   const res = await apiClient.post("/user/buy-property", formData, {
-  //     headers: {
-  //       "Content-Type": "multipart/form-data",
-  //     },
-  //   });
-  //   return res.data;
-  // } catch (error) {
-  //   console.log("create plan error", error);
-  //   // This ensures errors are properly propagated
-  //   throw error;
-  // }
 };
 export const makePendingPropertyPlanPayment = async (
   payload: Partial<PendingPropertyPlanPayload>

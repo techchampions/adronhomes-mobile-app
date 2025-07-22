@@ -15,6 +15,7 @@ import PaymentPending from "../PaymentPending";
 import { ApiError } from "../DashboardHomeComponents/SelectPaymentMethod";
 import { useUserStore } from "../../zustand/UserStore";
 import StatusFailed from "../StatusFailed";
+import { useContractDeatilStore } from "../../zustand/ContractDetailsStore";
 const BankTransfer = ({
   goBack,
   amount,
@@ -48,6 +49,33 @@ const BankTransfer = ({
   } = usePaymentBreakDownStore();
   const { showToast } = useToastStore();
   const { closeModal, openModal } = useModalStore();
+  const contractDetails = useContractDeatilStore();
+
+  const contractDetailPayload = {
+    contract_business_type: contractDetails.contract_business_type,
+    contract_subscriber_name_1: contractDetails.contract_subscriber_name_1,
+    contract_subscriber_name_2: contractDetails.contract_subscriber_name_2,
+    contract_subscriber_name_3: contractDetails.contract_subscriber_name_3,
+    contract_additional_name: contractDetails.contract_additional_name,
+    contract_marital_status: contractDetails.contract_marital_status,
+    contract_gender: contractDetails.contract_gender,
+    contract_date_of_birth: contractDetails.contract_date_of_birth,
+    contract_nationality: contractDetails.contract_nationality,
+    contract_residential_address: contractDetails.contract_residential_address,
+    contract_town: contractDetails.contract_town,
+    contract_state: contractDetails.contract_state,
+    contract_country: contractDetails.contract_country,
+    contract_email: contractDetails.contract_email,
+    contract_sms: contractDetails.contract_sms,
+    contract_employer_address: contractDetails.contract_employer_address,
+    contract_occupation: contractDetails.contract_occupation,
+    contract_employer: contractDetails.contract_employer,
+    contract_next_of_kin_phone: contractDetails.contract_next_of_kin_phone,
+    contract_next_of_kin_address: contractDetails.contract_next_of_kin_address,
+    contract_next_of_kin: contractDetails.contract_next_of_kin,
+    contract_next_of_kin_relationship:
+      contractDetails.contract_next_of_kin_relationship,
+  };
 
   const handlePaymentSuccess = (values: typeof initialValues) => {
     if (values.bank_name && values.proof) {
@@ -55,6 +83,7 @@ const BankTransfer = ({
         let payload = {};
         if (paymentType === "One Time") {
           payload = {
+            ...contractDetailPayload,
             payment_method: "bank_transfer",
             payment_type: 1,
             monthly_duration: Number(paymentDuration),
@@ -70,6 +99,7 @@ const BankTransfer = ({
           };
         } else {
           payload = {
+            ...contractDetailPayload,
             payment_method: "bank_transfer",
             payment_type: 2,
             monthly_duration: Number(paymentDuration),
@@ -89,7 +119,7 @@ const BankTransfer = ({
             openModal(
               <PaymentPending text="Your Payment is being confrimed by Admin" />
             );
-            navigate(`/my-property/${data.plan?.id}`);
+            navigate(`/my-property/${data.plan?.id}`, { replace: true });
           },
           onError(error: ApiError) {
             openModal(<StatusFailed text="Oops... there's been an Error!" />);

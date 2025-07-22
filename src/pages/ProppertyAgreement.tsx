@@ -49,7 +49,9 @@ const ProppertyAgreement = () => {
         <Button
           label="Proceed to Payment"
           className="bg-adron-green px-6 !w-fit"
-          onClick={() => navigate(`/property/${id}/payment-method`)}
+          onClick={() =>
+            navigate(`/property/${id}/payment-method`, { replace: true })
+          }
         />
       </div>
     </div>

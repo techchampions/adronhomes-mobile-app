@@ -26,6 +26,7 @@ import MyPropertyDetail from "../pages/MyPropertyDetail";
 import MyPropertyPaymentList from "../pages/MyPropertyPaymentList";
 import FAQAccordion from "../pages/FAQScreen";
 import PropertySearchResultScreen from "../pages/PropertySearchResult";
+import InvestmentDetailForm from "../pages/InvestmentDetailForm";
 
 const DashboardScreen = lazy(() => import("../pages/DashboardScreen"));
 
@@ -72,6 +73,10 @@ const AllRoutes = () => {
                 <Route
                   path="/properties/:id"
                   element={<PropertyDetail />}
+                />{" "}
+                <Route
+                  path="/invest-property-form/:id"
+                  element={<InvestmentDetailForm />}
                 />{" "}
                 <Route
                   path="/invest-property/:id"
