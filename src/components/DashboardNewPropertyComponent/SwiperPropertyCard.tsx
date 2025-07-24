@@ -23,9 +23,8 @@ import Button from "../Button";
 import { formatPrice } from "../../data/utils";
 import apiClient from "../../data/apiClient";
 import { useToastStore } from "../../zustand/useToastStore";
-import { PropertyType } from "../../data/types/propertiesPageTypes";
+import { Property, PropertyType } from "../../data/types/propertiesPageTypes";
 import { IoGiftOutline } from "react-icons/io5";
-import { Property } from "../../data/types/GetPropertyByIdResponse";
 // import { useToggleSaveProperty } from "../../data/hooks";
 
 interface Props {

@@ -80,6 +80,7 @@ export interface Property {
   discount_name: string;
   discount_percentage: string | number;
   total_amount: number;
+  property_duration_limit: number;
 }
 
 export interface SavedProperty {
