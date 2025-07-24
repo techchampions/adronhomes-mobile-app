@@ -34,7 +34,8 @@ const PropertyDetail = () => {
   const address = `${data?.data.properties[0].street_address}, ${data?.data.properties[0].lga}, ${data?.data.properties[0].state} ${data?.data.properties[0].country}`;
 
   const invest = () => {
-    navigate(`/invest-property/${id}`);
+    // navigate(`/invest-property/${id}`);
+    navigate(`/invest-property-form/${id}`);
   };
 
   // const NextArrow = ({ onClick }: { onClick?: () => void }) => (
