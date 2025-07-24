@@ -74,7 +74,7 @@ export interface Property {
   subscriber_form: string;
   status: string;
   property_duration_limit: number;
-  payment_schedule: string | null;
+  payment_schedule: string[];
   payment_type: string;
   is_sold: number;
   is_active: number;

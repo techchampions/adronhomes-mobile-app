@@ -75,6 +75,7 @@ const BankTransfer = ({
     contract_next_of_kin: contractDetails.contract_next_of_kin,
     contract_next_of_kin_relationship:
       contractDetails.contract_next_of_kin_relationship,
+    contract_profile_picture: contractDetails.contract_profile_picture,
   };
 
   const handlePaymentSuccess = (values: typeof initialValues) => {
@@ -123,11 +124,12 @@ const BankTransfer = ({
           },
           onError(error: ApiError) {
             openModal(<StatusFailed text="Oops... there's been an Error!" />);
-            const message =
-              error?.response?.data?.message ||
-              error?.message ||
-              "Something went wrong";
-            showToast(message, "error");
+            // const message =
+            //   error?.response?.data?.message ||
+            //   error?.message ||
+            //   "Something went wrong";
+            // showToast(message, "error");
+            showToast("Failed to complete payment", "error");
           },
         });
       } else {

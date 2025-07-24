@@ -25,26 +25,29 @@ import apiClient from "../../data/apiClient";
 import { useToastStore } from "../../zustand/useToastStore";
 import { PropertyType } from "../../data/types/propertiesPageTypes";
 import { IoGiftOutline } from "react-icons/io5";
+import { Property } from "../../data/types/GetPropertyByIdResponse";
 // import { useToggleSaveProperty } from "../../data/hooks";
 
 interface Props {
-  property: {
-    id: number;
-    size: number | string;
-    name: string;
-    street_address: string;
-    lga: string;
-    state: string;
-    country: string;
-    price: number;
-    features: string[];
-    photos: string[];
-    type: PropertyType;
-    is_saved: boolean;
-    is_bought: boolean;
-    is_discount: boolean;
-    discount_percentage: string | number;
-  };
+  // property: {
+  //   id: number;
+  //   size: number | string;
+  //   name: string;
+  //   street_address: string;
+  //   lga: string;
+  //   state: string;
+  //   country: string;
+  //   price: number;
+  //   features: string[];
+  //   photos: string[];
+  //   type: PropertyType;
+  //   is_saved: boolean;
+  //   is_bought: boolean;
+  //   is_discount: boolean;
+  //   discount_percentage: string | number;
+
+  // };
+  property: Property;
 }
 
 export default function SwiperPropertyCard({ property }: Props) {
@@ -224,8 +227,14 @@ export default function SwiperPropertyCard({ property }: Props) {
             {property.type.name}
           </div>
         </div>
+        <div className="flex items-center gap-2 text-[10px]">
+          <div className="">Payment Duration:</div>
+          <div className=" font-bold">
+            {property.property_duration_limit} month(s) max
+          </div>
+        </div>
 
-        <div className="flex items-center justify-between mt-[20px] md:mt-[43px] gap-2">
+        <div className="flex items-center justify-between gap-2">
           <Button
             label="View Property"
             className="bg-adron-green text-xs py-3"

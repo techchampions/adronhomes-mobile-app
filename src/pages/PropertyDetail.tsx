@@ -374,7 +374,11 @@ const PropertyDetail = () => {
                     </div>
                     <div className="flex-flex-col">
                       <p className="text-xs text-gray-500">Payment Schedule</p>
-                      <p className="text-sm">Weekly, Monthly</p>
+                      <p className="text-sm capitalize">
+                        {data?.data.properties[0].payment_schedule.map(
+                          (item, index) => `${item} `
+                        )}
+                      </p>
                     </div>
                     <div className="flex-flex-col bg-[#CFFFCF] rounded-xl p-4">
                       <p className="text-xs text-gray-500">Fees & Charges</p>

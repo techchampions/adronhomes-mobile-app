@@ -89,69 +89,71 @@ const SelectPaymentMethod = ({
     contract_next_of_kin: contractDetails.contract_next_of_kin,
     contract_next_of_kin_relationship:
       contractDetails.contract_next_of_kin_relationship,
+    contract_profile_picture: contractDetails.contract_profile_picture,
   };
 
   const handleContinue = () => {
+    let payload = {};
     if (selectedPaymentMethod == "Bank Transfer") {
       openModal(
         <BankTransfer goBack={goBack} amount={amount} isBuyNow={isBuyNow} />
       );
     } else if (selectedPaymentMethod == "Paystack") {
       if (isBuyNow) {
-        makePayment(
-          {
+        if (paymentType === "One Time") {
+          payload = {
             ...contractDetailPayload,
-            ...(paymentType == "One Time"
-              ? {
-                  payment_method: "paystack",
-                  payment_type: 1,
-                  property_id: Number(propertyId),
-                  paid_amount: totalAmount,
-                  marketer_code: marketerId,
-                  number_of_unit: numberOfUnits,
-                }
-              : {
-                  payment_method: "paystack",
-                  payment_type: 2,
-                  monthly_duration: Number(paymentDuration),
-                  property_id: Number(propertyId),
-                  start_date: startDate,
-                  end_date: endDate,
-                  repayment_schedule: paymentSchedule,
-                  paid_amount: totalAmount,
-                  marketer_code: marketerId,
-                  number_of_unit: numberOfUnits,
-                }),
-          },
-          {
-            onSuccess: (res) => {
-              paystack({
-                email: user?.email || "",
-                amount: totalAmount, // in Naira
-                reference: res.payment.reference,
-                onSuccess: (ref) => {
-                  openModal(
-                    <PaymentSuccessfull text="Payment received successfully." />
-                  );
-                  navigate(`/my-property/${res.plan?.id}`, { replace: true });
+            payment_method: "paystack",
+            payment_type: 1,
+            property_id: Number(propertyId),
+            paid_amount: totalAmount,
+            marketer_code: marketerId,
+            number_of_unit: numberOfUnits,
+          };
+        } else {
+          payload = {
+            ...contractDetailPayload,
+            payment_method: "paystack",
+            payment_type: 2,
+            monthly_duration: Number(paymentDuration),
+            property_id: Number(propertyId),
+            start_date: startDate,
+            end_date: endDate,
+            repayment_schedule: paymentSchedule,
+            paid_amount: totalAmount,
+            marketer_code: marketerId,
+            number_of_unit: numberOfUnits,
+          };
+        }
+        makePayment(payload, {
+          onSuccess: (res) => {
+            paystack({
+              email: user?.email || "",
+              amount: totalAmount, // in Naira
+              reference: res.payment.reference,
+              onSuccess: (ref) => {
+                openModal(
+                  <PaymentSuccessfull text="Payment received successfully." />
+                );
+                navigate(`/my-property/${res.plan?.id}`, { replace: true });
 
-                  // TODO: call your backend API to confirm payment
-                },
-                onClose: () => {
-                  showToast("Payment cancel...Please try again. ", "error");
-                  navigate(`/my-property/${res.plan?.id}`, { replace: true });
-                },
-              });
-            },
-            onError: (error: ApiError) => {
-              const message =
-                error?.response?.data?.message ||
-                error?.message ||
-                "Something went wrong";
-              showToast(message, "error");
-            },
-          }
-        );
+                // TODO: call your backend API to confirm payment
+              },
+              onClose: () => {
+                showToast("Payment cancel...Please try again. ", "error");
+                navigate(`/my-property/${res.plan?.id}`, { replace: true });
+              },
+            });
+          },
+          onError: (error: ApiError) => {
+            // const message =
+            //   error?.response?.data?.message ||
+            //   error?.message ||
+            //   "Something went wrong";
+            // showToast(message, "error");
+            showToast("Failed to complete payment", "error");
+          },
+        });
       } else {
         makeRepayment(
           {
@@ -192,47 +194,47 @@ const SelectPaymentMethod = ({
       // Check if payment is to buy property or Recuring payment
       if (isBuyNow) {
         if (userWalletData?.wallet_balance || 0 > amount) {
-          makePayment(
-            {
+          if (paymentType === "One Time") {
+            payload = {
               ...contractDetailPayload,
-              ...(paymentType == "One Time"
-                ? {
-                    payment_method: "virtual_wallet",
-                    payment_type: 1,
-                    property_id: Number(propertyId),
-                    paid_amount: totalAmount,
-                    marketer_code: marketerId,
-                    number_of_unit: numberOfUnits,
-                  }
-                : {
-                    payment_method: "virtual_wallet",
-                    payment_type: 2,
-                    monthly_duration: Number(paymentDuration),
-                    property_id: Number(propertyId),
-                    start_date: startDate,
-                    end_date: endDate,
-                    repayment_schedule: paymentSchedule,
-                    paid_amount: totalAmount,
-                    marketer_code: marketerId,
-                    number_of_unit: numberOfUnits,
-                  }),
+              payment_method: "virtual_wallet",
+              payment_type: 1,
+              property_id: Number(propertyId),
+              paid_amount: totalAmount,
+              marketer_code: marketerId,
+              number_of_unit: numberOfUnits,
+            };
+          } else {
+            payload = {
+              ...contractDetailPayload,
+              payment_method: "virtual_wallet",
+              payment_type: 2,
+              monthly_duration: Number(paymentDuration),
+              property_id: Number(propertyId),
+              start_date: startDate,
+              end_date: endDate,
+              repayment_schedule: paymentSchedule,
+              paid_amount: totalAmount,
+              marketer_code: marketerId,
+              number_of_unit: numberOfUnits,
+            };
+          }
+          makePayment(payload, {
+            onSuccess: (res) => {
+              openModal(
+                <PaymentSuccessfull text="Payment received successfully." />
+              );
+              navigate(`/my-property/${res.plan?.id}`, { replace: true });
             },
-            {
-              onSuccess: (res) => {
-                openModal(
-                  <PaymentSuccessfull text="Payment received successfully." />
-                );
-                navigate(`/my-property/${res.plan?.id}`, { replace: true });
-              },
-              onError: (error: ApiError) => {
-                const message =
-                  error?.response?.data?.message ||
-                  error?.message ||
-                  "Something went wrong";
-                showToast(message, "error");
-              },
-            }
-          );
+            onError: (error: ApiError) => {
+              // const message =
+              //   error?.response?.data?.message ||
+              //   error?.message ||
+              //   "Something went wrong";
+              // showToast(message, "error");
+              showToast("Failed to complete payment", "error");
+            },
+          });
         } else {
           showToast("Insufficient balance", "error");
         }
