@@ -7,6 +7,7 @@ const tabs = [
   // "Customer Picture",
   // "Employer",
   "Next of Kin",
+  "PassPort Photo",
   // "Document Management",
 ];
 

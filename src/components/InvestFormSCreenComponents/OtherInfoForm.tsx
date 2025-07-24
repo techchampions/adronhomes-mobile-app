@@ -77,7 +77,7 @@ export const OtherInfoForm: React.FC<Props> = ({ activeTab, setActiveTab }) => {
 
               <SelectField
                 name="businessType"
-                options={["Individual", "Company", "Joint", "Minor"]}
+                options={["", "Individual", "Company", "Joint", "Minor"]}
               />
             </div>
             <div className="">

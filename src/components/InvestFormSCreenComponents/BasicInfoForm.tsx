@@ -67,7 +67,10 @@ export const CustomerInfoForm: React.FC<Props> = ({
       initialValues={initialValues}
       validationSchema={customerInfoSchema}
       onSubmit={(values) => {
-        setActiveTab(activeTab + 1);
+        const originalDOB = values.dateOfBirth || "";
+        const date = new Date(originalDOB);
+        const formatedDOB = date.toISOString();
+
         setContractDetails({
           contract_email: values.email,
           contract_sms: values.phoneSMS,
@@ -77,9 +80,10 @@ export const CustomerInfoForm: React.FC<Props> = ({
           contract_country: values.country,
           contract_residential_address: values.residentialAddress,
           contract_nationality: values.nationality,
-          contract_date_of_birth: values.dateOfBirth,
+          contract_date_of_birth: formatedDOB,
           contract_marital_status: values.maritalStatus,
         });
+        setActiveTab(activeTab + 1);
       }}
     >
       {({ errors, touched, isValid }) => (
@@ -102,10 +106,7 @@ export const CustomerInfoForm: React.FC<Props> = ({
                 Select Gender
               </label>
 
-              <SelectField
-                name="gender"
-                options={["Male", "Female", "Confused"]}
-              />
+              <SelectField name="gender" options={["", "male", "female"]} />
             </div>
             <div className="">
               <label htmlFor="" className="text-sm text-gray-400">
@@ -114,7 +115,7 @@ export const CustomerInfoForm: React.FC<Props> = ({
 
               <SelectField
                 name="maritalStatus"
-                options={["Single", "Maried", "Adewale"]}
+                options={["", "Single", "Maried"]}
               />
             </div>
             <div className="">

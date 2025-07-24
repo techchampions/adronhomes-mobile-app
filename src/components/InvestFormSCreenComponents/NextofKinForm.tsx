@@ -45,7 +45,8 @@ export const NextofKinForm: React.FC<Props> = ({ activeTab, setActiveTab }) => {
           contract_next_of_kin_address: values.address,
           contract_next_of_kin_phone: values.phone,
         });
-        navigate(`/invest-property/${id}`);
+        // navigate(`/invest-property/${id}`);
+        setActiveTab(activeTab + 1);
       }}
     >
       {({ errors, touched, isValid }) => (

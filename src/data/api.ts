@@ -295,7 +295,7 @@ export const createPropertyPlan = async (
   payload: Partial<NewPropertyPlanPayload>
 ): Promise<InitiatePropertyPurchaseResponse> => {
   const formData = new FormData();
-
+  console.log("buy property payload:", payload);
   if (payload.property_id !== undefined)
     formData.append("property_id", payload.property_id.toString());
 
@@ -398,6 +398,13 @@ export const createPropertyPlan = async (
       "contract_next_of_kin_relationship",
       payload.contract_next_of_kin_relationship
     );
+
+  if (payload.contract_profile_picture) {
+    formData.append(
+      "contract_profile_picture",
+      payload.contract_profile_picture
+    );
+  }
 
   const res = await apiClient.post("/user/buy-property", formData, {
     headers: {

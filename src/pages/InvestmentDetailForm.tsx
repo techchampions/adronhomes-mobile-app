@@ -7,6 +7,7 @@ import { CustomerInfoForm } from "../components/InvestFormSCreenComponents/Basic
 import Button from "../components/Button";
 import { OtherInfoForm } from "../components/InvestFormSCreenComponents/OtherInfoForm";
 import { NextofKinForm } from "../components/InvestFormSCreenComponents/NextofKinForm";
+import { PassportPhotoForm } from "../components/InvestFormSCreenComponents/PassportPhotoForm";
 
 const InvestmentDetailForm = () => {
   // import other tab components...
@@ -23,14 +24,17 @@ const InvestmentDetailForm = () => {
         return (
           <OtherInfoForm activeTab={activeTab} setActiveTab={setActiveTab} />
         );
-      // case 2: return <ChargesFeesForm />;
-      // case 3: return <PictureUploadForm />;
-      // case 4: return <EmployerForm />;
       case 2:
         return (
           <NextofKinForm activeTab={activeTab} setActiveTab={setActiveTab} />
         );
-      // case 6: return <DocumentUploadForm />;
+      case 3:
+        return (
+          <PassportPhotoForm
+            activeTab={activeTab}
+            setActiveTab={setActiveTab}
+          />
+        );
       default:
         return null;
     }
