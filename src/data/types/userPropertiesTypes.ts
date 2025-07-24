@@ -166,6 +166,7 @@ export interface UserPropertyPlanResponse {
   total_invoice: number;
   total_amount_paid: number;
   user_properties: UserProperties;
+  new_form_properties: UserProperties;
   pending_user_properties: UserProperties;
   completed_user_properties: UserProperties;
 }
