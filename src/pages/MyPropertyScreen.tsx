@@ -4,14 +4,11 @@ import ApiErrorBlock from "../components/ApiErrorBlock";
 import { formatPrice } from "../data/utils";
 import { useState } from "react";
 import Pagination from "../components/Pagination";
+import { IoInformationCircle } from "react-icons/io5";
 
 const MyPropertyScreen = () => {
   const [page, setPage] = useState(1);
-  const tabs = [
-    "In Progress Properties",
-    "My Pending Properties",
-    "My Properties",
-  ];
+  const tabs = ["In Progress", "Awaiting", "Pending", "Completed"];
   type Tab = (typeof tabs)[number];
 
   const [activeTab, setActiveTab] = useState<Tab>("In Progress Properties");
@@ -33,21 +30,35 @@ const MyPropertyScreen = () => {
   );
   const numberofHouses = houseData?.count;
   let properties = data?.user_properties.data ?? [];
-  if (activeTab === "In Progress Properties") {
+  let propertyInfo = "";
+  if (activeTab === "In Progress") {
     properties = data?.user_properties.data ?? [];
     totalPages = data?.user_properties.last_page || 0;
     hasPrev = !!data?.user_properties.prev_page_url;
     hasNext = !!data?.user_properties.next_page_url;
-  } else if (activeTab === "My Pending Properties") {
+    propertyInfo =
+      "These are properties where you’ve made at least the initial deposit. Payment and processing are ongoing.";
+  } else if (activeTab === "Awaiting") {
+    properties = data?.new_form_properties.data ?? [];
+    totalPages = data?.new_form_properties.last_page || 0;
+    hasPrev = !!data?.new_form_properties.prev_page_url;
+    hasNext = !!data?.new_form_properties.next_page_url;
+    propertyInfo =
+      "These are properties where your payment is yet to be confirmed by AdronHomes Admin. Confirmation is required to proceed.";
+  } else if (activeTab === "Pending") {
     properties = data?.pending_user_properties.data ?? [];
     totalPages = data?.pending_user_properties.last_page || 0;
     hasPrev = !!data?.pending_user_properties.prev_page_url;
     hasNext = !!data?.pending_user_properties.next_page_url;
-  } else if (activeTab === "My Properties") {
+    propertyInfo =
+      "These are properties where your payment is yet to be confirmed by AdronHomes Admin. Confirmation is required to proceed.";
+  } else if (activeTab === "Completed") {
     properties = data?.completed_user_properties.data ?? [];
     totalPages = data?.completed_user_properties.last_page || 0;
     hasPrev = !!data?.completed_user_properties.prev_page_url;
     hasNext = !!data?.completed_user_properties.next_page_url;
+    propertyInfo =
+      "These are fully paid properties, including at least 50% of infrastructure and other related fees.";
   }
   return (
     <div className="flex flex-col gap-4">
@@ -74,7 +85,7 @@ const MyPropertyScreen = () => {
         </div>
       </div>
       <div className="bg-white rounded-3xl p-4 lg:p-6">
-        <div className="flex justify-between text-sm font-medium mb-6 px-0 sm:px-10 lg:px-30">
+        <div className="flex gap-5 text-sm font-medium mb-6 px-0 sm:px-10 lg:px-0">
           {tabs.map((tab) => (
             <button
               key={tab}
@@ -82,7 +93,7 @@ const MyPropertyScreen = () => {
                 activeTab === tab
                   ? "text-black underline underline-offset-5"
                   : "text-gray-400"
-              } transition text-xs`}
+              } transition text-xs md:text-sm`}
               onClick={() => {
                 setActiveTab(tab);
                 setPage(1);
@@ -92,7 +103,12 @@ const MyPropertyScreen = () => {
             </button>
           ))}
         </div>
-
+        <div className="w-full pb-4">
+          <div className="w-full justify-center flex items-start gap-1  text-gray-400">
+            <IoInformationCircle className="h-4 w-4 md:h-5 md:w-5" />
+            <span className="text-xs md:text-sm flex-1">{propertyInfo}</span>
+          </div>
+        </div>
         <PropertyList
           properties={properties}
           isError={isError}
