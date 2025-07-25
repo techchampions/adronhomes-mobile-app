@@ -15,7 +15,7 @@ import NavItem from "./NavItem";
 import NavbarAddorder from "./NavbarAddorder";
 import Auth from "../../utils/Auth";
 import { useUserStore } from "../../zustand/UserStore";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import CopyButton from "../CopyButton";
 import { useGetNotifications } from "../../data/hooks";
 
@@ -39,16 +39,18 @@ const MobileNav = () => {
               <Menu size={28} />
             </button>
           </div>
-          <img src="/logo.png" alt="" className="h-[30px] w-[100px]" />
+          <Link to="/">
+            <img src="/logo.png" alt="" className="h-[30px] w-[100px]" />
+          </Link>
         </div>
         <div className="flex items-center gap-4">
-          {/* <div className="border border-gray-300 rounded-xl px-4 py-1 gap-1 flex flex-col">
+          <div className="border border-gray-300 rounded-xl px-4 py-1 gap-1 flex flex-col">
             <div className="flex justify-between w-full gap-4">
               <p className="text-[10px] text-gray-400">Contract ID</p>
               <CopyButton text={user?.contract_id} />
             </div>
             <p className="text-xs">{user?.contract_id || "No contract ID"}</p>
-          </div> */}
+          </div>
 
           {/* <Button label="View Property" className="text-xs px-4" /> */}
           {user?.profile_picture ? (
@@ -79,7 +81,9 @@ const MobileNav = () => {
         <div className="w-64 bg-white h-screen p-6 shadow-lg ">
           <div className="flex flex-col">
             <div className="flex justify-between mb-6">
-              <img src="/logo.png" alt="logo" className=" w-[60%]" />
+              <Link to="/">
+                <img src="/logo.png" alt="logo" className=" w-[60%]" />
+              </Link>
               <button onClick={() => setIsMobileMenuOpen(false)}>
                 <X size={24} />
               </button>

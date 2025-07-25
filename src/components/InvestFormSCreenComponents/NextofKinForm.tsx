@@ -11,6 +11,8 @@ import { useNavigate, useParams } from "react-router-dom";
 const customerInfoSchema = Yup.object({
   nextOfKin: Yup.string().required("Required"),
   relationship: Yup.string().required("Required"),
+  phone: Yup.mixed().required("Required"),
+  address: Yup.string().required("Required"),
 });
 type Props = {
   activeTab: number;
@@ -56,25 +58,28 @@ export const NextofKinForm: React.FC<Props> = ({ activeTab, setActiveTab }) => {
               <label htmlFor="" className="text-sm text-gray-400">
                 Next Of Kin Name
               </label>
-              <InputField name="nextOfKin" />
+              <InputField name="nextOfKin" placeholder="Full Name" />
             </div>
             <div className="">
               <label htmlFor="" className="text-sm text-gray-400">
                 Relationship
               </label>
-              <InputField name="relationship" />
+              <InputField
+                name="relationship"
+                placeholder="eg. Brother, Sister, Mother, Father"
+              />
             </div>
             <div className="">
               <label htmlFor="" className="text-sm text-gray-400">
                 Next of Kin Phone.No
               </label>
-              <InputField name="phone" />
+              <InputField name="phone" placeholder="Phone number" />
             </div>
             <div className="">
               <label htmlFor="" className="text-sm text-gray-400">
                 Next of Kin Address
               </label>
-              <InputField name="address" />
+              <InputField name="address" placeholder="Residential address" />
             </div>
           </div>
 

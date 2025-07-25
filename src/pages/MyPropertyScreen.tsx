@@ -8,10 +8,10 @@ import { IoInformationCircle } from "react-icons/io5";
 
 const MyPropertyScreen = () => {
   const [page, setPage] = useState(1);
-  const tabs = ["In Progress", "Awaiting", "Pending", "Completed"];
+  const tabs = ["Awaiting", "In Progress", "Pending", "Completed"];
   type Tab = (typeof tabs)[number];
 
-  const [activeTab, setActiveTab] = useState<Tab>("In Progress Properties");
+  const [activeTab, setActiveTab] = useState<Tab>("Awaiting");
 
   const { data, isLoading, isError } = useGetUserPropertiesPlan(page);
   let totalPages = data?.user_properties.last_page || 0;
@@ -29,7 +29,7 @@ const MyPropertyScreen = () => {
     (item) => item.type_name === "Residential"
   );
   const numberofHouses = houseData?.count;
-  let properties = data?.user_properties.data ?? [];
+  let properties = data?.new_form_properties.data ?? [];
   let propertyInfo = "";
   if (activeTab === "In Progress") {
     properties = data?.user_properties.data ?? [];
@@ -44,7 +44,7 @@ const MyPropertyScreen = () => {
     hasPrev = !!data?.new_form_properties.prev_page_url;
     hasNext = !!data?.new_form_properties.next_page_url;
     propertyInfo =
-      "These are properties where your payment is yet to be confirmed by AdronHomes Admin. Confirmation is required to proceed.";
+      "These are properties that are awaiting contract ID assignment.";
   } else if (activeTab === "Pending") {
     properties = data?.pending_user_properties.data ?? [];
     totalPages = data?.pending_user_properties.last_page || 0;

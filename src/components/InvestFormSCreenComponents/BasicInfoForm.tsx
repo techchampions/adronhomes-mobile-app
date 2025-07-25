@@ -3,15 +3,13 @@ import * as Yup from "yup";
 import InputField from "../InputField";
 import SelectField from "../SelectField";
 import Button from "../Button";
-import { ArrowRight } from "lucide-react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import React from "react";
 import { useUserStore } from "../../zustand/UserStore";
 import DatePickerInput from "../DatePickerInput";
 import { useContractDeatilStore } from "../../zustand/ContractDetailsStore";
 
 const customerInfoSchema = Yup.object({
-  email: Yup.string().email("Invalid email").required("Email is required"),
-  phoneSMS: Yup.string().required("Phone is required"),
   gender: Yup.string().required("Gender is required"),
   state: Yup.string().required("State is required"),
   town: Yup.string().required("Town is required"),
@@ -29,14 +27,9 @@ type Props = {
   activeTab: number;
   setActiveTab: (index: number) => void;
 };
-export const CustomerInfoForm: React.FC<Props> = ({
-  activeTab,
-  setActiveTab,
-}) => {
+export const BasicInfoForm: React.FC<Props> = ({ activeTab, setActiveTab }) => {
   const { user } = useUserStore();
   const {
-    contract_email,
-    contract_sms,
     contract_gender,
     contract_state,
     contract_town,
@@ -48,8 +41,8 @@ export const CustomerInfoForm: React.FC<Props> = ({
     setContractDetails,
   } = useContractDeatilStore();
   const initialValues = {
-    email: getValue(contract_email, user?.email),
-    phoneSMS: getValue(contract_sms, user?.phone_number),
+    // email: getValue(contract_email, user?.email),
+    // phoneSMS: getValue(contract_sms, user?.phone_number),
     gender: getValue(contract_gender, user?.gender),
     state: getValue(contract_state, user?.state),
     town: getValue(contract_town, user?.lga),
@@ -72,8 +65,8 @@ export const CustomerInfoForm: React.FC<Props> = ({
         const formatedDOB = date.toISOString();
 
         setContractDetails({
-          contract_email: values.email,
-          contract_sms: values.phoneSMS,
+          // contract_email: values.email,
+          // contract_sms: values.phoneSMS,
           contract_gender: values.gender,
           contract_state: values.state,
           contract_town: values.town,
@@ -89,7 +82,7 @@ export const CustomerInfoForm: React.FC<Props> = ({
       {({ errors, touched, isValid }) => (
         <Form className="space-y-4 py-5 w-full md:w-[80%] mx-auto">
           <div className="grid grid-cols-2 gap-4">
-            <div className="">
+            {/* <div className="">
               <label htmlFor="" className="text-sm text-gray-400">
                 Email
               </label>
@@ -100,7 +93,7 @@ export const CustomerInfoForm: React.FC<Props> = ({
                 SMS Phone.No
               </label>
               <InputField name="phoneSMS" />
-            </div>
+            </div> */}
             <div className="">
               <label htmlFor="" className="text-sm text-gray-400">
                 Select Gender
@@ -159,7 +152,13 @@ export const CustomerInfoForm: React.FC<Props> = ({
             </div>
           </div>
 
-          <div className="flex justify-end">
+          <div className="flex justify-between">
+            <Button
+              label="Prev"
+              icon={<ArrowLeft />}
+              onClick={() => setActiveTab(activeTab - 1)}
+              className="!w-fit px-4 !rounded-lg !bg-black"
+            />
             <Button
               label="Next"
               type="submit"

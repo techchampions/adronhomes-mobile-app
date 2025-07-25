@@ -1,14 +1,10 @@
 import { useState } from "react";
 
 const tabs = [
-  "Basic Info",
+  "OwnerShip Info",
   "Other Information",
-  // "Charges & Fees",
-  // "Customer Picture",
-  // "Employer",
   "Next of Kin",
-  "PassPort Photo",
-  // "Document Management",
+  "Identity Info",
 ];
 
 type Props = {
@@ -17,7 +13,7 @@ type Props = {
 };
 
 const Tabs = ({ activeTab, setActiveTab }: Props) => (
-  <div className="flex text-xs py-6">
+  <div className="flex flex-wrap text-xs py-2 md:py-6">
     {tabs.map((tab, i) => (
       <button
         key={tab}
