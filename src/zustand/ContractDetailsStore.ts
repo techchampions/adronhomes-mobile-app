@@ -24,6 +24,8 @@ type ContractDeatilStore = {
   contract_next_of_kin: string;
   contract_next_of_kin_relationship: string;
   contract_profile_picture: File | null;
+  contract_profile_picture2: File | null;
+  contract_idFile: File | null;
   setContractDetails: (
     details: Partial<
       Omit<ContractDeatilStore, "setContractDetails" | "resetContractDetails">
@@ -56,6 +58,8 @@ export const useContractDeatilStore = create<ContractDeatilStore>((set) => ({
   contract_next_of_kin: "",
   contract_next_of_kin_relationship: "",
   contract_profile_picture: null,
+  contract_profile_picture2: null,
+  contract_idFile: null,
 
   setContractDetails: (details) => set((state) => ({ ...state, ...details })),
 
@@ -84,5 +88,7 @@ export const useContractDeatilStore = create<ContractDeatilStore>((set) => ({
       contract_next_of_kin: "",
       contract_next_of_kin_relationship: "",
       contract_profile_picture: null,
+      contract_profile_picture2: null,
+      contract_idFile: null,
     }),
 }));

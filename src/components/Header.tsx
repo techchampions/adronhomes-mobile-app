@@ -84,25 +84,20 @@ const Header = ({ pageTitle }: { pageTitle: string }) => {
             {unReadCount}
           </span>
         </div>
-        <div className="">
+        {/* <div className="">
           <Button
             label="Fund Wallet"
             className="px-6 text-sm"
             onClick={handleFundWallet}
           />
-          {/* <Button
-            label="Buy Property"
-            className="px-6 text-sm"
-            onClick={handleBuyProperty}
-          /> */}
-        </div>
-        {/* <div className="border border-adron-body rounded-xl px-4 py-1 gap-1 flex flex-col">
+        </div> */}
+        <div className="border border-adron-body rounded-xl px-4 py-1 gap-1 flex flex-col">
           <div className="flex justify-between w-full gap-4">
             <p className="text-[10px] text-gray-400">Contract ID</p>
             <CopyButton text={user?.contract_id} />
           </div>
           <p className="text-xs">{user?.contract_id || "No contract ID"}</p>
-        </div> */}
+        </div>
         <div
           className="p-2 bg-adron-body rounded-full cursor-pointer"
           onClick={goToProfile}

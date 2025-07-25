@@ -3,11 +3,12 @@ import { Form, Formik, useFormikContext } from "formik";
 import * as Yup from "yup";
 import { useState } from "react";
 import Tabs from "../components/InvestFormSCreenComponents/Tabs";
-import { CustomerInfoForm } from "../components/InvestFormSCreenComponents/BasicInfoForm";
 import Button from "../components/Button";
 import { OtherInfoForm } from "../components/InvestFormSCreenComponents/OtherInfoForm";
 import { NextofKinForm } from "../components/InvestFormSCreenComponents/NextofKinForm";
 import { PassportPhotoForm } from "../components/InvestFormSCreenComponents/PassportPhotoForm";
+import { CustomerForm } from "../components/InvestFormSCreenComponents/CustomerForm";
+import { BasicInfoForm } from "../components/InvestFormSCreenComponents/BasicInfoForm";
 
 const InvestmentDetailForm = () => {
   // import other tab components...
@@ -18,11 +19,12 @@ const InvestmentDetailForm = () => {
     switch (activeTab) {
       case 0:
         return (
-          <CustomerInfoForm activeTab={activeTab} setActiveTab={setActiveTab} />
+          <CustomerForm activeTab={activeTab} setActiveTab={setActiveTab} />
         );
       case 1:
         return (
-          <OtherInfoForm activeTab={activeTab} setActiveTab={setActiveTab} />
+          <BasicInfoForm activeTab={activeTab} setActiveTab={setActiveTab} />
+          // <OtherInfoForm activeTab={activeTab} setActiveTab={setActiveTab} />
         );
       case 2:
         return (
