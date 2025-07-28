@@ -102,12 +102,12 @@ const WalletTransactionDetail = ({ id }: { id: number }) => {
         <div className="flex justify-between items-center py-3">
           <div className="flex flex-col">
             <p className="text-gray-400 text-xs">Status</p>
-            <p className="font-bold text-xs ">
+            <div className="font-bold text-xs ">
               {/* {" "}
               <span className="bg-adron-green h-2 w-2 rounded-full"></span>{" "}
               Completed */}
               {renderStatusBadge(data?.data.status ?? 2)}
-            </p>
+            </div>
           </div>
         </div>
       </div>

@@ -118,7 +118,10 @@ export interface InfrastructureBreakDown {
   updated_at: string;
   type: string;
 }
-
+export interface Contract {
+  id: number;
+  unique_contract_id: string;
+}
 export interface PlanPropertiesDetailResponse {
   success: boolean;
   user_property: UserProperty;
@@ -130,4 +133,5 @@ export interface PlanPropertiesDetailResponse {
   infrastructure_break_down: FeeBreakdown[];
   others_fee_break_down: FeeBreakdown[];
   transactions: PaginatedData<Transaction>;
+  contract: Contract;
 }

@@ -8,10 +8,10 @@ import { IoInformationCircle } from "react-icons/io5";
 
 const MyPropertyScreen = () => {
   const [page, setPage] = useState(1);
-  const tabs = ["Awaiting", "In Progress", "Pending", "Completed"];
+  const tabs = ["Pending", "Awaiting", "In Progress", "Completed"];
   type Tab = (typeof tabs)[number];
 
-  const [activeTab, setActiveTab] = useState<Tab>("Awaiting");
+  const [activeTab, setActiveTab] = useState<Tab>("Pending");
 
   const { data, isLoading, isError } = useGetUserPropertiesPlan(page);
   let totalPages = data?.user_properties.last_page || 0;

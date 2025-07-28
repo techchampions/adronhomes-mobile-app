@@ -37,7 +37,10 @@ const PropertyDetail = () => {
     // navigate(`/invest-property/${id}`);
     navigate(`/invest-property-form/${id}`);
   };
-
+  const totalFees = data?.data.properties[0].details.reduce(
+    (sum, item) => sum + item.value,
+    0
+  );
   // const NextArrow = ({ onClick }: { onClick?: () => void }) => (
   //   <div
   //     onClick={onClick}
@@ -291,9 +294,9 @@ const PropertyDetail = () => {
 
                 {/* New Additional details */}
                 <div className="flex flex-col gap-2">
-                  <h4 className="font-bold text-md">Additional Details</h4>
+                  <h4 className="font-bold text-md">Fees and Charges</h4>
 
-                  <div className="grid grid-cols-2 gap-2">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                     {/* Split details in half for two tables */}
                     {item?.details && item.details.length > 0 ? (
                       <>
@@ -383,12 +386,7 @@ const PropertyDetail = () => {
                     </div>
                     <div className="flex-flex-col bg-[#CFFFCF] rounded-xl p-4">
                       <p className="text-xs text-gray-500">Fees & Charges</p>
-                      <p className="text-sm">
-                        {" "}
-                        {formatPrice(
-                          data?.data.properties[0].details[0]?.value || 0
-                        )}{" "}
-                      </p>
+                      <p className="text-sm"> {formatPrice(totalFees || 0)}</p>
                     </div>
                   </div>
                 </div>
