@@ -405,6 +405,16 @@ export const createPropertyPlan = async (
       payload.contract_profile_picture
     );
   }
+  if (payload.contract_profile_picture_2) {
+    formData.append(
+      "contract_profile_picture_2",
+      payload.contract_profile_picture_2
+    );
+  }
+  if (payload.means_of_ids)
+    payload.means_of_ids.forEach((file, index) => {
+      formData.append(`means_of_ids[${index}]`, file);
+    });
 
   const res = await apiClient.post("/user/buy-property", formData, {
     headers: {

@@ -53,6 +53,8 @@ export const CustomerForm: React.FC<Props> = ({ activeTab, setActiveTab }) => {
   const customerInfoSchema = Yup.object({
     email: Yup.string().email("Invalid email").required("Email is required"),
     phoneSMS: Yup.string().required("Phone is required"),
+    occupation: Yup.string().required("Required"),
+    businessType: Yup.string().required("Required"),
     subscriberName1: Yup.string().required("Required"),
     subscriberName2: Yup.string(),
     subscriberName3: Yup.string(),
@@ -84,32 +86,6 @@ export const CustomerForm: React.FC<Props> = ({ activeTab, setActiveTab }) => {
           <div className="grid grid-cols-2 gap-4">
             <div className="">
               <label htmlFor="" className="text-sm text-gray-400">
-                Email
-              </label>
-              <InputField name="email" placeholder="Email Address" />
-            </div>
-            <div className="">
-              <label htmlFor="" className="text-sm text-gray-400">
-                SMS Phone.No
-              </label>
-              <InputField name="phoneSMS" placeholder="Phone No. (for SMS)" />
-            </div>
-
-            <div className="">
-              <label htmlFor="" className="text-sm text-gray-400">
-                Employer Name
-              </label>
-              <InputField name="employer" placeholder="Full Name" />
-            </div>
-            <div className="">
-              <label htmlFor="" className="text-sm text-gray-400">
-                Employer Address
-              </label>
-              <InputField name="employerAddress" />
-            </div>
-
-            <div className="">
-              <label htmlFor="" className="text-sm text-gray-400">
                 Principal Owner
               </label>
               <InputField name="subscriberName1" placeholder="Full Name" />
@@ -131,6 +107,47 @@ export const CustomerForm: React.FC<Props> = ({ activeTab, setActiveTab }) => {
                 Co-Owner Name 2
               </label>
               <InputField name="subscriberName3" placeholder="Full Name" />
+            </div>
+
+            <div className="">
+              <label htmlFor="" className="text-sm text-gray-400">
+                Occupation
+              </label>
+              <InputField name="occupation" placeholder="Full Name" />
+            </div>
+            <div className="">
+              <label htmlFor="" className="text-sm text-gray-400">
+                Bussiness Type
+              </label>
+              <SelectField
+                name="businessType"
+                options={["", "Company", "Joint", "Individual", "Patnership"]}
+              />
+            </div>
+            <div className="">
+              <label htmlFor="" className="text-sm text-gray-400">
+                Employer Name
+              </label>
+              <InputField name="employer" placeholder="Full Name" />
+            </div>
+            <div className="">
+              <label htmlFor="" className="text-sm text-gray-400">
+                Employer Address
+              </label>
+              <InputField name="employerAddress" />
+            </div>
+
+            <div className="">
+              <label htmlFor="" className="text-sm text-gray-400">
+                Email
+              </label>
+              <InputField name="email" placeholder="Email Address" />
+            </div>
+            <div className="">
+              <label htmlFor="" className="text-sm text-gray-400">
+                SMS Phone.No
+              </label>
+              <InputField name="phoneSMS" placeholder="Phone No. (for SMS)" />
             </div>
           </div>
 

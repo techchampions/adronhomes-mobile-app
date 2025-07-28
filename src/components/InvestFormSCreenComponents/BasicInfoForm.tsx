@@ -8,6 +8,7 @@ import React from "react";
 import { useUserStore } from "../../zustand/UserStore";
 import DatePickerInput from "../DatePickerInput";
 import { useContractDeatilStore } from "../../zustand/ContractDetailsStore";
+import CustomDateInput from "../CustomDateInput";
 
 const customerInfoSchema = Yup.object({
   gender: Yup.string().required("Gender is required"),
@@ -41,8 +42,6 @@ export const BasicInfoForm: React.FC<Props> = ({ activeTab, setActiveTab }) => {
     setContractDetails,
   } = useContractDeatilStore();
   const initialValues = {
-    // email: getValue(contract_email, user?.email),
-    // phoneSMS: getValue(contract_sms, user?.phone_number),
     gender: getValue(contract_gender, user?.gender),
     state: getValue(contract_state, user?.state),
     town: getValue(contract_town, user?.lga),
@@ -82,18 +81,6 @@ export const BasicInfoForm: React.FC<Props> = ({ activeTab, setActiveTab }) => {
       {({ errors, touched, isValid }) => (
         <Form className="space-y-4 py-5 w-full md:w-[80%] mx-auto">
           <div className="grid grid-cols-2 gap-4">
-            {/* <div className="">
-              <label htmlFor="" className="text-sm text-gray-400">
-                Email
-              </label>
-              <InputField name="email" />
-            </div>
-            <div className="">
-              <label htmlFor="" className="text-sm text-gray-400">
-                SMS Phone.No
-              </label>
-              <InputField name="phoneSMS" />
-            </div> */}
             <div className="">
               <label htmlFor="" className="text-sm text-gray-400">
                 Select Gender
@@ -143,12 +130,17 @@ export const BasicInfoForm: React.FC<Props> = ({ activeTab, setActiveTab }) => {
             </div>
 
             <div className="">
-              <DatePickerInput
+              {/* <DatePickerInput
                 label="Date of Birth"
                 name="dateOfBirth"
                 maxDate={new Date()}
-                placeholder="Date of birth"
-              />
+                placeholder="Select year of birth"
+              /> */}
+              <CustomDateInput
+                label="Date of Birth"
+                name="dateOfBirth"
+                maxDate={new Date().toISOString().split("T")[0]} // Today's date in YYYY-MM-DD format
+              />{" "}
             </div>
           </div>
 

@@ -4,6 +4,7 @@ const tabs = [
   "OwnerShip Info",
   "Other Information",
   "Next of Kin",
+  "Passport Photo",
   "Identity Info",
 ];
 
