@@ -19,6 +19,8 @@ export interface User {
   address: string | null;
   created_at: string;
   updated_at: string;
+  unique_customer_id: string;
+  contract_id: string;
 }
 
 export interface GetUserResponse {

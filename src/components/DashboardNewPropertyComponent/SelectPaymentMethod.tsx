@@ -18,6 +18,7 @@ import { usePaystackPayment } from "../../hooks/usePaystackPayment";
 import { useUserStore } from "../../zustand/UserStore";
 import { ApiError } from "../DashboardHomeComponents/SelectPaymentMethod";
 import { useContractDeatilStore } from "../../zustand/ContractDetailsStore";
+import { NewPropertyPlanPayload } from "../../data/types/CreatePropertyPayload";
 
 const SelectPaymentMethod = ({
   goBack,
@@ -90,6 +91,8 @@ const SelectPaymentMethod = ({
     contract_next_of_kin_relationship:
       contractDetails.contract_next_of_kin_relationship,
     contract_profile_picture: contractDetails.contract_profile_picture,
+    contract_profile_picture_2: contractDetails.contract_profile_picture2,
+    means_of_ids: contractDetails.contract_idFiles,
   };
 
   const handleContinue = () => {

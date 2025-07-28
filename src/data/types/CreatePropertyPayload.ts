@@ -60,4 +60,6 @@ export interface NewPropertyPlanPayload {
   contract_next_of_kin?: string;
   contract_next_of_kin_relationship?: string;
   contract_profile_picture?: File;
+  contract_profile_picture_2?: File;
+  means_of_ids?: File[];
 }

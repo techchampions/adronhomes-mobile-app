@@ -120,7 +120,8 @@ import { AccountDetail } from "../data/types/AccountDetailsTypes";
 
 export type User = {
   id: number;
-  contract_id?: number | null;
+  contract_id?: string | null;
+  unique_customer_id: string;
   email: string;
   phone_number: string;
   referral_code: string;
@@ -176,6 +177,7 @@ export const useUserStore = create<UserState>()(
               user: {
                 id: userData.id,
                 contract_id: userData.contract_id,
+                unique_customer_id: userData.unique_customer_id,
                 email: userData.email,
                 phone_number: userData.phone_number,
                 referral_code: userData.referral_code,

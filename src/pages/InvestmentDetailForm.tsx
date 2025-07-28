@@ -9,6 +9,7 @@ import { NextofKinForm } from "../components/InvestFormSCreenComponents/NextofKi
 import { PassportPhotoForm } from "../components/InvestFormSCreenComponents/PassportPhotoForm";
 import { CustomerForm } from "../components/InvestFormSCreenComponents/CustomerForm";
 import { BasicInfoForm } from "../components/InvestFormSCreenComponents/BasicInfoForm";
+import { IdInfoForm } from "../components/InvestFormSCreenComponents/IdInfoForm";
 
 const InvestmentDetailForm = () => {
   // import other tab components...
@@ -37,6 +38,8 @@ const InvestmentDetailForm = () => {
             setActiveTab={setActiveTab}
           />
         );
+      case 4:
+        return <IdInfoForm activeTab={activeTab} setActiveTab={setActiveTab} />;
       default:
         return null;
     }

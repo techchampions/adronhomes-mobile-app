@@ -93,10 +93,12 @@ const Header = ({ pageTitle }: { pageTitle: string }) => {
         </div> */}
         <div className="border border-adron-body rounded-xl px-4 py-1 gap-1 flex flex-col">
           <div className="flex justify-between w-full gap-4">
-            <p className="text-[10px] text-gray-400">Contract ID</p>
-            <CopyButton text={user?.contract_id} />
+            <p className="text-[10px] text-gray-400">Customer ID</p>
+            <CopyButton text={user?.unique_customer_id} />
           </div>
-          <p className="text-xs">{user?.contract_id || "No contract ID"}</p>
+          <p className="text-xs">
+            {user?.unique_customer_id || "No Customer ID"}
+          </p>
         </div>
         <div
           className="p-2 bg-adron-body rounded-full cursor-pointer"
