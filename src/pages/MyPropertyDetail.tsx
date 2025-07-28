@@ -295,12 +295,12 @@ const MyPropertyDetail = () => {
                     <div className="flex justify-between w-full gap-4">
                       <p className="text-[10px] text-white">Contract ID</p>
                       <CopyButton
-                        text={data?.plan_properties.contract_id}
+                        text={data?.contract.unique_contract_id}
                         className="text-white"
                       />
                     </div>
                     <p className="text-xs text-white">
-                      {data?.plan_properties.contract_id || "No contract ID"}
+                      {data?.contract.unique_contract_id || "No contract ID"}
                     </p>
                   </div>
                 </div>

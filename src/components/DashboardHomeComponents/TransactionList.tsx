@@ -18,8 +18,9 @@ const TransactionsList: React.FC<Props> = ({ data, isLoading, isError }) => {
   const renderList = () => {
     return (
       <ul className="space-y-2">
-        {data.map((t) => (
+        {data.map((t, index) => (
           <li
+            key={index}
             className="p-4 gap-2 cursor-pointer rounded-3xl flex justify-between items-center even:bg-gray-100"
             onClick={() => openModal(<TransactionDetail id={t.id} />)}
           >

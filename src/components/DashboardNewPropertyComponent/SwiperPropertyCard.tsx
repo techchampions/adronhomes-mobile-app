@@ -198,7 +198,7 @@ export default function SwiperPropertyCard({ property }: Props) {
               {property.size} Sm q
             </span>
             {displayFeatures.map((feature, index) => (
-              <span className="flex items-center gap-1 truncate">
+              <span key={index} className="flex items-center gap-1 truncate">
                 {feature === "Gym" ? (
                   <img
                     src="/dumbbell.svg"
