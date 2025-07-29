@@ -76,6 +76,8 @@ const BankTransfer = ({
     contract_next_of_kin_relationship:
       contractDetails.contract_next_of_kin_relationship,
     contract_profile_picture: contractDetails.contract_profile_picture,
+    contract_profile_picture_2: contractDetails.contract_profile_picture2,
+    means_of_ids: contractDetails.contract_idFiles,
   };
 
   const handlePaymentSuccess = (values: typeof initialValues) => {
