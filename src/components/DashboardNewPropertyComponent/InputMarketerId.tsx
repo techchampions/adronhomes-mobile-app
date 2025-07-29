@@ -39,7 +39,7 @@ const InputMarketerId = () => {
                 <InputField
                   name="marketerId"
                   type="text"
-                  placeholder="Marketer ID"
+                  placeholder="Marketer ID (Optional)"
                   className="text-2xl font-bold"
                 />
                 <p className="text-xs text-gray-400 w-full">

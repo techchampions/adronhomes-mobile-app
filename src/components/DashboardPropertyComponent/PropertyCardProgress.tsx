@@ -4,9 +4,11 @@ import Button from "../Button";
 import { useNavigate } from "react-router-dom";
 import { useModalStore } from "../../zustand/useModalStore";
 import SelectPaymentMethod from "../DashboardMyPropertyComponents/SelectPaymentMethod";
+import { formatDate } from "../../data/utils";
 
 type PropertyCardProps = {
   id: number;
+  createdAt: string;
   user_property_id: number;
   imageUrl: string;
   title: string;
@@ -24,6 +26,7 @@ type PropertyCardProps = {
 const PropertyCard: React.FC<PropertyCardProps> = ({
   id,
   user_property_id,
+  createdAt,
   imageUrl,
   title,
   state,
@@ -70,8 +73,11 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
             alt={title}
             className="w-12 h-12 rounded-lg object-cover"
           />
-          <div className="bg-adron-body rounded-lg px-2 py-1  text-gray-400 text-xs ">
-            x {units} units
+          <div className="flex flex-col text-xs text-gray-400 items-start gap-1">
+            <div className="bg-adron-body rounded-lg px-2 py-1  text-gray-400 text-xs ">
+              x {units} units
+            </div>
+            <div className="">{formatDate(createdAt)}</div>
           </div>
         </div>
         <div className="w-full">

@@ -122,6 +122,14 @@ export interface Contract {
   id: number;
   unique_contract_id: string;
 }
+export interface ContractDocument {
+  id: number;
+  plan_id: number;
+  document_name: string;
+  document_file: string;
+  created_at: string;
+  updated_at: string;
+}
 export interface PlanPropertiesDetailResponse {
   success: boolean;
   user_property: UserProperty;
@@ -134,4 +142,5 @@ export interface PlanPropertiesDetailResponse {
   others_fee_break_down: FeeBreakdown[];
   transactions: PaginatedData<Transaction>;
   contract: Contract;
+  contract_documents: ContractDocument[];
 }

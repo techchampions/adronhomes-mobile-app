@@ -355,7 +355,10 @@ export const createPropertyPlan = async (
   if (payload.contract_marital_status)
     formData.append("contract_marital_status", payload.contract_marital_status);
   if (payload.contract_gender)
-    formData.append("contract_gender", payload.contract_gender);
+    formData.append(
+      "contract_gender",
+      payload.contract_gender.toLocaleLowerCase()
+    );
   if (payload.contract_date_of_birth)
     formData.append("contract_date_of_birth", payload.contract_date_of_birth);
   if (payload.contract_nationality)

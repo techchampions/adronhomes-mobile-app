@@ -23,6 +23,7 @@ import CopyButton from "../components/CopyButton";
 import { BsFillExclamationCircleFill } from "react-icons/bs";
 import MyPlanPaymentHistory from "../components/DashboardMyPropertyComponents/MyPropertyPaymentHistory";
 import SelectPaymentMethod from "../components/DashboardMyPropertyComponents/SelectPaymentMethod";
+import DownloadPropertyDocuments from "../components/DashboardMyPropertyComponents/DownloadPropertyDocuments";
 
 const MyPropertyDetail = () => {
   // const { data, isLoading, isError } = useGetUserTransactions();
@@ -148,14 +149,34 @@ const MyPropertyDetail = () => {
   const viewPaymentList = () => {
     navigate(`/my-property/payment-list/${id}`);
   };
-
+  const handleDownload = () => {
+    openModal(
+      <DownloadPropertyDocuments
+        contractDocuments={data?.contract_documents || []}
+      />
+    );
+    // if (data?.contract_documents) {
+    //   const link = document.createElement("a");
+    //   link.href = data.contract_documents;
+    //   link.download = "property-document.pdf";
+    //   document.body.appendChild(link);
+    //   link.click();
+    //   document.body.removeChild(link);
+    // }
+  };
   const renderButton = () => {
     if (paymentProgress === 100) {
       return (
         <div className="flex items-center text-white gap-4">
           <div className="flex items-center gap-1">
-            <FaCheckCircle className="text-white" />
-            <span className="text-sm text-white/50">Payment Complete</span>
+            <Button
+              label="Download Document"
+              onClick={handleDownload}
+              className=" bg-white !text-adron-green !w-fit px-6 text-sm"
+            />
+
+            {/* <FaCheckCircle className="text-white" />
+            <span className="text-sm text-white/50">Payment Complete</span> */}
           </div>
         </div>
       );
@@ -166,8 +187,9 @@ const MyPropertyDetail = () => {
     ) {
       return (
         <div className="flex items-center mb-5 gap-2 text-white">
-          <InlineLoader />
-          <p className="text-sm">Documents are being prepared</p>
+          <Button label="Download Document" onClick={handleDownload} />
+          {/* <InlineLoader />
+          <p className="text-sm">Documents are being prepared</p> */}
         </div>
       );
     } else if (
