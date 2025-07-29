@@ -86,7 +86,7 @@ export const BasicInfoForm: React.FC<Props> = ({ activeTab, setActiveTab }) => {
                 Select Gender
               </label>
 
-              <SelectField name="gender" options={["", "male", "female"]} />
+              <SelectField name="gender" options={["", "Male", "Female"]} />
             </div>
             <div className="">
               <label htmlFor="" className="text-sm text-gray-400">
