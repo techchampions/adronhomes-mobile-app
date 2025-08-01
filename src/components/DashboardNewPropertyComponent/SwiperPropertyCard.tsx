@@ -28,24 +28,6 @@ import { IoGiftOutline } from "react-icons/io5";
 // import { useToggleSaveProperty } from "../../data/hooks";
 
 interface Props {
-  // property: {
-  //   id: number;
-  //   size: number | string;
-  //   name: string;
-  //   street_address: string;
-  //   lga: string;
-  //   state: string;
-  //   country: string;
-  //   price: number;
-  //   features: string[];
-  //   photos: string[];
-  //   type: PropertyType;
-  //   is_saved: boolean;
-  //   is_bought: boolean;
-  //   is_discount: boolean;
-  //   discount_percentage: string | number;
-
-  // };
   property: Property;
 }
 
@@ -163,6 +145,11 @@ export default function SwiperPropertyCard({ property }: Props) {
         {property.is_discount && (
           <div className="bg-red-600 text-white text-xs px-3 py-1 rounded-full absolute top-2 right-5 z-50">
             {property.discount_percentage}% off
+          </div>
+        )}
+        {property.purpose && (
+          <div className="absolute bottom-3 right-5 bg-black/60 py-1 px-4 rounded-lg z-50 text-white text-xs">
+            {property.purpose}
           </div>
         )}
       </div>

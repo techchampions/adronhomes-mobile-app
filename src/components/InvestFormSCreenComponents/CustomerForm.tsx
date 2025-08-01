@@ -113,15 +113,24 @@ export const CustomerForm: React.FC<Props> = ({ activeTab, setActiveTab }) => {
               <label htmlFor="" className="text-sm text-gray-400">
                 Occupation
               </label>
-              <InputField name="occupation" placeholder="Full Name" />
+              <InputField
+                name="occupation"
+                placeholder="eg. Banker, Teacher, etc."
+              />
             </div>
             <div className="">
               <label htmlFor="" className="text-sm text-gray-400">
-                Bussiness Type
+                Business Type
               </label>
               <SelectField
                 name="businessType"
-                options={["", "Company", "Joint", "Individual", "Patnership"]}
+                placeholder="Select Business type"
+                options={[
+                  "Company (Corporate)",
+                  "Joint",
+                  "Individual",
+                  "Minor",
+                ]}
               />
             </div>
             <div className="">

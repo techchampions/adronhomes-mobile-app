@@ -3,6 +3,7 @@ import "./App.css";
 import AllRoutes from "./routes/allRoutes";
 import { Providers } from "./data/Provider";
 import "react-datepicker/dist/react-datepicker.css";
+import NetworkStatusBar from "./components/NetworkStatus";
 
 function App() {
   useEffect(() => {
@@ -15,6 +16,7 @@ function App() {
   return (
     <Providers>
       <AllRoutes />
+      <NetworkStatusBar />
     </Providers>
   );
 }

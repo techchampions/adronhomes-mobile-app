@@ -6,6 +6,8 @@
 //   };
 // }
 
+import { Property as P } from "./propertiesPageTypes";
+
 // export interface Property {
 //   id: number;
 //   name: string;
@@ -35,6 +37,7 @@ export interface GetPropertyByIdResponse {
   message: string;
   data: {
     properties: Property[];
+    similar_property_user: P[];
   };
 }
 
@@ -44,7 +47,7 @@ export interface Property {
   display_image: string;
   photos: string[];
   size: string;
-  price: number | null;
+  price: number;
   initial_deposit: number | null;
   type: PropertyType; // changed from number to object
   slug: string;
@@ -65,7 +68,7 @@ export interface Property {
   discount_percentage: number | string;
   no_of_bedroom: number;
   number_of_bathroom: number;
-  year_built: string | number;
+  year_built: string;
   parking_space: string | number;
   area: string;
   property_map: string | null;

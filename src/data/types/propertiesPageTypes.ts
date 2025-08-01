@@ -1,3 +1,5 @@
+import { BoughtProperty, PropertyDetail } from "./GetPropertyByIdResponse";
+
 export interface PropertiesResponse {
   status: string;
   message: string;
@@ -81,6 +83,25 @@ export interface Property {
   discount_percentage: string | number;
   total_amount: number;
   property_duration_limit: number;
+  purpose: string;
+
+  initial_deposit: number | null;
+  no_of_bedroom: number;
+  number_of_bathroom: number;
+  year_built: string;
+  parking_space: string | number;
+  property_map: string | null;
+  property_video: string | null;
+  virtual_tour: string | null;
+  payment_schedule: string[];
+  payment_type: string;
+  is_sold: number;
+  is_active: number;
+  details: PropertyDetail[];
+  saved_property: SavedProperty | null;
+  bought_property: BoughtProperty | null;
+  number_of_unit: number;
+  property_agreement: string;
 }
 
 export interface SavedProperty {
