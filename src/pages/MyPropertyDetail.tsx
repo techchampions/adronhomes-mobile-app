@@ -165,7 +165,8 @@ const MyPropertyDetail = () => {
     // }
   };
   const renderButton = () => {
-    if (paymentProgress === 100) {
+    const length = data?.contract_documents.length || 0;
+    if (length > 0) {
       return (
         <div className="flex items-center text-white gap-4">
           <div className="flex items-center gap-1">
@@ -174,9 +175,15 @@ const MyPropertyDetail = () => {
               onClick={handleDownload}
               className=" bg-white !text-adron-green !w-fit px-6 text-sm"
             />
-
-            {/* <FaCheckCircle className="text-white" />
-            <span className="text-sm text-white/50">Payment Complete</span> */}
+          </div>
+        </div>
+      );
+    } else if (paymentProgress === 100) {
+      return (
+        <div className="flex items-center text-white gap-4">
+          <div className="flex items-center gap-1">
+            <FaCheckCircle className="text-white" />
+            <span className="text-sm text-white/50">Payment Complete</span>
           </div>
         </div>
       );
@@ -188,8 +195,8 @@ const MyPropertyDetail = () => {
       return (
         <div className="flex items-center mb-5 gap-2 text-white">
           <Button label="Download Document" onClick={handleDownload} />
-          {/* <InlineLoader />
-          <p className="text-sm">Documents are being prepared</p> */}
+          <InlineLoader />
+          <p className="text-sm">Documents are being prepared</p>
         </div>
       );
     } else if (

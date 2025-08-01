@@ -1,4 +1,5 @@
 import { Property } from "../data/types/propertiesPageTypes";
+import { Property as P } from "../data/types/GetPropertyByIdResponse";
 import NoPropertyFound from "./NoPropertyFound";
 import PropertyCard from "./PropertyCard";
 

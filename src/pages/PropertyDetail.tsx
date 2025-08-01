@@ -10,7 +10,7 @@ import "swiper/css";
 import "swiper/css/navigation";
 import { GiStreetLight } from "react-icons/gi";
 import { useEnquireProperty, useGetPropertyByID } from "../data/hooks";
-import { formatPrice } from "../data/utils";
+import { formatDate, formatPrice } from "../data/utils";
 import ApiErrorBlock from "../components/ApiErrorBlock";
 import Loader from "../components/Loader";
 import { LiaToiletSolid } from "react-icons/lia";
@@ -18,6 +18,7 @@ import { TbBed } from "react-icons/tb";
 import { IoCarSportOutline, IoConstructOutline } from "react-icons/io5";
 import { useUserStore } from "../zustand/UserStore";
 import { useToastStore } from "../zustand/useToastStore";
+import PropertyList from "../components/PropertyList";
 const PropertyDetail = () => {
   const params = useParams();
   const { user } = useUserStore();
@@ -191,7 +192,7 @@ const PropertyDetail = () => {
               <div className="flex flex-col w-full md:w-[70%] gap-10">
                 <div className="flex flex-col gap-2">
                   <h4 className="font-bold text-md">Overview</h4>
-                  <div className="text-sm flex ml-5 divide-adron-gray-300 divide-x-1">
+                  <div className="text-sm flex flex-wrap ml-5 divide-adron-gray-300 divide-x-1 py-1 mb-2 border-b-1 border-b-gray-300">
                     {item?.no_of_bedroom != null && (
                       <li className="flex items-center gap-2 px-2">
                         <TbBed />
@@ -213,7 +214,7 @@ const PropertyDetail = () => {
                     {item?.year_built != null && (
                       <li className="flex items-center gap-2 px-2">
                         <IoConstructOutline />
-                        <span>Built Year {item?.year_built}</span>
+                        <span>Built Year {formatDate(item?.year_built)}</span>
                       </li>
                     )}
                   </div>
@@ -361,7 +362,7 @@ const PropertyDetail = () => {
                 {/* Payment Structure */}
                 <div className="flex flex-col gap-4">
                   <h4 className="textxl font-bold">Payment Structure</h4>
-                  <div className="flex justify-between items-center">
+                  <div className="flex justify-between items-center flex-wrap gap-2">
                     <div className="flex-flex-col">
                       <p className="text-xs text-gray-500">Payment type</p>
                       <p className="text-sm">Interval Payment</p>
@@ -467,11 +468,7 @@ const PropertyDetail = () => {
           </div>
           <div className="flex flex-col mt-14 gap-4">
             <h4 className="font-bold">Similar Properties</h4>
-            {/* <PropertyList properties={properties} /> */}
-          </div>
-          <div className="flex flex-col mt-14 gap-4">
-            <h4 className="font-bold">Recently Viewed</h4>
-            {/* <PropertyList properties={properties} /> */}
+            <PropertyList properties={data?.data.similar_property_user || []} />
           </div>
         </div>
       </div>

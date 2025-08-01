@@ -86,7 +86,11 @@ export const BasicInfoForm: React.FC<Props> = ({ activeTab, setActiveTab }) => {
                 Select Gender
               </label>
 
-              <SelectField name="gender" options={["", "Male", "Female"]} />
+              <SelectField
+                name="gender"
+                options={["Male", "Female"]}
+                placeholder="Select"
+              />
             </div>
             <div className="">
               <label htmlFor="" className="text-sm text-gray-400">
@@ -95,20 +99,24 @@ export const BasicInfoForm: React.FC<Props> = ({ activeTab, setActiveTab }) => {
 
               <SelectField
                 name="maritalStatus"
-                options={["", "Single", "Maried"]}
+                options={["Single", "Maried"]}
+                placeholder="Select"
               />
             </div>
             <div className="">
               <label htmlFor="" className="text-sm text-gray-400">
                 Country
               </label>
-              <InputField name="country" />
+              <InputField
+                name="country"
+                placeholder="eg. Nigeria, Ghana, etc."
+              />
             </div>
             <div className="">
               <label htmlFor="" className="text-sm text-gray-400">
                 State
               </label>
-              <InputField name="state" />
+              <InputField name="state" placeholder="State" />
             </div>
             <div className="">
               <label htmlFor="" className="text-sm text-gray-400">
@@ -120,7 +128,10 @@ export const BasicInfoForm: React.FC<Props> = ({ activeTab, setActiveTab }) => {
               <label htmlFor="" className="text-sm text-gray-400">
                 Nationality
               </label>
-              <InputField name="nationality" />
+              <InputField
+                name="nationality"
+                placeholder="eg. Canadian, Nigerian etc."
+              />
             </div>
             <div className="">
               <label htmlFor="" className="text-sm text-gray-400">

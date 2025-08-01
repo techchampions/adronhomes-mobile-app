@@ -73,13 +73,15 @@ const PropertyCard = ({
               <span>Gym</span>
             </div>
           </div>
-          <div className="flex justify-between w-full mt-6 items-center">
+          <div className="flex justify-between gap-4 w-full mt-6 items-center">
             <Button
               onClick={handleViewProperty}
               label="View Property"
               className="bg-adron-green text-xs px-4 !w-fit"
             />
-            <div className="text 4xl font-bold">{formattedPrice} </div>
+            <div className="text 4xl font-bold truncate flex-1">
+              {formattedPrice}{" "}
+            </div>
           </div>
         </div>
       </div>
