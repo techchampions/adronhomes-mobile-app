@@ -76,15 +76,6 @@ const login = async (
         showToast("An unexpected error occurred. Please try again.", "error");
       }
     }
-    // if (error.response && error.response.data.errors) {
-    //   const errorMessages = Object.values(error.response.data.errors)
-    //     .flat()
-    //     .join("\n"); // Extract and format error messages
-    //   showToast(errorMessages, "error");
-    // } else {
-    //   showToast("An unexpected error occurred. Please try again.", "error");
-    // }
-    // console.error("Login failed:", error);
   } finally {
     setSubmitting(false);
   }

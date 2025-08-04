@@ -118,33 +118,6 @@ export const CustomerForm: React.FC<Props> = ({ activeTab, setActiveTab }) => {
                 placeholder="eg. Banker, Teacher, etc."
               />
             </div>
-            <div className="">
-              <label htmlFor="" className="text-sm text-gray-400">
-                Business Type
-              </label>
-              <SelectField
-                name="businessType"
-                placeholder="Select Business type"
-                options={[
-                  "Company (Corporate)",
-                  "Joint",
-                  "Individual",
-                  "Minor",
-                ]}
-              />
-            </div>
-            <div className="">
-              <label htmlFor="" className="text-sm text-gray-400">
-                Employer Name
-              </label>
-              <InputField name="employer" placeholder="Full Name" />
-            </div>
-            <div className="">
-              <label htmlFor="" className="text-sm text-gray-400">
-                Employer Address
-              </label>
-              <InputField name="employerAddress" />
-            </div>
 
             <div className="">
               <label htmlFor="" className="text-sm text-gray-400">
@@ -157,6 +130,37 @@ export const CustomerForm: React.FC<Props> = ({ activeTab, setActiveTab }) => {
                 SMS Phone.No
               </label>
               <InputField name="phoneSMS" placeholder="Phone No. (for SMS)" />
+            </div>
+            <div className="">
+              <label htmlFor="" className="text-sm text-gray-400">
+                Property Ownership Type
+              </label>
+              <SelectField
+                name="businessType"
+                placeholder="Select intended use of the property"
+                options={[
+                  "Company (Corporate)",
+                  "Joint",
+                  "Individual",
+                  "Minor",
+                ]}
+              />
+            </div>
+            <div className="flex items-center gap-5 col-span-2 mt-7 mb-2">
+              <span className="text-lg text-nowrap">Employment info</span>
+              <span className=" w-full border-b-1 border-gray-400"></span>
+            </div>
+            <div className="">
+              <label htmlFor="" className="text-sm text-gray-400">
+                Employer Name
+              </label>
+              <InputField name="employer" placeholder="Full Name" />
+            </div>
+            <div className="">
+              <label htmlFor="" className="text-sm text-gray-400">
+                Employer Address
+              </label>
+              <InputField name="employerAddress" />
             </div>
           </div>
 

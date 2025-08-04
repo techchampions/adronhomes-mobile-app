@@ -44,7 +44,7 @@ const MobileNav = () => {
           </Link>
         </div>
         <div className="flex items-center gap-4">
-          <div className="border border-gray-300 rounded-xl px-4 py-1 gap-1 flex flex-col">
+          {/* <div className="border border-gray-300 rounded-xl px-4 py-1 gap-1 flex flex-col">
             <div className="flex justify-between w-full gap-4">
               <p className="text-[10px] text-gray-400">Customer ID</p>
               <CopyButton text={user?.unique_customer_id} />
@@ -52,7 +52,7 @@ const MobileNav = () => {
             <p className="text-xs">
               {user?.unique_customer_id || "No Customer ID"}
             </p>
-          </div>
+          </div> */}
 
           {/* <Button label="View Property" className="text-xs px-4" /> */}
           {user?.profile_picture ? (
@@ -81,8 +81,8 @@ const MobileNav = () => {
 
         {/* Side drawer menu */}
         <div className="w-64 bg-white h-screen p-6 shadow-lg ">
-          <div className="flex flex-col">
-            <div className="flex justify-between mb-6">
+          <div className="flex flex-col gap-4">
+            <div className="flex justify-between">
               <Link to="/">
                 <img src="/logo.png" alt="logo" className=" w-[60%]" />
               </Link>
@@ -90,6 +90,16 @@ const MobileNav = () => {
                 <X size={24} />
               </button>
             </div>
+            <div className="border border-gray-300 rounded-xl px-4 py-1 gap-1 flex flex-col">
+              <div className="flex justify-between w-full gap-4">
+                <p className="text-[10px] text-gray-400">Customer ID</p>
+                <CopyButton text={user?.unique_customer_id} />
+              </div>
+              <p className="text-xs">
+                {user?.unique_customer_id || "No Customer ID"}
+              </p>
+            </div>
+
             <input
               placeholder="Search..."
               className="px-6 bg-adron-body rounded-full py-2 text-xs"

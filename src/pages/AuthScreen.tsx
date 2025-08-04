@@ -24,18 +24,10 @@ const OnboardingScreen = () => {
         return <Login />;
       case "verify OTP":
         return <OTPScreen />;
-      // case "signup completed":
-      //   return <SignupComplete />;
       case "forgot password":
         return <ForgotPassword />;
       case "reset password":
         return <ResetPassword />;
-      // case "password reset success":
-      //   return <AddServices />;
-      // case "signup completed":
-      //   return <AddItems />;
-      // case "onboarding complete":
-      //   return <OnboardingComplete />;
       default:
         return <Login />;
     }

@@ -182,8 +182,8 @@ export default function InvestmentForm() {
               <PropertySummary id={id ?? ""} units={values.units} />
             </div>
             {/* Investment Section */}
-            <div className="grid grid-cols-1 bg-white md:grid-cols-3 p-8 gap-8 rounded-3xl">
-              <div className="md:col-span-2 p-6 space-y-4">
+            <div className="grid grid-cols-1 bg-white md:grid-cols-3 p-2 md:p-8 gap-8 rounded-3xl">
+              <div className="md:col-span-2 p-1 md:p-6 space-y-4">
                 <div className="grid grid-cols-2 gap-4 md:gap-6">
                   <div>
                     <label className="block text-sm mb-2">Payment Type</label>
@@ -249,7 +249,7 @@ export default function InvestmentForm() {
                   )}
                 </div>
               </div>
-              <div className="bg-white p-6 rounded-3xl shadow-xl">
+              <div className="bg-white py-6 px-4 md:px-6 rounded-3xl shadow-xl">
                 <h4 className="font-semibold mb-4">Infrastructure Fees</h4>
                 <div className="space-y-4 mb-4 text-sm">
                   <p className="text-black flex justify-between gap-4">

@@ -155,14 +155,15 @@ export default function SwiperPropertyCard({ property }: Props) {
       </div>
 
       {/* Property Info */}
-      <div className="mt-4 space-y-2 bg-white p-6 rounded-3xl">
+      <div className="mt-4 space-y-2 bg-white p-6 rounded-3xl w-full">
         <h4 className="text-lg font-adron-text-body font-semibold truncate">
           {property.name}
         </h4>
-        <p className="text-xs text-gray-400 flex items-center mt-1 truncate">
-          <FaMapMarkerAlt className="mr-1" /> {address}
-          {/* {`${property.street_address}, ${property.lga}, ${property.state} ${property.country}`} */}
-        </p>
+        <div className="flex items-center text-xs text-gray-400 mt-1 gap-1">
+          <FaMapMarkerAlt className="" />
+          <span className=" w-full truncate">{address}</span>
+        </div>
+        {/* {`${property.street_address}, ${property.lga}, ${property.state} ${property.country}`} */}
 
         <div className="text-lg font-black text-adron-black mt-4 flex justify-between">
           <span className="w-[70%] truncate">

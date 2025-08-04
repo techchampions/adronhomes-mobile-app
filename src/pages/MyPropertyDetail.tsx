@@ -165,8 +165,15 @@ const MyPropertyDetail = () => {
     // }
   };
   const renderButton = () => {
-    const length = data?.contract_documents.length || 0;
-    if (length > 0) {
+    const docLength = data?.contract_documents.length || 0;
+    if (!data?.contract?.unique_contract_id) {
+      return (
+        <div className="flex items-center text-white/70 px-2 text-sm gap-2">
+          <InlineLoader />
+          <span>Contract is not yet Active</span>
+        </div>
+      );
+    } else if (paymentProgress === 100 && docLength > 0) {
       return (
         <div className="flex items-center text-white gap-4">
           <div className="flex items-center gap-1">
@@ -324,12 +331,12 @@ const MyPropertyDetail = () => {
                     <div className="flex justify-between w-full gap-4">
                       <p className="text-[10px] text-white">Contract ID</p>
                       <CopyButton
-                        text={data?.contract.unique_contract_id}
+                        text={data?.contract?.unique_contract_id || ""}
                         className="text-white"
                       />
                     </div>
                     <p className="text-xs text-white">
-                      {data?.contract.unique_contract_id || "No contract ID"}
+                      {data?.contract?.unique_contract_id || "No contract ID"}
                     </p>
                   </div>
                 </div>
@@ -446,7 +453,12 @@ const MyPropertyDetail = () => {
                     ></div>
                   </div>
                 </div>
-                {infrastructureProgress >= 100 ? (
+                {!data?.contract?.unique_contract_id ? (
+                  <div className="flex items-center text-white/70 px-2 text-sm gap-2">
+                    <InlineLoader />
+                    <span>this contract is not yet Active</span>
+                  </div>
+                ) : infrastructureProgress >= 100 ? (
                   paymentProgress >= 100 && otherFeeProgress >= 100 ? (
                     <div className="flex items-center mb-5 gap-2 text-white">
                       <InlineLoader />
@@ -517,7 +529,12 @@ const MyPropertyDetail = () => {
                     ></div>
                   </div>
                 </div>
-                {otherFeeProgress >= 100 ? (
+                {!data?.contract?.unique_contract_id ? (
+                  <div className="flex items-center text-white/70 px-2 text-sm gap-2">
+                    <InlineLoader />
+                    <span>this contract is not yet Active</span>
+                  </div>
+                ) : otherFeeProgress >= 100 ? (
                   infrastructureProgress >= 100 && paymentProgress >= 100 ? (
                     <div className="flex items-center mb-5 gap-2 text-white">
                       <InlineLoader />

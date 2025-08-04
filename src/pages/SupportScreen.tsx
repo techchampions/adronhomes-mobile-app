@@ -1,6 +1,8 @@
+import { useNavigate } from "react-router-dom";
 import Button from "../components/Button";
 
 const SupportScreen = () => {
+  const navigate = useNavigate();
   return (
     <div className="w-full space-y-4">
       <div className=" flex flex-col justify-between items-start bg-white py-7 px-4 md:px-12 rounded-3xl gap-5">
@@ -37,6 +39,7 @@ const SupportScreen = () => {
         <Button
           label="See FAQs"
           className="bg-black text-white font-bold !w-[155px] text-xs"
+          onClick={() => navigate("/faqs")}
         />
       </div>
     </div>
