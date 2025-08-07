@@ -187,7 +187,7 @@ export const PassportPhotoForm: React.FC<Props> = ({
                 </label>
                 <div className="text-sm w-full text-center">Co-Owner Photo</div>
               </div> */}
-              <div className="flex items-start gap-5 mb-4">
+              <div className="flex flex-wrap items-start gap-5 mb-4">
                 <ImageUploadField
                   name="ownerPhoto1"
                   label="Principal Owner Photo"

@@ -19,6 +19,7 @@ import { IoCarSportOutline, IoConstructOutline } from "react-icons/io5";
 import { useUserStore } from "../zustand/UserStore";
 import { useToastStore } from "../zustand/useToastStore";
 import PropertyList from "../components/PropertyList";
+import HorizontalPropertyList from "../components/DashboardPropertyComponent/HorizontalPropertyList";
 const PropertyDetail = () => {
   const params = useParams();
   const { user } = useUserStore();
@@ -467,8 +468,12 @@ const PropertyDetail = () => {
             />
           </div>
           <div className="flex flex-col mt-14 gap-4">
-            <h4 className="font-bold">Similar Properties</h4>
-            <PropertyList properties={data?.data.similar_property_user || []} />
+            {/* <h4 className="font-bold">Similar Properties</h4> */}
+            <HorizontalPropertyList
+              title="Similar Properties"
+              properties={data?.data.similar_property_user || []}
+            />
+            {/* <PropertyList properties={data?.data.similar_property_user || []} /> */}
           </div>
         </div>
       </div>

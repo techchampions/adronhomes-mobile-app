@@ -18,6 +18,8 @@ export interface PendingPropertyPlanPayload {
   user_property_id?: number;
   payment_type?: number;
   payment_method?: string;
+  bank_name?: string;
+  proof_of_payment?: File;
 }
 
 export interface NewPropertyPlanPayload {

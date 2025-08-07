@@ -55,13 +55,19 @@ export const NextofKinForm: React.FC<Props> = ({ activeTab, setActiveTab }) => {
         <Form className="space-y-4 py-5 w-full md:w-[80%] mx-auto">
           <div className="grid grid-cols-2 gap-4">
             <div className="">
-              <label htmlFor="" className="text-sm text-gray-400">
+              <label
+                htmlFor=""
+                className="text-sm text-gray-400 min-w-0 line-clamp-1"
+              >
                 Next Of Kin Name
               </label>
               <InputField name="nextOfKin" placeholder="Full Name" />
             </div>
             <div className="">
-              <label htmlFor="" className="text-sm text-gray-400">
+              <label
+                htmlFor=""
+                className="text-sm text-gray-400 min-w-0 line-clamp-1"
+              >
                 Relationship
               </label>
               <InputField
@@ -70,13 +76,19 @@ export const NextofKinForm: React.FC<Props> = ({ activeTab, setActiveTab }) => {
               />
             </div>
             <div className="">
-              <label htmlFor="" className="text-sm text-gray-400">
+              <label
+                htmlFor=""
+                className="text-sm text-gray-400 min-w-0 line-clamp-1"
+              >
                 Next of Kin Phone.No
               </label>
               <InputField name="phone" placeholder="Phone number" />
             </div>
             <div className="">
-              <label htmlFor="" className="text-sm text-gray-400">
+              <label
+                htmlFor=""
+                className="text-sm text-gray-400 min-w-0 line-clamp-1"
+              >
                 Next of Kin Address
               </label>
               <InputField name="address" placeholder="Residential address" />

@@ -166,6 +166,77 @@ const MyPropertyDetail = () => {
   };
   const renderButton = () => {
     const docLength = data?.contract_documents.length || 0;
+    if (data?.payment.status === 0) {
+      if (data.payment.payment_type === "Bank Transfer") {
+        return (
+          <div className="flex items-center gap-1 text-white/50">
+            <BsFillExclamationCircleFill />
+            <span className="text-xs">
+              Please wait... Payment is being confirmed.
+            </span>
+          </div>
+        );
+      }
+      if (data.payment.payment_type === "Paystack") {
+        return (
+          <div className="space-y-1">
+            <Button
+              onClick={completeInitialPropertyPayment}
+              label="Complete Initial Payment"
+              className="mt-0 bg-white !text-adron-green !w-fit px-6 text-sm"
+            />
+            <div className="flex items-center gap-1 text-white/50">
+              <BsFillExclamationCircleFill />
+              <span className="text-xs">
+                Your Paystack Payment was not completed... Try again.
+              </span>
+            </div>
+          </div>
+        );
+      }
+    }
+    if (data?.payment.status === 1) {
+      if (data.contract.unique_contract_id) {
+        if (paymentProgress === 100) {
+          if (docLength > 0) {
+            return (
+              <div className="flex items-center text-white gap-4">
+                <div className="flex items-center gap-1">
+                  <Button
+                    label="Download Document"
+                    onClick={handleDownload}
+                    className=" bg-white !text-adron-green !w-fit px-6 text-sm"
+                  />
+                </div>
+              </div>
+            );
+          }
+          return (
+            <div className="flex items-center text-white gap-4">
+              <div className="flex items-center gap-1">
+                <FaCheckCircle className="text-white" />
+                <span className="text-sm text-white/50">
+                  Payment Complete, Documents are being prepared...
+                </span>
+              </div>
+            </div>
+          );
+        }
+        return (
+          <Button
+            onClick={makePaymentForProperty}
+            label="Make Payment"
+            className="bg-white !text-adron-green !w-fit px-6 text-sm"
+          />
+        );
+      }
+      return (
+        <div className="flex items-center text-white/70 px-2 text-sm gap-2">
+          <BsFillExclamationCircleFill />
+          <span>Sorry, this contract is not yet active</span>
+        </div>
+      );
+    }
     if (!data?.contract?.unique_contract_id) {
       return (
         <div className="flex items-center text-white/70 px-2 text-sm gap-2">

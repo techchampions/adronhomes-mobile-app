@@ -39,8 +39,8 @@ const PropertyCard = ({
   };
 
   return (
-    <div className="w-full max-w-[472px] mx-auto rounded-[30px] overflow-hidden">
-      <div className="relative w-full h-[200px] md:h-[240px] overflow-hidden">
+    <div className="w-full min-w-[300px] max-w-[472px] mx-auto rounded-[30px] overflow-hidden">
+      <div className="relative w-full h-[180px] md:h-[200px] overflow-hidden">
         <img src={image} alt={title} className="object-cover w-full h-full" />
       </div>
 

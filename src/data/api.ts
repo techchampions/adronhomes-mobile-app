@@ -439,6 +439,10 @@ export const makePendingPropertyPlanPayment = async (
 
   if (payload.payment_method)
     formData.append("payment_method", payload.payment_method);
+  if (payload.bank_name) formData.append("bank_name", payload.bank_name);
+
+  if (payload.proof_of_payment)
+    formData.append("proof_of_payment", payload.proof_of_payment);
 
   const res = await apiClient.post("/user/make-pending-payment", formData, {
     headers: {

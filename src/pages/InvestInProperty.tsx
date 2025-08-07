@@ -62,6 +62,7 @@ export default function InvestmentForm() {
     startDate: "",
     endDate: "",
     units: 1,
+    propertyPurpose: "",
   };
   const validationSchema = Yup.object({
     ...(selectedPaymentType === "Installment"
@@ -79,6 +80,9 @@ export default function InvestmentForm() {
             .max(data?.data.properties[0].number_of_unit || 0)
             .required("Required"),
         }),
+    ...(property?.type.name === "Land" && {
+      propertyPurpose: Yup.string().required("Required"),
+    }),
 
     // marketerId: Yup.string().required("Required"),
   });
@@ -204,6 +208,15 @@ export default function InvestmentForm() {
                       placeholder="Enter Number of Units to buy"
                     />
                   </div>
+                  <div>
+                    <label className="block text-sm mb-2">Land Purpose</label>
+                    <SelectField
+                      name="propertyPurpose"
+                      placeholder="Select Land Purpose"
+                      options={["Bungalow", "Duplex", "WareHouse"]}
+                    />
+                  </div>
+
                   {selectedPaymentType === "Installment" && (
                     <>
                       <div>
