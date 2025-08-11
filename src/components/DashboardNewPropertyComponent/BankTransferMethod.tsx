@@ -45,6 +45,7 @@ const BankTransfer = ({
     paymentType,
     planId,
     numberOfUnits,
+    propertyPurpose,
     resetPaymentDetails,
   } = usePaymentBreakDownStore();
   const { showToast } = useToastStore();
@@ -99,6 +100,7 @@ const BankTransfer = ({
             proof_of_payment: values.proof,
             number_of_unit: numberOfUnits,
             bank_name: values.bank_name,
+            purpose: propertyPurpose,
           };
         } else {
           payload = {
@@ -115,6 +117,7 @@ const BankTransfer = ({
             proof_of_payment: values.proof,
             number_of_unit: numberOfUnits,
             bank_name: values.bank_name,
+            purpose: propertyPurpose,
           };
         }
         createPlan(payload, {

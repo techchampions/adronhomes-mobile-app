@@ -1,6 +1,8 @@
 import { Form, Formik } from "formik";
+import { PiRoadHorizonDuotone } from "react-icons/pi";
 import { FaHeart, FaMapMarker } from "react-icons/fa";
 import { IoIosCheckmarkCircleOutline, IoMdBed } from "react-icons/io";
+import { LuFence } from "react-icons/lu";
 import { useNavigate, useParams } from "react-router-dom";
 import InputField from "../components/InputField";
 import Button from "../components/Button";
@@ -8,18 +10,25 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
-import { GiStreetLight } from "react-icons/gi";
+import { GiGate, GiStreetLight } from "react-icons/gi";
 import { useEnquireProperty, useGetPropertyByID } from "../data/hooks";
 import { formatDate, formatPrice } from "../data/utils";
 import ApiErrorBlock from "../components/ApiErrorBlock";
 import Loader from "../components/Loader";
-import { LiaToiletSolid } from "react-icons/lia";
+import { LiaLandmarkSolid, LiaToiletSolid } from "react-icons/lia";
 import { TbBed } from "react-icons/tb";
-import { IoCarSportOutline, IoConstructOutline } from "react-icons/io5";
+import {
+  IoCarSportOutline,
+  IoConstructOutline,
+  IoLogoWhatsapp,
+} from "react-icons/io5";
 import { useUserStore } from "../zustand/UserStore";
 import { useToastStore } from "../zustand/useToastStore";
 import PropertyList from "../components/PropertyList";
 import HorizontalPropertyList from "../components/DashboardPropertyComponent/HorizontalPropertyList";
+import { LucideFence, PhoneCall } from "lucide-react";
+import { MdOutlineLandscape } from "react-icons/md";
+import { FaRoad } from "react-icons/fa6";
 const PropertyDetail = () => {
   const params = useParams();
   const { user } = useUserStore();
@@ -191,40 +200,99 @@ const PropertyDetail = () => {
             </div>
             <div className="flex flex-col md:flex-row gap-4">
               <div className="flex flex-col w-full md:w-[70%] gap-10">
+                {item?.nearby_landmarks !== null && (
+                  <div className="flex flex-col gap-2">
+                    <div className="flex">
+                      <LiaLandmarkSolid />
+                      <h4 className="font-bold text-md">Landmarks:</h4>
+                    </div>
+                    <div className="flex flex-wrap ml-5 text-sm">
+                      <span className="bg-gray-300 py-1 px-2 rounded-md">
+                        {item?.nearby_landmarks}
+                      </span>
+                      {/* {item?.nearby_landmarks?.map((item, index) => (
+                        <span
+                          className="bg-gray-400 p-1 rounded-sm"
+                          key={index}
+                        >
+                          {item}
+                        </span>
+                      ))} */}
+                    </div>
+                  </div>
+                )}
+
                 <div className="flex flex-col gap-2">
                   <h4 className="font-bold text-md">Overview</h4>
-                  <div className="text-sm flex flex-wrap ml-5 divide-adron-gray-300 divide-x-1 py-1 mb-2 border-b-1 border-b-gray-300">
-                    {item?.no_of_bedroom != null && (
-                      <li className="flex items-center gap-2 px-2">
-                        <TbBed />
-                        <span>{item?.no_of_bedroom} Bedrooms</span>
-                      </li>
-                    )}
-                    {item?.number_of_bathroom != null && (
-                      <li className="flex items-center gap-2 px-2">
-                        <LiaToiletSolid />
-                        <span>{item?.number_of_bathroom} Bathroom</span>
-                      </li>
-                    )}
-                    {item?.parking_space != null && (
-                      <li className="flex items-center gap-2 px-2">
-                        <IoCarSportOutline />
-                        <span>{item?.parking_space} Vehicle Parking Space</span>
-                      </li>
-                    )}
-                    {item?.year_built != null && (
-                      <li className="flex items-center gap-2 px-2">
-                        <IoConstructOutline />
-                        <span>Built Year {formatDate(item?.year_built)}</span>
-                      </li>
-                    )}
-                  </div>
-                  <p className="text-sm ml-5">{item?.overview}</p>
+                  {item?.type.name === "Land" ? (
+                    <div className="text-sm flex flex-wrap ml-5 divide-adron-gray-300 divide-x-1 py-1 mb-2 border-b-1 border-b-gray-300">
+                      {item?.topography != null && (
+                        <li className="flex items-center gap-2 px-2">
+                          <MdOutlineLandscape />
+                          <span>{item.topography}</span>
+                        </li>
+                      )}
+                      {item?.road_access != null && (
+                        <li className="flex items-center gap-2 px-2">
+                          <PiRoadHorizonDuotone />{" "}
+                          <span>{item?.road_access}</span>
+                        </li>
+                      )}
+                      {item?.gated_estate != null && (
+                        <li className="flex items-center gap-2 px-2">
+                          <GiGate />{" "}
+                          <span>
+                            {item.gated_estate === "Yes" ? "Gated" : "No gates"}
+                          </span>
+                        </li>
+                      )}
+                      {item?.fencing != null && (
+                        <li className="flex items-center gap-2 px-2">
+                          <LuFence />{" "}
+                          <span>
+                            {item.fencing === "Yes" ? "Fenced" : "Not Fenced"}
+                          </span>
+                        </li>
+                      )}
+                    </div>
+                  ) : (
+                    <div className="text-sm flex flex-wrap ml-5 divide-adron-gray-300 divide-x-1 py-1 mb-2 border-b-1 border-b-gray-300">
+                      {item?.no_of_bedroom != null && (
+                        <li className="flex items-center gap-2 px-2">
+                          <TbBed />
+                          <span>{item?.no_of_bedroom} Bedrooms</span>
+                        </li>
+                      )}
+                      {item?.number_of_bathroom != null && (
+                        <li className="flex items-center gap-2 px-2">
+                          <LiaToiletSolid />
+                          <span>{item?.number_of_bathroom} Bathroom</span>
+                        </li>
+                      )}
+                      {item?.parking_space != null && (
+                        <li className="flex items-center gap-2 px-2">
+                          <IoCarSportOutline />
+                          <span>
+                            {item?.parking_space} Vehicle Parking Space
+                          </span>
+                        </li>
+                      )}
+                      {item?.year_built != null && (
+                        <li className="flex items-center gap-2 px-2">
+                          <IoConstructOutline />
+                          <span>Built Year {formatDate(item?.year_built)}</span>
+                        </li>
+                      )}
+                    </div>
+                  )}
+                  <p className="text-sm ml-5 break-words">{item?.overview}</p>
                 </div>
 
                 <div className="flex flex-col gap-2">
                   <h4 className="font-bold text-md">Description</h4>
-                  <p className="text-sm ml-5">{item?.description}</p>
+                  <p className="text-sm ml-5 break-words">
+                    {item?.description}
+                  </p>
                 </div>
                 <div className="flex flex-col gap-2">
                   <h4 className="font-bold text-md">Features</h4>
@@ -245,21 +313,23 @@ const PropertyDetail = () => {
                           <tr className="bg-white border-b border-gray-200">
                             <th
                               scope="row"
-                              className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap "
+                              className="px-2 py-4 font-medium text-gray-900 whitespace-nowrap "
                             >
                               Country
                             </th>
-                            <td className="px-6 py-4">{item?.country}</td>
+                            <td className="px-2 py-4 text-left">
+                              {item?.country}
+                            </td>
                           </tr>
 
                           <tr className="bg-white border-b border-gray-200">
                             <th
                               scope="row"
-                              className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap "
+                              className="px-2 py-4 font-medium text-gray-900 whitespace-nowrap "
                             >
                               State
                             </th>
-                            <td className="px-6 py-4">{item?.state}</td>
+                            <td className="px-2 py-4">{item?.state}</td>
                           </tr>
                         </tbody>
                       </table>
@@ -270,21 +340,21 @@ const PropertyDetail = () => {
                           <tr className="bg-white border-b border-gray-200">
                             <th
                               scope="row"
-                              className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
+                              className="px-2 py-4 font-medium text-gray-900 whitespace-nowrap"
                             >
                               LGA
                             </th>
-                            <td className="px-6 py-4">{item?.lga}</td>
+                            <td className="px-2 py-4">{item?.lga}</td>
                           </tr>
 
                           <tr className="bg-white border-b border-gray-200">
                             <th
                               scope="row"
-                              className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
+                              className="px-2 py-4 font-medium text-gray-900 whitespace-nowrap"
                             >
                               Address
                             </th>
-                            <td className="px-6 py-4 line-clamp-1 truncate">
+                            <td className="px-2 py-4 line-clamp-1 truncate">
                               {item?.street_address}
                             </td>
                           </tr>
@@ -316,7 +386,10 @@ const PropertyDetail = () => {
                                       scope="row"
                                       className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
                                     >
-                                      {detail.name.trim()}
+                                      {detail.name.trim()}{" "}
+                                      {detail.purpose
+                                        ? `(${detail.purpose})`
+                                        : ""}
                                     </th>
                                     <td className="px-6 py-4">
                                       {formatPrice(detail.value)}
@@ -341,7 +414,10 @@ const PropertyDetail = () => {
                                       scope="row"
                                       className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
                                     >
-                                      {detail.name.trim()}
+                                      {detail.name.trim()}{" "}
+                                      {detail.purpose
+                                        ? `(${detail.purpose})`
+                                        : ""}
                                     </th>
                                     <td className="px-6 py-4">
                                       {detail.value.toLocaleString()}
@@ -380,21 +456,42 @@ const PropertyDetail = () => {
                     </div>
                     <div className="flex-flex-col">
                       <p className="text-xs text-gray-500">Payment Schedule</p>
-                      <p className="text-sm capitalize">
-                        {data?.data.properties[0].payment_schedule.map(
-                          (item, index) => `${item} `
-                        )}
-                      </p>
+                      {data?.data.properties[0].payment_schedule ? (
+                        <p className="text-sm capitalize">
+                          {data?.data.properties[0].payment_schedule.map(
+                            (item, index) => `${item} `
+                          )}
+                        </p>
+                      ) : (
+                        <p className="text-sm capitalize">
+                          No payment schedule available
+                        </p>
+                      )}
                     </div>
                     <div className="flex-flex-col bg-[#CFFFCF] rounded-xl p-4">
                       <p className="text-xs text-gray-500">Fees & Charges</p>
-                      <p className="text-sm"> {formatPrice(totalFees || 0)}</p>
+                      <p className="text-sm">
+                        {totalFees == 0
+                          ? "No Fees & Charges"
+                          : formatPrice(totalFees || 0)}{" "}
+                      </p>
                     </div>
                   </div>
                 </div>
+
+                <div className="relative w-full h-[360px] rounded-[50px] overflow-hidden mb-6">
+                  {/* <StreetView lat={40.748817} lng={-73.985428} /> */}
+                  <iframe
+                    src={data?.data.properties[0].virtual_tour || ""}
+                    className="w-full h-full"
+                    allowFullScreen
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                  ></iframe>
+                </div>
               </div>
               {/* Interest Form  */}
-              <div className="w-full md:w-[30%]">
+              <div className="w-full md:w-[30%] space-y-4">
                 <Formik
                   initialValues={{
                     description: "",
@@ -448,17 +545,46 @@ const PropertyDetail = () => {
                         />
                       </div>
                     </div>
-                    <div className="flex justify-between text-xs gap-1">
+                    <div className="flex flex-col text-xs gap-1">
                       <Button
                         label="Submit Form"
                         type="submit"
                         isLoading={isPending}
                         disabled={isPending}
-                        className="border bg-transparent !text-black border-adron-black mt-8 flex-1 py-1"
+                        className="border bg-transparent !text-black border-adron-black mt-8"
                       />
+                      {data?.data.properties[0].whatsapp_link && (
+                        <a href={data.data.properties[0].whatsapp_link}>
+                          <Button
+                            label="Chat on WhatsApp"
+                            icon={<IoLogoWhatsapp size={18} />}
+                          />
+                        </a>
+                      )}
+                      {data?.data.properties[0].contact_number && (
+                        <a
+                          href={`tel:${data.data.properties[0].contact_number}`}
+                        >
+                          <Button
+                            label="Call Marketer"
+                            className="!bg-blue-950"
+                            icon={<PhoneCall size={18} />}
+                          />
+                        </a>
+                      )}
                     </div>
                   </Form>
                 </Formik>
+
+                <div className="video-responsive w-full h-[250px] md:h-[150px] rounded-2xl overflow-hidden">
+                  <iframe
+                    className="w-full h-full"
+                    src={data?.data.properties[0].video_link || ""}
+                    title="YouTube video player"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  ></iframe>
+                </div>
               </div>
             </div>
             <Button

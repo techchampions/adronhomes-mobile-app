@@ -317,6 +317,7 @@ export const createPropertyPlan = async (
 
   if (payload.payment_method)
     formData.append("payment_method", payload.payment_method);
+  if (payload.purpose) formData.append("purpose", payload.purpose);
 
   if (payload.marketer_code)
     formData.append("marketer_code", payload.marketer_code);

@@ -116,7 +116,9 @@ export default function InvestmentForm() {
         infrastructureFees: infrastructureFees,
         otherFees: otherFees,
         numberOfUnits: values.units,
-        propertyId: id ? Number(id) : null, // Convert string ID to number
+        propertyId: id ? Number(id) : null,
+        propertyPurpose:
+          property?.type.name === "Land" ? values.propertyPurpose : null,
       };
       setPaymentDetails(planDetails);
       openModal(<InputMarketerId />);
@@ -136,6 +138,8 @@ export default function InvestmentForm() {
         otherFees: otherFees,
         numberOfUnits: values.units,
         propertyId: id ? Number(id) : null, // Convert string ID to number
+        propertyPurpose:
+          property?.type.name === "Land" ? values.propertyPurpose : null,
       };
       setPaymentDetails(planDetails);
       openModal(<InputMarketerId />);
@@ -208,14 +212,16 @@ export default function InvestmentForm() {
                       placeholder="Enter Number of Units to buy"
                     />
                   </div>
-                  <div>
-                    <label className="block text-sm mb-2">Land Purpose</label>
-                    <SelectField
-                      name="propertyPurpose"
-                      placeholder="Select Land Purpose"
-                      options={["Bungalow", "Duplex", "WareHouse"]}
-                    />
-                  </div>
+                  {property?.type.name === "Land" && (
+                    <div>
+                      <label className="block text-sm mb-2">Land Purpose</label>
+                      <SelectField
+                        name="propertyPurpose"
+                        placeholder="Select Land Purpose"
+                        options={property?.purpose || []}
+                      />
+                    </div>
+                  )}
 
                   {selectedPaymentType === "Installment" && (
                     <>
@@ -237,7 +243,7 @@ export default function InvestmentForm() {
                         <SelectField
                           name="paymentSchedule"
                           placeholder="Select Payment Schedule"
-                          options={["Monthly", "Quarterly"]}
+                          options={property?.payment_schedule || []}
                         />
                       </div>
                       <div className="flex gap-4 col-span-2">
