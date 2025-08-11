@@ -1,35 +1,20 @@
 import { useState } from "react";
 import { Plus, X } from "lucide-react";
-
-const faqData = [
-  {
-    question: "How much is a consultation?",
-    answer:
-      "We charge $150 for a consultation with an HR consultant. During your consultation you can ask the consultant any questions you have. In order to accurately advise you, your consultant may also ask you questions. If we feel you need long term support, we will talk about the service options we have available.",
-  },
-  {
-    question: "Is this confidential?",
-    answer: "Yes, all consultations are strictly confidential.",
-  },
-  {
-    question: "What documents are needed to buy a property?",
-    answer:
-      "You will need identification, proof of income, and other relevant documents depending on the type of property.",
-  },
-  {
-    question: "Why are the consultations recorded?",
-    answer: "Recordings are made to ensure quality and for training purposes.",
-  },
-  {
-    question: "Can I schedule a physical inspection?",
-    answer:
-      "Yes, physical inspections can be scheduled through our support team.",
-  },
-];
+import { useGetFAQs } from "../data/hooks";
+import SmallLoader from "../components/SmallLoader";
+import ApiErrorBlock from "../components/ApiErrorBlock";
 
 const FAQAccordion = () => {
-  const [openIndex, setOpenIndex] = useState<number | null>(0);
+  const { data, isError, isLoading } = useGetFAQs();
+  if (isLoading) {
+    return <SmallLoader />;
+  }
+  if (isError) {
+    return <ApiErrorBlock />;
+  }
 
+  const [openIndex, setOpenIndex] = useState<number | null>(0);
+  const faqData = data?.data || [];
   const toggleAccordion = (index: number) => {
     setOpenIndex(openIndex === index ? null : index);
   };

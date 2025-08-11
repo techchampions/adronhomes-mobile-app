@@ -29,6 +29,7 @@ import { AccountDetailsResponse } from "./types/AccountDetailsTypes";
 import { EnquirePayload } from "./types/EnquirePayload";
 import { PropertiesRequestResponse } from "./types/PropertyRequestTypes";
 import { SliderByTypeResponse } from "./types/SliderByTypeTypes";
+import { FAQResponse } from "./types/FAQTypes";
 
 export type ApiError = {
   response?: {
@@ -561,5 +562,10 @@ export const getSliderByType = async (
 ): Promise<SliderByTypeResponse> => {
   const endpoint = `/sliders?type=${type.toString()}`;
   const response = await apiClient.get(endpoint);
+  return response.data;
+};
+
+export const getFAQs = async (): Promise<FAQResponse> => {
+  const response = await apiClient.get("/faqs");
   return response.data;
 };
