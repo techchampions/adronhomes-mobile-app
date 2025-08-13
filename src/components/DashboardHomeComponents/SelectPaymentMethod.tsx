@@ -133,7 +133,9 @@ const SelectPaymentMethod = ({
               </p>
             </div>
           </div>
-          <div
+
+          {/* Bank Tranfer */}
+          {/* <div
             className={`flex items-center gap-4 p-4 rounded-xl cursor-pointer transition-all ${
               selectedPaymentMethod === "Bank Transfer"
                 ? "bg-adron-green text-white border-none "
@@ -160,7 +162,7 @@ const SelectPaymentMethod = ({
                 payment will be confrimed within 24 hours.
               </p>
             </div>
-          </div>
+          </div> */}
 
           <div
             className={`flex items-center gap-4 p-4 rounded-xl cursor-pointer transition-all ${

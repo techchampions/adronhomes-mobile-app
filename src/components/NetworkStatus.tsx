@@ -22,9 +22,9 @@ const NetworkStatusBar = () => {
   return (
     <div
       className={`
-      fixed bottom-4 left-1/2 transform -translate-x-1/2
-      px-4 py-3 rounded-full shadow-lg z-50 flex items-center
-      ${isOnline ? "bg-adron-green text-white" : "bg-red-500 text-white"}
+      fixed bottom-4 left-1/2 transform -translate-x-1/2 w-[95%] md:w-auto text-sm
+      px-4 py-3 rounded-md shadow-lg z-50 flex items-center
+      ${isOnline ? "bg-green-500 text-white" : "bg-red-500 text-white"}
       animate-fade-in-up
     `}
     >

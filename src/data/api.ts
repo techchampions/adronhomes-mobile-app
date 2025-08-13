@@ -29,6 +29,7 @@ import { AccountDetailsResponse } from "./types/AccountDetailsTypes";
 import { EnquirePayload } from "./types/EnquirePayload";
 import { PropertiesRequestResponse } from "./types/PropertyRequestTypes";
 import { SliderByTypeResponse } from "./types/SliderByTypeTypes";
+import { FAQResponse } from "./types/FAQTypes";
 
 export type ApiError = {
   response?: {
@@ -317,6 +318,7 @@ export const createPropertyPlan = async (
 
   if (payload.payment_method)
     formData.append("payment_method", payload.payment_method);
+  if (payload.purpose) formData.append("purpose", payload.purpose);
 
   if (payload.marketer_code)
     formData.append("marketer_code", payload.marketer_code);
@@ -439,6 +441,10 @@ export const makePendingPropertyPlanPayment = async (
 
   if (payload.payment_method)
     formData.append("payment_method", payload.payment_method);
+  if (payload.bank_name) formData.append("bank_name", payload.bank_name);
+
+  if (payload.proof_of_payment)
+    formData.append("proof_of_payment", payload.proof_of_payment);
 
   const res = await apiClient.post("/user/make-pending-payment", formData, {
     headers: {
@@ -556,5 +562,10 @@ export const getSliderByType = async (
 ): Promise<SliderByTypeResponse> => {
   const endpoint = `/sliders?type=${type.toString()}`;
   const response = await apiClient.get(endpoint);
+  return response.data;
+};
+
+export const getFAQs = async (): Promise<FAQResponse> => {
+  const response = await apiClient.get("/faqs");
   return response.data;
 };

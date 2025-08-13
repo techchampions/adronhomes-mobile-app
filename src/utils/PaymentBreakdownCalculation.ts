@@ -8,13 +8,18 @@ export const calculatePaymentDetails = (
     paymentDuration: string;
     paymentSchedule: string;
     units: number;
+    propertyPurpose: string;
   },
   property?: Property
 ) => {
   const feesList = property?.details || [];
-  const otherFeesData = feesList.filter((item) => item.type === "others");
+  const otherFeesData = feesList.filter(
+    (item) => item.type === "others" && item.purpose === values.propertyPurpose
+  );
   const infrastructureData = feesList.filter(
-    (item) => item.type === "infrastructure"
+    (item) =>
+      item.type === "infrastructure and development" &&
+      item.purpose === values.propertyPurpose
   );
 
   let otherFees =

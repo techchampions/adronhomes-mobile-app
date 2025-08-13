@@ -56,7 +56,9 @@ const BankTransfer = ({
       const payload = {
         user_property_id: user_property_id,
         payment_type: payment_type,
-        payment_method: "bank transfer",
+        payment_method: "bank_transfer",
+        bank_name: values.bank_name,
+        proof_of_payment: values.proof,
       };
       makePayment(payload, {
         onSuccess(data) {

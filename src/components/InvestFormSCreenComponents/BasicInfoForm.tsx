@@ -82,7 +82,10 @@ export const BasicInfoForm: React.FC<Props> = ({ activeTab, setActiveTab }) => {
         <Form className="space-y-4 py-5 w-full md:w-[80%] mx-auto">
           <div className="grid grid-cols-2 gap-4">
             <div className="">
-              <label htmlFor="" className="text-sm text-gray-400">
+              <label
+                htmlFor=""
+                className="text-sm text-gray-400 min-w-0 line-clamp-1"
+              >
                 Select Gender
               </label>
 
@@ -93,18 +96,24 @@ export const BasicInfoForm: React.FC<Props> = ({ activeTab, setActiveTab }) => {
               />
             </div>
             <div className="">
-              <label htmlFor="" className="text-sm text-gray-400">
+              <label
+                htmlFor=""
+                className="text-sm text-gray-400 min-w-0 line-clamp-1"
+              >
                 Marital Status
               </label>
 
               <SelectField
                 name="maritalStatus"
-                options={["Single", "Maried"]}
+                options={["Single", "Married"]}
                 placeholder="Select"
               />
             </div>
             <div className="">
-              <label htmlFor="" className="text-sm text-gray-400">
+              <label
+                htmlFor=""
+                className="text-sm text-gray-400 min-w-0 line-clamp-1"
+              >
                 Country
               </label>
               <InputField
@@ -113,19 +122,28 @@ export const BasicInfoForm: React.FC<Props> = ({ activeTab, setActiveTab }) => {
               />
             </div>
             <div className="">
-              <label htmlFor="" className="text-sm text-gray-400">
+              <label
+                htmlFor=""
+                className="text-sm text-gray-400 min-w-0 line-clamp-1"
+              >
                 State
               </label>
               <InputField name="state" placeholder="State" />
             </div>
             <div className="">
-              <label htmlFor="" className="text-sm text-gray-400">
+              <label
+                htmlFor=""
+                className="text-sm text-gray-400 min-w-0 line-clamp-1"
+              >
                 Town
               </label>
               <InputField name="town" />
             </div>
             <div className="">
-              <label htmlFor="" className="text-sm text-gray-400">
+              <label
+                htmlFor=""
+                className="text-sm text-gray-400 min-w-0 line-clamp-1"
+              >
                 Nationality
               </label>
               <InputField
@@ -134,7 +152,10 @@ export const BasicInfoForm: React.FC<Props> = ({ activeTab, setActiveTab }) => {
               />
             </div>
             <div className="">
-              <label htmlFor="" className="text-sm text-gray-400">
+              <label
+                htmlFor=""
+                className="text-sm text-gray-400 min-w-0 line-clamp-1"
+              >
                 Address
               </label>
               <InputField name="residentialAddress" />

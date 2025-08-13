@@ -53,6 +53,7 @@ const SelectPaymentMethod = ({
     marketerId,
     planId,
     numberOfUnits,
+    propertyPurpose,
   } = usePaymentBreakDownStore();
   const walletBalance = userWalletData?.wallet_balance || 0;
 
@@ -112,6 +113,7 @@ const SelectPaymentMethod = ({
             paid_amount: totalAmount,
             marketer_code: marketerId,
             number_of_unit: numberOfUnits,
+            purpose: propertyPurpose,
           };
         } else {
           payload = {
@@ -126,6 +128,7 @@ const SelectPaymentMethod = ({
             paid_amount: totalAmount,
             marketer_code: marketerId,
             number_of_unit: numberOfUnits,
+            purpose: propertyPurpose,
           };
         }
         makePayment(payload, {
@@ -206,6 +209,7 @@ const SelectPaymentMethod = ({
               paid_amount: totalAmount,
               marketer_code: marketerId,
               number_of_unit: numberOfUnits,
+              purpose: propertyPurpose,
             };
           } else {
             payload = {
@@ -220,6 +224,7 @@ const SelectPaymentMethod = ({
               paid_amount: totalAmount,
               marketer_code: marketerId,
               number_of_unit: numberOfUnits,
+              purpose: propertyPurpose,
             };
           }
           makePayment(payload, {

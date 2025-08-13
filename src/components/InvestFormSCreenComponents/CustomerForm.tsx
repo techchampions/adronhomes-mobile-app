@@ -85,32 +85,47 @@ export const CustomerForm: React.FC<Props> = ({ activeTab, setActiveTab }) => {
         <Form className="space-y-4 py-5 w-full md:w-[80%] mx-auto">
           <div className="grid grid-cols-2 gap-4">
             <div className="">
-              <label htmlFor="" className="text-sm text-gray-400">
+              <label
+                htmlFor=""
+                className="text-sm text-gray-400 min-w-0 truncate line-clamp-1"
+              >
                 Principal Owner
               </label>
               <InputField name="subscriberName1" placeholder="Full Name" />
             </div>
             <div className="">
-              <label htmlFor="" className="text-sm text-gray-400">
+              <label
+                htmlFor=""
+                className="text-sm text-gray-400 min-w-0 truncate line-clamp-1"
+              >
                 Additional Name
               </label>
               <InputField name="additionalName" placeholder="Full Name" />
             </div>
             <div className="">
-              <label htmlFor="" className="text-sm text-gray-400">
+              <label
+                htmlFor=""
+                className="text-sm text-gray-400 min-w-0 truncate line-clamp-1"
+              >
                 Co-Owner Name
               </label>
               <InputField name="subscriberName2" placeholder="Full Name" />
             </div>
             <div className="">
-              <label htmlFor="" className="text-sm text-gray-400">
+              <label
+                htmlFor=""
+                className="text-sm text-gray-400 min-w-0 truncate line-clamp-1"
+              >
                 Co-Owner Name 2
               </label>
               <InputField name="subscriberName3" placeholder="Full Name" />
             </div>
 
             <div className="">
-              <label htmlFor="" className="text-sm text-gray-400">
+              <label
+                htmlFor=""
+                className="text-sm text-gray-400 min-w-0 truncate line-clamp-1"
+              >
                 Occupation
               </label>
               <InputField
@@ -118,13 +133,35 @@ export const CustomerForm: React.FC<Props> = ({ activeTab, setActiveTab }) => {
                 placeholder="eg. Banker, Teacher, etc."
               />
             </div>
+
             <div className="">
-              <label htmlFor="" className="text-sm text-gray-400">
-                Business Type
+              <label
+                htmlFor=""
+                className="text-sm text-gray-400 min-w-0 truncate line-clamp-1"
+              >
+                Email
+              </label>
+              <InputField name="email" placeholder="Email Address" />
+            </div>
+            <div className="">
+              <label
+                htmlFor=""
+                className="text-sm text-gray-400 min-w-0 truncate line-clamp-1"
+              >
+                SMS Phone.No
+              </label>
+              <InputField name="phoneSMS" placeholder="Phone No. (for SMS)" />
+            </div>
+            <div className="">
+              <label
+                htmlFor=""
+                className="text-sm text-gray-400 min-w-0 truncate line-clamp-1"
+              >
+                Property Ownership Type
               </label>
               <SelectField
                 name="businessType"
-                placeholder="Select Business type"
+                placeholder="Select intended use of the property"
                 options={[
                   "Company (Corporate)",
                   "Joint",
@@ -133,30 +170,27 @@ export const CustomerForm: React.FC<Props> = ({ activeTab, setActiveTab }) => {
                 ]}
               />
             </div>
+            <div className="flex items-center gap-5 col-span-2 mt-7 mb-2">
+              <span className="text-lg text-nowrap">Employment info</span>
+              <span className=" w-full border-b-1 border-gray-400"></span>
+            </div>
             <div className="">
-              <label htmlFor="" className="text-sm text-gray-400">
+              <label
+                htmlFor=""
+                className="text-sm text-gray-400 min-w-0 truncate line-clamp-1"
+              >
                 Employer Name
               </label>
               <InputField name="employer" placeholder="Full Name" />
             </div>
             <div className="">
-              <label htmlFor="" className="text-sm text-gray-400">
+              <label
+                htmlFor=""
+                className="text-sm text-gray-400 min-w-0 truncate line-clamp-1"
+              >
                 Employer Address
               </label>
               <InputField name="employerAddress" />
-            </div>
-
-            <div className="">
-              <label htmlFor="" className="text-sm text-gray-400">
-                Email
-              </label>
-              <InputField name="email" placeholder="Email Address" />
-            </div>
-            <div className="">
-              <label htmlFor="" className="text-sm text-gray-400">
-                SMS Phone.No
-              </label>
-              <InputField name="phoneSMS" placeholder="Phone No. (for SMS)" />
             </div>
           </div>
 

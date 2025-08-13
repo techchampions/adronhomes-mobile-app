@@ -62,6 +62,7 @@ export default function InvestmentForm() {
     startDate: "",
     endDate: "",
     units: 1,
+    propertyPurpose: "",
   };
   const validationSchema = Yup.object({
     ...(selectedPaymentType === "Installment"
@@ -79,6 +80,9 @@ export default function InvestmentForm() {
             .max(data?.data.properties[0].number_of_unit || 0)
             .required("Required"),
         }),
+    ...(property?.type.name === "Land" && {
+      propertyPurpose: Yup.string().required("Required"),
+    }),
 
     // marketerId: Yup.string().required("Required"),
   });
@@ -112,7 +116,9 @@ export default function InvestmentForm() {
         infrastructureFees: infrastructureFees,
         otherFees: otherFees,
         numberOfUnits: values.units,
-        propertyId: id ? Number(id) : null, // Convert string ID to number
+        propertyId: id ? Number(id) : null,
+        propertyPurpose:
+          property?.type.name === "Land" ? values.propertyPurpose : null,
       };
       setPaymentDetails(planDetails);
       openModal(<InputMarketerId />);
@@ -132,6 +138,8 @@ export default function InvestmentForm() {
         otherFees: otherFees,
         numberOfUnits: values.units,
         propertyId: id ? Number(id) : null, // Convert string ID to number
+        propertyPurpose:
+          property?.type.name === "Land" ? values.propertyPurpose : null,
       };
       setPaymentDetails(planDetails);
       openModal(<InputMarketerId />);
@@ -182,8 +190,8 @@ export default function InvestmentForm() {
               <PropertySummary id={id ?? ""} units={values.units} />
             </div>
             {/* Investment Section */}
-            <div className="grid grid-cols-1 bg-white md:grid-cols-3 p-8 gap-8 rounded-3xl">
-              <div className="md:col-span-2 p-6 space-y-4">
+            <div className="grid grid-cols-1 bg-white md:grid-cols-3 p-2 md:p-8 gap-8 rounded-3xl">
+              <div className="md:col-span-2 p-1 md:p-6 space-y-4">
                 <div className="grid grid-cols-2 gap-4 md:gap-6">
                   <div>
                     <label className="block text-sm mb-2">Payment Type</label>
@@ -204,6 +212,17 @@ export default function InvestmentForm() {
                       placeholder="Enter Number of Units to buy"
                     />
                   </div>
+                  {property?.type.name === "Land" && (
+                    <div>
+                      <label className="block text-sm mb-2">Land Purpose</label>
+                      <SelectField
+                        name="propertyPurpose"
+                        placeholder="Select Land Purpose"
+                        options={property?.purpose || []}
+                      />
+                    </div>
+                  )}
+
                   {selectedPaymentType === "Installment" && (
                     <>
                       <div>
@@ -224,7 +243,7 @@ export default function InvestmentForm() {
                         <SelectField
                           name="paymentSchedule"
                           placeholder="Select Payment Schedule"
-                          options={["Monthly", "Quarterly"]}
+                          options={property?.payment_schedule || []}
                         />
                       </div>
                       <div className="flex gap-4 col-span-2">
@@ -249,7 +268,7 @@ export default function InvestmentForm() {
                   )}
                 </div>
               </div>
-              <div className="bg-white p-6 rounded-3xl shadow-xl">
+              <div className="bg-white py-6 px-4 md:px-6 rounded-3xl shadow-xl">
                 <h4 className="font-semibold mb-4">Infrastructure Fees</h4>
                 <div className="space-y-4 mb-4 text-sm">
                   <p className="text-black flex justify-between gap-4">

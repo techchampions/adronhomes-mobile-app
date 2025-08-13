@@ -86,6 +86,15 @@ export interface Property {
   bought_property: BoughtProperty | null;
   number_of_unit: number;
   property_agreement: string;
+  whatsapp_link: string;
+  video_link: string;
+  contact_number: string;
+  topography: string;
+  road_access: string;
+  gated_estate: string;
+  fencing: string;
+  purpose: string[] | null;
+  nearby_landmarks: string[] | null;
 }
 
 export interface PropertyType {
@@ -100,6 +109,7 @@ export interface PropertyDetail {
   name: string;
   value: number;
   type: string;
+  purpose: string;
   property_id: number;
   created_at: string;
   updated_at: string;

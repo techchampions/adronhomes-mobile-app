@@ -9,6 +9,7 @@ import {
   getAllPropertyLocations,
   getAllPropertyType,
   getDashboardHomeData,
+  getFAQs,
   getNotificationByID,
   getNotifications,
   getPropertyByID,
@@ -61,6 +62,7 @@ import { SliderByTypeResponse } from "./types/SliderByTypeTypes";
 import { PropertyPlanPayload } from "./types/CreatePropertyPayload";
 import { useToastStore } from "../zustand/useToastStore";
 import { useModalStore } from "../zustand/useModalStore";
+import { FAQResponse } from "./types/FAQTypes";
 
 //Query hook for User profile
 export const useGetUser = () => {
@@ -406,5 +408,12 @@ export const useRequestStatement = () => {
 export const useEnquireProperty = () => {
   return useMutation({
     mutationFn: makeEnquire,
+  });
+};
+
+export const useGetFAQs = () => {
+  return useQuery<FAQResponse>({
+    queryKey: ["FAQs"],
+    queryFn: getFAQs,
   });
 };
