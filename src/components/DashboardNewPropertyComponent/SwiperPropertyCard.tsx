@@ -39,6 +39,9 @@ export default function SwiperPropertyCard({ property }: Props) {
   const displayFeatures = features.filter((item) =>
     allowedFeatures.includes(item)
   );
+
+  const isRented = property?.purpose?.includes("Rent") || false;
+  console.log(isRented);
   // const { mutate: toggleSavePropertyHook, isLoading } = useToggleSaveProperty();
 
   const prevRef = useRef<HTMLButtonElement>(null);
@@ -147,11 +150,11 @@ export default function SwiperPropertyCard({ property }: Props) {
             {property.discount_percentage}% off
           </div>
         )}
-        {property.purpose && (
+        {/* {property.purpose && (
           <div className="absolute bottom-3 right-5 bg-black/60 py-1 px-4 rounded-lg z-50 text-white text-xs">
             {property.purpose}
           </div>
-        )}
+        )} */}
       </div>
 
       {/* Property Info */}
@@ -227,16 +230,18 @@ export default function SwiperPropertyCard({ property }: Props) {
             className="bg-adron-green text-xs py-3"
             onClick={() => navigate(`/properties/${property.id}`)}
           />
-          <Button
-            // label={
-            //   property.is_bought ? `Already bought this` : `Invest in Property`
-            // }
-            // disabled={property.is_bought}
-            label="Invest in Property"
-            className="!bg-transparent !text-black border hover:!text-white hover:!bg-black text-xs py-3"
-            // onClick={() => navigate(`/invest-property/${property.id}`)}
-            onClick={() => navigate(`/invest-property-form/${property.id}`)}
-          />
+          {!isRented && (
+            <Button
+              // label={
+              //   property.is_bought ? `Already bought this` : `Invest in Property`
+              // }
+              // disabled={property.is_bought}
+              label="Invest in Property"
+              className="!bg-transparent !text-black border hover:!text-white hover:!bg-black text-xs py-3"
+              // onClick={() => navigate(`/invest-property/${property.id}`)}
+              onClick={() => navigate(`/invest-property-form/${property.id}`)}
+            />
+          )}
         </div>
       </div>
     </div>

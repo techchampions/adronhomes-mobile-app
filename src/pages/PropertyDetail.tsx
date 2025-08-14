@@ -41,6 +41,7 @@ const PropertyDetail = () => {
   if (isLoading) return <Loader />;
   const item = data?.data.properties[0];
   const features = item?.features || [];
+  const isRented = item?.purpose?.includes("Rent") || false;
 
   const address = `${data?.data.properties[0].street_address}, ${data?.data.properties[0].lga}, ${data?.data.properties[0].state} ${data?.data.properties[0].country}`;
 
@@ -107,11 +108,21 @@ const PropertyDetail = () => {
           <div className="p-4 rounded-full bg-white w-fit">
             <FaHeart />
           </div>
-          <Button
-            label="Invest in Property"
-            className="px-6 text-sm"
-            onClick={invest}
-          />
+          {data?.data.properties[0].whatsapp_link && isRented ? (
+            <a href={data.data.properties[0].whatsapp_link}>
+              <Button
+                label="Inquire on WhatsApp"
+                icon={<IoLogoWhatsapp size={18} />}
+                className="px-6 py-3 text-sm"
+              />
+            </a>
+          ) : (
+            <Button
+              label="Invest in Property"
+              className="px-6 text-sm"
+              onClick={invest}
+            />
+          )}
         </div>
       </div>
       <div className="flex flex-col justify-between gap-10">
@@ -587,11 +598,21 @@ const PropertyDetail = () => {
                 </div>
               </div>
             </div>
-            <Button
-              label="Invest in Property"
-              className="px-6 text-sm !w-fit"
-              onClick={invest}
-            />
+            {data?.data.properties[0].whatsapp_link && isRented ? (
+              <a href={data.data.properties[0].whatsapp_link} className="w-fit">
+                <Button
+                  label="Inquire on WhatsApp"
+                  icon={<IoLogoWhatsapp size={18} />}
+                  className="px-6 py-3 text-sm"
+                />
+              </a>
+            ) : (
+              <Button
+                label="Invest in Property"
+                className="px-6 !w-fit text-sm"
+                onClick={invest}
+              />
+            )}
           </div>
           <div className="flex flex-col mt-14 gap-4">
             {/* <h4 className="font-bold">Similar Properties</h4> */}

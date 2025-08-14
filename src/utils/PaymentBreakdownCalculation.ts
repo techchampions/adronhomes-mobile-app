@@ -18,8 +18,7 @@ export const calculatePaymentDetails = (
   );
   const infrastructureData = feesList.filter(
     (item) =>
-      item.type === "infrastructure and development" &&
-      item.purpose === values.propertyPurpose
+      item.type === "infrastructure" && item.purpose === values.propertyPurpose
   );
 
   let otherFees =

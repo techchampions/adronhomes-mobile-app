@@ -83,7 +83,7 @@ export interface Property {
   discount_percentage: string | number;
   total_amount: number;
   property_duration_limit: number;
-  purpose: string;
+  purpose: string[];
 
   initial_deposit: number | null;
   no_of_bedroom: number;
