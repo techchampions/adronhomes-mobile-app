@@ -192,13 +192,13 @@ export const PassportPhotoForm: React.FC<Props> = ({
                   name="ownerPhoto1"
                   label="Principal Owner Photo"
                   infoText="Upload a clear photo of your face"
-                  className=""
+                  className="!w-fit"
                 />
                 <ImageUploadField
                   name="ownerPhoto2"
                   label="Co-Owner Photo"
                   infoText="Upload a clear photo of the co-owner"
-                  className=""
+                  className="!w-fit"
                 />
               </div>
             </div>
