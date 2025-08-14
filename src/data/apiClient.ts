@@ -1,6 +1,7 @@
 import axios, { AxiosInstance, AxiosResponse, AxiosError } from "axios";
 import { useUserStore } from "../zustand/UserStore";
 import { ApiError } from "./api";
+import Auth from "../utils/Auth";
 
 type ApiResponse<T = any> = {
   success: boolean;
@@ -18,21 +19,17 @@ const apiClient: AxiosInstance = axios.create({
   },
 });
 
-// apiClient.interceptors.response.use(
-//   (response: AxiosResponse<ApiResponse>) => {
-//     return response;
-//   },
-//   (error: ApiError) => {
-//     const errorMessage =
-//       error?.response?.data?.message ||
-//       error?.message ||
-//       "Something went wrong";
-
-//     console.error("API Error:", errorMessage);
-//     console.error("API Error2:", error);
-//     return Promise.reject(error);
-//   }
-// );
+apiClient.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  (error: ApiError) => {
+    if (error.status === 401) {
+      Auth.logout();
+    }
+    return Promise.reject(error);
+  }
+);
 
 // Interceptor to attach token if available
 apiClient.interceptors.request.use((config) => {

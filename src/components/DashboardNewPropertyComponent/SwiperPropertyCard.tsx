@@ -24,7 +24,7 @@ import { formatPrice } from "../../data/utils";
 import apiClient from "../../data/apiClient";
 import { useToastStore } from "../../zustand/useToastStore";
 import { Property, PropertyType } from "../../data/types/propertiesPageTypes";
-import { IoGiftOutline } from "react-icons/io5";
+import { IoGiftOutline, IoLogoWhatsapp } from "react-icons/io5";
 // import { useToggleSaveProperty } from "../../data/hooks";
 
 interface Props {
@@ -224,13 +224,21 @@ export default function SwiperPropertyCard({ property }: Props) {
           </div>
         </div>
 
-        <div className="flex items-center justify-between gap-2">
+        <div className="grid grid-cols-2 items-center justify-between gap-2">
           <Button
             label="View Property"
             className="bg-adron-green text-xs py-3"
             onClick={() => navigate(`/properties/${property.id}`)}
           />
-          {!isRented && (
+          {isRented ? (
+            <a href={property.whatsapp_link} className="">
+              <Button
+                label="Inquire"
+                icon={<IoLogoWhatsapp className="h-4 w-4" />}
+                className="text-xs py-3"
+              />
+            </a>
+          ) : (
             <Button
               // label={
               //   property.is_bought ? `Already bought this` : `Invest in Property`

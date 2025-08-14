@@ -102,6 +102,7 @@ export interface Property {
   bought_property: BoughtProperty | null;
   number_of_unit: number;
   property_agreement: string;
+  whatsapp_link: string;
 }
 
 export interface SavedProperty {
