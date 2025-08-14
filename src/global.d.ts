@@ -1,5 +1,6 @@
 declare module "*.css";
 // src/global.d.ts
+
 // export {};
 
 // declare global {
@@ -17,3 +18,4 @@ declare module "*.css";
 //     Tawk_LoadStart?: Date;
 //   }
 // }
+
