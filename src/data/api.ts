@@ -160,10 +160,11 @@ export const fetchPropertiesPageData = async (
   );
   const params = new URLSearchParams({
     page: String(page),
-    ...(filters.state && { state: filters.state }),
-    ...(filters.propertyType && { type: filters.propertyType }),
-    ...(filters.min && { minPrice: String(filters.min) }),
-    ...(filters.max && { maxPrice: String(filters.max) }),
+    state: String(filters.state),
+    type: String(filters.propertyType),
+    minPrice: String(filters.min),
+    maxPrice: String(filters.max),
+    status: String(filters.status),
   });
 
   const endpoint = hasFilters
