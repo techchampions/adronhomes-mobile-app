@@ -218,6 +218,7 @@ const AuthForm = ({
             type="submit"
             isLoading={isSubmitting}
             disabled={isSubmitting}
+            loadingText="Loading..."
             label={
               isForgotPassword
                 ? "Recover Password"

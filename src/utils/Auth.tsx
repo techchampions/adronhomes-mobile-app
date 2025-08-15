@@ -141,8 +141,16 @@ const logout = () => {
   localStorage.removeItem("user-state"); // Clear persisted user state
   localStorage.removeItem("onboarding-state"); // Clear persisted onboarding state
 
-  window.location.reload(); // Optional: Refresh page to clear UI state
+  // window.location.reload(); // Optional: Refresh page to clear UI state
   showToast("Logged out successfully!", "success"); // Show logout success message
+};
+
+const sessionExpire = () => {
+  useUserStore.getState().reset(); // Reset user store
+  useOnboardingStore.getState().reset(); // Reset onboarding store
+  localStorage.removeItem("user-state"); // Clear persisted user state
+  localStorage.removeItem("onboarding-state"); // Clear persisted onboarding state
+  showToast("User session expired!", "error"); // Show logout success message
 };
 
 const handleResetPassword = async (
@@ -229,6 +237,7 @@ const Auth = {
   login,
   register,
   logout,
+  sessionExpire,
   handleResendOTP,
   handleResetPassword,
   handleForgotpassword,

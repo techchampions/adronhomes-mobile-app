@@ -25,7 +25,7 @@ apiClient.interceptors.response.use(
   },
   (error: ApiError) => {
     if (error.status === 401) {
-      Auth.logout();
+      Auth.sessionExpire();
     }
     return Promise.reject(error);
   }
