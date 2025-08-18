@@ -20,11 +20,17 @@ const Header = ({ pageTitle }: { pageTitle: string }) => {
   const { data: notificationData } = useGetNotifications(1);
   const unReadCount = notificationData?.unread || 0;
   const queryClient = useQueryClient();
+  const currentPath = window.location.pathname;
+  const isPropertyDetail = /^\/my-property\/\d+$/.test(currentPath);
   const goToProfile = () => {
     navigate("/my-profile");
   };
   const goBack = () => {
-    navigate(-1);
+    if (isPropertyDetail) {
+      navigate("/my-properties");
+    } else {
+      navigate(-1);
+    }
   };
   const handleFundWallet = () => {
     return openModal(<AddFundAmount goBack={goBack} />);
