@@ -110,8 +110,8 @@ const register = async (
     if (response.data.success) {
       setToken(response.data.token); // Save token in store
       showToast("User registered successfully!", "success");
-      localStorage.setItem("otp", response.data.otp.otp);
-      console.log(response.data.otp.otp); // Save OTP for verification
+      // localStorage.setItem("otp", response.data.otp.otp);
+      // console.log(response.data.otp.otp); // Save OTP for verification
       setStep("verify OTP");
     } else if (response.data.errors) {
       const errorMessages = Object.values(response.data.errors)

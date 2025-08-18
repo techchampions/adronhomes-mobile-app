@@ -317,7 +317,7 @@ const PropertyDetail = () => {
                 </div>
                 <div className="flex flex-col gap-2">
                   <h4 className="font-bold text-md">Address</h4>
-                  <div className="grid grid-cols-2 gap-2">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                     <div className="relative overflow-x-hidden">
                       <table className="w-full text-sm text-left rtl:text-right text-gray-500">
                         <tbody>

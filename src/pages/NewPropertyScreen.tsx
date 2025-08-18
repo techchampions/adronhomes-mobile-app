@@ -34,9 +34,9 @@ const NewPropertyScreen = () => {
           Discover affordable properties within your budget{" "}
         </p>
         <div className="bg-white flex w-fit mx-auto rounded-full px-4 my-1 text-xs justify-between items-center gap-2 mb-4 md:mb-0">
-          <span>28 Properties</span>
+          <span>{data?.properties_header[0].list_description[0]}</span>
           <span className="text-lg">•</span>
-          <span>16 Locations</span>
+          <span>{data?.properties_header[0].list_description[1]}</span>
         </div>
       </div>
 
