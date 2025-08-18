@@ -41,7 +41,7 @@ const WalletScreen = () => {
             onClick={startFundWallet}
           />
           <p className="text-xs bg-gray-200 px-6 py-1 rounded-full">
-            {data?.total_property} active plans
+            {data?.total_property} active coontracts
           </p>
         </div>
         <div className="row-span- md:row-span-2 col-span-2 md:col-span-1 p-10 bg-white rounded-3xl flex flex-col gap-4 justify-between">
