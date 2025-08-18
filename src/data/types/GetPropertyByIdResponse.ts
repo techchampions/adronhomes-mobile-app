@@ -85,6 +85,7 @@ export interface Property {
   saved_property: SavedProperty | null;
   bought_property: BoughtProperty | null;
   number_of_unit: number;
+  unit_available: number;
   property_agreement: string;
   whatsapp_link: string;
   video_link: string;

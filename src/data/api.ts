@@ -1,7 +1,10 @@
 import apiClient from "./apiClient";
 import { GetPropertyByIdResponse } from "./types/GetPropertyByIdResponse";
 import { GetUserResponse } from "./types/UserProfileTypes";
-import { PropertiesResponse } from "./types/propertiesPageTypes";
+import {
+  PaginatedProperties,
+  PropertiesResponse,
+} from "./types/propertiesPageTypes";
 import { PropertyLocationResponse } from "./types/PropertyLocationTypes";
 import { PropertiesTypeResponse } from "./types/propertyTypes";
 import { UserTransactionResponse } from "./types/userTransactionsTypes";
@@ -170,6 +173,38 @@ export const fetchPropertiesPageData = async (
   const endpoint = hasFilters
     ? `/filter-property?${params.toString()}`
     : `/properties-page?page=${page}`;
+
+  const response = await apiClient.get(endpoint);
+  return response.data;
+};
+
+export const filterProperties = async (
+  page: number,
+  filters: PropertyFilters = {} // Use the defined type
+): Promise<PaginatedProperties> => {
+  const params = new URLSearchParams({
+    page: String(page),
+  });
+  if (filters.state) {
+    params.append("state", String(filters.state));
+  }
+  if (filters.propertyType) {
+    params.append("type", String(filters.propertyType));
+  }
+  if (filters.status) {
+    params.append("status", String(filters.status));
+  }
+  if (filters.bedrooms) {
+    params.append("no_of_bedrooms", String(filters.bedrooms));
+  }
+  if (filters.max) {
+    params.append("maxPrice", String(filters.max));
+  }
+  if (filters.min) {
+    params.append("minPrice", String(filters.min));
+  }
+
+  const endpoint = `/filter-property?${params.toString()}`;
 
   const response = await apiClient.get(endpoint);
   return response.data;

@@ -4,6 +4,7 @@ import {
   createPropertyPlan,
   fetchPropertiesPageData,
   fetchSavedProperties,
+  filterProperties,
   fundWallet,
   getAllAccountDetails,
   getAllPropertyLocations,
@@ -35,7 +36,10 @@ import {
   StatementResponse,
   toggleSaveProperty,
 } from "./api";
-import { PropertiesResponse } from "./types/propertiesPageTypes";
+import {
+  PaginatedProperties,
+  PropertiesResponse,
+} from "./types/propertiesPageTypes";
 import { GetPropertyByIdResponse } from "./types/GetPropertyByIdResponse";
 import { PropertyLocationResponse } from "./types/PropertyLocationTypes";
 import { PropertiesTypeResponse } from "./types/propertyTypes";
@@ -183,6 +187,16 @@ export const usePropertiespage = (
   return useQuery<PropertiesResponse>({
     queryKey: ["properties-page", page, filters],
     queryFn: () => fetchPropertiesPageData(page, filters),
+  });
+};
+
+export const useFilterProperties = (
+  page: number,
+  filters?: PropertyFilters
+) => {
+  return useQuery<PaginatedProperties>({
+    queryKey: ["properties", page, filters],
+    queryFn: () => filterProperties(page, filters),
   });
 };
 

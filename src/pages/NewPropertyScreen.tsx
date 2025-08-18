@@ -1,7 +1,7 @@
 import { useState } from "react";
 import SwiperPropertyList from "../components/DashboardNewPropertyComponent/SwiperPropertyList";
 import FilterBar from "../components/DashboardNewPropertyComponent/FilterBar";
-import { usePropertiespage } from "../data/hooks";
+import { useFilterProperties, usePropertiespage } from "../data/hooks";
 import { PropertyFilters } from "../data/api";
 import Button from "../components/Button";
 import { IoArrowBack, IoArrowForward } from "react-icons/io5";
@@ -12,8 +12,13 @@ const NewPropertyScreen = () => {
   // const [filters, setFilters] = useState<Record<string, any>>({});
   const [filters, setFilters] = useState<PropertyFilters>({});
 
-  const { data, isLoading, isError } = usePropertiespage(page, filters);
-  const totalPages = data?.properties.last_page || 0;
+  const { data, isLoading, isError } = usePropertiespage(page);
+  const {
+    data: propertyData,
+    isLoading: loadingProperties,
+    isError: errorProperty,
+  } = useFilterProperties(page, filters);
+  const totalPages = propertyData?.last_page || 0;
   const handleNext = () => {
     setPage(page + 1);
   };
@@ -21,10 +26,11 @@ const NewPropertyScreen = () => {
     setPage(page - 1);
   };
 
-  const properties =
-    filters && Object.values(filters).some((v) => v !== "")
-      ? data?.data || []
-      : data?.properties?.data || [];
+  const properties = propertyData?.data || [];
+  // const properties =
+  //   filters && Object.values(filters).some((v) => v !== "")
+  //     ? data?.data || []
+  //     : data?.properties?.data || [];
 
   // const pagination = data?.properties;
   return (
@@ -43,22 +49,22 @@ const NewPropertyScreen = () => {
       <FilterBar
         initialFilters={{}}
         onFilter={(values) => {
-          const mapped = {
+          const mapped: PropertyFilters = {
             state: values.state,
-            type: values.propertyType,
+            propertyType: values.propertyType,
             status: values.status,
-            minPrice: values.min,
-            maxPrice: values.max,
+            min: values.min,
+            max: values.max,
           };
-
+          console.log("the filters are", mapped);
           setPage(1); // Reset pagination when filters change
           setFilters(mapped);
         }}
       />
       <SwiperPropertyList
         properties={properties}
-        isError={isError}
-        isLoading={isLoading}
+        isError={isError || errorProperty}
+        isLoading={isLoading || loadingProperties}
         isSavePropertyList={false}
       />
 
@@ -67,47 +73,9 @@ const NewPropertyScreen = () => {
         currentPage={page}
         totalPages={totalPages}
         onPageChange={setPage}
-        hasPrev={!!data?.properties.prev_page_url}
-        hasNext={!!data?.properties.next_page_url}
+        hasPrev={!!propertyData?.prev_page_url}
+        hasNext={!!propertyData?.next_page_url}
       />
-      {/* <div className="flex w-full justify-center gap-2 items-center mt-10">
-        <Button
-          label="Prev"
-          icon={<IoArrowBack />}
-          onClick={handlePrev}
-          className="!w-fit px-3 text-xs"
-          disabled={!data?.properties.prev_page_url}
-        />
-        {Array.from({ length: totalPages }, (_, i) => i + 1)
-          .filter(
-            (p) =>
-              p === page || // current
-              p === page - 1 ||
-              p === page - 2 ||
-              p === page + 1 ||
-              p === page + 2
-          )
-          .map((p) => (
-            <button
-              key={p}
-              onClick={() => setPage(p)}
-              className={`w-8 h-8 flex items-center justify-center rounded-full text-xs ${
-                p === page
-                  ? "bg-black text-white"
-                  : "bg-gray-200 text-black hover:bg-gray-300"
-              }`}
-            >
-              {p}
-            </button>
-          ))}
-        <Button
-          label="Next"
-          rightIcon={<IoArrowForward />}
-          onClick={handleNext}
-          disabled={!data?.properties.next_page_url}
-          className="!w-fit px-3 text-xs"
-        />
-      </div> */}
     </div>
   );
 };

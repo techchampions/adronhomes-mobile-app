@@ -44,7 +44,7 @@ const PropertyDetail = () => {
   const isRented = item?.purpose?.includes("Rent") || false;
 
   const address = `${data?.data.properties[0].street_address}, ${data?.data.properties[0].lga}, ${data?.data.properties[0].state} ${data?.data.properties[0].country}`;
-
+  const unitsAvialable = item?.unit_available || 0;
   const invest = () => {
     // navigate(`/invest-property/${id}`);
     navigate(`/invest-property-form/${id}`);
@@ -53,44 +53,6 @@ const PropertyDetail = () => {
     (sum, item) => sum + item.value,
     0
   );
-  // const NextArrow = ({ onClick }: { onClick?: () => void }) => (
-  //   <div
-  //     onClick={onClick}
-  //     className="absolute top-1/2 right-2 transform -translate-y-1/2 z-10 bg-white/60 bg-opacity-50 hover:bg-opacity-70 w-10 h-10 rounded-full flex items-center justify-center cursor-pointer"
-  //   >
-  //     <svg
-  //       className="w-5 h-5 text-gray-800"
-  //       fill="none"
-  //       stroke="currentColor"
-  //       strokeWidth={2.5}
-  //       viewBox="0 0 24 24"
-  //     >
-  //       <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-  //     </svg>
-  //   </div>
-  // );
-
-  // const PrevArrow = ({ onClick }: { onClick?: () => void }) => (
-  //   <div
-  //     onClick={onClick}
-  //     className="absolute top-1/2 left-2 transform -translate-y-1/2 z-10 bg-white/60 bg-opacity-50 hover:bg-opacity-70 w-10 h-10 rounded-full flex items-center justify-center cursor-pointer"
-  //   >
-  //     <svg
-  //       className="w-5 h-5 text-gray-800"
-  //       fill="none"
-  //       stroke="currentColor"
-  //       strokeWidth={2.5}
-  //       viewBox="0 0 24 24"
-  //     >
-  //       <path
-  //         strokeLinecap="round"
-  //         strokeLinejoin="round"
-  //         d="M15 19l-7-7 7-7"
-  //       />
-  //     </svg>
-  //   </div>
-  // );
-
   return (
     <div className="flex flex-col w-full px-4 md:px-0 pb-32">
       <div className="w-full flex flex-col md:flex-row justify-between md:items-start my-5">
@@ -116,6 +78,12 @@ const PropertyDetail = () => {
                 className="px-6 py-3 text-sm"
               />
             </a>
+          ) : unitsAvialable < 1 ? (
+            <Button
+              label="Sold out"
+              className="!bg-transparent !text-red-500 border text-xs px-6"
+              onClick={() => showToast("This Property is sold out", "error")}
+            />
           ) : (
             <Button
               label="Invest in Property"
@@ -135,7 +103,7 @@ const PropertyDetail = () => {
           <div className="relative w-full h-[300px] rounded-xl overflow-hidden mt-4">
             <Swiper
               spaceBetween={10}
-              slidesPerView={1.3}
+              slidesPerView={item?.photos.length == 1 ? 1 : 1.3}
               navigation={true}
               modules={[Navigation]}
               breakpoints={{
@@ -155,13 +123,6 @@ const PropertyDetail = () => {
                 </SwiperSlide>
               ))}
             </Swiper>
-            {/* Custom Navigation Buttons */}
-            {/* <button className="absolute left-2 top-1/2 -translate-y-1/2 z-10 bg-white/70 rounded-full p-2 shadow">
-              <FaChevronLeft size={20} />
-            </button>
-            <button className="absolute right-2 top-1/2 -translate-y-1/2 z-10 bg-white/70 rounded-full p-2 shadow">
-              <FaChevronRight size={20} />
-            </button> */}
           </div>
           <div className="flex flex-col my-5 gap-10">
             <div className="flex flex-col md:flex-row justify-between md:items-center">
@@ -493,7 +454,7 @@ const PropertyDetail = () => {
                 <div className="relative w-full h-[360px] rounded-[50px] overflow-hidden mb-6">
                   {/* <StreetView lat={40.748817} lng={-73.985428} /> */}
                   <iframe
-                    src={data?.data.properties[0].virtual_tour || ""}
+                    src={data?.data.properties[0].property_map || ""}
                     className="w-full h-full"
                     allowFullScreen
                     loading="lazy"
@@ -606,6 +567,12 @@ const PropertyDetail = () => {
                   className="px-6 py-3 text-sm"
                 />
               </a>
+            ) : unitsAvialable < 1 ? (
+              <Button
+                label="Sold out"
+                className="!bg-transparent !text-red-500 px-6 !w-fit border text-xs py-3"
+                onClick={() => showToast("This Property is sold out", "error")}
+              />
             ) : (
               <Button
                 label="Invest in Property"
