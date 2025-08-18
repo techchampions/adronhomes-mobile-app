@@ -62,19 +62,21 @@ export default function FilterBar({
         onFilter(values);
       }}
     >
-      {({ isValid }) => (
+      {({ isValid, values }) => (
         <>
           <Form className="hidden md:block">
             <div
               className={`bg-white px-8 py-6 rounded-3xl mb-8 md:grid grid-cols-2 sm:grid-cols-3 ${
-                !location ? `md:grid-cols-6` : `md:grid-cols-5`
+                values.propertyType !== "1"
+                  ? `md:grid-cols-7`
+                  : `md:grid-cols-5`
               } gap-4`}
             >
               {!location && (
                 <div className="flex flex-col justify-between gap-4">
                   <label
                     htmlFor="location"
-                    className="flex font-bold gap-2 items-center text-sm"
+                    className="flex font-bold gap-2 items-center text-[10px]"
                   >
                     <TbLocationFilled /> Location
                   </label>
@@ -88,7 +90,7 @@ export default function FilterBar({
               <div className="flex flex-col justify-between gap-4">
                 <label
                   htmlFor="location"
-                  className="flex font-bold gap-2 items-center text-sm"
+                  className="flex font-bold gap-2 items-center text-[10px]"
                 >
                   <GoHomeFill /> Property Type
                 </label>
@@ -99,44 +101,49 @@ export default function FilterBar({
                   options={propertyTypes}
                 />
               </div>
-              <div className={`flex flex-col justify-between gap-4`}>
-                <label
-                  htmlFor="location"
-                  className="flex font-bold gap-2 items-center text-sm"
-                >
-                  <FaBed /> No. of Bedrooms
-                </label>
+              {values.propertyType !== "1" && (
+                <div className={`flex flex-col justify-between gap-4`}>
+                  <label
+                    htmlFor="location"
+                    className="flex font-bold gap-2 items-center text-[10px]"
+                  >
+                    <FaBed /> No. of Bedrooms
+                  </label>
 
-                <SelectField
-                  name="bedrooms"
-                  placeholder="Bedrooms"
-                  options={["1", "2", "3", "4", "5+"]}
-                />
-              </div>
-              <div className="flex flex-col justify-between gap-4">
-                <label
-                  htmlFor="location"
-                  className="flex font-bold gap-2 items-center text-sm"
-                >
-                  <FaCheckCircle /> Availability status
-                </label>
+                  <SelectField
+                    name="bedrooms"
+                    placeholder="Bedrooms"
+                    options={["1", "2", "3", "4", "5+"]}
+                  />
+                </div>
+              )}
+              {values.propertyType !== "1" && (
+                <div className="flex flex-col justify-between gap-4">
+                  <label
+                    htmlFor="location"
+                    className="flex font-bold gap-2 items-center text-[10px]"
+                  >
+                    <FaCheckCircle /> Availability status
+                  </label>
 
-                <SelectField
-                  name="status"
-                  placeholder="Status"
-                  options={["For Sale", "For Rent"]}
-                />
-              </div>
-              <div className="flex flex-col justify-between gap-4">
+                  <SelectField
+                    name="status"
+                    placeholder="Status"
+                    options={["For Sale", "For Rent"]}
+                  />
+                </div>
+              )}
+
+              <div className="flex flex-col justify-between gap-4 md:col-span-2">
                 <label
                   htmlFor="location"
-                  className="flex gap-2 font-bold items-center"
+                  className="flex gap-2 font-bold items-center text-[10px]"
                 >
                   {/* <IoPricetag /> */}
                   <img
                     src="/price-tag.svg"
-                    width={20}
-                    height={20}
+                    width={12}
+                    height={12}
                     alt="price tag"
                   />
                   Price ₦

@@ -150,6 +150,11 @@ export default function SwiperPropertyCard({ property }: Props) {
             {property.discount_percentage}% off
           </div>
         )}
+        {property.unit_available < 1 && (
+          <div className="bg-red-600 text-white text-xs px-3 py-1 rounded-full absolute top-2 left-5 z-50">
+            sold out
+          </div>
+        )}
         {/* {property.purpose && (
           <div className="absolute bottom-3 right-5 bg-black/60 py-1 px-4 rounded-lg z-50 text-white text-xs">
             {property.purpose}
@@ -231,19 +236,20 @@ export default function SwiperPropertyCard({ property }: Props) {
             onClick={() => navigate(`/properties/${property.id}`)}
           />
           {isRented ? (
-            <a href={property.whatsapp_link} className="">
-              <Button
-                label="Inquire"
-                icon={<IoLogoWhatsapp className="h-4 w-4" />}
-                className="text-xs py-3"
-              />
-            </a>
+            <Button
+              label="For rent"
+              icon={<IoLogoWhatsapp className="h-4 w-4" />}
+              className="text-xs py-3 !bg-transparent !text-gray-700"
+            />
+          ) : property.unit_available < 1 ? (
+            <Button
+              label="Sold out"
+              className="!bg-transparent !text-red-500 border text-xs py-3"
+              // onClick={() => navigate(`/invest-property/${property.id}`)}
+              onClick={() => showToast("This Property is sold out", "error")}
+            />
           ) : (
             <Button
-              // label={
-              //   property.is_bought ? `Already bought this` : `Invest in Property`
-              // }
-              // disabled={property.is_bought}
               label="Invest in Property"
               className="!bg-transparent !text-black border hover:!text-white hover:!bg-black text-xs py-3"
               // onClick={() => navigate(`/invest-property/${property.id}`)}

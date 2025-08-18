@@ -1,7 +1,7 @@
 import { FaArrowLeft, FaSearch, FaUser } from "react-icons/fa";
 import InputField from "./InputField";
 import { Form, Formik } from "formik";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useMatch, useNavigate } from "react-router-dom";
 import { useUserStore } from "../zustand/UserStore";
 import { useQueryClient } from "@tanstack/react-query";
 import { searchProperties } from "../data/api";
@@ -20,11 +20,20 @@ const Header = ({ pageTitle }: { pageTitle: string }) => {
   const { data: notificationData } = useGetNotifications(1);
   const unReadCount = notificationData?.unread || 0;
   const queryClient = useQueryClient();
+  const currentPath = window.location.pathname;
+  const isPropertyDetail = /^\/my-property\/\d+$/.test(currentPath);
+  const location = useLocation();
+  const match = useMatch("/my-property/:id");
+
   const goToProfile = () => {
     navigate("/my-profile");
   };
   const goBack = () => {
-    navigate(-1);
+    if (match) {
+      navigate("/my-properties");
+    } else {
+      navigate(-1);
+    }
   };
   const handleFundWallet = () => {
     return openModal(<AddFundAmount goBack={goBack} />);
