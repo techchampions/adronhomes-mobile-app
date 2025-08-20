@@ -38,8 +38,9 @@ const PropertyDetail = () => {
   const { data, isError, isLoading } = useGetPropertyByID(id ?? "");
   const { mutate: enquire, isPending } = useEnquireProperty();
   if (isError) return <ApiErrorBlock />;
-  if (isLoading) return <Loader />;
+  if (isLoading || !data) return <Loader />;
   const item = data?.data.properties[0];
+  const photoLenght = item?.photos.length || 0;
   const features = item?.features || [];
   const isRented = item?.purpose?.includes("Rent") || false;
 
@@ -99,31 +100,32 @@ const PropertyDetail = () => {
         {/* Main slider and thumbnails */}
         <div className="w-full mx-auto">
           {/* Main slider */}
-          {/* Swiper Carousel */}
-          <div className="relative w-full h-[300px] rounded-xl overflow-hidden mt-4">
-            <Swiper
-              spaceBetween={10}
-              slidesPerView={item?.photos.length == 1 ? 1 : 1.3}
-              navigation={true}
-              modules={[Navigation]}
-              breakpoints={{
-                320: {
-                  slidesPerView: 2.3,
-                },
-              }}
-              className="w-full h-full rounded-xl"
-            >
-              {item?.photos.map((img, idx) => (
-                <SwiperSlide key={idx}>
-                  <img
-                    src={img}
-                    alt={`Image ${idx + 1}`}
-                    className="object-cover h-full w-full"
-                  />
-                </SwiperSlide>
-              ))}
-            </Swiper>
-          </div>
+          {photoLenght > 0 && (
+            <div className="relative w-full h-[300px] rounded-xl overflow-hidden mt-4">
+              <Swiper
+                spaceBetween={10}
+                slidesPerView={1.3}
+                navigation={true}
+                modules={[Navigation]}
+                breakpoints={{
+                  320: {
+                    slidesPerView: photoLenght < 2 ? 1 : 2.3,
+                  },
+                }}
+                className="w-full h-full rounded-xl"
+              >
+                {item?.photos.map((img, idx) => (
+                  <SwiperSlide key={idx}>
+                    <img
+                      src={img}
+                      alt={`Image ${idx + 1}`}
+                      className="object-cover h-full w-full"
+                    />
+                  </SwiperSlide>
+                ))}
+              </Swiper>
+            </div>
+          )}
           <div className="flex flex-col my-5 gap-10">
             <div className="flex flex-col md:flex-row justify-between md:items-center">
               <div className="flex items-center text-sm justify-between font-bold text-gray-500 gap-4 md:gap-10">
@@ -450,17 +452,18 @@ const PropertyDetail = () => {
                     </div>
                   </div>
                 </div>
-
-                <div className="relative w-full h-[360px] rounded-[50px] overflow-hidden mb-6">
-                  {/* <StreetView lat={40.748817} lng={-73.985428} /> */}
-                  <iframe
-                    src={data?.data.properties[0].property_map || ""}
-                    className="w-full h-full"
-                    allowFullScreen
-                    loading="lazy"
-                    referrerPolicy="no-referrer-when-downgrade"
-                  ></iframe>
-                </div>
+                {data?.data.properties[0].property_map && (
+                  <div className="relative w-full h-[360px] rounded-[50px] overflow-hidden mb-6">
+                    {/* <StreetView lat={40.748817} lng={-73.985428} /> */}
+                    <iframe
+                      src={data?.data.properties[0].property_map || ""}
+                      className="w-full h-full"
+                      allowFullScreen
+                      loading="lazy"
+                      referrerPolicy="no-referrer-when-downgrade"
+                    ></iframe>
+                  </div>
+                )}
               </div>
               {/* Interest Form  */}
               <div className="w-full md:w-[30%] space-y-4">
@@ -547,16 +550,17 @@ const PropertyDetail = () => {
                     </div>
                   </Form>
                 </Formik>
-
-                <div className="video-responsive w-full h-[250px] md:h-[150px] rounded-2xl overflow-hidden">
-                  <iframe
-                    className="w-full h-full"
-                    src={data?.data.properties[0].video_link || ""}
-                    title="YouTube video player"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                  ></iframe>
-                </div>
+                {data?.data.properties[0].video_link && (
+                  <div className="video-responsive w-full h-[250px] md:h-[150px] rounded-2xl overflow-hidden">
+                    <iframe
+                      className="w-full h-full"
+                      src={data?.data.properties[0].video_link || ""}
+                      title="YouTube video player"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                    ></iframe>
+                  </div>
+                )}
               </div>
             </div>
             {data?.data.properties[0].whatsapp_link && isRented ? (
