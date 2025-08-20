@@ -100,6 +100,7 @@ const PropertyDetail = () => {
         {/* Main slider and thumbnails */}
         <div className="w-full mx-auto">
           {/* Main slider */}
+
           {photoLenght > 0 && (
             <div className="relative w-full h-[300px] rounded-xl overflow-hidden mt-4">
               <Swiper
@@ -126,6 +127,7 @@ const PropertyDetail = () => {
               </Swiper>
             </div>
           )}
+
           <div className="flex flex-col my-5 gap-10">
             <div className="flex flex-col md:flex-row justify-between md:items-center">
               <div className="flex items-center text-sm justify-between font-bold text-gray-500 gap-4 md:gap-10">
@@ -452,6 +454,7 @@ const PropertyDetail = () => {
                     </div>
                   </div>
                 </div>
+
                 {data?.data.properties[0].property_map && (
                   <div className="relative w-full h-[360px] rounded-[50px] overflow-hidden mb-6">
                     {/* <StreetView lat={40.748817} lng={-73.985428} /> */}
@@ -464,6 +467,7 @@ const PropertyDetail = () => {
                     ></iframe>
                   </div>
                 )}
+
               </div>
               {/* Interest Form  */}
               <div className="w-full md:w-[30%] space-y-4">
