@@ -59,18 +59,20 @@ const AuthForm = ({
       ? {
           fullName: Yup.string().required("Required"),
           email: Yup.string().email("Invalid email").required("Required"),
-          phone: Yup.number()
-            .typeError("Phone No. must be a number")
-            .max(11, "Phone No. must be 11 digits or less")
+          phone: Yup.string()
+            .matches(/^[0-9]+$/, "Phone number must contain only digits")
+            .min(11, "Phone number must be at least 10 digits")
+            .max(15, "Phone number must be 15 digits or less")
             .required("Required"),
           password: Yup.string().required("Required"),
           marketerReferralCode: Yup.string().optional(),
         }
       : {
           fullName: Yup.string().required("Required"),
-          phone: Yup.number()
-            .typeError("Phone must be a number")
-            .max(11, "Phone must be 11 digits or less")
+          phone: Yup.string()
+            .matches(/^[0-9]+$/, "Phone number must contain only digits")
+            .min(11, "Phone number must be at least 10 digits")
+            .max(15, "Phone number must be 15 digits or less")
             .required("Required"),
           email: Yup.string().email("Invalid email").required("Required"),
           password: Yup.string().required("Required"),
