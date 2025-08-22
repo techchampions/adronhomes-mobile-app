@@ -6,6 +6,7 @@ import InputField from "../InputField";
 import Button from "../Button";
 import { useOnboardingStore } from "../../zustand/OnboardingStore";
 import Auth from "../../utils/Auth";
+import { useLocation, useNavigate } from "react-router-dom";
 
 type AuthFormProps = {
   isLogin?: boolean;
@@ -22,6 +23,8 @@ const AuthForm = ({
 }: AuthFormProps) => {
   const { setStep } = useOnboardingStore();
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
+  const from = localStorage.getItem("from");
 
   // Password visibility toggle logic
   const togglePasswordVisibility = () => setShowPassword((prev) => !prev);
@@ -99,7 +102,6 @@ const AuthForm = ({
       console.log("Resetting password:", values.password);
     } else if (isLogin) {
       Auth.login(values, { setSubmitting });
-      // console.log("Logging in with:", values);
     } else if (isSignup) {
       // handleSignup(values, { setSubmitting });
       Auth.register(values, { setSubmitting });
