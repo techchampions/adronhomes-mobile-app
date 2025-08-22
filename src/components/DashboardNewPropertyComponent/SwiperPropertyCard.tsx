@@ -250,7 +250,7 @@ export default function SwiperPropertyCard({ property }: Props) {
             />
           ) : (
             <Button
-              label="Invest in Property"
+              label="Subscribe"
               className="!bg-transparent !text-black border hover:!text-white hover:!bg-black text-xs py-3"
               // onClick={() => navigate(`/invest-property/${property.id}`)}
               onClick={() => navigate(`/invest-property-form/${property.id}`)}

@@ -110,12 +110,8 @@ const AllRoutes = () => {
                 )
               }
             />
-
-            {/* Catch-All Redirect */}
-            {/* <Route path="*" element={<Navigate to="/auth" />} /> */}
           </Routes>
         </Suspense>
-        {/* <Toast message={message} type={type} onClose={hideToast} /> */}
         <Toast />
         <Modal />
       </BrowserRouter>

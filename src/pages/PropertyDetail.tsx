@@ -24,11 +24,9 @@ import {
 } from "react-icons/io5";
 import { useUserStore } from "../zustand/UserStore";
 import { useToastStore } from "../zustand/useToastStore";
-import PropertyList from "../components/PropertyList";
 import HorizontalPropertyList from "../components/DashboardPropertyComponent/HorizontalPropertyList";
-import { LucideFence, PhoneCall } from "lucide-react";
+import { PhoneCall } from "lucide-react";
 import { MdOutlineLandscape } from "react-icons/md";
-import { FaRoad } from "react-icons/fa6";
 const PropertyDetail = () => {
   const params = useParams();
   const { user } = useUserStore();
@@ -87,8 +85,8 @@ const PropertyDetail = () => {
             />
           ) : (
             <Button
-              label="Invest in Property"
-              className="px-6 text-sm"
+              label="Subscribe"
+              className="px-10 text-sm"
               onClick={invest}
             />
           )}
@@ -349,59 +347,62 @@ const PropertyDetail = () => {
                     {item?.details && item.details.length > 0 ? (
                       <>
                         <div className="relative overflow-x-hidden">
-                          <table className="w-full text-sm text-left rtl:text-right text-gray-500">
-                            <tbody>
-                              {item.details
-                                .slice(0, Math.ceil(item.details.length / 2))
-                                .map((detail) => (
-                                  <tr
-                                    key={detail.id}
-                                    className="bg-white border-b border-gray-200"
-                                  >
-                                    <th
-                                      scope="row"
-                                      className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
+                          <div className="w-full text-sm text-left rtl:text-right text-gray-500">
+                            {item.details
+                              .slice(0, Math.ceil(item.details.length / 2))
+                              .map((detail) => (
+                                <div
+                                  key={detail.id}
+                                  className="bg-white p-2 border-b flex justify-between border-gray-200 min-w-0"
+                                >
+                                  <div className="">
+                                    <div
+                                      // scope="row"
+                                      className="truncate font-medium text-gray-900 whitespace-nowrap"
                                     >
                                       {detail.name.trim()}{" "}
-                                      {detail.purpose
-                                        ? `(${detail.purpose})`
-                                        : ""}
-                                    </th>
-                                    <td className="px-6 py-4">
-                                      {formatPrice(detail.value)}
-                                    </td>
-                                  </tr>
-                                ))}
-                            </tbody>
-                          </table>
+                                      {detail.purpose && (
+                                        <div className="text-xs text-gray-500">
+                                          purpose: {detail.purpose}
+                                        </div>
+                                      )}
+                                    </div>
+                                  </div>
+                                  <span className=" truncate ">
+                                    {formatPrice(detail.value)}
+                                  </span>
+                                </div>
+                              ))}
+                          </div>
                         </div>
-
                         <div className="relative overflow-x-hidden">
-                          <table className="w-full text-sm text-left rtl:text-right text-gray-500">
-                            <tbody>
-                              {item.details
-                                .slice(Math.ceil(item.details.length / 2))
-                                .map((detail) => (
-                                  <tr
-                                    key={detail.id}
-                                    className="bg-white border-b border-gray-200"
-                                  >
-                                    <th
-                                      scope="row"
-                                      className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
+                          <div className="w-full text-sm text-left rtl:text-right text-gray-500">
+                            {item.details
+                              .slice(Math.ceil(item.details.length / 2))
+                              .map((detail) => (
+                                <div
+                                  key={detail.id}
+                                  className="bg-white p-2 border-b flex justify-between border-gray-200 min-w-0"
+                                >
+                                  <div className="">
+                                    <div
+                                      // scope="row"
+                                      className="truncate font-medium text-gray-900 whitespace-nowrap"
                                     >
                                       {detail.name.trim()}{" "}
-                                      {detail.purpose
-                                        ? `(${detail.purpose})`
-                                        : ""}
-                                    </th>
-                                    <td className="px-6 py-4">
-                                      {detail.value.toLocaleString()}
-                                    </td>
-                                  </tr>
-                                ))}
-                            </tbody>
-                          </table>
+                                      {detail.purpose && (
+                                        <div className="text-xs text-gray-500">
+                                          purpose: {detail.purpose}
+                                        </div>
+                                      )}
+                                    </div>
+                                  </div>
+                                  <span className="">
+                                    {formatPrice(detail.value)}
+                                  </span>
+                                </div>
+                              ))}
+                          </div>
                         </div>
                       </>
                     ) : (
@@ -467,7 +468,6 @@ const PropertyDetail = () => {
                     ></iframe>
                   </div>
                 )}
-
               </div>
               {/* Interest Form  */}
               <div className="w-full md:w-[30%] space-y-4">
@@ -583,7 +583,7 @@ const PropertyDetail = () => {
               />
             ) : (
               <Button
-                label="Invest in Property"
+                label="Subscribe"
                 className="px-6 !w-fit text-sm"
                 onClick={invest}
               />
