@@ -24,11 +24,9 @@ import {
 } from "react-icons/io5";
 import { useUserStore } from "../zustand/UserStore";
 import { useToastStore } from "../zustand/useToastStore";
-import PropertyList from "../components/PropertyList";
 import HorizontalPropertyList from "../components/DashboardPropertyComponent/HorizontalPropertyList";
-import { LucideFence, PhoneCall } from "lucide-react";
+import { PhoneCall } from "lucide-react";
 import { MdOutlineLandscape } from "react-icons/md";
-import { FaRoad } from "react-icons/fa6";
 const PropertyDetail = () => {
   const params = useParams();
   const { user } = useUserStore();
@@ -38,8 +36,9 @@ const PropertyDetail = () => {
   const { data, isError, isLoading } = useGetPropertyByID(id ?? "");
   const { mutate: enquire, isPending } = useEnquireProperty();
   if (isError) return <ApiErrorBlock />;
-  if (isLoading) return <Loader />;
+  if (isLoading || !data) return <Loader />;
   const item = data?.data.properties[0];
+  const photoLenght = item?.photos.length || 0;
   const features = item?.features || [];
   const isRented = item?.purpose?.includes("Rent") || false;
 
@@ -86,8 +85,8 @@ const PropertyDetail = () => {
             />
           ) : (
             <Button
-              label="Invest in Property"
-              className="px-6 text-sm"
+              label="Subscribe"
+              className="px-10 text-sm"
               onClick={invest}
             />
           )}
@@ -99,31 +98,34 @@ const PropertyDetail = () => {
         {/* Main slider and thumbnails */}
         <div className="w-full mx-auto">
           {/* Main slider */}
-          {/* Swiper Carousel */}
-          <div className="relative w-full h-[300px] rounded-xl overflow-hidden mt-4">
-            <Swiper
-              spaceBetween={10}
-              slidesPerView={item?.photos.length == 1 ? 1 : 1.3}
-              navigation={true}
-              modules={[Navigation]}
-              breakpoints={{
-                320: {
-                  slidesPerView: 2.3,
-                },
-              }}
-              className="w-full h-full rounded-xl"
-            >
-              {item?.photos.map((img, idx) => (
-                <SwiperSlide key={idx}>
-                  <img
-                    src={img}
-                    alt={`Image ${idx + 1}`}
-                    className="object-cover h-full w-full"
-                  />
-                </SwiperSlide>
-              ))}
-            </Swiper>
-          </div>
+
+          {photoLenght > 0 && (
+            <div className="relative w-full h-[300px] rounded-xl overflow-hidden mt-4">
+              <Swiper
+                spaceBetween={10}
+                slidesPerView={1.3}
+                navigation={true}
+                modules={[Navigation]}
+                breakpoints={{
+                  320: {
+                    slidesPerView: photoLenght < 2 ? 1 : 2.3,
+                  },
+                }}
+                className="w-full h-full rounded-xl"
+              >
+                {item?.photos.map((img, idx) => (
+                  <SwiperSlide key={idx}>
+                    <img
+                      src={img}
+                      alt={`Image ${idx + 1}`}
+                      className="object-cover h-full w-full"
+                    />
+                  </SwiperSlide>
+                ))}
+              </Swiper>
+            </div>
+          )}
+
           <div className="flex flex-col my-5 gap-10">
             <div className="flex flex-col md:flex-row justify-between md:items-center">
               <div className="flex items-center text-sm justify-between font-bold text-gray-500 gap-4 md:gap-10">
@@ -345,59 +347,62 @@ const PropertyDetail = () => {
                     {item?.details && item.details.length > 0 ? (
                       <>
                         <div className="relative overflow-x-hidden">
-                          <table className="w-full text-sm text-left rtl:text-right text-gray-500">
-                            <tbody>
-                              {item.details
-                                .slice(0, Math.ceil(item.details.length / 2))
-                                .map((detail) => (
-                                  <tr
-                                    key={detail.id}
-                                    className="bg-white border-b border-gray-200"
-                                  >
-                                    <th
-                                      scope="row"
-                                      className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
+                          <div className="w-full text-sm text-left rtl:text-right text-gray-500">
+                            {item.details
+                              .slice(0, Math.ceil(item.details.length / 2))
+                              .map((detail) => (
+                                <div
+                                  key={detail.id}
+                                  className="bg-white p-2 border-b flex justify-between border-gray-200 min-w-0"
+                                >
+                                  <div className="">
+                                    <div
+                                      // scope="row"
+                                      className="truncate font-medium text-gray-900 whitespace-nowrap"
                                     >
                                       {detail.name.trim()}{" "}
-                                      {detail.purpose
-                                        ? `(${detail.purpose})`
-                                        : ""}
-                                    </th>
-                                    <td className="px-6 py-4">
-                                      {formatPrice(detail.value)}
-                                    </td>
-                                  </tr>
-                                ))}
-                            </tbody>
-                          </table>
+                                      {detail.purpose && (
+                                        <div className="text-xs text-gray-500">
+                                          purpose: {detail.purpose}
+                                        </div>
+                                      )}
+                                    </div>
+                                  </div>
+                                  <span className=" truncate ">
+                                    {formatPrice(detail.value)}
+                                  </span>
+                                </div>
+                              ))}
+                          </div>
                         </div>
-
                         <div className="relative overflow-x-hidden">
-                          <table className="w-full text-sm text-left rtl:text-right text-gray-500">
-                            <tbody>
-                              {item.details
-                                .slice(Math.ceil(item.details.length / 2))
-                                .map((detail) => (
-                                  <tr
-                                    key={detail.id}
-                                    className="bg-white border-b border-gray-200"
-                                  >
-                                    <th
-                                      scope="row"
-                                      className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
+                          <div className="w-full text-sm text-left rtl:text-right text-gray-500">
+                            {item.details
+                              .slice(Math.ceil(item.details.length / 2))
+                              .map((detail) => (
+                                <div
+                                  key={detail.id}
+                                  className="bg-white p-2 border-b flex justify-between border-gray-200 min-w-0"
+                                >
+                                  <div className="">
+                                    <div
+                                      // scope="row"
+                                      className="truncate font-medium text-gray-900 whitespace-nowrap"
                                     >
                                       {detail.name.trim()}{" "}
-                                      {detail.purpose
-                                        ? `(${detail.purpose})`
-                                        : ""}
-                                    </th>
-                                    <td className="px-6 py-4">
-                                      {detail.value.toLocaleString()}
-                                    </td>
-                                  </tr>
-                                ))}
-                            </tbody>
-                          </table>
+                                      {detail.purpose && (
+                                        <div className="text-xs text-gray-500">
+                                          purpose: {detail.purpose}
+                                        </div>
+                                      )}
+                                    </div>
+                                  </div>
+                                  <span className="">
+                                    {formatPrice(detail.value)}
+                                  </span>
+                                </div>
+                              ))}
+                          </div>
                         </div>
                       </>
                     ) : (
@@ -451,16 +456,18 @@ const PropertyDetail = () => {
                   </div>
                 </div>
 
-                <div className="relative w-full h-[360px] rounded-[50px] overflow-hidden mb-6">
-                  {/* <StreetView lat={40.748817} lng={-73.985428} /> */}
-                  <iframe
-                    src={data?.data.properties[0].property_map || ""}
-                    className="w-full h-full"
-                    allowFullScreen
-                    loading="lazy"
-                    referrerPolicy="no-referrer-when-downgrade"
-                  ></iframe>
-                </div>
+                {data?.data.properties[0].property_map && (
+                  <div className="relative w-full h-[360px] rounded-[50px] overflow-hidden mb-6">
+                    {/* <StreetView lat={40.748817} lng={-73.985428} /> */}
+                    <iframe
+                      src={data?.data.properties[0].property_map || ""}
+                      className="w-full h-full"
+                      allowFullScreen
+                      loading="lazy"
+                      referrerPolicy="no-referrer-when-downgrade"
+                    ></iframe>
+                  </div>
+                )}
               </div>
               {/* Interest Form  */}
               <div className="w-full md:w-[30%] space-y-4">
@@ -547,16 +554,17 @@ const PropertyDetail = () => {
                     </div>
                   </Form>
                 </Formik>
-
-                <div className="video-responsive w-full h-[250px] md:h-[150px] rounded-2xl overflow-hidden">
-                  <iframe
-                    className="w-full h-full"
-                    src={data?.data.properties[0].video_link || ""}
-                    title="YouTube video player"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                  ></iframe>
-                </div>
+                {data?.data.properties[0].video_link && (
+                  <div className="video-responsive w-full h-[250px] md:h-[150px] rounded-2xl overflow-hidden">
+                    <iframe
+                      className="w-full h-full"
+                      src={data?.data.properties[0].video_link || ""}
+                      title="YouTube video player"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                    ></iframe>
+                  </div>
+                )}
               </div>
             </div>
             {data?.data.properties[0].whatsapp_link && isRented ? (
@@ -575,7 +583,7 @@ const PropertyDetail = () => {
               />
             ) : (
               <Button
-                label="Invest in Property"
+                label="Subscribe"
                 className="px-6 !w-fit text-sm"
                 onClick={invest}
               />
