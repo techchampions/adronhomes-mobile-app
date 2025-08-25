@@ -60,33 +60,27 @@ const OTPScreen: React.FC<OTPProps> = ({ length = 4 }) => {
 
   const handleSubmit = async () => {
     const enteredOtp = otp.join("");
-    const storedOtp = localStorage.getItem("otp");
-    console.log(storedOtp);
 
-    if (enteredOtp === storedOtp) {
-      try {
-        const response = await apiClient.post("/verify-otp", {
-          otp: enteredOtp,
-        });
-        setIsSubmitting(true);
+    try {
+      const response = await apiClient.post("/verify-otp", {
+        otp: enteredOtp,
+      });
+      setIsSubmitting(true);
 
-        if (response.data.success) {
-          showToast("OTP verified successfully!", "success");
-          if (token) {
-            setStep("onboarding complete");
-            setHasCompletedOnboarding(true);
-            setIsLoggedIn(true);
-          }
-          setStep("signup completed");
+      if (response.data.success) {
+        showToast("OTP verified successfully!", "success");
+        if (token) {
+          setStep("onboarding complete");
+          setHasCompletedOnboarding(true);
+          setIsLoggedIn(true);
         }
-      } catch (error) {
-        showToast("OTP verification failed. Please try again.", "error");
-        console.error("OTP verification failed:", error);
+        setStep("signup completed");
       }
-      setIsSubmitting(false);
-    } else {
-      showToast("Invalid OTP!", "error");
+    } catch (error) {
+      showToast("OTP verification failed. Please try again.", "error");
+      console.error("OTP verification failed:", error);
     }
+    setIsSubmitting(false);
   };
 
   const handleResendOTP = async () => {
@@ -96,8 +90,6 @@ const OTPScreen: React.FC<OTPProps> = ({ length = 4 }) => {
       if (response.data.success) {
         showToast("OTP resent successfully!", "success");
         setTimer(59);
-        localStorage.setItem("otp", response.data.otp);
-        console.log(response.data.otp);
       } else {
         throw new Error("Failed to resend OTP");
       }

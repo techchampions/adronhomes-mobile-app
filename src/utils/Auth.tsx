@@ -4,6 +4,7 @@ import { useUserStore } from "../zustand/UserStore";
 import { useOnboardingStore } from "../zustand/OnboardingStore";
 import { useToastStore } from "../zustand/useToastStore";
 import { ApiError } from "../data/api";
+import { useNavigate } from "react-router-dom";
 
 const { showToast } = useToastStore.getState();
 const { setHasCompletedOnboarding, setStep } = useOnboardingStore.getState();
@@ -30,7 +31,8 @@ const login = async (
     email: string;
     password: string;
   },
-  { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void }
+  { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void },
+  navigate?: (path: string) => void
 ) => {
   try {
     const response = await apiClient.post("/login", {
@@ -50,10 +52,13 @@ const login = async (
         "success"
       );
       setToken(response.data.token); // Save token in store
-      setIsLoggedIn(true); // Set logged-in state in store
+      setIsLoggedIn(false); // Set logged-in state in store
       // await getUser();
       handleResendOTP();
       setStep("verify OTP");
+      if (navigate) {
+        navigate("/verify-otp");
+      }
     } else if (response.data.errors) {
       const errorMessages = Object.values(response.data.errors)
         .flat()
@@ -89,7 +94,8 @@ const register = async (
     password: string;
     marketerReferralCode: string;
   },
-  { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void }
+  { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void },
+  navigate?: (path: string) => void
 ) => {
   try {
     const [firstName, lastName] = values.fullName.trim().split(" ");
@@ -110,9 +116,10 @@ const register = async (
     if (response.data.success) {
       setToken(response.data.token); // Save token in store
       showToast("User registered successfully!", "success");
-      // localStorage.setItem("otp", response.data.otp.otp);
-      // console.log(response.data.otp.otp); // Save OTP for verification
       setStep("verify OTP");
+      if (navigate) {
+        navigate("/verify-Otp");
+      }
     } else if (response.data.errors) {
       const errorMessages = Object.values(response.data.errors)
         .flat()
@@ -159,7 +166,8 @@ const handleResetPassword = async (
     password: string;
     confirmPassword: string;
   },
-  { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void }
+  { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void },
+  navigate?: (path: string) => void
 ) => {
   try {
     const response = await apiClient.post("/change-password", {
@@ -170,6 +178,9 @@ const handleResetPassword = async (
 
     if (response.data.success) {
       showToast("Password changed successfully", "success");
+      if (navigate) {
+        navigate("/login");
+      }
       setStep("login");
     } else if (response.data.errors) {
       const errorMessages = Object.values(response.data.errors)
@@ -197,7 +208,8 @@ const handleForgotpassword = async (
   values: {
     email: string;
   },
-  { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void }
+  { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void },
+  navigate?: (path: string) => void
 ) => {
   try {
     const response = await apiClient.post("/forget-password", {
@@ -206,6 +218,9 @@ const handleForgotpassword = async (
 
     if (response.data.success) {
       showToast("OTP sent to email successfully", "success");
+      if (navigate) {
+        navigate("/reset-password");
+      }
       setStep("reset password");
     } else if (response.data.errors) {
       const errorMessages = Object.values(response.data.errors)

@@ -6,6 +6,7 @@ import ApiErrorBlock from "../components/ApiErrorBlock";
 
 const FAQAccordion = () => {
   const { data, isError, isLoading } = useGetFAQs();
+  const [openIndex, setOpenIndex] = useState<number | null>(0);
   if (isLoading) {
     return <SmallLoader />;
   }
@@ -13,7 +14,6 @@ const FAQAccordion = () => {
     return <ApiErrorBlock />;
   }
 
-  const [openIndex, setOpenIndex] = useState<number | null>(0);
   const faqData = data?.data || [];
   const toggleAccordion = (index: number) => {
     setOpenIndex(openIndex === index ? null : index);

@@ -26,11 +26,11 @@ const Header = ({ pageTitle }: { pageTitle: string }) => {
   const match = useMatch("/my-property/:id");
 
   const goToProfile = () => {
-    navigate("/my-profile");
+    navigate("/dashboard/my-profile");
   };
   const goBack = () => {
     if (match) {
-      navigate("/my-properties");
+      navigate("/dashboard/my-properties");
     } else {
       navigate(-1);
     }
@@ -81,13 +81,13 @@ const Header = ({ pageTitle }: { pageTitle: string }) => {
       <div className="flex items-center gap-4">
         <div
           className="w-7 h-7 relative cursor-pointer"
-          onClick={() => navigate("/notifications")}
+          onClick={() => navigate("/dashboard/notifications")}
         >
           <img
             src="/images/notifications-rounded.svg"
             alt=""
             className="h-full w-full"
-            onClick={() => navigate("/notifications")}
+            onClick={() => navigate("/dashboard/notifications")}
           />
           <span className="absolute -top-1 -right-2 bg-red-600 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
             {unReadCount}

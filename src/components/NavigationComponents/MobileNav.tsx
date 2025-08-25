@@ -192,10 +192,10 @@ const MobileNav = () => {
                 Logout
               </button>
               <a
-                href=""
+                href="https://adronhomes.com/"
                 className="text-adron-green text-[12px] w-full block font-bold px-7 py-[7px] text-center mx-auto"
               >
-                Go Home
+                Go to Website
               </a>
             </nav>
           </div>

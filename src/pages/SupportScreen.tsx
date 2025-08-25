@@ -39,7 +39,7 @@ const SupportScreen = () => {
         <Button
           label="See FAQs"
           className="bg-black text-white font-bold !w-[155px] text-xs"
-          onClick={() => navigate("/faqs")}
+          onClick={() => navigate("/dashboard/faqs")}
         />
       </div>
     </div>
