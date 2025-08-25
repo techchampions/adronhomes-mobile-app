@@ -14,6 +14,7 @@ import { useEffect } from "react";
 
 const ProtectedRoutes = () => {
   const { isLoggedIn } = useUserStore();
+
   const location = useLocation();
   const from = location.state?.from?.pathname;
   console.log(from);
@@ -24,6 +25,7 @@ const ProtectedRoutes = () => {
   ) : (
     <Navigate to="/login" state={{ from: location }} replace />
   );
+
 };
 
 export default ProtectedRoutes;
