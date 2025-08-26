@@ -102,7 +102,9 @@ const AuthForm = ({
       );
       console.log("Resetting password:", values.password);
     } else if (isLogin) {
+
       Auth.login(values, { setSubmitting }, navigate);
+
     } else if (isSignup) {
       // handleSignup(values, { setSubmitting });
       Auth.register(values, { setSubmitting }, navigate);
