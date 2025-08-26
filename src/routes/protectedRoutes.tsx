@@ -23,7 +23,9 @@ const ProtectedRoutes = () => {
   return isLoggedIn ? (
     <Outlet />
   ) : (
+
     <Navigate to="/login" state={{ from: location }} replace />
+
   );
 
 };
