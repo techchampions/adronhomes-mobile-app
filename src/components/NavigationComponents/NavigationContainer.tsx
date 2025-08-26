@@ -29,22 +29,22 @@ function NavigationContainer() {
           <NavItem
             label="Dashboard"
             icon={<MdDashboardCustomize className="w-4 h-4" />}
-            path="/"
+            path="/dashboard"
           />
           <NavItem
             label="My Wallet"
             icon={<RiWallet3Fill className=" w-4 h-4" />}
-            path="/wallet"
+            path="/dashboard/wallet"
           />
           <NavItem
             label="Payments"
             icon={<FaArrowRightArrowLeft className=" w-4 h-4" />}
-            path="/payments"
+            path="/dashboard/payments"
           />
           <NavItem
             label="Notifications"
             icon={<RiNotificationBadgeFill className=" w-4 h-4" />}
-            path="/notifications"
+            path="/dashboard/notifications"
             badge={unread}
           />
           <h4 className="text-adron-gray-400 font-bold px-7 mt-7 text-[13px]">
@@ -53,17 +53,17 @@ function NavigationContainer() {
           <NavItem
             label="My Properties"
             icon={<MdAddHome className=" w-4 h-4" />}
-            path="/my-properties"
+            path="/dashboard/my-properties"
           />
           <NavItem
             label="New Properties"
             icon={<MdAddHome className=" w-4 h-4" />}
-            path="/new-properties"
+            path="/dashboard/new-properties"
           />
           <NavItem
             label="Saved Properties"
             icon={<RiHomeHeartFill className=" w-4 h-4" />}
-            path="/saved-properties"
+            path="/dashboard/saved-properties"
           />
           {/* Profile Nav */}
           <h4 className="text-adron-gray-400 font-bold px-7 mt-7 text-[13px]">
@@ -72,18 +72,18 @@ function NavigationContainer() {
           <NavItem
             label="My Profile"
             icon={<FaUserAlt className=" w-4 h-4" />}
-            path="/my-profile"
+            path="/dashboard/my-profile"
           />
           <NavItem
             label="Account Settings"
             icon={<IoSettingsSharp className=" w-4 h-4" />}
-            path="/settings"
+            path="/dashboard/settings"
           />
 
           <NavItem
             label="Support"
             icon={<MdOutlineHelp className=" w-4 h-4" />}
-            path="/support"
+            path="/dashboard/support"
           />
         </nav>
         {/* <div className="px-4 py-20">
@@ -100,7 +100,7 @@ function NavigationContainer() {
             Logout
           </button>
           <a
-            href="https://adron.netlify.app"
+            href="https://adronhomes.com"
             className="text-adron-green text-[12px] w-full block font-bold px-7 py-[7px] text-center mx-auto"
           >
             Go to Website

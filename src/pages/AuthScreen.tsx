@@ -1,3 +1,4 @@
+import { Outlet, useNavigate } from "react-router-dom";
 import AuthNavbar from "../components/AuthComponents/AuthNav";
 import Slideshow from "../components/AuthComponents/NewShildeshow";
 import SmallLoader from "../components/SmallLoader";
@@ -15,6 +16,7 @@ const OnboardingScreen = () => {
   const { data: loginSlidesData, isLoading: isLoadingLogin } =
     useGetSlidersByType("login");
   const slides = loginSlidesData?.data || [];
+  const navigate = useNavigate();
 
   const stepContainer = () => {
     switch (step) {
@@ -74,7 +76,10 @@ const OnboardingScreen = () => {
           />
           <h1 className="text-3xl font-medium mt-4">Welcome to Adron Homes</h1>
         </div>
-        <div className="px-0 lg:px-24 py-4">{stepContainer()}</div>
+        <div className="px-0 lg:px-24 py-4">
+          <Outlet />
+        </div>
+        {/* <div className="px-0 lg:px-24 py-4">{stepContainer()}</div> */}
         <div className="w-full">
           <AuthNavbar />
         </div>

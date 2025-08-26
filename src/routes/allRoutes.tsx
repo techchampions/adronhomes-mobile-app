@@ -33,6 +33,12 @@ import MyPropertyPaymentList from "../pages/MyPropertyPaymentList";
 import FAQAccordion from "../pages/FAQScreen";
 import PropertySearchResultScreen from "../pages/PropertySearchResult";
 import InvestmentDetailForm from "../pages/InvestmentDetailForm";
+import Login from "../pages/Login";
+import SignUp from "../pages/SignUp";
+import AuthRoutes from "./authRoutes";
+import OTPScreen from "../pages/OTPScreen";
+import ForgotPassword from "../pages/ForgotPassword";
+import ResetPassword from "../pages/ResetPassword";
 
 const DashboardScreen = lazy(() => import("../pages/DashboardScreen"));
 
@@ -50,72 +56,96 @@ const AllRoutes = () => {
               path="/"
               element={
                 <Navigate
-                  to={isLoggedIn && hasCompletedOnboarding ? "/" : "/auth"}
+                  to={
+                    isLoggedIn && hasCompletedOnboarding
+                      ? "/dashboard"
+                      : "/login"
+                  }
                   replace
                 />
               }
             />
 
             {/* Protected Routes - Dashboard */}
-            <Route path="/" element={<ProtectedRoutes />}>
+            <Route path="/dashboard/" element={<ProtectedRoutes />}>
               <Route element={<DashboardScreen />}>
                 <Route index element={<HomeScreen />} />
-                <Route path="/wallet" element={<WalletScreen />} />
-                <Route path="/payments" element={<TransactionsPage />} />
-                <Route path="/notifications" element={<NotificationsPage />} />
-                <Route path="/my-properties" element={<MyPropertyScreen />} />
-                <Route path="/new-properties" element={<NewPropertyScreen />} />
+                <Route path="/dashboard/wallet" element={<WalletScreen />} />
                 <Route
-                  path="/search-properties"
+                  path="/dashboard/payments"
+                  element={<TransactionsPage />}
+                />
+                <Route
+                  path="/dashboard/notifications"
+                  element={<NotificationsPage />}
+                />
+                <Route
+                  path="/dashboard/my-properties"
+                  element={<MyPropertyScreen />}
+                />
+                <Route
+                  path="/dashboard/new-properties"
+                  element={<NewPropertyScreen />}
+                />
+                <Route
+                  path="/dashboard/search-properties"
                   element={<PropertySearchResultScreen />}
                 />
                 <Route
-                  path="/saved-properties"
+                  path="/dashboard/saved-properties"
                   element={<SavedPropertyScreen />}
                 />
-                <Route path="/my-profile" element={<MyProfileScreen />} />
-                <Route path="/settings" element={<ProfileSettings />} />
-                <Route path="/support" element={<SupportScreen />} />
                 <Route
-                  path="/properties/:id"
+                  path="/dashboard/my-profile"
+                  element={<MyProfileScreen />}
+                />
+                <Route
+                  path="/dashboard/settings"
+                  element={<ProfileSettings />}
+                />
+                <Route path="/dashboard/support" element={<SupportScreen />} />
+                <Route
+                  path="/dashboard/properties/:id"
                   element={<PropertyDetail />}
                 />{" "}
                 <Route
-                  path="/invest-property-form/:id"
+                  path="/dashboard/invest-property-form/:id"
                   element={<InvestmentDetailForm />}
                 />{" "}
                 <Route
-                  path="/invest-property/:id"
+                  path="/dashboard/invest-property/:id"
                   element={<InvestmentForm />}
                 />{" "}
                 <Route
-                  path="/property-agreement/:id"
+                  path="/dashboard/property-agreement/:id"
                   element={<ProppertyAgreement />}
                 />{" "}
                 <Route
-                  path="/property/:id/payment-method"
+                  path="/dashboard/property/:id/payment-method"
                   element={<PropertyPaymentMethod />}
                 />{" "}
-                <Route path="/my-property/:id" element={<MyPropertyDetail />} />
                 <Route
-                  path="/my-property/payment-list/:id"
+                  path="/dashboard/my-property/:id"
+                  element={<MyPropertyDetail />}
+                />
+                <Route
+                  path="/dashboard/my-property/payment-list/:id"
                   element={<MyPropertyPaymentList />}
                 />
-                <Route path="/FAQs" element={<FAQAccordion />} />
+                <Route path="/dashboard/FAQs" element={<FAQAccordion />} />
               </Route>
             </Route>
 
             {/* Login Route */}
-            <Route
-              path="/auth"
-              element={
-                isLoggedIn && hasCompletedOnboarding ? (
-                  <Navigate to="/" />
-                ) : (
-                  <OnboardingScreen />
-                )
-              }
-            />
+            <Route path="/" element={<AuthRoutes />}>
+              <Route element={<OnboardingScreen />}>
+                <Route path="/login" index element={<Login />} />
+                <Route path="/signup" element={<SignUp />} />
+                <Route path="/verify-otp" element={<OTPScreen />} />
+                <Route path="/forgot-password" element={<ForgotPassword />} />
+                <Route path="/reset-password" element={<ResetPassword />} />
+              </Route>
+            </Route>
           </Routes>
         </Suspense>
         <Toast />

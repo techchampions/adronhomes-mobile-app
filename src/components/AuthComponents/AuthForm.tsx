@@ -88,7 +88,7 @@ const AuthForm = ({
     setSubmitting: (isSubmitting: boolean) => void
   ) => {
     if (isForgotPassword) {
-      Auth.handleForgotpassword(values, { setSubmitting });
+      Auth.handleForgotpassword(values, { setSubmitting }, navigate);
     } else if (isResetPassword) {
       // Auth.handleResetPassword(values, { setSubmitting });
       // When calling the function:
@@ -97,14 +97,17 @@ const AuthForm = ({
           ...values,
           OTP: Number(values.OTP), // Convert string OTP to number
         },
-        { setSubmitting }
+        { setSubmitting },
+        navigate
       );
       console.log("Resetting password:", values.password);
     } else if (isLogin) {
-      Auth.login(values, { setSubmitting });
+
+      Auth.login(values, { setSubmitting }, navigate);
+
     } else if (isSignup) {
       // handleSignup(values, { setSubmitting });
-      Auth.register(values, { setSubmitting });
+      Auth.register(values, { setSubmitting }, navigate);
       console.log("Registering with:", values);
     }
   };
@@ -218,7 +221,10 @@ const AuthForm = ({
               </div>
               <span
                 className="text-[#FF4A1B] text-xs cursor-pointer"
-                onClick={() => setStep("forgot password")}
+                onClick={() => {
+                  setStep("forgot password");
+                  navigate("/forgot-password");
+                }}
               >
                 Forgot password?
               </span>
@@ -241,27 +247,33 @@ const AuthForm = ({
             className={`bg-adron-green text-white w-full py-2 rounded-full mt-10`}
           />
           {/* Link to switch between forms */}
-          <p className="text-sm flex gap-1 items-center text-center justify-center">
+          <div className="text-sm flex gap-1 items-center text-center justify-center">
             {isLogin ? (
               <>
                 Are you new?{" "}
                 <Button
                   label="Create an Account"
                   className="!text-adron-green bg-transparent font-medium !w-fit underline"
-                  onClick={() => setStep("signup")}
+                  onClick={() => {
+                    setStep("signup");
+                    navigate("/signup");
+                  }}
                 />
               </>
             ) : (
               <div className="mb-10">
-                Already have an account?
+                Already have an account?{" "}
                 <Button
                   label="Sign In"
                   className="!text-adron-green bg-transparent font-medium !w-fit underline"
-                  onClick={() => setStep("login")}
+                  onClick={() => {
+                    setStep("login");
+                    navigate("/login");
+                  }}
                 />
               </div>
             )}
-          </p>
+          </div>
           {/* Toast notification */}
           {/* {showToast && (
             <Toast
