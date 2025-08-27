@@ -67,6 +67,7 @@ const AllRoutes = () => {
             />
 
             {/* Protected Routes - Dashboard */}
+
             <Route path="/dashboard/*" element={<ProtectedRoutes />}>
               <Route element={<DashboardScreen />}>
                 <Route index element={<HomeScreen />} />
@@ -112,6 +113,7 @@ const AllRoutes = () => {
                   element={<MyPropertyPaymentList />}
                 />
                 <Route path="FAQs" element={<FAQAccordion />} />
+
               </Route>
             </Route>
 
