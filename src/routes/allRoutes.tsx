@@ -67,72 +67,53 @@ const AllRoutes = () => {
             />
 
             {/* Protected Routes - Dashboard */}
-            <Route path="/dashboard/" element={<ProtectedRoutes />}>
+
+            <Route path="/dashboard/*" element={<ProtectedRoutes />}>
               <Route element={<DashboardScreen />}>
                 <Route index element={<HomeScreen />} />
-                <Route path="/dashboard/wallet" element={<WalletScreen />} />
+                <Route path="wallet" element={<WalletScreen />} />
+                <Route path="payments" element={<TransactionsPage />} />
+                <Route path="notifications" element={<NotificationsPage />} />
+                <Route path="my-properties" element={<MyPropertyScreen />} />
+                <Route path="new-properties" element={<NewPropertyScreen />} />
                 <Route
-                  path="/dashboard/payments"
-                  element={<TransactionsPage />}
-                />
-                <Route
-                  path="/dashboard/notifications"
-                  element={<NotificationsPage />}
-                />
-                <Route
-                  path="/dashboard/my-properties"
-                  element={<MyPropertyScreen />}
-                />
-                <Route
-                  path="/dashboard/new-properties"
-                  element={<NewPropertyScreen />}
-                />
-                <Route
-                  path="/dashboard/search-properties"
+                  path="search-properties"
                   element={<PropertySearchResultScreen />}
                 />
                 <Route
-                  path="/dashboard/saved-properties"
+                  path="saved-properties"
                   element={<SavedPropertyScreen />}
                 />
+                <Route path="my-profile" element={<MyProfileScreen />} />
+                <Route path="settings" element={<ProfileSettings />} />
+                <Route path="support" element={<SupportScreen />} />
                 <Route
-                  path="/dashboard/my-profile"
-                  element={<MyProfileScreen />}
-                />
-                <Route
-                  path="/dashboard/settings"
-                  element={<ProfileSettings />}
-                />
-                <Route path="/dashboard/support" element={<SupportScreen />} />
-                <Route
-                  path="/dashboard/properties/:id"
+                  path="properties/:id"
                   element={<PropertyDetail />}
                 />{" "}
                 <Route
-                  path="/dashboard/invest-property-form/:id"
+                  path="invest-property-form/:id"
                   element={<InvestmentDetailForm />}
                 />{" "}
                 <Route
-                  path="/dashboard/invest-property/:id"
+                  path="invest-property/:id"
                   element={<InvestmentForm />}
                 />{" "}
                 <Route
-                  path="/dashboard/property-agreement/:id"
+                  path="property-agreement/:id"
                   element={<ProppertyAgreement />}
                 />{" "}
                 <Route
-                  path="/dashboard/property/:id/payment-method"
+                  path="property/:id/payment-method"
                   element={<PropertyPaymentMethod />}
                 />{" "}
+                <Route path="my-property/:id" element={<MyPropertyDetail />} />
                 <Route
-                  path="/dashboard/my-property/:id"
-                  element={<MyPropertyDetail />}
-                />
-                <Route
-                  path="/dashboard/my-property/payment-list/:id"
+                  path="my-property/payment-list/:id"
                   element={<MyPropertyPaymentList />}
                 />
-                <Route path="/dashboard/FAQs" element={<FAQAccordion />} />
+                <Route path="FAQs" element={<FAQAccordion />} />
+
               </Route>
             </Route>
 

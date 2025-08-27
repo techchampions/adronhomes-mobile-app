@@ -46,7 +46,7 @@ const PropertyDetail = () => {
   const unitsAvialable = item?.unit_available || 0;
   const invest = () => {
     // navigate(`/invest-property/${id}`);
-    navigate(`/invest-property-form/${id}`);
+    navigate(`/dashboard/invest-property-form/${id}`);
   };
   const totalFees = data?.data.properties[0].details.reduce(
     (sum, item) => sum + item.value,
