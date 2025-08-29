@@ -89,7 +89,7 @@ const MyPropertyDetail = () => {
     data?.plan_properties.infrastructure_percentage || 0;
   const otherFeeProgress = data?.plan_properties.other_percentage || 0;
   const handleViewProperty = () => {
-    navigate(`/properties/${data?.plan_properties.property.id}`);
+    navigate(`/dashboard/properties/${data?.plan_properties.property.id}`);
   };
   const completeInitialPropertyPayment = () => {
     resetPaymentDetails();
@@ -147,7 +147,7 @@ const MyPropertyDetail = () => {
     );
   };
   const viewPaymentList = () => {
-    navigate(`/my-property/payment-list/${id}`);
+    navigate(`/dashboard/my-property/payment-list/${id}`);
   };
   const handleDownload = () => {
     openModal(

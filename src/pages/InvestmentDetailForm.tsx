@@ -1,10 +1,5 @@
-import React from "react";
-import { Form, Formik, useFormikContext } from "formik";
-import * as Yup from "yup";
 import { useState } from "react";
 import Tabs from "../components/InvestFormSCreenComponents/Tabs";
-import Button from "../components/Button";
-import { OtherInfoForm } from "../components/InvestFormSCreenComponents/OtherInfoForm";
 import { NextofKinForm } from "../components/InvestFormSCreenComponents/NextofKinForm";
 import { PassportPhotoForm } from "../components/InvestFormSCreenComponents/PassportPhotoForm";
 import { CustomerForm } from "../components/InvestFormSCreenComponents/CustomerForm";

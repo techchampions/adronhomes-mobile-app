@@ -15,6 +15,7 @@ import {
   getNotifications,
   getPropertyByID,
   getPropertyPlanByID,
+  getSettings,
   getSliderByType,
   getTransactionByID,
   getUser,
@@ -67,6 +68,7 @@ import { PropertyPlanPayload } from "./types/CreatePropertyPayload";
 import { useToastStore } from "../zustand/useToastStore";
 import { useModalStore } from "../zustand/useModalStore";
 import { FAQResponse } from "./types/FAQTypes";
+import { SettingsResponse } from "./types/SettingsTypes";
 
 //Query hook for User profile
 export const useGetUser = () => {
@@ -429,5 +431,12 @@ export const useGetFAQs = () => {
   return useQuery<FAQResponse>({
     queryKey: ["FAQs"],
     queryFn: getFAQs,
+  });
+};
+
+export const useGetEquiryInfo = () => {
+  return useQuery<SettingsResponse>({
+    queryKey: ["settings", "enquiry"],
+    queryFn: () => getSettings("enquiry"),
   });
 };

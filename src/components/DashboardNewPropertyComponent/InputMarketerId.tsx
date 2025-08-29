@@ -30,7 +30,7 @@ const InputMarketerId = () => {
           onSubmit={(values) => {
             setPaymentDetails({ marketerId: values.marketerId });
             closeModal();
-            navigate(`/property-agreement/${propertyId}`);
+            navigate(`/dashboard/property-agreement/${propertyId}`);
           }}
         >
           {({ isValid, dirty }) => (

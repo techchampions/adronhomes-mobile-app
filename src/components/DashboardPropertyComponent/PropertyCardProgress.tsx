@@ -46,7 +46,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
   //   (raisedAmount / targetAmount) * 100
   // ).toFixed(1);
   const handleNavigation = () => {
-    navigate(`/my-property/${id}`);
+    navigate(`/dashboard/my-property/${id}`);
   };
   const makePayment = () => {
     openModal(
