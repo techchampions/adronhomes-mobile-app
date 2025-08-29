@@ -125,7 +125,9 @@ const BankTransfer = ({
             openModal(
               <PaymentPending text="Your Payment is being confrimed by Admin" />
             );
-            navigate(`/my-property/${data.plan?.id}`, { replace: true });
+            navigate(`/dashboard/my-property/${data.plan?.id}`, {
+              replace: true,
+            });
           },
           onError(error: ApiError) {
             openModal(<StatusFailed text="Oops... there's been an Error!" />);

@@ -141,13 +141,17 @@ const SelectPaymentMethod = ({
                 openModal(
                   <PaymentSuccessfull text="Payment received successfully." />
                 );
-                navigate(`/my-property/${res.plan?.id}`, { replace: true });
+                navigate(`/dashboard/my-property/${res.plan?.id}`, {
+                  replace: true,
+                });
 
                 // TODO: call your backend API to confirm payment
               },
               onClose: () => {
                 showToast("Payment cancel...Please try again. ", "error");
-                navigate(`/my-property/${res.plan?.id}`, { replace: true });
+                navigate(`/dashboard/my-property/${res.plan?.id}`, {
+                  replace: true,
+                });
               },
             });
           },
@@ -232,7 +236,9 @@ const SelectPaymentMethod = ({
               openModal(
                 <PaymentSuccessfull text="Payment received successfully." />
               );
-              navigate(`/my-property/${res.plan?.id}`, { replace: true });
+              navigate(`/dashboard/my-property/${res.plan?.id}`, {
+                replace: true,
+              });
             },
             onError: (error: ApiError) => {
               // const message =

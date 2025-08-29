@@ -148,7 +148,7 @@ export const IdInfoForm: React.FC<Props> = ({ activeTab, setActiveTab }) => {
         setContractDetails({
           contract_idFiles: values.idFiles, // Updated to use array
         });
-        navigate(`/invest-property/${id}`);
+        navigate(`/dashboard/invest-property/${id}`);
       }}
     >
       {({ isValid, setFieldValue, values, errors, touched }) => (
