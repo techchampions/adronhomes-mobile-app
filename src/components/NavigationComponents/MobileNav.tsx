@@ -112,25 +112,25 @@ const MobileNav = () => {
                 onSlideBack={setIsMobileMenuOpen}
                 label="Dashboard"
                 icon={<MdDashboardCustomize className="w-4 h-4" />}
-                path="/"
+                path="/dashboard/"
               />
               <NavItem
                 onSlideBack={setIsMobileMenuOpen}
                 label="My Wallet"
                 icon={<RiWallet3Fill className=" w-4 h-4" />}
-                path="/wallet"
+                path="/dashboard/wallet"
               />
               <NavItem
                 onSlideBack={setIsMobileMenuOpen}
                 label="Payments"
                 icon={<FaArrowRightArrowLeft className=" w-4 h-4" />}
-                path="/payments"
+                path="/dashboard/payments"
               />
               <NavItem
                 onSlideBack={setIsMobileMenuOpen}
                 label="Notifications"
                 icon={<RiNotificationBadgeFill className=" w-4 h-4" />}
-                path="/notifications"
+                path="/dashboard/notifications"
                 badge={unReadCount || 0}
               />
               <h4 className="text-adron-gray-400 font-bold px-7 mt-7 text-[13px]">
@@ -140,19 +140,19 @@ const MobileNav = () => {
                 onSlideBack={setIsMobileMenuOpen}
                 label="My Properties"
                 icon={<MdAddHome className=" w-4 h-4" />}
-                path="/my-properties"
+                path="/dashboard/my-properties"
               />
               <NavItem
                 onSlideBack={setIsMobileMenuOpen}
                 label="New Properties"
                 icon={<MdAddHome className=" w-4 h-4" />}
-                path="/new-properties"
+                path="/dashboard/new-properties"
               />
               <NavItem
                 onSlideBack={setIsMobileMenuOpen}
                 label="Saved Properties"
                 icon={<RiHomeHeartFill className=" w-4 h-4" />}
-                path="/saved-properties"
+                path="/dashboard/saved-properties"
               />
               {/* Profile Nav */}
               <h4 className="text-adron-gray-400 font-bold px-7 mt-7 text-[13px]">
@@ -162,20 +162,20 @@ const MobileNav = () => {
                 onSlideBack={setIsMobileMenuOpen}
                 label="My Profile"
                 icon={<FaUserAlt className=" w-4 h-4" />}
-                path="/my-profile"
+                path="/dashboard/my-profile"
               />
               <NavItem
                 onSlideBack={setIsMobileMenuOpen}
                 label="Account Settings"
                 icon={<IoSettingsSharp className=" w-4 h-4" />}
-                path="/settings"
+                path="/dashboard/settings"
               />
 
               <NavItem
                 onSlideBack={setIsMobileMenuOpen}
                 label="Support"
                 icon={<MdOutlineHelp className=" w-4 h-4" />}
-                path="/support"
+                path="/dashboard/support"
               />
             </nav>
             {/* <div className="px-4 py-20">

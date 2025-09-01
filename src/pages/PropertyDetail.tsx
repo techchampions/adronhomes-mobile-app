@@ -270,7 +270,7 @@ const PropertyDetail = () => {
                 </div>
                 <div className="flex flex-col gap-2">
                   <h4 className="font-bold text-md">Features</h4>
-                  <div className="text-md ml-5 grid grid-cols-3 text-gray-500 space-y-2">
+                  <div className="text-md ml-5 grid grid-cols-1 md:grid-cols-3 text-gray-500 space-y-2">
                     {features.map((list) => (
                       <div key={list} className="flex gap-2 items-center">
                         <IoIosCheckmarkCircleOutline /> <div>{list}</div>
@@ -280,61 +280,69 @@ const PropertyDetail = () => {
                 </div>
                 <div className="flex flex-col gap-2">
                   <h4 className="font-bold text-md">Address</h4>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                  <div className="grid md:grid-cols-2 gap-2">
                     <div className="relative overflow-x-hidden">
-                      <table className="w-full text-sm text-left rtl:text-right text-gray-500">
-                        <tbody>
-                          <tr className="bg-white border-b border-gray-200">
-                            <th
-                              scope="row"
-                              className="px-2 py-4 font-medium text-gray-900 whitespace-nowrap "
-                            >
+                      <div className="w-full text-sm text-left rtl:text-right text-gray-500">
+                        <div>
+                          <div className="p-3 flex justify-between gap-2 bg-white border-b border-gray-200">
+                            <div className="font-medium text-gray-900 whitespace-nowrap truncate">
                               Country
-                            </th>
-                            <td className="px-2 py-4 text-left">
-                              {item?.country}
-                            </td>
-                          </tr>
+                            </div>
+                            <div className=" truncate ">
+                              {data?.data.properties[0].country}
+                            </div>
+                          </div>
 
-                          <tr className="bg-white border-b border-gray-200">
-                            <th
-                              scope="row"
-                              className="px-2 py-4 font-medium text-gray-900 whitespace-nowrap "
-                            >
+                          <div className="p-3 flex justify-between gap-2 bg-white border-b border-gray-200">
+                            <div className=" font-medium text-gray-900 whitespace-nowrap ">
                               State
-                            </th>
-                            <td className="px-2 py-4">{item?.state}</td>
-                          </tr>
-                        </tbody>
-                      </table>
+                            </div>
+                            <div className="">
+                              {data?.data.properties[0].state}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                     <div className="relative overflow-x-hidden">
-                      <table className="w-full text-sm text-left rtl:text-right text-gray-500">
-                        <tbody>
-                          <tr className="bg-white border-b border-gray-200">
-                            <th
-                              scope="row"
-                              className="px-2 py-4 font-medium text-gray-900 whitespace-nowrap"
-                            >
+                      <div className="w-full text-sm text-left rtl:text-right text-gray-500">
+                        <div>
+                          <div className="p-3 flex justify-between gap-2 bg-white border-b border-gray-200">
+                            <div className=" font-medium text-gray-900 whitespace-nowrap">
                               LGA
-                            </th>
-                            <td className="px-2 py-4">{item?.lga}</td>
-                          </tr>
+                            </div>
+                            <div className="">
+                              {data?.data.properties[0].lga}
+                            </div>
+                          </div>
 
-                          <tr className="bg-white border-b border-gray-200">
-                            <th
-                              scope="row"
-                              className="px-2 py-4 font-medium text-gray-900 whitespace-nowrap"
-                            >
+                          <div className="p-3 flex justify-between gap-2 bg-white border-b border-gray-200">
+                            <div className=" font-medium text-gray-900 whitespace-nowrap">
                               Address
-                            </th>
-                            <td className="px-2 py-4 line-clamp-1 truncate">
-                              {item?.street_address}
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
+                            </div>
+                            <div className=" line-clamp-1 truncate">
+                              {data?.data.properties[0].street_address}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
+                    {data.data.properties[0].nearby_landmarks && (
+                      <div className="relative overflow-x-hidden">
+                        <div className="w-full text-sm text-left rtl:text-right text-gray-500">
+                          <div>
+                            <div className="p-3 flex justify-between gap-2 bg-white border-b border-gray-200">
+                              <div className=" font-medium text-gray-900 whitespace-nowrap">
+                                Near-by Landmark
+                              </div>
+                              <div className="">
+                                {data?.data.properties[0].nearby_landmarks}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
 
