@@ -127,8 +127,8 @@ const AuthForm = ({
               : isResetPassword
               ? "Reset Password"
               : isLogin
-              ? "Login to AdronHomes"
-              : "Signup Account with AdronHomes"}
+              ? "Login to Adron Homes"
+              : "Signup on Adron Homes"}
           </h1>
           {/* Render based on state */}
           {!isLogin && !isForgotPassword && !isResetPassword && (
