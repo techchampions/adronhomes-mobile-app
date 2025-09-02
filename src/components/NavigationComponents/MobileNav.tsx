@@ -27,7 +27,7 @@ const MobileNav = () => {
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const goTpProfile = () => {
-    navigate("/my-profile");
+    navigate("/dashboard/my-profile");
   };
 
   return (

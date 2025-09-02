@@ -19,7 +19,7 @@ const MobileNavItem: React.FC<NavItemProps> = ({
       to={path}
       end={true}
       className={({ isActive }) =>
-        `flex flex-col items-center ${
+        `flex flex-col items-center min-w-14 ${
           isActive ? "text-adron-green" : " text-gray-500"
         }`
       }
@@ -32,7 +32,7 @@ const MobileNavItem: React.FC<NavItemProps> = ({
           </span>
         )}
       </div>
-      <span className="text-xs">{label}</span>
+      <span className="text-xs truncate">{label}</span>
     </NavLink>
   );
 };

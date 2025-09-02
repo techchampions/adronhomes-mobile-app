@@ -53,11 +53,8 @@ const OnboardingScreen = () => {
           <img
             src="/images/logo.svg"
             alt="Adron Logo"
-            width={120}
-            height={50}
-            className="mx-auto"
+            className="mx-auto w-full h-[60px]"
           />
-          <h1 className="text-3xl font-medium mt-4">Welcome to Adron Homes</h1>
         </div>
         <div className="px-0 lg:px-24 py-4">
           <Outlet />
