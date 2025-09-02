@@ -48,6 +48,7 @@ function DashboardScreen() {
     showToast("Error fetching account details", "error");
   }
   const userAgent = navigator.userAgent.toLowerCase();
+  console.log("userAgent", userAgent);
   const isMobileApp = userAgent.includes("WebViewApp/1.0");
 
   return (
@@ -61,9 +62,13 @@ function DashboardScreen() {
       </aside>
 
       {/* Main Content */}
-      <main className="pt-[70px] md:pt-24 lg:pt-2 flex-1 bg-adron-body overflow-y-auto mb-18 py-5 px-4 md:px-2 lg:pr-4 scrollbar-hide">
+      <main
+        className={`pt-[70px] md:pt-24 lg:pt-2 flex-1 bg-adron-body overflow-y-auto py-5 px-4 md:px-2 lg:pr-4 scrollbar-hide`}
+      >
         <Header pageTitle={pageTitle} />
-        <Outlet />
+        <div className={`${isMobileApp ? "mb-18 md:mb-4" : "mb-10"} `}>
+          <Outlet />
+        </div>
       </main>
       {isMobileApp && (
         <div className="fixed bottom-0 w-full md:block">
