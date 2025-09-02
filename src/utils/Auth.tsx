@@ -16,7 +16,7 @@ const handleResendOTP = async () => {
 
     if (response.data.success) {
       showToast("OTP resent successfully!", "success");
-      localStorage.setItem("otp", response.data.otp);
+      // localStorage.setItem("otp", response.data.otp);
       console.log(response.data.otp);
     } else {
       throw new Error("Failed to resend OTP");

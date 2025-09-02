@@ -18,23 +18,6 @@ const OnboardingScreen = () => {
   const slides = loginSlidesData?.data || [];
   const navigate = useNavigate();
 
-  const stepContainer = () => {
-    switch (step) {
-      case "signup":
-        return <SignUp />;
-      case "login":
-        return <Login />;
-      case "verify OTP":
-        return <OTPScreen />;
-      case "forgot password":
-        return <ForgotPassword />;
-      case "reset password":
-        return <ResetPassword />;
-      default:
-        return <Login />;
-    }
-  };
-
   const handleReset = () => {
     useUserStore.getState().reset(); // Reset user store
     useOnboardingStore.getState().reset(); // Reset onboarding store
