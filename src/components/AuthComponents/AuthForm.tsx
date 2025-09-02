@@ -121,14 +121,14 @@ const AuthForm = ({
     >
       {({ isSubmitting }) => (
         <Form className="space-y-3 flex flex-col px-4 md:px-10 lg:px-20">
-          <h1 className="font-bold text-3xl font text-black text-center py-4">
+          <h1 className="font-bold text-2xl font text-black text-center py-4">
             {isForgotPassword
               ? "Forgot Password"
               : isResetPassword
               ? "Reset Password"
               : isLogin
               ? "Login to AdronHomes"
-              : "Create Account with AdronHomes"}
+              : "Signup Account with AdronHomes"}
           </h1>
           {/* Render based on state */}
           {!isLogin && !isForgotPassword && !isResetPassword && (
