@@ -4,6 +4,7 @@ import Header from "../components/Header";
 import MobileNav from "../components/NavigationComponents/MobileNav";
 import { useGetAccounts, useGetUser } from "../data/hooks";
 import { useToastStore } from "../zustand/useToastStore";
+import BottomNav from "../components/NavigationComponents/BottomNavBar";
 
 const routeTitles = {
   "/": "Dashboard",
@@ -46,6 +47,9 @@ function DashboardScreen() {
   if (AccountDetailsError) {
     showToast("Error fetching account details", "error");
   }
+  const userAgent = navigator.userAgent.toLowerCase();
+  const isMobileApp = userAgent.includes("WebViewApp/1.0");
+
   return (
     <div className="fixed inset-0 z-50 flex h-screen w-screen">
       {/* Sidebar */}
@@ -57,13 +61,15 @@ function DashboardScreen() {
       </aside>
 
       {/* Main Content */}
-      <main className="pt-[70px] md:pt-24 lg:pt-2 flex-1 bg-adron-body overflow-y-auto mb-0 py-5 px-4 md:px-2 lg:pr-4 scrollbar-hide">
+      <main className="pt-[70px] md:pt-24 lg:pt-2 flex-1 bg-adron-body overflow-y-auto mb-18 py-5 px-4 md:px-2 lg:pr-4 scrollbar-hide">
         <Header pageTitle={pageTitle} />
         <Outlet />
       </main>
-      {/* <div className="md:block fixed bottom-0 w-full">
-        <MobileNavContainer />
-      </div> */}
+      {isMobileApp && (
+        <div className="fixed bottom-0 w-full md:block">
+          <BottomNav />
+        </div>
+      )}
     </div>
   );
 }

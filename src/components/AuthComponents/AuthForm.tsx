@@ -102,9 +102,7 @@ const AuthForm = ({
       );
       console.log("Resetting password:", values.password);
     } else if (isLogin) {
-
       Auth.login(values, { setSubmitting }, navigate);
-
     } else if (isSignup) {
       // handleSignup(values, { setSubmitting });
       Auth.register(values, { setSubmitting }, navigate);
@@ -123,14 +121,14 @@ const AuthForm = ({
     >
       {({ isSubmitting }) => (
         <Form className="space-y-3 flex flex-col px-4 md:px-10 lg:px-20">
-          <h1 className="font-medium text-3xl text-black text-center py-4">
+          <h1 className="font-bold text-3xl font text-black text-center py-4">
             {isForgotPassword
               ? "Forgot Password"
               : isResetPassword
               ? "Reset Password"
               : isLogin
-              ? "Login"
-              : "Register"}
+              ? "Login to AdronHomes"
+              : "Create Account with AdronHomes"}
           </h1>
           {/* Render based on state */}
           {!isLogin && !isForgotPassword && !isResetPassword && (
