@@ -46,7 +46,10 @@ const UserProfileCard: React.FC<Props> = ({
           </div>
         </div>
       </div>
-      <Link to="/settings" className="text-sm font-semibold text-black">
+      <Link
+        to="/dashboard/settings"
+        className="text-sm font-semibold text-black"
+      >
         Account Settings
       </Link>
     </div>
