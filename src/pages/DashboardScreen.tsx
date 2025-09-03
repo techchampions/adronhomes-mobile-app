@@ -47,8 +47,7 @@ function DashboardScreen() {
   if (AccountDetailsError) {
     showToast("Error fetching account details", "error");
   }
-  const userAgent = navigator.userAgent.toLowerCase();
-  console.log("userAgent", userAgent);
+  const userAgent = navigator.userAgent;
   const isMobileApp = userAgent.includes("WebViewApp/1.0");
 
   return (

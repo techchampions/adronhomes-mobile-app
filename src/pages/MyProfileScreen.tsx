@@ -7,6 +7,7 @@ import Loader from "../components/Loader";
 import { useGetUser, useGetUserPropertiesPlan } from "../data/hooks";
 import ApiErrorBlock from "../components/ApiErrorBlock";
 import { formatPrice } from "../data/utils";
+import SupportScreen from "./SupportScreen";
 
 const MyProfileScreen = () => {
   const { openModal } = useModalStore();
@@ -66,6 +67,10 @@ const MyProfileScreen = () => {
           onClick={() => openModal(<StatementRequest />)}
         />
       </div>
+      <div className="col-span-2 md:col-span-3">
+        <SupportScreen />
+      </div>
+      {/* 
       <div className="col-span-2 md:col-span-3 flex flex-col md:flex-row justify-between gap-3 md:items-center bg-white py-4 px-4 md:px-12 rounded-3xl">
         <div className="flex flex-col w-full md:w-[60%]">
           <h4 className=" font-bold text-md">FAQs</h4>
@@ -79,7 +84,7 @@ const MyProfileScreen = () => {
           className="bg-black text-white font-bold !w-[155px] text-xs"
           onClick={() => navigate("/dashboard/faqs")}
         />
-      </div>
+      </div> */}
     </div>
   );
 };

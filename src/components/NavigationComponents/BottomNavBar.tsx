@@ -15,7 +15,7 @@ const BottomNav: React.FC = () => {
         path="/dashboard"
       />
       <MobileNavItem
-        label="My Properties"
+        label="Properties"
         icon={<FaHome size={24} />}
         path="/dashboard/my-properties"
       />

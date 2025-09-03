@@ -96,6 +96,7 @@ export interface Property {
   fencing: string;
   purpose: string[] | null;
   nearby_landmarks: string[] | null;
+  title_document_type: string | null;
 }
 
 export interface PropertyType {

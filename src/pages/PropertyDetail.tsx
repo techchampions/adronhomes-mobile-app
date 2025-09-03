@@ -1,6 +1,7 @@
 import { Form, Formik } from "formik";
 import { PiRoadHorizonDuotone } from "react-icons/pi";
 import { FaHeart, FaMapMarker } from "react-icons/fa";
+import { GrDocumentUser } from "react-icons/gr";
 import { IoIosCheckmarkCircleOutline, IoMdBed } from "react-icons/io";
 import { LuFence } from "react-icons/lu";
 import { useNavigate, useParams } from "react-router-dom";
@@ -20,6 +21,7 @@ import { TbBed } from "react-icons/tb";
 import {
   IoCarSportOutline,
   IoConstructOutline,
+  IoDocument,
   IoLogoWhatsapp,
 } from "react-icons/io5";
 import { useUserStore } from "../zustand/UserStore";
@@ -132,7 +134,7 @@ const PropertyDetail = () => {
                 <span className="flex items-center gap-1 truncate">
                   {/* <TfiRulerAlt2 />  */}
                   <img src="/ruler.svg" width={14} height={14} alt="dumbbell" />
-                  {item?.size}Sq M
+                  {item?.size} Sq M
                 </span>
                 <span className="flex items-center gap-1 truncate">
                   <GiStreetLight /> Str Light
@@ -309,10 +311,10 @@ const PropertyDetail = () => {
                         <div>
                           <div className="p-3 flex justify-between gap-2 bg-white border-b border-gray-200">
                             <div className=" font-medium text-gray-900 whitespace-nowrap">
-                              LGA
+                              Nearby Landmark
                             </div>
                             <div className="">
-                              {data?.data.properties[0].lga}
+                              {data?.data.properties[0].nearby_landmarks}
                             </div>
                           </div>
 
@@ -346,6 +348,13 @@ const PropertyDetail = () => {
                   </div>
                 </div>
 
+                <div className="flex flex-col gap-2">
+                  <h4 className="font-bold text-md">Property Document Type</h4>
+                  <div className="flex items-center gap-2 ml-5 text-gray-500">
+                    <GrDocumentUser />
+                    <span>{data.data.properties[0].title_document_type}</span>
+                  </div>
+                </div>
                 {/* New Additional details */}
                 <div className="flex flex-col gap-2">
                   <h4 className="font-bold text-md">Fees and Charges</h4>

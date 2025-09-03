@@ -132,79 +132,120 @@ const AuthForm = ({
           </h1>
           {/* Render based on state */}
           {!isLogin && !isForgotPassword && !isResetPassword && (
-            <InputField name="fullName" placeholder="Full Name" />
+            <div className="">
+              <label htmlFor="" className="text-gray-400 text-sm">
+                Full Name
+              </label>
+
+              <InputField name="fullName" placeholder="Full Name" />
+            </div>
           )}
           {!isResetPassword && (
-            <InputField
-              name="email"
-              type="email"
-              placeholder="Email Address"
-              className="input"
-            />
+            <div className="">
+              <label htmlFor="" className="text-gray-400 text-sm">
+                Email
+              </label>
+              <InputField
+                name="email"
+                type="email"
+                placeholder="Email Address"
+                className="input"
+              />
+            </div>
           )}
           {!isLogin && !isForgotPassword && !isResetPassword && (
-            <InputField
-              name="phone"
-              type="tel"
-              placeholder="Phone Number"
-              className="input"
-            />
+            <div className="">
+              <label htmlFor="" className="text-gray-400 text-sm">
+                Phone Number
+              </label>
+
+              <InputField
+                name="phone"
+                type="tel"
+                placeholder="Phone Number"
+                className="input"
+              />
+            </div>
           )}
           {isResetPassword && (
-            <InputField name="OTP" type="number" placeholder="OTP code" />
+            <div className="">
+              <label htmlFor="" className="text-gray-400 text-sm">
+                OTP Code
+              </label>
+
+              <InputField name="OTP" type="number" placeholder="OTP code" />
+            </div>
           )}
           {/* Password and Confirm Password Fields */}
           {(isLogin || isResetPassword || isSignup) && (
-            <InputField
-              name="password"
-              type={showPassword ? "text" : "password"}
-              placeholder="Password"
-              className="input"
-              rightIcon={
-                showPassword ? (
-                  <FaEye
-                    className="text-gray-500 w-5 h-5 cursor-pointer"
-                    onClick={togglePasswordVisibility}
-                  />
-                ) : (
-                  <FaEyeSlash
-                    className="text-gray-500 w-5 h-5 cursor-pointer"
-                    onClick={togglePasswordVisibility}
-                  />
-                )
-              }
-            />
+            <div className="">
+              <label htmlFor="" className="text-gray-400 text-sm">
+                Password
+              </label>
+
+              <InputField
+                name="password"
+                type={showPassword ? "text" : "password"}
+                placeholder="Password"
+                className="input"
+                rightIcon={
+                  showPassword ? (
+                    <FaEye
+                      className="text-gray-500 w-5 h-5 cursor-pointer"
+                      onClick={togglePasswordVisibility}
+                    />
+                  ) : (
+                    <FaEyeSlash
+                      className="text-gray-500 w-5 h-5 cursor-pointer"
+                      onClick={togglePasswordVisibility}
+                    />
+                  )
+                }
+              />
+            </div>
           )}
           {/* Marketer Referral Code (Only for Signup) */}
           {isSignup && (
-            <InputField
-              name="marketerReferralCode"
-              type="text"
-              placeholder="Marketer Referral Code"
-              className="input"
-            />
+            <div className="">
+              <label htmlFor="" className="text-gray-400 text-sm">
+                Marketer Referral Code
+              </label>
+
+              <InputField
+                name="marketerReferralCode"
+                type="text"
+                placeholder="Marketer Referral Code"
+                className="input"
+              />
+            </div>
           )}
           {/* Confirm Password (Only for reset) */}
           {isResetPassword && (
-            <InputField
-              name="confirmPassword"
-              type={showPassword ? "text" : "password"}
-              placeholder="Confirm Password"
-              className="input"
-              rightIcon={
-                showPassword ? (
-                  <FaEyeSlash
-                    className="text-gray-500 w-5 h-5 cursor-pointer"
-                    onClick={togglePasswordVisibility}
-                  />
-                ) : (
-                  <FaEye
-                    className="text-gray-500 w-5 h-5 cursor-pointer"
-                    onClick={togglePasswordVisibility}
-                  />
-                )
-              }
-            />
+            <div className="">
+              <label htmlFor="" className="text-gray-400 text-sm">
+                Confirm Password
+              </label>
+
+              <InputField
+                name="confirmPassword"
+                type={showPassword ? "text" : "password"}
+                placeholder="Confirm Password"
+                className="input"
+                rightIcon={
+                  showPassword ? (
+                    <FaEyeSlash
+                      className="text-gray-500 w-5 h-5 cursor-pointer"
+                      onClick={togglePasswordVisibility}
+                    />
+                  ) : (
+                    <FaEye
+                      className="text-gray-500 w-5 h-5 cursor-pointer"
+                      onClick={togglePasswordVisibility}
+                    />
+                  )
+                }
+              />
+            </div>
           )}
           {/* Forgot Password Link */}
           {isLogin && (
