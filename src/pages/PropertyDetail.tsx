@@ -46,6 +46,14 @@ const PropertyDetail = () => {
 
   const address = `${data?.data.properties[0].street_address}, ${data?.data.properties[0].lga}, ${data?.data.properties[0].state} ${data?.data.properties[0].country}`;
   const unitsAvialable = item?.unit_available || 0;
+  // Filter items by purpose
+  const bungalows = item.details.filter((item) => item.purpose === "bungalow");
+  const duplexes = item.details.filter((item) => item.purpose === "duplex");
+
+  // Calculate totals
+  const bungalowTotal = bungalows.reduce((sum, item) => sum + item.value, 0);
+  const duplexTotal = duplexes.reduce((sum, item) => sum + item.value, 0);
+
   const invest = () => {
     // navigate(`/invest-property/${id}`);
     navigate(`/dashboard/invest-property-form/${id}`);
@@ -362,63 +370,157 @@ const PropertyDetail = () => {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                     {/* Split details in half for two tables */}
                     {item?.details && item.details.length > 0 ? (
+                      // <>
+                      //   <div className="relative overflow-x-hidden">
+                      //     <div className="w-full text-sm text-left rtl:text-right text-gray-500">
+                      //       {item.details
+                      //         .slice(0, Math.ceil(item.details.length / 2))
+                      //         .map((detail) => (
+                      //           <div
+                      //             key={detail.id}
+                      //             className="bg-white p-3 border-b flex justify-between border-gray-200 min-w-0"
+                      //           >
+                      //             <div className="">
+                      //               <div
+                      //                 // scope="row"
+                      //                 className="truncate font-medium text-gray-900 whitespace-nowrap"
+                      //               >
+                      //                 {detail.name.trim()}{" "}
+                      //                 {detail.purpose && (
+                      //                   <div className="text-xs text-gray-500">
+                      //                     purpose: {detail.purpose}
+                      //                   </div>
+                      //                 )}
+                      //               </div>
+                      //             </div>
+                      //             <span className=" truncate ">
+                      //               {formatPrice(detail.value)}
+                      //             </span>
+                      //           </div>
+                      //         ))}
+                      //     </div>
+                      //   </div>
+                      //   <div className="relative overflow-x-hidden">
+                      //     <div className="w-full text-sm text-left rtl:text-right text-gray-500">
+                      //       {item.details
+                      //         .slice(Math.ceil(item.details.length / 2))
+                      //         .map((detail) => (
+                      //           <div
+                      //             key={detail.id}
+                      //             className="bg-white p-3 border-b flex justify-between border-gray-200 min-w-0"
+                      //           >
+                      //             <div className="">
+                      //               <div
+                      //                 // scope="row"
+                      //                 className="truncate font-medium text-gray-900 whitespace-nowrap"
+                      //               >
+                      //                 {detail.name.trim()}{" "}
+                      //                 {detail.purpose && (
+                      //                   <div className="text-xs text-gray-500">
+                      //                     purpose: {detail.purpose}
+                      //                   </div>
+                      //                 )}
+                      //               </div>
+                      //             </div>
+                      //             <span className="">
+                      //               {formatPrice(detail.value)}
+                      //             </span>
+                      //           </div>
+                      //         ))}
+                      //     </div>
+                      //   </div>
+                      // </>
                       <>
                         <div className="relative overflow-x-hidden">
                           <div className="w-full text-sm text-left rtl:text-right text-gray-500">
-                            {item.details
-                              .slice(0, Math.ceil(item.details.length / 2))
-                              .map((detail) => (
-                                <div
-                                  key={detail.id}
-                                  className="bg-white p-2 border-b flex justify-between border-gray-200 min-w-0"
-                                >
+                            {bungalows.length > 0 ? (
+                              <>
+                                {bungalows.map((detail) => (
+                                  <div
+                                    key={detail.id}
+                                    className="bg-white p-3 border-b flex justify-between border-gray-200 min-w-0"
+                                  >
+                                    <div className="">
+                                      <div
+                                        // scope="row"
+                                        className="truncate font-medium text-gray-900 whitespace-nowrap"
+                                      >
+                                        {detail.name.trim()}{" "}
+                                        {detail.purpose && (
+                                          <div className="text-xs text-gray-500">
+                                            purpose: {detail.purpose}
+                                          </div>
+                                        )}
+                                      </div>
+                                    </div>
+                                    <span className=" truncate ">
+                                      {formatPrice(detail.value)}
+                                    </span>
+                                  </div>
+                                ))}
+                                <div className="bg-white p-3 border-b flex justify-between border-gray-200 min-w-0">
                                   <div className="">
                                     <div
                                       // scope="row"
                                       className="truncate font-medium text-gray-900 whitespace-nowrap"
                                     >
-                                      {detail.name.trim()}{" "}
-                                      {detail.purpose && (
-                                        <div className="text-xs text-gray-500">
-                                          purpose: {detail.purpose}
-                                        </div>
-                                      )}
+                                      Total:{" "}
                                     </div>
                                   </div>
                                   <span className=" truncate ">
-                                    {formatPrice(detail.value)}
+                                    {formatPrice(bungalowTotal)}
                                   </span>
                                 </div>
-                              ))}
+                              </>
+                            ) : (
+                              <div className="">No Items Found...</div>
+                            )}
                           </div>
                         </div>
                         <div className="relative overflow-x-hidden">
                           <div className="w-full text-sm text-left rtl:text-right text-gray-500">
-                            {item.details
-                              .slice(Math.ceil(item.details.length / 2))
-                              .map((detail) => (
-                                <div
-                                  key={detail.id}
-                                  className="bg-white p-2 border-b flex justify-between border-gray-200 min-w-0"
-                                >
+                            {duplexes.length > 0 ? (
+                              <>
+                                {duplexes.map((detail) => (
+                                  <div
+                                    key={detail.id}
+                                    className="bg-white p-3 border-b flex justify-between border-gray-200 min-w-0"
+                                  >
+                                    <div className="">
+                                      <div
+                                        // scope="row"
+                                        className="truncate font-medium text-gray-900 whitespace-nowrap"
+                                      >
+                                        {detail.name.trim()}{" "}
+                                        {detail.purpose && (
+                                          <div className="text-xs text-gray-500">
+                                            purpose: {detail.purpose}
+                                          </div>
+                                        )}
+                                      </div>
+                                    </div>
+                                    <span className="">
+                                      {formatPrice(detail.value)}
+                                    </span>
+                                  </div>
+                                ))}
+                                <div className="bg-white p-3 border-b flex justify-between border-gray-200 min-w-0">
                                   <div className="">
                                     <div
                                       // scope="row"
                                       className="truncate font-medium text-gray-900 whitespace-nowrap"
                                     >
-                                      {detail.name.trim()}{" "}
-                                      {detail.purpose && (
-                                        <div className="text-xs text-gray-500">
-                                          purpose: {detail.purpose}
-                                        </div>
-                                      )}
+                                      Total:{" "}
                                     </div>
                                   </div>
-                                  <span className="">
-                                    {formatPrice(detail.value)}
+                                  <span className=" truncate ">
+                                    {formatPrice(duplexTotal)}
                                   </span>
                                 </div>
-                              ))}
+                              </>
+                            ) : (
+                              <div className="">No Items found...</div>
+                            )}
                           </div>
                         </div>
                       </>
