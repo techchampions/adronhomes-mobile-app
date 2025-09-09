@@ -39,6 +39,8 @@ import AuthRoutes from "./authRoutes";
 import OTPScreen from "../pages/OTPScreen";
 import ForgotPassword from "../pages/ForgotPassword";
 import ResetPassword from "../pages/ResetPassword";
+import Test from "../components/onboardingMobileScreen/pages";
+import AdronSplashScreens from "../components/onboardingMobileScreen/pages/Stepscreens";
 
 const DashboardScreen = lazy(() => import("../pages/DashboardScreen"));
 
@@ -76,6 +78,7 @@ const AllRoutes = () => {
                 <Route path="notifications" element={<NotificationsPage />} />
                 <Route path="my-properties" element={<MyPropertyScreen />} />
                 <Route path="new-properties" element={<NewPropertyScreen />} />
+                 
                 <Route
                   path="search-properties"
                   element={<PropertySearchResultScreen />}
@@ -126,6 +129,9 @@ const AllRoutes = () => {
                 <Route path="/forgot-password" element={<ForgotPassword />} />
                 <Route path="/reset-password" element={<ResetPassword />} />
               </Route>
+               <Route path="nav" element={<Test />} />
+                 <Route path="splash" element={<AdronSplashScreens />} />
+               
             </Route>
           </Routes>
         </Suspense>
