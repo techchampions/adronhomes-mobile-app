@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight, Heart, MapPin } from "lucide-react";
 
-export default function AdronSplashScreens() {
+export// Wrapper component for the splash screens
+const AdronSplashScreensWrapper = ({ setHasSeenSplash }: { setHasSeenSplash: (value: boolean) => void }) => {
   const [currentScreen, setCurrentScreen] = useState(0);
 
   const screens = [
@@ -29,7 +30,13 @@ export default function AdronSplashScreens() {
   ];
 
   const nextScreen = () => {
-    setCurrentScreen((prev) => (prev + 1) % screens.length);
+    if (currentScreen === screens.length - 1) {
+      // On the last screen, set hasSeenSplash to true in localStorage
+      localStorage.setItem("hasSeenSplash", "true");
+      setHasSeenSplash(true);
+    } else {
+      setCurrentScreen((prev) => (prev + 1) % screens.length);
+    }
   };
 
   const prevScreen = () => {
@@ -39,18 +46,21 @@ export default function AdronSplashScreens() {
   const current = screens[currentScreen];
 
   return (
-    <div className=" px-4 bg-white  flex flex-col min-h-screen ">
+    <div className="px-4 bg-white flex flex-col min-h-screen ">
       {/* Header */}
-      <div className="px-6 pt-8 pb-[45px]">
-        <div className="flex items-center w-full justify-center">
-          <img src="/iconk.svg" />
-        </div>
+      <div className="px-6 pt-8 pb-6 flex justify-center">
+        <img src="/iconk.svg" alt="Logo" className="max-h-16 w-auto" />
       </div>
 
       {/* Content Area */}
-      <div className="w-full justify-center flex bg-white">
-        <img src={current.imgUrl} className="" />
+      <div className="flex-1 flex justify-center items-center bg-white">
+        <img
+          src={current.imgUrl}
+          alt={current.title}
+          className="w-full max-w-md h-auto object-contain"
+        />
       </div>
+
       {/* Page Indicators */}
       <div className="flex justify-center space-x-2 mb-6">
         {screens.map((_, index) => (
@@ -62,8 +72,9 @@ export default function AdronSplashScreens() {
           />
         ))}
       </div>
+
       {/* Bottom Content */}
-      <div className=" pb-8">
+      <div className="pb-8 px-4">
         <h2 className="text-2xl font-bold text-[#090A0A] text-center mb-2 font-gotham">
           {current.title}
         </h2>
@@ -72,23 +83,23 @@ export default function AdronSplashScreens() {
         </p>
 
         {/* Navigation Buttons */}
-        <div className="grid grid-cols-2 space-x-4 ">
+        <div className="flex space-x-4">
           {currentScreen > 0 && (
             <button
               onClick={prevScreen}
-              className="flex-1 py-3 px-6  text-base font-adron-mid "
+              className="flex-1 py-3 px-6 text-base font-adron-mid text-[#090A0A] border border-[#579A0C] rounded-full"
             >
               Back
             </button>
           )}
           <button
             onClick={nextScreen}
-            className={`flex-1 py-3 px-6 bg-[#92C559] text-white rounded-full font-adron-mid `}
+            className="flex-1 py-3 px-6 bg-[#92C559] text-white rounded-full font-adron-mid"
           >
-            Next
+            {currentScreen === screens.length - 1 ? "Finish" : "Next"}
           </button>
         </div>
       </div>
     </div>
   );
-}
+};

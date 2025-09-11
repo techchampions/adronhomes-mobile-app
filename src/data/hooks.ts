@@ -10,7 +10,9 @@ import {
   getAllPropertyLocations,
   getAllPropertyType,
   getDashboardHomeData,
+  getEstates,
   getFAQs,
+  getFeaturedProperties,
   getNotificationByID,
   getNotifications,
   getPropertyByID,
@@ -69,6 +71,7 @@ import { useToastStore } from "../zustand/useToastStore";
 import { useModalStore } from "../zustand/useModalStore";
 import { FAQResponse } from "./types/FAQTypes";
 import { SettingsResponse } from "./types/SettingsTypes";
+import { estatePropertiesResponse } from "./types/estatetypes";
 
 //Query hook for User profile
 export const useGetUser = () => {
@@ -438,5 +441,22 @@ export const useGetEquiryInfo = () => {
   return useQuery<SettingsResponse>({
     queryKey: ["settings", "enquiry"],
     queryFn: () => getSettings("enquiry"),
+  });
+};
+
+
+
+
+export const useGetFeatured = () => {
+  return useQuery<PropertiesResponse>({
+    queryKey: ["featured-data"],
+    queryFn: getFeaturedProperties,
+  });
+};
+
+export const useGetEstate = () => {
+  return useQuery<estatePropertiesResponse>({
+    queryKey: ["estate-data"],
+    queryFn: getEstates,
   });
 };

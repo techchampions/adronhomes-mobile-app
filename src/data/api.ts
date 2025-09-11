@@ -34,6 +34,7 @@ import { PropertiesRequestResponse } from "./types/PropertyRequestTypes";
 import { SliderByTypeResponse } from "./types/SliderByTypeTypes";
 import { FAQResponse } from "./types/FAQTypes";
 import { SettingsResponse } from "./types/SettingsTypes";
+import { estatePropertiesResponse } from "./types/estatetypes";
 
 export type ApiError = {
   response?: {
@@ -71,6 +72,11 @@ export const getUserWallet = async (): Promise<UserWalletResponse> => {
   const response = await apiClient.get("/user/fund-wallet-data");
   return response.data;
 };
+
+// export const getFeaturedProperties = async (): Promise<UserWalletResponse> => {
+//   const response = await apiClient.get("/user/fund-wallet-data");
+//   return response.data;
+// };
 // Get user Properties data
 export const getUserPropertiesPlan = async (
   page: number
@@ -124,6 +130,9 @@ export const getNotificationByID = async (
   const res = await apiClient.get(`/notification/${id}`);
   return res.data;
 };
+
+
+
 
 // types.ts (or at the top of your file)
 //Get Properties
@@ -608,5 +617,18 @@ export const getFAQs = async (): Promise<FAQResponse> => {
 };
 export const getSettings = async (type: string): Promise<SettingsResponse> => {
   const response = await apiClient.get(`/settings?type=${type}`);
+  return response.data;
+};
+
+
+
+
+export const getFeaturedProperties = async (): Promise<PropertiesResponse> => {
+  const response = await apiClient.get("/filter-property?page=1&is_featured=1");
+  return response.data;
+};
+
+export const getEstates = async (): Promise<estatePropertiesResponse> => {
+  const response = await apiClient.get("/property-estate?page=1&state=Ogun+State");
   return response.data;
 };

@@ -313,14 +313,7 @@ const AuthForm = ({
               </div>
             )}
           </div>
-          {/* Toast notification */}
-          {/* {showToast && (
-            <Toast
-              message={toastMsg}
-              type={toastType}
-              onClose={() => setShowToast(false)}
-            />
-          )} */}
+         
         </Form>
       )}
     </Formik>

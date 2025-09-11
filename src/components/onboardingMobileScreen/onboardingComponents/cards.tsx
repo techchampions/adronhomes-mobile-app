@@ -1,85 +1,131 @@
-import { useState } from "react";
-import { ChevronLeft, ChevronRight, Heart, MapPin } from "lucide-react";
+// import React, { useState } from "react";
+// import { MdLocationPin } from "react-icons/md";
+// import { FaRegHeart } from "react-icons/fa";
+// import { Navbar } from "../onboardingComponents/Bottomnavigation";
+// import PropertyCard from "../onboardingComponents/PropertyCard";
+// import CompactPropertyCard from "../onboardingComponents/CompactPropertyCard";
+// import DashboardCard from "../onboardingComponents/DashboardCard";
+// import { Layout } from "../layout";
+// import { useGetFeatured, useGetUser } from "../../../data/hooks";
+// import Loader from "../../Loader";
 
-export default function AdronSplashScreens() {
-  const [currentScreen, setCurrentScreen] = useState(0);
+// const dashboardItems = [
+//   { imageSrc: "/q1.svg", imageAlt: "Dashboard", label: "Dashboard" },
+//   { imageSrc: "/q2.svg", imageAlt: "Users", label: "Walllet" },
+//   { imageSrc: "/q3.svg", imageAlt: "Reports", label: "Notifications" },
+//   { imageSrc: "/q4.svg", imageAlt: "Settings", label: "Payment" },
+//   { imageSrc: "/q5.svg", imageAlt: "Notifications", label: "Saved Properties" },
+//   { imageSrc: "/q6.svg", imageAlt: "Settings", label: "Settings" },
+// ];
 
-  const screens = [
-    {
-      id: "homes",
-      title: "Homes for Every Lifestyle",
-      description:
-        "Browse through a diverse range of properties tailored to meet your unique preferences and budget. Your dream home is just a few clicks away!",
-      imgUrl: "/page1.svg",
-    },
-    {
-      id: "partner",
-      title: "Your Trusted Property Partner",
-      description:
-        "From finding the perfect property to completing the paperwork, our team is here to guide you every step of the way with expert advice and support.",
-      imgUrl: "/page2.svg",
-    },
-    {
-      id: "trust",
-      title: "A Journey Built on Trust",
-      description:
-        "Experience real estate with integrity. We ensure secure transactions and transparent processes to give you peace of mind throughout your journey.",
-      imgUrl:"/page3.svg",
-    },
-  ];
+// const PropertiesPage = () => {
+//   const { data, isLoading, isError } = useGetFeatured();
+//   const FeaturedProp = data?.data;
+//   const [showAllFeatured, setShowAllFeatured] = useState(false);
 
-  const nextScreen = () => {
-    setCurrentScreen((prev) => (prev + 1) % screens.length);
-  };
+//   const features = [
+//     { iconSrc: "ruller.svg", alt: "rl", label: "648 SqM" },
+//     { iconSrc: "strtlight.svg", alt: "strt", label: "Str Lights" },
+//     { iconSrc: "_gym.svg", alt: "gym", label: "Gym" },
+//   ];
 
-  const prevScreen = () => {
-    setCurrentScreen((prev) => (prev - 1 + screens.length) % screens.length);
-  };
+//   return (
+//     <Layout>
+//       <div className="mt-[14px] mb-[32px] px-4">
+//         <img
+//           src="/flag.svg"
+//           alt="User"
+//           className="w-full h-full object-cover max-h-[140px] rounded-[20px]"
+//         />
+//       </div>
 
-  const current = screens[currentScreen];
+//       <div className="space-y-[30px]">
+//         <div className="px-4">
+//           <div className="flex justify-between items-center mb-[10px]">
+//   <p className="font-adron-mid text-base">Featured</p>
+//   <button
+//     onClick={() => setShowAllFeatured(prev => !prev)}
+//     className="font-adron-mid text-sm text-[#79B833]"
+//   >
+//     {showAllFeatured ? "Show Less" : "View All"}
+//   </button>
+// </div>
 
-  return (
-    <div className=" px-4 bg-white  flex flex-col">
-      {/* Header */}
-      <div className="px-6 pt-8 pb-[45px]">
-        <div className="flex items-center w-full justify-center">
-          <img src="/iconk.svg" />
-        </div>
-      </div>
+//          <div className="space-y-[10px]">
+//   {(showAllFeatured ? FeaturedProp : FeaturedProp?.slice(0, 2))?.map((property, index) => (
+//     <div key={index}>
+//       <PropertyCard
+//         imageSrc={property.display_image}
+//         imageAlt={property.name}
+//         title={property.name}
+//         location={`${property.lga}, ${property.state}`}
+//         price={property.price}
+//         features={property.features}
+//       />
+//     </div>
+//   ))}
+// </div>
 
-      {/* Content Area */}
-<div className="w-full justify-center flex bg-white">
-    <img src={current.imgUrl} className=""/>
-</div>
-      {/* Bottom Content */}
-      <div className=" pb-8">
-        <h2 className="text-2xl font-bold text-[#090A0A] text-center mb-2 font-gotham">
-          {current.title}
-        </h2>
-        <p className="text-[#545454] text-base text-center mb-8 leading-relaxed">
-          {current.description}
-        </p>
+//         </div>
 
-        {/* Navigation Buttons */}
-        <div className="grid grid-cols-2 space-x-4 ">
-          {currentScreen > 0 && (
-            <button
-              onClick={prevScreen}
-              className="flex-1 py-3 px-6  text-base font-adron-mid "
-            >
-              Back
-            </button>
-          )}
-          <button
-            onClick={nextScreen}
-            className={`flex-1 py-3 px-6 bg-[#92C559] text-white rounded-full font-adron-mid `}
-          >
-            Next
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
+//         <div className="pl-4">
+//           <div className="flex justify-between items-center mb-[10px] pr-4">
+//             <p className="font-adron-mid text-base">Estates</p>
+//             <p className="font-adron-mid text-sm text-[#79B833]">View All</p>
+//           </div>
+//           <div className="flex overflow-x-auto space-x-3 py-2 no-scrollbar">
+//             <div className="flex-none">
+//               <CompactPropertyCard
+//                 imageUrl="/housing.svg"
+//                 imageAlt="Modern house"
+//                 title="Treasure Islands and Gardens Phantom"
+//                 location="Ejigbo Wuse, Lagos"
+//               />
+//             </div>
+//             <div className="flex-none">
+//               <CompactPropertyCard
+//                 imageUrl="/housing.svg"
+//                 imageAlt="Modern house"
+//                 title="Treasure Islands and Gardens Phantom"
+//                 location="Ejigbo Wuse, Lagos"
+//               />
+//             </div>
+//             <div className="flex-none">
+//               <CompactPropertyCard
+//                 imageUrl="/housing.svg"
+//                 imageAlt="Modern house"
+//                 title="Treasure Islands and Gardens Phantom"
+//                 location="Ejigbo Wuse, Lagos"
+//               />
+//             </div>
+//             <div className="flex-none pr-4">
+//               <CompactPropertyCard
+//                 imageUrl="/housing.svg"
+//                 imageAlt="Modern house"
+//                 title="Treasure Islands and Gardens Phantom"
+//                 location="Ejigbo Wuse, Lagos"
+//               />
+//             </div>
+//           </div>
+//         </div>
+//       </div>
+//       <div>
+//         <div className="flex justify-between items-center mb-[10px] pr-4 mt-8 px-4">
+//           <p className="font-adron-mid text-base">Estates</p>
+//         </div>
+//         <div className="grid grid-cols-3 sm:grid-cols-2 md:grid-cols-3 gap-3 px-4">
+//           {dashboardItems.map((item, index) => (
+//             <DashboardCard
+//               key={index}
+//               imageSrc={item.imageSrc}
+//               imageAlt={item.imageAlt}
+//               label={item.label}
+//             />
+//           ))}
+//         </div>
+//       </div>
+//     </Layout>
+//   );
+// };
 
-
+// export default PropertiesPage;

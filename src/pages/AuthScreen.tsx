@@ -49,13 +49,12 @@ const OnboardingScreen = () => {
 
       {/* Signup Form Section */}
       <div className="bg-white flex flex-col max-h-[100vh] p-4 justify-between overflow-y-scroll">
-        <div className="text-center mt-5">
-          <img
-            src="/images/logo.svg"
-            alt="Adron Logo"
-            className="mx-auto w-full h-[60px]"
-          />
-        </div>
+     <div className="px-6 pt-8 pb-6 flex justify-center">
+        <img src="/iconk.svg" alt="Logo" className="max-h-16 w-auto" />
+      </div>
+        <div className="px-6  flex justify-center">
+        <img src="/loginh.svg" alt="Logo" className="max-h-32 w-auto" />
+      </div>
         <div className="px-0 lg:px-24 py-4">
           <Outlet />
         </div>
