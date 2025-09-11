@@ -12,8 +12,6 @@ import {
   useGetUser,
   useGetUserWalletdata,
 } from "../../../data/hooks";
-import Loader from "../../Loader";
-import WalletHistoryList from "../../DashboardWalletComponents/WalletHistoryList";
 import AddFundAmount from "../../DashboardHomeComponents/AddFundAmount";
 import { useModalStore } from "../../../zustand/useModalStore";
 
@@ -22,7 +20,7 @@ const dashboardItems = [
     imageSrc: "/q1.svg",
     imageAlt: "Dashboard",
     label: "Dashboard",
-    url: "/dashboard",
+    url: "/dashboard/home",
   },
   {
     imageSrc: "/q2.svg",
@@ -162,7 +160,7 @@ const PropertiesPage = () => {
 
   return (
     <>
-      <div className="mt-[14px] mb-[32px] px-4">
+      <div className=" mb-[32px] px-4">
         <img
           src="/flag.svg"
           alt="User"

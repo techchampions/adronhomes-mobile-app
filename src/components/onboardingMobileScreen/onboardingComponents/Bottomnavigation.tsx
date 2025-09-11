@@ -6,6 +6,7 @@ import { RiWallet3Fill } from "react-icons/ri";
 import { Link, useLocation, useNavigate, useNavigation } from "react-router-dom";
 import AddFundAmount from "../../DashboardHomeComponents/AddFundAmount";
 import { useModalStore } from "../../../zustand/useModalStore";
+import { IoHome } from "react-icons/io5";
 
 export const Navbar = () => {
   const location = useLocation();
@@ -32,7 +33,7 @@ export const Navbar = () => {
           }`}
         >
     
-          <MdDashboard className="w-6 h-6" />{" "}
+          <IoHome  className="w-6 h-6" />{" "}
           <span  className="text-[12px]  font-[325]">Home</span>{" "}
         </Link>
         {/* Properties */}{" "}
