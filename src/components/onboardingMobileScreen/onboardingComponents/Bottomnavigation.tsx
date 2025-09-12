@@ -7,6 +7,7 @@ import { Link, useLocation, useNavigate, useNavigation } from "react-router-dom"
 import AddFundAmount from "../../DashboardHomeComponents/AddFundAmount";
 import { useModalStore } from "../../../zustand/useModalStore";
 import { IoHome } from "react-icons/io5";
+// import { IoHome } from "react-icons/io5";
 
 export const Navbar = () => {
   const location = useLocation();
