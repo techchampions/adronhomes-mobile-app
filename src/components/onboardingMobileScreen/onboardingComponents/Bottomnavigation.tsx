@@ -24,7 +24,7 @@ export const Navbar = () => {
 
   return (
     <>
-      <nav className="fixed bottom-0 w-full bg-white shadow-lg p-4 flex justify-between items-center z-50">
+      <nav className="fixed bottom-0 w-full bg-white shadow-lg py-4 flex justify-between items-center z-50">
         {/* Home */}{" "}
         <Link
           to="/dashboard"
