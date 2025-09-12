@@ -1,21 +1,25 @@
 import React, { useState } from "react";
-import { MdLocationPin } from "react-icons/md";
-import { FaRegHeart } from "react-icons/fa";
-import { Navbar } from "../onboardingComponents/Bottomnavigation";
 import PropertyCard from "../onboardingComponents/PropertyCard";
 import CompactPropertyCard from "../onboardingComponents/CompactPropertyCard";
 import DashboardCard from "../onboardingComponents/DashboardCard";
-import { Layout } from "../layout";
+
 import {
   useGetEstate,
   useGetFeatured,
+  useGetSlidersByType,
   useGetUser,
   useGetUserWalletdata,
 } from "../../../data/hooks";
 import AddFundAmount from "../../DashboardHomeComponents/AddFundAmount";
 import { useModalStore } from "../../../zustand/useModalStore";
-import { EmptyEstates, EmptyFeaturedProperties } from "../onboardingComponents/emptyStates";
-import { CompactCardSkeleton, PropertyCardSkeleton } from "../onboardingComponents/skeleton";
+import {
+  EmptyEstates,
+  EmptyFeaturedProperties,
+} from "../onboardingComponents/emptyStates";
+import {
+  CompactCardSkeleton,
+  PropertyCardSkeleton,
+} from "../onboardingComponents/skeleton";
 import ImageCarousel from "../onboardingComponents/ImageCarousel";
 
 const dashboardItems = [
@@ -57,13 +61,22 @@ const dashboardItems = [
   },
 ];
 
-
-
-// Loading Skeleton Components
-
-
 const PropertiesPage = () => {
   const { data, isLoading, isError } = useGetFeatured();
+  const { data: dashboardSlider, isLoading: sliderLoading } =
+    useGetSlidersByType("dashboard");
+
+const getRoleName = (is_saved: any): any => {
+  switch (is_saved) {
+    case 0:
+      return false;
+    case 1:
+      return true
+
+    default:
+      return false;
+  }
+};
 
   const {
     data: dataestate,
@@ -82,17 +95,20 @@ const PropertiesPage = () => {
 
   const [showAllFeatured, setShowAllFeatured] = useState(false);
 
-  // Demo images for the carousel (you can replace with API data)
   const carouselImages = [
     { src: "/flag.svg", alt: "Featured property" },
-    { src: "/demo1.svg", alt: "Demo property 1" },
-    { src: "/demo2.svg", alt: "Demo property 2" }
+    { src: "/dot3.svg", alt: "Demo property 1" },
+    { src: "/dot2.svg", alt: "Demo property 2" },
   ];
+
+  const imgapi = dashboardSlider?.data?.map((item) => ({
+    src: item?.image,
+    alt: "andron",
+  }));
 
   return (
     <>
-      {/* Replace the static image with the carousel */}
-      <ImageCarousel images={carouselImages} interval={5000} />
+      <ImageCarousel images={imgapi ?? carouselImages} interval={5000} />
 
       <div className="space-y-[30px]">
         {/* Featured Properties Section */}
@@ -133,7 +149,7 @@ const PropertiesPage = () => {
                       location={`${property.lga}, ${property.state}`}
                       price={property.price}
                       features={property.features}
-                      isSavedInitial={property.is_saved}
+                      isSavedInitial={getRoleName(property.is_saved)}
                       loading={false}
                     />
                   </div>
@@ -162,7 +178,9 @@ const PropertiesPage = () => {
                 Error loading estates
               </div>
             ) : estatedProp.length === 0 ? (
-              <div className="justify-center flext w-full"><EmptyEstates /></div>
+              <div className="justify-center flext w-full">
+                <EmptyEstates />
+              </div>
             ) : (
               estatedProp.map((estate, index) => (
                 <div className="flex-none" key={estate.id || index}>

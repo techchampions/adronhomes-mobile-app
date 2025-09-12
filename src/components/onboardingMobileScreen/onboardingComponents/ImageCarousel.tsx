@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 
 interface CarouselImage {
-  src: string;
-  alt: string;
+  src: any;
+  alt: any;
 }
 
 interface ImageCarouselProps {
@@ -56,7 +56,7 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
               <img
                 src={image.src}
                 alt={image.alt}
-                className="w-full h-full object-cover min-h-[160px] "
+                className="w-full h-full object-cover min-h-[160px] max-h-[160px] md:min-h-[200px] md:max-h-[200px]  "
               />
             </div>
           ))}
