@@ -43,6 +43,7 @@ import { Layout } from "../components/onboardingMobileScreen/layout";
 import { AdronSplashScreensWrapper } from "../components/onboardingMobileScreen/pages/Stepscreens";
 import PropertiesPage from "../components/onboardingMobileScreen/pages";
 import HomeScreen from "../pages/HomeScreen";
+import ScrollToTop from "./ScrollToTop";
 
 const DashboardScreen = lazy(() => import("../pages/DashboardScreen"));
 
@@ -71,6 +72,7 @@ const AllRoutes = () => {
 
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <Suspense fallback={<Loader className="h-[100px] w-[100px]" />}>
         <Routes>
           <Route
@@ -180,7 +182,8 @@ const AppWrapper = () => {
     );
   }
 
-  // Once splash screen is done, render the main application
+
+  
   return <AllRoutes />;
 };
 

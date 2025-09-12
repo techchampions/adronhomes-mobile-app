@@ -10,8 +10,7 @@ import {
   useGetUser,
   useGetUserWalletdata,
 } from "../../../data/hooks";
-import AddFundAmount from "../../DashboardHomeComponents/AddFundAmount";
-import { useModalStore } from "../../../zustand/useModalStore";
+
 import {
   EmptyEstates,
   EmptyFeaturedProperties,
@@ -66,17 +65,17 @@ const PropertiesPage = () => {
   const { data: dashboardSlider, isLoading: sliderLoading } =
     useGetSlidersByType("dashboard");
 
-const getRoleName = (is_saved: any): any => {
-  switch (is_saved) {
-    case 0:
-      return false;
-    case 1:
-      return true
+// const getRoleName = (is_saved: any): any => {
+//   switch (is_saved) {
+//     case 0:
+//       return false;
+//     case 1:
+//       return true
 
-    default:
-      return false;
-  }
-};
+//     default:
+//       return false;
+//   }
+// };
 
   const {
     data: dataestate,
@@ -149,7 +148,7 @@ const getRoleName = (is_saved: any): any => {
                       location={`${property.lga}, ${property.state}`}
                       price={property.price}
                       features={property.features}
-                      isSavedInitial={getRoleName(property.is_saved)}
+                      isSavedInitial={property.is_saved}
                       loading={false}
                     />
                   </div>

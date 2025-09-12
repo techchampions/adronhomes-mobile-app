@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { ChevronLeft, ChevronRight, Heart, MapPin } from "lucide-react";
 
-export// Wrapper component for the splash screens
-const AdronSplashScreensWrapper = ({ setHasSeenSplash }: { setHasSeenSplash: (value: boolean) => void }) => {
+// Wrapper component for the splash screens
+export const AdronSplashScreensWrapper = ({ setHasSeenSplash }: { setHasSeenSplash: (value: boolean) => void }) => {
   const [currentScreen, setCurrentScreen] = useState(0);
 
   const screens = [
@@ -31,7 +31,6 @@ const AdronSplashScreensWrapper = ({ setHasSeenSplash }: { setHasSeenSplash: (va
 
   const nextScreen = () => {
     if (currentScreen === screens.length - 1) {
-      // On the last screen, set hasSeenSplash to true in localStorage
       localStorage.setItem("hasSeenSplash", "true");
       setHasSeenSplash(true);
     } else {
@@ -41,6 +40,11 @@ const AdronSplashScreensWrapper = ({ setHasSeenSplash }: { setHasSeenSplash: (va
 
   const prevScreen = () => {
     setCurrentScreen((prev) => (prev - 1 + screens.length) % screens.length);
+  };
+
+  const skipScreens = () => {
+    localStorage.setItem("hasSeenSplash", "true");
+    setHasSeenSplash(true);
   };
 
   const current = screens[currentScreen];
@@ -81,7 +85,15 @@ const AdronSplashScreensWrapper = ({ setHasSeenSplash }: { setHasSeenSplash: (va
         <p className="text-[#545454] text-base text-center mb-8 leading-relaxed">
           {current.description}
         </p>
-
+ {/* Skip Button */}
+        <div className="flex justify-center mt-6 mb-5">
+          <button
+            onClick={skipScreens}
+            className="text-xl text-[#92C559] underline font-medium"
+          >
+            Skip
+          </button>
+        </div>
         {/* Navigation Buttons */}
         <div className="flex space-x-4">
           {currentScreen > 0 && (
@@ -99,6 +111,8 @@ const AdronSplashScreensWrapper = ({ setHasSeenSplash }: { setHasSeenSplash: (va
             {currentScreen === screens.length - 1 ? "Finish" : "Next"}
           </button>
         </div>
+
+       
       </div>
     </div>
   );
