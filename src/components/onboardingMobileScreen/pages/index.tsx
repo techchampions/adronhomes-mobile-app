@@ -1,28 +1,33 @@
 import React, { useState } from "react";
-import { MdLocationPin } from "react-icons/md";
-import { FaRegHeart } from "react-icons/fa";
-import { Navbar } from "../onboardingComponents/Bottomnavigation";
 import PropertyCard from "../onboardingComponents/PropertyCard";
 import CompactPropertyCard from "../onboardingComponents/CompactPropertyCard";
 import DashboardCard from "../onboardingComponents/DashboardCard";
-import { Layout } from "../layout";
+
 import {
   useGetEstate,
   useGetFeatured,
+  useGetSlidersByType,
   useGetUser,
   useGetUserWalletdata,
 } from "../../../data/hooks";
-import Loader from "../../Loader";
-import WalletHistoryList from "../../DashboardWalletComponents/WalletHistoryList";
 import AddFundAmount from "../../DashboardHomeComponents/AddFundAmount";
 import { useModalStore } from "../../../zustand/useModalStore";
+import {
+  EmptyEstates,
+  EmptyFeaturedProperties,
+} from "../onboardingComponents/emptyStates";
+import {
+  CompactCardSkeleton,
+  PropertyCardSkeleton,
+} from "../onboardingComponents/skeleton";
+import ImageCarousel from "../onboardingComponents/ImageCarousel";
 
 const dashboardItems = [
   {
     imageSrc: "/q1.svg",
     imageAlt: "Dashboard",
     label: "Dashboard",
-    url: "/dashboard",
+    url: "/dashboard/home",
   },
   {
     imageSrc: "/q2.svg",
@@ -56,86 +61,22 @@ const dashboardItems = [
   },
 ];
 
-// Empty State Components
-const EmptyFeaturedProperties = () => (
-  <div className="flex flex-col items-center justify-center py-8 px-4 text-center">
-    <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mb-4">
-      <svg
-        className="w-10 h-10 text-gray-400"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth={2}
-          d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-4m-5 0H3m2 0h3M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
-        />
-      </svg>
-    </div>
-    <h3 className="font-adron-mid text-lg text-gray-600 mb-2">
-      No Featured Properties
-    </h3>
-    <p className="text-gray-500 text-sm">
-      Featured properties will appear here when available
-    </p>
-  </div>
-);
-
-const EmptyEstates = () => (
-  <div className="flex flex-col items-center justify-center py-8 px-4 text-center min-w-[200px]">
-    <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-3">
-      <svg
-        className="w-8 h-8 text-gray-400"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth={2}
-          d="M3 21l18-18M3 3l18 18"
-        />
-      </svg>
-    </div>
-    <h3 className="font-adron-mid text-base text-gray-600 mb-1">
-      No Estates Available
-    </h3>
-    <p className="text-gray-500 text-xs">Check back later for new estates</p>
-  </div>
-);
-
-// Loading Skeleton Components
-const PropertyCardSkeleton = () => (
-  <div className="animate-pulse">
-    <div className="bg-gray-200 h-48 rounded-lg mb-3"></div>
-    <div className="space-y-2">
-      <div className="h-4 bg-gray-200 rounded w-3/4"></div>
-      <div className="h-3 bg-gray-200 rounded w-1/2"></div>
-      <div className="h-4 bg-gray-200 rounded w-1/3"></div>
-    </div>
-  </div>
-);
-
-const CompactCardSkeleton = () => (
-  <div className="animate-pulse flex-none w-32">
-    <div className="bg-gray-200 h-24 rounded-lg mb-2"></div>
-    <div className="space-y-1">
-      <div className="h-3 bg-gray-200 rounded w-full"></div>
-      <div className="h-2 bg-gray-200 rounded w-3/4"></div>
-    </div>
-  </div>
-);
-
 const PropertiesPage = () => {
   const { data, isLoading, isError } = useGetFeatured();
-  const openModal = useModalStore((state) => state.openModal);
+  const { data: dashboardSlider, isLoading: sliderLoading } =
+    useGetSlidersByType("dashboard");
 
-  const startFundWallet = () => {
-    openModal(<AddFundAmount goBack={startFundWallet} />);
-  };
+const getRoleName = (is_saved: any): any => {
+  switch (is_saved) {
+    case 0:
+      return false;
+    case 1:
+      return true
+
+    default:
+      return false;
+  }
+};
 
   const {
     data: dataestate,
@@ -154,21 +95,20 @@ const PropertiesPage = () => {
 
   const [showAllFeatured, setShowAllFeatured] = useState(false);
 
-  const features = [
-    { iconSrc: "ruller.svg", alt: "rl", label: "648 SqM" },
-    { iconSrc: "strtlight.svg", alt: "strt", label: "Str Lights" },
-    { iconSrc: "_gym.svg", alt: "gym", label: "Gym" },
+  const carouselImages = [
+    { src: "/flag.svg", alt: "Featured property" },
+    { src: "/dot3.svg", alt: "Demo property 1" },
+    { src: "/dot2.svg", alt: "Demo property 2" },
   ];
+
+  const imgapi = dashboardSlider?.data?.map((item) => ({
+    src: item?.image,
+    alt: "andron",
+  }));
 
   return (
     <>
-      <div className="mt-[14px] mb-[32px] px-4">
-        <img
-          src="/flag.svg"
-          alt="User"
-          className="w-full h-full object-cover max-h-[140px] rounded-[20px]"
-        />
-      </div>
+      <ImageCarousel images={imgapi ?? carouselImages} interval={5000} />
 
       <div className="space-y-[30px]">
         {/* Featured Properties Section */}
@@ -209,7 +149,7 @@ const PropertiesPage = () => {
                       location={`${property.lga}, ${property.state}`}
                       price={property.price}
                       features={property.features}
-                      isSavedInitial={property.is_saved}
+                      isSavedInitial={getRoleName(property.is_saved)}
                       loading={false}
                     />
                   </div>
@@ -238,7 +178,9 @@ const PropertiesPage = () => {
                 Error loading estates
               </div>
             ) : estatedProp.length === 0 ? (
-              <EmptyEstates />
+              <div className="justify-center flext w-full">
+                <EmptyEstates />
+              </div>
             ) : (
               estatedProp.map((estate, index) => (
                 <div className="flex-none" key={estate.id || index}>

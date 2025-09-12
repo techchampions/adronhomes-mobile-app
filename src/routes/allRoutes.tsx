@@ -40,9 +40,9 @@ import OTPScreen from "../pages/OTPScreen";
 import ForgotPassword from "../pages/ForgotPassword";
 import ResetPassword from "../pages/ResetPassword";
 import { Layout } from "../components/onboardingMobileScreen/layout";
-// import AdronSplashScreens, { AdronSplashScreensWrapper } from "../components/onboardingMobileScreen/pages/Stepscreens";
-import PropertiesPage from "../components/onboardingMobileScreen/pages";
 import { AdronSplashScreensWrapper } from "../components/onboardingMobileScreen/pages/Stepscreens";
+import PropertiesPage from "../components/onboardingMobileScreen/pages";
+import HomeScreen from "../pages/HomeScreen";
 
 const DashboardScreen = lazy(() => import("../pages/DashboardScreen"));
 
@@ -55,7 +55,7 @@ const ProtectedLayout = ({ children }: ProtectedLayoutProps) => {
   const dash = location.pathname === "/dashboard";
   const prop = location.pathname.startsWith("/dashboard/properties");
   const paddingClass = dash || prop ? "px-0 md:px-4" : "px-4";
-  
+
   return (
     <Layout>
       <div className={paddingClass}>{children}</div>
@@ -63,31 +63,11 @@ const ProtectedLayout = ({ children }: ProtectedLayoutProps) => {
   );
 };
 
-
-
+// The main component that manages all routing logic
 const AllRoutes = () => {
-  const { message, type, hideToast } = useToastStore();
   const { hasCompletedOnboarding } = useOnboardingStore();
   const { isLoggedIn } = useUserStore();
-
-  // Splash state
-  const [hasSeenSplash, setHasSeenSplash] = useState<boolean | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    // Check local storage to see if the splash screens have been seen
-    const seenSplash = localStorage.getItem("hasSeenSplash") === "true";
-    setHasSeenSplash(seenSplash);
-    setIsLoading(false);
-  }, [isLoading,isLoggedIn]);
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Loader className="h-[100px] w-[100px]" />
-      </div>
-    );
-  }
+  const { message, type, hideToast } = useToastStore();
 
   return (
     <BrowserRouter>
@@ -96,14 +76,7 @@ const AllRoutes = () => {
           <Route
             path="/"
             element={
-              <Navigate
-                to={
-                  isLoggedIn && hasCompletedOnboarding
-                    ? "/dashboard"
-                    : "/login"
-                }
-                replace
-              />
+              <Navigate to={isLoggedIn ? "/dashboard" : "/login"} replace />
             }
           />
 
@@ -111,17 +84,13 @@ const AllRoutes = () => {
           <Route path="/dashboard/*" element={<ProtectedRoutes />}>
             <Route
               element={
-                // Show splash screens if user is logged in and hasn't seen them yet
-                isLoggedIn && !hasSeenSplash ? (
-                  <AdronSplashScreensWrapper setHasSeenSplash={setHasSeenSplash} />
-                ) : (
-                  <ProtectedLayout>
-                    <Outlet />
-                  </ProtectedLayout>
-                )
+                <ProtectedLayout>
+                  <Outlet />
+                </ProtectedLayout>
               }
             >
               <Route index element={<PropertiesPage />} />
+               <Route path="home" element={<HomeScreen />} />
               <Route path="wallet" element={<WalletScreen />} />
               <Route path="payments" element={<TransactionsPage />} />
               <Route path="notifications" element={<NotificationsPage />} />
@@ -143,10 +112,7 @@ const AllRoutes = () => {
                 path="invest-property-form/:id"
                 element={<InvestmentDetailForm />}
               />
-              <Route
-                path="invest-property/:id"
-                element={<InvestmentForm />}
-              />
+              <Route path="invest-property/:id" element={<InvestmentForm />} />
               <Route
                 path="property-agreement/:id"
                 element={<ProppertyAgreement />}
@@ -166,7 +132,7 @@ const AllRoutes = () => {
 
           {/* Login & Auth Routes */}
           <Route path="/" element={<AuthRoutes />}>
-            <Route path="/" element={<OnboardingScreen />}>
+            <Route element={<OnboardingScreen />}>
               <Route path="/login" index element={<Login />} />
               <Route path="/signup" element={<SignUp />} />
               <Route path="/verify-otp" element={<OTPScreen />} />
@@ -182,4 +148,40 @@ const AllRoutes = () => {
   );
 };
 
-export default AllRoutes;
+const AppWrapper = () => {
+  const [hasSeenSplash, setHasSeenSplash] = useState<boolean | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    // Check local storage to see if the splash screens have been seen
+    const seenSplash = localStorage.getItem("hasSeenSplash") === "true";
+    setHasSeenSplash(seenSplash);
+    setIsLoading(false);
+  }, []);
+
+  // Show a full-page loader if the app is still initializing
+  if (isLoading || hasSeenSplash === null) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader className="h-[100px] w-[100px]" />
+      </div>
+    );
+  }
+
+  // Show splash screens if the user hasn't seen them yet
+  if (!hasSeenSplash) {
+    return (
+      <AdronSplashScreensWrapper
+        setHasSeenSplash={() => {
+          localStorage.setItem("hasSeenSplash", "true");
+          setHasSeenSplash(true);
+        }}
+      />
+    );
+  }
+
+  // Once splash screen is done, render the main application
+  return <AllRoutes />;
+};
+
+export default AppWrapper;

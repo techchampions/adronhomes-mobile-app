@@ -16,15 +16,9 @@ import { useGetUser } from "../../data/hooks";
 import { Navbar } from "./onboardingComponents/Bottomnavigation";
 import { useUserStore } from "../../zustand/UserStore";
 import Auth from "../../utils/Auth";
+
 // Placeholder for external hooks and utilities to make the file runnable
-// In a real project, these would be separate files.
-
 const useGetNotifications = () => ({ data: { unread: 3 } });
-// const Auth = { logout: () => console.log("User logged out.") };
-
-// const Navbar = () => <div className="fixed bottom-0 left-0 right-0 p-4 bg-transparent text-center z-50">Bottom Navigation Bar</div>;
-
-// --- Helper Components (defined in the same file) ---
 
 const CopyButton = ({ text }: { text: any }) => {
   const [copied, setCopied] = useState(false);
@@ -36,15 +30,14 @@ const CopyButton = ({ text }: { text: any }) => {
         setTimeout(() => setCopied(false), 2000);
       });
     } else {
-      // Fallback for browsers that do not support navigator.clipboard
       const textArea = document.createElement("textarea");
       textArea.value = text;
       document.body.appendChild(textArea);
       textArea.select();
       try {
-        document.execCommand("copy");
-        setCopied(true);
-        setTimeout(() => setCopied(false), 2000);
+            document.execCommand("copy");
+            setCopied(true);
+            setTimeout(() => setCopied(false), 2000);
       } catch (err) {
         console.error("Failed to copy", err);
       }
@@ -59,9 +52,9 @@ const CopyButton = ({ text }: { text: any }) => {
   );
 };
 
-// --- New Sidebar Component ---
 const Sidebar = ({ isOpen, onClose }: { isOpen: any; onClose: any }) => {
   const navigate = useNavigate();
+  
   const { user } = useUserStore();
   const { data: notificationData } = useGetNotifications();
   const unReadCount = notificationData?.unread || 0;
@@ -97,10 +90,8 @@ const Sidebar = ({ isOpen, onClose }: { isOpen: any; onClose: any }) => {
           isOpen ? "translate-x-0" : "-translate-x-full"
         } flex`}
       >
-        {/* Transparent dark overlay to close the sidebar */}
         <div className="flex-1 bg-black" onClick={() => onClose()} />
 
-        {/* Side drawer menu */}
         <div className="w-64 bg-white h-screen p-6 shadow-lg flex flex-col">
           <div className="flex flex-col gap-4">
             <div className="flex justify-between">
@@ -127,7 +118,6 @@ const Sidebar = ({ isOpen, onClose }: { isOpen: any; onClose: any }) => {
             />
           </div>
 
-          {/* Main navigation container */}
           <div className="flex-grow overflow-y-auto scrollbar-hide py-1.5 bg-white rounded-2xl mt-4">
             <nav className="space-y-2 p-2">
               <NavItem
@@ -136,7 +126,7 @@ const Sidebar = ({ isOpen, onClose }: { isOpen: any; onClose: any }) => {
                 }}
                 label="Dashboard"
                 icon={<MdDashboardCustomize className="w-4 h-4" />}
-                path="/dashboard/"
+                path="/dashboard/home"
               />
               <NavItem
                 onSlideBack={() => {
@@ -190,7 +180,6 @@ const Sidebar = ({ isOpen, onClose }: { isOpen: any; onClose: any }) => {
                 icon={<RiHomeHeartFill className=" w-4 h-4" />}
                 path="/dashboard/saved-properties"
               />
-              {/* Profile Nav */}
               <h4 className="text-adron-gray-400 font-bold px-7 mt-7 text-[13px]">
                 PROFILE
               </h4>
@@ -250,54 +239,15 @@ export const Layout = ({ children }: { children: any }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const userData = data?.user;
 
-  // New state for header visibility
-  const [headerVisible, setHeaderVisible] = useState(true);
-
-  // useEffect to handle the header visibility on scroll
-  useEffect(() => {
-    let scrollTimeout: number | undefined;
-
-    const handleScroll = () => {
-      // Hide the header as soon as scrolling starts
-      setHeaderVisible(false);
-
-      // Clear any existing timeout
-      clearTimeout(scrollTimeout);
-
-      // Set a new timeout to show the header after a brief pause
-      scrollTimeout = setTimeout(() => {
-        setHeaderVisible(true);
-      }, 500); // Adjust this delay as needed
-    };
-
-    window.addEventListener("scroll", handleScroll);
-
-    // Cleanup function
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-      clearTimeout(scrollTimeout);
-    };
-  }, []);
-
-  const getRandomBgColor = () => {
-    const letters = "0123456789ABCDEF";
-    let color = "#";
-    for (let i = 0; i < 6; i++) {
-      color += letters[Math.floor(Math.random() * 16)];
-    }
-    return color;
-  };
-
   const userHasProfilePicture = userData?.profile_picture;
   const initials =
     (userData?.first_name?.[0] || "") + (userData?.last_name?.[0] || "");
-  const backgroundColor = getRandomBgColor();
 
   const [screenWidth, setScreenWidth] = useState(
     typeof window !== "undefined" ? window.innerWidth : 0
   );
   const [showBoundary, setShowBoundary] = useState(false);
-
+const navigate = useNavigate()
   useEffect(() => {
     const handleResize = () => {
       const width = window.innerWidth;
@@ -305,26 +255,15 @@ export const Layout = ({ children }: { children: any }) => {
       setShowBoundary(width >= 525 && width <= 767);
     };
     window.addEventListener("resize", handleResize);
-    handleResize(); // Initial call
+    handleResize();
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   return (
-    <div className="min-h-screen bg-transparent flex flex-col">
+    <div className=" bg-transparent flex flex-col">
       <header
-        className={`fixed top-0 left-0 right-0 px-4 pt-4 pb-16 md:pb-16 z-20 transition-transform duration-300
-        ${headerVisible ? "translate-y-0" : "-translate-y-full"}`}
+        className="fixed top-0 left-0 right-0 px-4 py-4 z-20 bg-[#55A555]"
       >
-        <div
-          className={`absolute md:-right-72 bottom-1 md:bottom-0 rounded-full z-0 bg-[#55A555]
-            ${
-              showBoundary
-                ? "w-[1500px] h-[1500px] -right-60"
-                : "w-[600px] h-[600px] -right-4"
-            }
-            md:w-[1700px] md:h-[1700px] lg:w-[2500px] lg:h-[2500px] xl:w-[3500px] xl:h-[3500px]`}
-        ></div>
-
         <div className="flex justify-between items-start relative z-10 max-w-7xl mx-auto">
           <div className="flex items-center space-x-4">
             <button
@@ -350,7 +289,7 @@ export const Layout = ({ children }: { children: any }) => {
             </div>
           </div>
 
-          <div className="w-10 h-10 rounded-full bg-white overflow-hidden border-2 border-white hover:border-gray-200 transition-colors duration-200">
+          <div className="w-10 h-10 rounded-full bg-white overflow-hidden border-2 border-white hover:border-gray-200 transition-colors duration-200" onClick={()=>navigate("/dashboard/settings")}>
             {userHasProfilePicture ? (
               <img
                 src={userData.profile_picture!}
@@ -359,8 +298,7 @@ export const Layout = ({ children }: { children: any }) => {
               />
             ) : (
               <div
-                className="w-full h-full flex items-center justify-center text-white text-lg font-bold"
-                style={{ backgroundColor: backgroundColor }}
+                className="w-full h-full flex items-center justify-center text-adron-black text-lg font-bold "
               >
                 {initials.toUpperCase()}
               </div>
@@ -369,11 +307,9 @@ export const Layout = ({ children }: { children: any }) => {
         </div>
       </header>
 
-      {/* The Sidebar component */}
       <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
 
-      {/* Add padding-bottom to account for the fixed navbar */}
-      <main className="flex-1 overflow-auto pt-36 md:pt-44 pb-32 overflow-y-auto">
+      <main className="flex-1 overflow-auto pt-24 md:pt-24 pb-32 overflow-y-auto">
         {children}
       </main>
 
