@@ -43,7 +43,9 @@ import { Layout } from "../components/onboardingMobileScreen/layout";
 import { AdronSplashScreensWrapper } from "../components/onboardingMobileScreen/pages/Stepscreens";
 import PropertiesPage from "../components/onboardingMobileScreen/pages";
 import HomeScreen from "../pages/HomeScreen";
+
 import ScrollToTop from "./ScrollToTop";
+
 
 const DashboardScreen = lazy(() => import("../pages/DashboardScreen"));
 
@@ -183,7 +185,6 @@ const AppWrapper = () => {
   }
 
 
-  
   return <AllRoutes />;
 };
 

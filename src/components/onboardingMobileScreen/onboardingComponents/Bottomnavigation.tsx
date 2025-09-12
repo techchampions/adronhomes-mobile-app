@@ -34,7 +34,9 @@ export const Navbar = () => {
         >
     
           <IoHome  className="w-6 h-6" />{" "}
+
           <span  className=" text-[8px]  font-[325]">Home</span>{" "}
+
         </Link>
         {/* Properties */}{" "}
         <Link

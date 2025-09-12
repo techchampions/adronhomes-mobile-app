@@ -20,7 +20,9 @@ import {
   PropertyCardSkeleton,
 } from "../onboardingComponents/skeleton";
 import ImageCarousel from "../onboardingComponents/ImageCarousel";
+
 import { formatToNaira } from "../../../data/utils";
+
 
 const dashboardItems = [
   {
@@ -66,17 +68,7 @@ const PropertiesPage = () => {
   const { data: dashboardSlider, isLoading: sliderLoading } =
     useGetSlidersByType("dashboard");
 
-// const getRoleName = (is_saved: any): any => {
-//   switch (is_saved) {
-//     case 0:
-//       return false;
-//     case 1:
-//       return true
 
-//     default:
-//       return false;
-//   }
-// };
 
   const {
     data: dataestate,
@@ -149,7 +141,7 @@ const PropertiesPage = () => {
                       location={`${property.lga}, ${property.state}`}
                       price={formatToNaira(property.price)}
                       features={property.features}
-                      isSavedInitial={property.is_saved}
+                      isSavedInitial={getRoleName(property.is_saved)}
                       loading={false}
                     />
                   </div>
