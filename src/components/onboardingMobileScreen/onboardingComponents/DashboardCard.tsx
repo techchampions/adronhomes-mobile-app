@@ -38,7 +38,7 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
           className={`w-8 h-8 object-cover ${imageClassName}`}
         />
       </div>
-      <p className={`text-sm mt-[10px] text-center ${labelClassName}`}>{label}</p>
+      <p className={`text-[10px] mt-[10px] text-center ${labelClassName}`}>{label}</p>
     </div>
   );
 };

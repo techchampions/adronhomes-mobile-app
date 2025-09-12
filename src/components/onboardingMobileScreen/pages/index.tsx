@@ -10,8 +10,7 @@ import {
   useGetUser,
   useGetUserWalletdata,
 } from "../../../data/hooks";
-import AddFundAmount from "../../DashboardHomeComponents/AddFundAmount";
-import { useModalStore } from "../../../zustand/useModalStore";
+
 import {
   EmptyEstates,
   EmptyFeaturedProperties,
@@ -21,6 +20,7 @@ import {
   PropertyCardSkeleton,
 } from "../onboardingComponents/skeleton";
 import ImageCarousel from "../onboardingComponents/ImageCarousel";
+import { formatToNaira } from "../../../data/utils";
 
 const dashboardItems = [
   {
@@ -66,17 +66,7 @@ const PropertiesPage = () => {
   const { data: dashboardSlider, isLoading: sliderLoading } =
     useGetSlidersByType("dashboard");
 
-const getRoleName = (is_saved: any): any => {
-  switch (is_saved) {
-    case 0:
-      return false;
-    case 1:
-      return true
 
-    default:
-      return false;
-  }
-};
 
   const {
     data: dataestate,
@@ -147,9 +137,9 @@ const getRoleName = (is_saved: any): any => {
                       imageAlt={property.name}
                       title={property.name}
                       location={`${property.lga}, ${property.state}`}
-                      price={property.price}
+                      price={formatToNaira(property.price)}
                       features={property.features}
-                      isSavedInitial={getRoleName(property.is_saved)}
+                      isSavedInitial={property.is_saved}
                       loading={false}
                     />
                   </div>

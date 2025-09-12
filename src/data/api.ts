@@ -624,7 +624,7 @@ export const getSettings = async (type: string): Promise<SettingsResponse> => {
 
 
 export const getFeaturedProperties = async (): Promise<PropertiesResponse> => {
-  const response = await apiClient.get("/filter-property?page=1&is_featured=1");
+  const response = await apiClient.get("/filter-property?page=1&is_featured=1&is_auth=1");
   return response.data;
 };
 

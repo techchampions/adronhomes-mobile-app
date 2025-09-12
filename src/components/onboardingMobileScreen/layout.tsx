@@ -262,7 +262,7 @@ const navigate = useNavigate()
   return (
     <div className=" bg-transparent flex flex-col">
       <header
-        className="fixed top-0 left-0 right-0 px-4 py-4 z-20 bg-[#55A555]"
+        className="fixed top-0 left-0 right-0 px-4 py-2 z-20 bg-[#0e760e]"
       >
         <div className="flex justify-between items-start relative z-10 max-w-7xl mx-auto">
           <div className="flex items-center space-x-4">
@@ -279,9 +279,9 @@ const navigate = useNavigate()
             </button>
 
             <div className="text-white">
-              <div className="text-sm font-normal opacity-90">Welcome,</div>
+              <div className="text-[10px] font-normal opacity-90">Welcome,</div>
               <div
-                className="text-lg md:text-xl font-bold mt-1 max-w-[200px] md:max-w-[300px] truncate"
+                className="text-sm md:text-sm font-bold  max-w-[200px] md:max-w-[300px] truncate"
                 title={userData?.first_name || ""}
               >
                 {userData?.first_name || ""}
@@ -289,7 +289,7 @@ const navigate = useNavigate()
             </div>
           </div>
 
-          <div className="w-10 h-10 rounded-full bg-white overflow-hidden border-2 border-white hover:border-gray-200 transition-colors duration-200" onClick={()=>navigate("/dashboard/settings")}>
+          <div className="w-8 h-8 rounded-full bg-white overflow-hidden border-2 border-white hover:border-gray-200 transition-colors duration-200" onClick={()=>navigate("/dashboard/settings")}>
             {userHasProfilePicture ? (
               <img
                 src={userData.profile_picture!}
@@ -298,7 +298,7 @@ const navigate = useNavigate()
               />
             ) : (
               <div
-                className="w-full h-full flex items-center justify-center text-adron-black text-lg font-bold "
+                className="w-full h-full flex items-center justify-center text-adron-black text-xs font-bold "
               >
                 {initials.toUpperCase()}
               </div>
@@ -309,7 +309,7 @@ const navigate = useNavigate()
 
       <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
 
-      <main className="flex-1 overflow-auto pt-24 md:pt-24 pb-32 overflow-y-auto">
+      <main className="flex-1 overflow-auto pt-[70px] md:pt-[70px] pb-32 overflow-y-auto">
         {children}
       </main>
 
