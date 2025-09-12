@@ -1,4 +1,4 @@
-import { Formik, Form } from "formik";
+import { Formik, Form, FormikHelpers } from "formik";
 import * as Yup from "yup";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useState } from "react";
@@ -8,25 +8,17 @@ import { useOnboardingStore } from "../../zustand/OnboardingStore";
 import Auth from "../../utils/Auth";
 import { useLocation, useNavigate } from "react-router-dom";
 
-type AuthFormProps = {
-  isLogin?: boolean;
-  isSignup?: boolean;
-  isForgotPassword?: boolean;
-  isResetPassword?: boolean;
-};
-
 const AuthForm = ({
   isLogin = false,
   isForgotPassword = false,
   isResetPassword = false,
   isSignup = false,
-}: AuthFormProps) => {
+}) => {
   const { setStep } = useOnboardingStore();
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const from = localStorage.getItem("from");
 
-  // Password visibility toggle logic
   const togglePasswordVisibility = () => setShowPassword((prev) => !prev);
 
   const initialValues = {
@@ -39,7 +31,6 @@ const AuthForm = ({
     marketerReferralCode: "",
   };
 
-  // Validation schema that changes based on the state (login, forgot, reset)
   const validationSchema = Yup.object({
     ...(isForgotPassword
       ? {
@@ -82,46 +73,35 @@ const AuthForm = ({
         }),
   });
 
-  // Handle form submission based on state
-  const handleSubmit = (
-    values: typeof initialValues,
-    setSubmitting: (isSubmitting: boolean) => void
-  ) => {
-    if (isForgotPassword) {
-      Auth.handleForgotpassword(values, { setSubmitting }, navigate);
-    } else if (isResetPassword) {
-      // Auth.handleResetPassword(values, { setSubmitting });
-      // When calling the function:
-      Auth.handleResetPassword(
-        {
-          ...values,
-          OTP: Number(values.OTP), // Convert string OTP to number
-        },
-        { setSubmitting },
-        navigate
-      );
-      console.log("Resetting password:", values.password);
-    } else if (isLogin) {
-      Auth.login(values, { setSubmitting }, navigate);
-    } else if (isSignup) {
-      // handleSignup(values, { setSubmitting });
-      Auth.register(values, { setSubmitting }, navigate);
-      console.log("Registering with:", values);
-    }
-  };
+const handleSubmit = (
+  values: any, 
+  { setSubmitting }: FormikHelpers<any>
+) => {
+  if (isForgotPassword) {
+    Auth.handleForgotpassword(values, { setSubmitting }, navigate);
+  } else if (isResetPassword) {
+    Auth.handleResetPassword(
+      { ...values, OTP: Number(values.OTP) },
+      { setSubmitting },
+      navigate
+    );
+  } else if (isLogin) {
+    Auth.login(values, { setSubmitting }, navigate);
+  } else if (isSignup) {
+    Auth.register(values, { setSubmitting }, navigate);
+  }
+};
+
 
   return (
     <Formik
       initialValues={initialValues}
       validationSchema={validationSchema}
-      // onSubmit={handleSubmit}
-      onSubmit={(values, { setSubmitting }) =>
-        handleSubmit(values, setSubmitting)
-      }
+      onSubmit={handleSubmit}
     >
       {({ isSubmitting }) => (
-        <Form className="space-y-3 flex flex-col px-4 md:px-10 lg:px-20">
-          <h1 className="font-bold text-2xl font text-black text-center py-4">
+        <Form className="space-y-2 sm:space-y-3 flex flex-col px-4 sm:px-6 md:px-8 lg:px-12 w-full max-w-md mx-auto">
+          <h1 className="font-bold text-lg sm:text-xl md:text-2xl text-black text-center ">
             {isForgotPassword
               ? "Forgot Password"
               : isResetPassword
@@ -130,19 +110,17 @@ const AuthForm = ({
               ? "Login to Adron Homes"
               : "Signup on Adron Homes"}
           </h1>
-          {/* Render based on state */}
           {!isLogin && !isForgotPassword && !isResetPassword && (
-            <div className="">
-              <label htmlFor="" className="text-gray-400 text-sm">
+            <div>
+              <label className="text-gray-400 text-xs sm:text-sm">
                 Full Name
               </label>
-
               <InputField name="fullName" placeholder="Full Name" />
             </div>
           )}
           {!isResetPassword && (
-            <div className="">
-              <label htmlFor="" className="text-gray-400 text-sm">
+            <div>
+              <label className="text-gray-400 text-xs sm:text-sm">
                 Email
               </label>
               <InputField
@@ -154,11 +132,10 @@ const AuthForm = ({
             </div>
           )}
           {!isLogin && !isForgotPassword && !isResetPassword && (
-            <div className="">
-              <label htmlFor="" className="text-gray-400 text-sm">
+            <div>
+              <label className="text-gray-400 text-xs sm:text-sm">
                 Phone Number
               </label>
-
               <InputField
                 name="phone"
                 type="tel"
@@ -168,21 +145,18 @@ const AuthForm = ({
             </div>
           )}
           {isResetPassword && (
-            <div className="">
-              <label htmlFor="" className="text-gray-400 text-sm">
+            <div>
+              <label className="text-gray-400 text-xs sm:text-sm">
                 OTP Code
               </label>
-
               <InputField name="OTP" type="number" placeholder="OTP code" />
             </div>
           )}
-          {/* Password and Confirm Password Fields */}
           {(isLogin || isResetPassword || isSignup) && (
-            <div className="">
-              <label htmlFor="" className="text-gray-400 text-sm">
+            <div>
+              <label className="text-gray-400 text-xs sm:text-sm">
                 Password
               </label>
-
               <InputField
                 name="password"
                 type={showPassword ? "text" : "password"}
@@ -191,12 +165,12 @@ const AuthForm = ({
                 rightIcon={
                   showPassword ? (
                     <FaEye
-                      className="text-gray-500 w-5 h-5 cursor-pointer"
+                      className="text-gray-500 w-4 h-4 sm:w-5 sm:h-5 cursor-pointer"
                       onClick={togglePasswordVisibility}
                     />
                   ) : (
                     <FaEyeSlash
-                      className="text-gray-500 w-5 h-5 cursor-pointer"
+                      className="text-gray-500 w-4 h-4 sm:w-5 sm:h-5 cursor-pointer"
                       onClick={togglePasswordVisibility}
                     />
                   )
@@ -204,13 +178,11 @@ const AuthForm = ({
               />
             </div>
           )}
-          {/* Marketer Referral Code (Only for Signup) */}
           {isSignup && (
-            <div className="">
-              <label htmlFor="" className="text-gray-400 text-sm">
+            <div>
+              <label className="text-gray-400 text-xs sm:text-sm">
                 Marketer Referral Code
               </label>
-
               <InputField
                 name="marketerReferralCode"
                 type="text"
@@ -219,13 +191,11 @@ const AuthForm = ({
               />
             </div>
           )}
-          {/* Confirm Password (Only for reset) */}
           {isResetPassword && (
-            <div className="">
-              <label htmlFor="" className="text-gray-400 text-sm">
+            <div>
+              <label className="text-gray-400 text-xs sm:text-sm">
                 Confirm Password
               </label>
-
               <InputField
                 name="confirmPassword"
                 type={showPassword ? "text" : "password"}
@@ -234,12 +204,12 @@ const AuthForm = ({
                 rightIcon={
                   showPassword ? (
                     <FaEyeSlash
-                      className="text-gray-500 w-5 h-5 cursor-pointer"
+                      className="text-gray-500 w-4 h-4 sm:w-5 sm:h-5 cursor-pointer"
                       onClick={togglePasswordVisibility}
                     />
                   ) : (
                     <FaEye
-                      className="text-gray-500 w-5 h-5 cursor-pointer"
+                      className="text-gray-500 w-4 h-4 sm:w-5 sm:h-5 cursor-pointer"
                       onClick={togglePasswordVisibility}
                     />
                   )
@@ -247,10 +217,9 @@ const AuthForm = ({
               />
             </div>
           )}
-          {/* Forgot Password Link */}
           {isLogin && (
-            <div className="flex justify-between items-center">
-              <div className="flex items-center space-x-2 text-xs px-6">
+            <div className="flex justify-between items-center text-xs sm:text-sm">
+              <div className="flex items-center space-x-2 px-4 sm:px-6">
                 <input
                   type="checkbox"
                   id="remember"
@@ -259,7 +228,7 @@ const AuthForm = ({
                 <label htmlFor="remember">Remember me</label>
               </div>
               <span
-                className="text-[#FF4A1B] text-xs cursor-pointer"
+                className="text-[#FF4A1B] cursor-pointer"
                 onClick={() => {
                   setStep("forgot password");
                   navigate("/forgot-password");
@@ -283,10 +252,9 @@ const AuthForm = ({
                 ? "Log In"
                 : "Sign Up"
             }
-            className={`bg-adron-green text-white w-full py-2 rounded-full mt-10`}
+            className="bg-adron-green text-white w-full py-1.5 sm:py-2 rounded-full mt-4 sm:mt-6"
           />
-          {/* Link to switch between forms */}
-          <div className="text-sm flex gap-1 items-center text-center justify-center">
+          <div className="text-xs sm:text-sm flex gap-1 items-center text-center justify-center mb-4 sm:mb-6">
             {isLogin ? (
               <>
                 Are you new?{" "}
@@ -300,7 +268,7 @@ const AuthForm = ({
                 />
               </>
             ) : (
-              <div className="mb-10">
+              <>
                 Already have an account?{" "}
                 <Button
                   label="Sign In"
@@ -310,10 +278,9 @@ const AuthForm = ({
                     navigate("/login");
                   }}
                 />
-              </div>
+              </>
             )}
           </div>
-         
         </Form>
       )}
     </Formik>

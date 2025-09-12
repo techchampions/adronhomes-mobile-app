@@ -28,20 +28,19 @@ const Button: React.FC<ButtonProps> = ({
       type={type}
       onClick={onClick}
       disabled={disabled || isLoading}
-      className={`w-full bg-adron-green py-2 rounded-full transition duration-300 text-white ${className}
+      className={`w-full bg-adron-green py-1.5 sm:py-2 rounded-full transition duration-300 text-white text-xs sm:text-sm ${className}
         ${
           disabled || isLoading
             ? "opacity-50 cursor-not-allowed"
             : "hover:bg-brand-dark"
-        }
-        `}
+        }`}
     >
       {isLoading ? (
         <div className="flex items-center justify-center">
           <svg
             aria-hidden="true"
             role="status"
-            className="inline w-4 h-4 me-3 text-white animate-spin"
+            className="inline w-3 h-3 sm:w-4 sm:h-4 me-2 sm:me-3 text-white animate-spin"
             viewBox="0 0 100 101"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
@@ -59,9 +58,9 @@ const Button: React.FC<ButtonProps> = ({
         </div>
       ) : (
         <div className="flex items-center justify-center">
-          {icon && <span className="mr-2">{icon}</span>}
+          {icon && <span className="mr-1 sm:mr-2">{icon}</span>}
           {label}
-          {rightIcon && <span className="ml-2">{rightIcon}</span>}
+          {rightIcon && <span className="ml-1 sm:ml-2">{rightIcon}</span>}
         </div>
       )}
     </button>
