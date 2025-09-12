@@ -66,17 +66,7 @@ const PropertiesPage = () => {
   const { data: dashboardSlider, isLoading: sliderLoading } =
     useGetSlidersByType("dashboard");
 
-// const getRoleName = (is_saved: any): any => {
-//   switch (is_saved) {
-//     case 0:
-//       return false;
-//     case 1:
-//       return true
 
-//     default:
-//       return false;
-//   }
-// };
 
   const {
     data: dataestate,
