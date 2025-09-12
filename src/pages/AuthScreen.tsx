@@ -53,7 +53,7 @@ const OnboardingScreen = () => {
         <img src="/iconk.svg" alt="Logo" className="max-h-16 w-auto" />
       </div>
         <div className="px-6  flex justify-center">
-        <img src="/loginh.svg" alt="Logo" className="max-h-32 w-auto" />
+        <img src="/loginh.svg" alt="Logo" className="min-h-60 w-auto" />
       </div>
         <div className="px-0 lg:px-24 py-4">
           <Outlet />

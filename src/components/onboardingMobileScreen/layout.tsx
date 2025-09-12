@@ -54,6 +54,7 @@ const CopyButton = ({ text }: { text: any }) => {
 
 const Sidebar = ({ isOpen, onClose }: { isOpen: any; onClose: any }) => {
   const navigate = useNavigate();
+  
   const { user } = useUserStore();
   const { data: notificationData } = useGetNotifications();
   const unReadCount = notificationData?.unread || 0;
@@ -246,7 +247,7 @@ export const Layout = ({ children }: { children: any }) => {
     typeof window !== "undefined" ? window.innerWidth : 0
   );
   const [showBoundary, setShowBoundary] = useState(false);
-
+const navigate = useNavigate()
   useEffect(() => {
     const handleResize = () => {
       const width = window.innerWidth;
@@ -288,7 +289,7 @@ export const Layout = ({ children }: { children: any }) => {
             </div>
           </div>
 
-          <div className="w-10 h-10 rounded-full bg-white overflow-hidden border-2 border-white hover:border-gray-200 transition-colors duration-200">
+          <div className="w-10 h-10 rounded-full bg-white overflow-hidden border-2 border-white hover:border-gray-200 transition-colors duration-200" onClick={()=>navigate("/dashboard/settings")}>
             {userHasProfilePicture ? (
               <img
                 src={userData.profile_picture!}
@@ -308,7 +309,7 @@ export const Layout = ({ children }: { children: any }) => {
 
       <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
 
-      <main className="flex-1 overflow-auto pt-24 md:pt-44 pb-32 overflow-y-auto">
+      <main className="flex-1 overflow-auto pt-24 md:pt-24 pb-32 overflow-y-auto">
         {children}
       </main>
 
