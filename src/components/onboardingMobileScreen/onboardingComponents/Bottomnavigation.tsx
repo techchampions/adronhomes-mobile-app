@@ -34,7 +34,7 @@ export const Navbar = () => {
         >
     
           <IoHome  className="w-6 h-6" />{" "}
-          <span  className="text-[12px]  font-[325]">Home</span>{" "}
+          <span  className=" text-[8px]  font-[325]">Home</span>{" "}
         </Link>
         {/* Properties */}{" "}
         <Link
@@ -44,7 +44,7 @@ export const Navbar = () => {
           }`}
         >
           <BsFillHouseCheckFill  className="w-6 h-6" />{" "}
-          <span  className="text-[12px]  font-[325]">Properties</span>{" "}
+          <span  className=" text-[8px]  font-[325]">Properties</span>{" "}
         </Link>
         <div className="flex-1"></div>{" "}
         <button
@@ -76,7 +76,7 @@ export const Navbar = () => {
           }`}
         >
           <RiWallet3Fill  className="w-6 h-6" />{" "}
-          <span  className="text-[12px]  font-[325]">Wallet</span>{" "}
+          <span  className=" text-[8px]  font-[325]">Wallet</span>{" "}
         </Link>
         {/* Settings */}{" "}
         <Link
@@ -86,7 +86,7 @@ export const Navbar = () => {
           }`}
         >
           <IoMdSettings  className="w-6 h-6" />{" "}
-          <span  className="text-[12px]  font-[325]">Settings</span>{" "}
+          <span  className=" text-[8px]  font-[325]">Settings</span>{" "}
         </Link>{" "}
       </nav>
       

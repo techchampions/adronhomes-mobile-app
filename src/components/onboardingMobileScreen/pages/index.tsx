@@ -20,6 +20,7 @@ import {
   PropertyCardSkeleton,
 } from "../onboardingComponents/skeleton";
 import ImageCarousel from "../onboardingComponents/ImageCarousel";
+import { formatToNaira } from "../../../data/utils";
 
 const dashboardItems = [
   {
@@ -146,7 +147,7 @@ const PropertiesPage = () => {
                       imageAlt={property.name}
                       title={property.name}
                       location={`${property.lga}, ${property.state}`}
-                      price={property.price}
+                      price={formatToNaira(property.price)}
                       features={property.features}
                       isSavedInitial={property.is_saved}
                       loading={false}
