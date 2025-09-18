@@ -41,13 +41,13 @@ const InputField: React.FC<InputFieldProps> = ({
       <div
         className={`w-full relative flex ${
           isTextarea ? "flex-col" : "flex-row"
-        } border bg-adron-body rounded-full py-1.5 sm:py-2 ${
+        } border bg-adron-body rounded-full py-2 ${
           hasError ? "border-red-500" : "border-transparent"
         } ${className}`}
       >
         {/* Left Icon */}
         {icon && !isTextarea && (
-          <div className="flex items-center px-2 sm:px-3">{icon}</div>
+          <div className="flex items-center px-3">{icon}</div>
         )}
 
         {/* Field */}
@@ -59,29 +59,27 @@ const InputField: React.FC<InputFieldProps> = ({
           rows={isTextarea ? rows : undefined}
           readOnly={isReadOnly}
           autoComplete={autocomplete}
-          className={`text-gray-900 text-xs sm:text-sm rounded-lg focus:ring-0 block w-full px-3 sm:px-4 outline-none resize-none ${
-            isTextarea ? "min-h-[50px] sm:min-h-[60px]" : ""
+          className={` text-gray-900 text-sm rounded-lg focus:ring-0 block w-full px-5 outline-none resize-none ${
+            isTextarea ? "min-h-[60px]" : ""
           }`}
         />
 
         {/* Error Icon */}
         {!isTextarea && hasError && (
-          <div className="flex items-center px-2 sm:px-3">
-            <FaExclamationCircle className="w-4 h-4 sm:w-5 sm:h-5 text-red-500" />
+          <div className="flex items-center px-3">
+            <FaExclamationCircle className="w-5 h-5 text-red-500" />
           </div>
         )}
 
         {/* Right Icon */}
-        {rightIcon && (
-          <div className="flex items-center pr-2 sm:pr-3">{rightIcon}</div>
-        )}
+        {rightIcon && <div className="flex items-center pr-3">{rightIcon}</div>}
       </div>
 
       {/* Error Message */}
       <ErrorMessage
         name={name}
         component="p"
-        className="text-red-500 text-xs mt-0.5 sm:mt-1 ml-3 sm:ml-4 text-left"
+        className="text-red-500 text-xs mt-1 ml-5 text-left"
       />
     </div>
   );

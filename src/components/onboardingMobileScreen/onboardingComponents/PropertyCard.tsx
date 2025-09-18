@@ -163,9 +163,9 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
             onClick={toggleSaveProperty}
           >
             {isSaved ? (
-              <FaHeart className="w-4 h-4 text-red-500" />
+              <FaHeart className="w-5 h-5 text-red-500" />
             ) : (
-              <FaRegHeart className="w-4 h-4" />
+              <FaRegHeart className="w-5 h-5" />
             )}
           </div>
         </div>

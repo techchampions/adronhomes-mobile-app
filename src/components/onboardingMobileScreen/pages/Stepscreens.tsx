@@ -96,8 +96,6 @@ export const AdronSplashScreensWrapper = ({ setHasSeenSplash }: { setHasSeenSpla
         <p className="text-[#545454] text-sm sm:text-base md:text-lg text-center mb-6 sm:mb-8 leading-relaxed max-w-2xl mx-auto">
           {current.description}
         </p>
-
-
         {/* Navigation Buttons */}
         <div className="flex space-x-3 sm:space-x-4 max-w-md mx-auto">
           {currentScreen > 0 && (
@@ -115,8 +113,6 @@ export const AdronSplashScreensWrapper = ({ setHasSeenSplash }: { setHasSeenSpla
             {currentScreen === screens.length - 1 ? "Finish" : "Next"}
           </button>
         </div>
-
-       
       </div>
     </div>
   );

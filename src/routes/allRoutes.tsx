@@ -44,6 +44,7 @@ import { AdronSplashScreensWrapper } from "../components/onboardingMobileScreen/
 import PropertiesPage from "../components/onboardingMobileScreen/pages";
 import HomeScreen from "../pages/HomeScreen";
 import ScrollToTop from "./ScrollToTop";
+// import ScrollToTop from "./ScrollToTop";
 
 const DashboardScreen = lazy(() => import("../pages/DashboardScreen"));
 

@@ -79,7 +79,7 @@ export default function SwiperPropertyCard({ property }: Props) {
   //   }
   // }, [swiper]); // Ensure this effect runs when the swiper instance is available
 
-  const address = `${property.street_address}, ${property.lga}, ${property.state} ${property.country}`;
+  const address = `${property.street_address}, ${property.state} ${property.country}`;
   // const features = property.features;
   const toggleSaveProperty = async () => {
     try {
@@ -191,7 +191,7 @@ export default function SwiperPropertyCard({ property }: Props) {
             <span className="flex items-center gap-1 truncate">
               {/* <TfiRulerAlt2 />  */}
               <img src="/ruler.svg" width={14} height={14} alt="dumbbell" />
-              {property.size} Sm q
+              {property.size} SqM
             </span>
             {displayFeatures.map((feature, index) => (
               <span key={index} className="flex items-center gap-1 truncate">
@@ -233,7 +233,7 @@ export default function SwiperPropertyCard({ property }: Props) {
           <Button
             label="View Property"
             className="bg-adron-green text-xs py-3"
-            onClick={() => navigate(`/dashboard/properties/${property.id}`)}
+            onClick={() => navigate(`/dashboard/properties/${property.slug}`)}
           />
           {isRented ? (
             <Button

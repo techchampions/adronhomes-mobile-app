@@ -48,7 +48,7 @@ interface Props {
 export default function SavedSwiperPropertyCard({ saved_property }: Props) {
   const navigate = useNavigate();
   const { showToast } = useToastStore();
-  const { mutate: toggleSavePropertyHook } = useToggleSaveProperty();
+  const { mutate: toggleSave } = useToggleSaveProperty();
 
   // const prevRef = useRef(null);
   // const nextRef = useRef(null);
@@ -103,7 +103,7 @@ export default function SavedSwiperPropertyCard({ saved_property }: Props) {
   const address = `${saved_property?.street_address}, ${saved_property?.lga}, ${saved_property?.state} ${saved_property?.country}`;
   // const features = property.features;
   const toggleSaveProperty = async () => {
-    toggleSavePropertyHook(saved_property?.id || 0, {
+    toggleSave(saved_property?.id || 0, {
       onSuccess: () => {
         showToast("Property removed successfully", "success");
 

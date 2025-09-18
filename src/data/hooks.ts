@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   ApiError,
   createPropertyPlan,
+  // estatePropertiesResponse,
   fetchPropertiesPageData,
   fetchSavedProperties,
   filterProperties,
@@ -71,7 +72,7 @@ import { useToastStore } from "../zustand/useToastStore";
 import { useModalStore } from "../zustand/useModalStore";
 import { FAQResponse } from "./types/FAQTypes";
 import { SettingsResponse } from "./types/SettingsTypes";
-import { estatePropertiesResponse } from "./types/estatetypes";
+import { estatePropertiesResponse } from "./types/estatePropertiesResponse";
 
 //Query hook for User profile
 export const useGetUser = () => {

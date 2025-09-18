@@ -1,39 +1,31 @@
 import React from "react";
 
 interface ButtonProps {
-  type?: "button" | "submit" | "reset";
   label: string;
-  onClick?: () => void;
+  href: string;
+  target?: boolean;
   isLoading?: boolean;
   loadingText?: string;
-  disabled?: boolean;
   className?: string;
   icon?: React.ReactNode;
   rightIcon?: React.ReactNode;
 }
 
-const Button: React.FC<ButtonProps> = ({
-  type = "button",
+const LinkButton: React.FC<ButtonProps> = ({
   label,
   loadingText,
-  onClick,
+  href,
+  target = false,
   isLoading = false,
-  disabled = false,
   className = "",
   icon,
   rightIcon,
 }) => {
   return (
-    <button
-      type={type}
-      onClick={onClick}
-      disabled={disabled || isLoading}
+    <a
+      href={href}
+      target={`${target ? "_blank" : "_self"}`}
       className={`w-full bg-adron-green py-2 rounded-full transition duration-300 text-white ${className}
-        ${
-          disabled || isLoading
-            ? "opacity-50 cursor-not-allowed"
-            : "hover:bg-brand-dark"
-        }
         `}
     >
       {isLoading ? (
@@ -64,8 +56,8 @@ const Button: React.FC<ButtonProps> = ({
           {rightIcon && <span className="ml-2">{rightIcon}</span>}
         </div>
       )}
-    </button>
+    </a>
   );
 };
 
-export default Button;
+export default LinkButton;
