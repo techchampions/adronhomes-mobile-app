@@ -1,118 +1,3 @@
-// import { create } from "zustand";
-// import { persist } from "zustand/middleware";
-// import apiClient from "../utils/AxiosInstance";
-
-// type UserState = {
-//   firstName: string;
-//   setFirstName: (firstName: string) => void;
-//   lastName: string;
-//   setLastName: (lastName: string) => void;
-//   id: number;
-//   setId: (id: number) => void;
-
-//   email: string;
-//   setEmail: (email: string) => void;
-//   phoneNumber: string;
-//   setPhoneNumber: (phone: string) => void;
-//   role: string;
-//   setRole: (role: string) => void;
-
-//   gender: string;
-//   setGender: (gender: string) => void;
-
-//   referralCode: string;
-//   setReferralCode: (code: string) => void;
-//   country: string;
-//   setCountry: (country: string) => void;
-//   state: string;
-//   setState: (state: string) => void;
-
-//   lga: string;
-//   setLga: (lga: string) => void;
-
-//   token: string;
-//   setToken: (token: string) => void;
-//   isLoggedIn: boolean;
-//   setIsLoggedIn: (status: boolean) => void;
-
-//   createdAt: string;
-//   setCreatedAt: (createdAt: string) => void;
-//   updatedAt: string;
-//   setUpdatedAt: (updatedAt: string) => void;
-
-//   getUser: () => Promise<void>;
-
-//   reset: () => void;
-// };
-
-// export const useUserStore = create<UserState>()(
-//   persist(
-//     (set, get) => ({
-//       id: null,
-//       setId: (id) => set({ id }),
-//       email: "",
-//       setEmail: (email) => set({ email }),
-//       firstName: "",
-//       setFirstName: (firstName) => set({ firstName: firstName }),
-//       lastName: "",
-//       setLastName: (lastName) => set({ lastName }),
-//       phoneNumber: "",
-//       setPhoneNumber: (phone) => set({ phoneNumber: phone }),
-//       role: "",
-//       setRole: (role) => set({ role }),
-//       referralCode: "",
-//       setReferralCode: (code) => set({ referralCode: code }),
-//       country: "",
-//       setCountry: (country) => set({ country }),
-//       token: "",
-//       setToken: (token) => set({ token }),
-//       isLoggedIn: false,
-//       setIsLoggedIn: (status) => set({ isLoggedIn: status }),
-
-//       // GET USERS
-//       getUser: async () => {
-//         try {
-//           const res = await apiClient.get("/plans");
-//           set({
-//             firstName: res.data.user.first_name,
-//             lastName: res.data.user.last_name,
-//             email: res.data.user.email,
-//             phoneNumber: res.data.user.phone_number,
-//             referralCode: res.data.user.referral_code,
-//             role: res.data.user.role,
-//           });
-//         } catch (error) {
-//           console.error("Failed to load plans:", error);
-//         }
-//       },
-
-//       // RESET
-//       reset: () =>
-//         set({
-//           id: null,
-//           firstName: "",
-//           lastName: "",
-//           email: "",
-//           phoneNumber: "",
-//           role: "",
-//           referralCode: "",
-//           token: "",
-//           isLoggedIn: false,
-//           currentPlan: null,
-//           availablePlans: [],
-//           planStartDate: "",
-//           planEndDate: "",
-//           store: null,
-//           items: [],
-//           orders: [],
-//           services: [],
-//         }),
-//     }),
-//     {
-//       name: "user-state",
-//     }
-//   )
-// );
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import apiClient from "../utils/AxiosInstance";
@@ -145,14 +30,14 @@ export type User = {
 type UserState = {
   user: User | null;
   accounts: AccountDetail[];
-
+  acceptCookies: boolean;
   token: string;
   isLoggedIn: boolean;
   setToken: (token: string) => void;
   setIsLoggedIn: (status: boolean) => void;
   setUser: (user: User) => void; // 👈 add this  getUser: () => Promise<void>;
   setAccounts: (accounts: AccountDetail[]) => void;
-
+  setAcceptCookies: (accept: boolean) => void;
   reset: () => void;
 };
 
@@ -162,9 +47,11 @@ export const useUserStore = create<UserState>()(
       user: null,
       token: "",
       isLoggedIn: false,
+      acceptCookies: false,
 
       setToken: (token) => set({ token }),
       setIsLoggedIn: (status) => set({ isLoggedIn: status }),
+      setAcceptCookies: (accept) => set({ acceptCookies: accept }),
       setUser: (user) => set({ user }), // 👈 add this below setIsLoggedIn
 
       getUser: async () => {

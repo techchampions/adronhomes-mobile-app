@@ -136,7 +136,7 @@ const PropertiesPage = () => {
                       imageSrc={property.display_image}
                       imageAlt={property.name}
                       title={property.name}
-                      location={`${property.lga}, ${property.state}`}
+                      location={`${property.state}`}
                       price={formatToNaira(property.price)}
                       features={property.features}
                       isSavedInitial={property.is_saved}
@@ -150,8 +150,8 @@ const PropertiesPage = () => {
         </div>
 
         {/* Estates Section */}
-        <div className="pl-4">
-          <div className="flex justify-between items-center mb-[10px] pr-4">
+        <div className="px-4">
+          <div className="flex justify-between items-center mb-[10px] ">
             <p className="font-adron-mid text-base">Estates</p>
           </div>
 
@@ -178,7 +178,7 @@ const PropertiesPage = () => {
                     imageUrl={estate.display_image}
                     imageAlt={estate.name}
                     title={estate.name}
-                    location={`${estate.lga}, ${estate.state}`}
+                    location={` ${estate.state??""}`}
                     id={estate.id}
                     loading={false}
                   />

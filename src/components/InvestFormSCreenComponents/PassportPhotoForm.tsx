@@ -6,9 +6,8 @@ import React from "react";
 import { useContractDeatilStore } from "../../zustand/ContractDetailsStore";
 import { useNavigate, useParams } from "react-router-dom";
 import { useToastStore } from "../../zustand/useToastStore";
-import { IoInformationCircleOutline, IoTrash } from "react-icons/io5";
+import { IoInformationCircleOutline } from "react-icons/io5";
 import ImageUploadField from "../ImageUplaodField2";
-import { ImageUploadInput } from "../ImageUploadField";
 
 const customerInfoSchema = Yup.object({
   ownerPhoto1: Yup.mixed().required("Principal owner photo is required"),
@@ -84,109 +83,6 @@ export const PassportPhotoForm: React.FC<Props> = ({
               </div>
             </div>
             <div className="flex flex-wrap items-center gap-4">
-              {/* <div className="flex flex-col relative">
-                <label className="cursor-pointer border border-dashed border-gray-300 overflow-hidden p-2 rounded-2xl relative w-[225px] h-[250px] flex flex-col justify-center items-center">
-                  <input
-                    type="file"
-                    accept="image/*"
-                    className="hidden"
-                    onChange={(e) => {
-                      const file = e.target.files?.[0];
-                      if (file) {
-                        const error = validateFile(file);
-                        if (error) {
-                          showToast(error, "error");
-                          return;
-                        }
-                        setFieldValue("ownerPhoto1", file);
-                      }
-                    }}
-                  />
-                  {values.ownerPhoto1 ? (
-                    <>
-                      <img
-                        src={
-                          values.ownerPhoto1 instanceof File
-                            ? URL.createObjectURL(values.ownerPhoto1)
-                            : values.ownerPhoto1
-                        }
-                        alt="Profile"
-                        className="w-full h-full rounded-xl object-cover"
-                      />
-                      <button
-                        type="button"
-                        className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setFieldValue("ownerPhoto1", null);
-                        }}
-                      >
-                        <IoTrash size={16} />
-                      </button>
-                    </>
-                  ) : (
-                    <div className="flex text-gray-300 text-center">
-                      + Add Passport Image
-                    </div>
-                  )}
-                </label>
-                <div className="text-sm w-full text-center">
-                  Principal Owner Photo
-                </div>
-                {errors.ownerPhoto1 && touched.ownerPhoto1 && (
-                  <div className="text-red-500 text-xs mt-1">
-                    {errors.ownerPhoto1}
-                  </div>
-                )}
-              </div>
-              <div className="flex flex-col">
-                <label className="cursor-pointer border border-dashed border-gray-300 overflow-hidden p-2 rounded-2xl relative w-[225px] h-[250px] flex flex-col justify-center items-center">
-                  <input
-                    type="file"
-                    accept="image/*"
-                    className="hidden"
-                    onChange={(e) => {
-                      const file = e.target.files?.[0];
-                      if (file) {
-                        const error = validateFile(file);
-                        if (error) {
-                          showToast(error, "error");
-                          return;
-                        }
-                        setFieldValue("ownerPhoto2", file);
-                      }
-                    }}
-                  />
-                  {values.ownerPhoto2 ? (
-                    <>
-                      <img
-                        src={
-                          values.ownerPhoto2 instanceof File
-                            ? URL.createObjectURL(values.ownerPhoto2)
-                            : values.ownerPhoto2
-                        }
-                        alt="Profile"
-                        className="w-full h-full rounded-xl object-cover"
-                      />
-                      <button
-                        type="button"
-                        className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setFieldValue("ownerPhoto2", null);
-                        }}
-                      >
-                        <IoTrash size={16} />
-                      </button>
-                    </>
-                  ) : (
-                    <div className="flex text-gray-300 text-center">
-                      + Add Passport Image
-                    </div>
-                  )}
-                </label>
-                <div className="text-sm w-full text-center">Co-Owner Photo</div>
-              </div> */}
               <div className="flex flex-wrap items-start gap-5 mb-4">
                 <ImageUploadField
                   name="ownerPhoto1"

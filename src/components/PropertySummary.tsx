@@ -35,15 +35,14 @@ const PropertySummary: React.FC<Prop> = ({ id, units }) => {
           <h4 className="text-xl font-semibold">{property?.name}</h4>
           <p className="text-sm text-gray-500 flex items-center gap-1">
             <FaMapMarkerAlt className="h-4 w-4" />
-            {property?.street_address}, {property?.lga}, {property?.state},{" "}
-            {property?.country}
+            {property?.street_address}, {property?.state}, {property?.country}
           </p>
           <div className="flex items-center text-sm md:text-xs mt-2 justify-between font-bold text-gray-500 gap-4">
             <span className="flex items-center gap-1 truncate">
               {/* <TfiRulerAlt2 />  */}
               <img src="/ruler.svg" width={14} height={14} alt="dumbbell" />
               {/* 648 Sq M */}
-              {property?.size}
+              {property?.size} Sq M
             </span>
             {displayFeatures.map((feature, index) => (
               <span className="flex items-center gap-1 truncate">

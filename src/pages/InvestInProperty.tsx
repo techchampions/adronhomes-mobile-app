@@ -212,7 +212,7 @@ export default function InvestmentForm() {
                       placeholder="Enter Number of Units to buy"
                     />
                   </div>
-                  {property?.type.name === "Land" && (
+                  {property?.category === "estate" && (
                     <div>
                       <label className="block text-sm mb-2">Land Purpose</label>
                       <SelectField

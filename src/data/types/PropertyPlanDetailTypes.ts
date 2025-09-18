@@ -9,6 +9,7 @@ export interface Property {
   display_image: string;
   lga: string;
   state: string;
+  slug: String;
 }
 
 // export interface PlanProperty {

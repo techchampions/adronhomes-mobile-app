@@ -94,6 +94,7 @@ export interface Property {
   road_access: string;
   gated_estate: string;
   fencing: string;
+  category: string;
   purpose: string[] | null;
   nearby_landmarks: string[] | null;
   title_document_type: string | null;
