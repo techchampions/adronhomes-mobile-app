@@ -14,7 +14,7 @@ interface Props {
 const HorizontalPropertyList: React.FC<Props> = ({ title, properties }) => {
   const navigate = useNavigate();
   const handleMoreProducts = () => {
-    navigate("/new-properties");
+    navigate("/dashboard/new-properties");
   };
   const [emblaRef, embla] = useEmblaCarousel({
     align: "start",

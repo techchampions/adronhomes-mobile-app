@@ -28,7 +28,7 @@ import {
 import { useUserStore } from "../zustand/UserStore";
 import { useToastStore } from "../zustand/useToastStore";
 import HorizontalPropertyList from "../components/DashboardPropertyComponent/HorizontalPropertyList";
-import { MapPinned, PhoneCall } from "lucide-react";
+import { FileStack, MapPinned, PhoneCall } from "lucide-react";
 import { MdOutlineLandscape } from "react-icons/md";
 import { useModalStore } from "../zustand/useModalStore";
 import { useState } from "react";
@@ -37,6 +37,7 @@ const PropertyDetail = () => {
   const { user } = useUserStore();
   const navigate = useNavigate();
   const [showMap, setshowMap] = useState(false);
+  const [showFiles, setshowFiles] = useState(false);
   const id = params?.id;
   const { showToast } = useToastStore();
   const { data, isError, isLoading } = useGetPropertyByID(id ?? "");
@@ -46,9 +47,17 @@ const PropertyDetail = () => {
   const item = data?.data.properties[0];
   const photoLenght = item?.photos.length || 0;
   const features = item?.features || [];
-  const isRented = item?.purpose?.includes("Rent") || false;
 
-  const address = `${data?.data.properties[0].street_address}, ${data?.data.properties[0].state} ${data?.data.properties[0].country}`;
+  const isRented =
+    item?.purpose?.includes("rent") || item?.purpose?.includes("Rent") || false;
+  let address = "All Adron locations.";
+  if (
+    data?.data.properties[0].street_address &&
+    data?.data.properties[0].state &&
+    data?.data.properties[0].country
+  ) {
+    address = `${data?.data.properties[0].street_address}, ${data?.data.properties[0].state} ${data?.data.properties[0].country}`;
+  }
   const unitsAvialable = item?.unit_available || 0;
   // Filter items by purpose
 
@@ -170,26 +179,32 @@ const PropertyDetail = () => {
                   {item?.type.name}
                 </div>
               </div>
-              <div className="flex flex-col items-end mt-3 md:mt-0">
-                <div className="flex items-center gap-2">
-                  {item?.is_discount && (
-                    <div className="bg-red-700 text-white text-xs px-2 py-1 rounded-full">
-                      {item.discount_percentage}% off
+              {isRented ? (
+                <div className="flex flex-col items-end mt-3 md:mt-0 text-cyan-700">
+                  For Rent
+                </div>
+              ) : (
+                <div className="flex flex-col items-end mt-3 md:mt-0">
+                  <div className="flex items-center gap-2">
+                    {item?.is_discount && (
+                      <div className="bg-red-700 text-white text-xs px-2 py-1 rounded-full">
+                        {item.discount_percentage}% off
+                      </div>
+                    )}
+                    <div className="text-2xl font-bold ">
+                      {formatPrice(item?.price ?? 0)}
+                    </div>
+                  </div>
+                  {item?.initial_deposit && (
+                    <div className="flex items-center text-gray-700 text-xs bg-[#CFFFCF] p-2 rounded-full">
+                      Initial Deposit{" "}
+                      <span className="text-bold text-adron-green text-sm ml-2">
+                        {formatPrice(item?.initial_deposit || 0)}
+                      </span>
                     </div>
                   )}
-                  <div className="text-2xl font-bold ">
-                    {formatPrice(item?.price ?? 0)}
-                  </div>
                 </div>
-                {item?.initial_deposit && (
-                  <div className="flex items-center text-gray-700 text-xs bg-[#CFFFCF] p-2 rounded-full">
-                    Initial Deposit{" "}
-                    <span className="text-bold text-adron-green text-sm ml-2">
-                      {formatPrice(item?.initial_deposit || 0)}
-                    </span>
-                  </div>
-                )}
-              </div>
+              )}
             </div>
             <div className="flex flex-col md:flex-row gap-4">
               <div className="flex flex-col w-full md:w-[70%] gap-10">
@@ -379,14 +394,10 @@ const PropertyDetail = () => {
                     {/* Split details in half for two tables */}
                     {item?.details && item.details.length > 0 ? (
                       <>
-                        <div className="bg-white font-extrabold p-3 border-b flex justify-between border-gray-200 min-w-0">
-                          Bungalow
-                        </div>
-                        <div className="bg-white font-extrabold p-3 border-b flex justify-between border-gray-200 min-w-0">
-                          Duplex
-                        </div>
-
                         <div className="relative overflow-x-hidden">
+                          <div className="bg-white font-extrabold p-3 border-b flex justify-between border-gray-200 min-w-0">
+                            Bungalow
+                          </div>
                           <div className="w-full text-sm text-left rtl:text-right text-gray-500">
                             {bungalows.length > 0 ? (
                               <>
@@ -433,6 +444,10 @@ const PropertyDetail = () => {
                           </div>
                         </div>
                         <div className="relative overflow-x-hidden">
+                          <div className="bg-white font-extrabold p-3 border-b flex justify-between border-gray-200 min-w-0">
+                            Duplex
+                          </div>
+
                           <div className="w-full text-sm text-left rtl:text-right text-gray-500">
                             {duplexes.length > 0 ? (
                               <>
@@ -634,6 +649,15 @@ const PropertyDetail = () => {
                     ></iframe>
                   </div>
                 )}
+                {data?.data.properties[0].property_files &&
+                  data.data.properties[0].property_files.length > 0 && (
+                    <Button
+                      rightIcon={<FileStack />}
+                      label="See Property file"
+                      onClick={() => setshowFiles(!showFiles)}
+                      className="!bg-gray-700"
+                    />
+                  )}
               </div>
             </div>
             {data?.data.properties[0].whatsapp_link && isRented ? (
@@ -689,6 +713,36 @@ const PropertyDetail = () => {
               {/* <StreetView lat={40.748817} lng={-73.985428} /> */}
               <iframe
                 src={data?.data.properties[0].property_map || ""}
+                className="w-full h-full"
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              ></iframe>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showFiles && (
+        <div
+          className="fixed inset-0 flex items-center justify-center bg-black/50 z-50"
+          onClick={() => setshowFiles(false)}
+        >
+          <div
+            className="bg-white p-5 rounded-xl shadow-lg w-[98%] md:w-fit"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              className="absolute top-4 right-3 text-gray-600 bg-white p-2 rounded-full hover:text-gray-900"
+              onClick={() => setshowMap(false)}
+              aria-label="Close"
+            >
+              <IoClose size={24} />
+            </button>
+
+            <div className="w-full md:w-[600px] h-[360px] rounded-lg overflow-hidden">
+              <iframe
+                src={data?.data.properties[0].property_files[0] || ""}
                 className="w-full h-full"
                 allowFullScreen
                 loading="lazy"
