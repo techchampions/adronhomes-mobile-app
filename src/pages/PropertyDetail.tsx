@@ -28,7 +28,9 @@ import {
 import { useUserStore } from "../zustand/UserStore";
 import { useToastStore } from "../zustand/useToastStore";
 import HorizontalPropertyList from "../components/DashboardPropertyComponent/HorizontalPropertyList";
+
 import { FileStack, MapPinned, PhoneCall } from "lucide-react";
+
 import { MdOutlineLandscape } from "react-icons/md";
 import { useModalStore } from "../zustand/useModalStore";
 import { useState } from "react";
@@ -37,7 +39,9 @@ const PropertyDetail = () => {
   const { user } = useUserStore();
   const navigate = useNavigate();
   const [showMap, setshowMap] = useState(false);
+
   const [showFiles, setshowFiles] = useState(false);
+
   const id = params?.id;
   const { showToast } = useToastStore();
   const { data, isError, isLoading } = useGetPropertyByID(id ?? "");
@@ -47,6 +51,7 @@ const PropertyDetail = () => {
   const item = data?.data.properties[0];
   const photoLenght = item?.photos.length || 0;
   const features = item?.features || [];
+
 
   const isRented =
     item?.purpose?.includes("rent") || item?.purpose?.includes("Rent") || false;
@@ -58,6 +63,7 @@ const PropertyDetail = () => {
   ) {
     address = `${data?.data.properties[0].street_address}, ${data?.data.properties[0].state} ${data?.data.properties[0].country}`;
   }
+
   const unitsAvialable = item?.unit_available || 0;
   // Filter items by purpose
 
@@ -723,6 +729,7 @@ const PropertyDetail = () => {
         </div>
       )}
 
+
       {showFiles && (
         <div
           className="fixed inset-0 flex items-center justify-center bg-black/50 z-50"
@@ -752,6 +759,7 @@ const PropertyDetail = () => {
           </div>
         </div>
       )}
+
     </div>
   );
 };
