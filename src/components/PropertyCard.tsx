@@ -5,6 +5,7 @@ import Button from "./Button";
 import { useNavigate } from "react-router-dom";
 type PropertyProps = {
   id: number;
+  slug: string;
   image: string;
   title: string;
   price: number;
@@ -19,6 +20,7 @@ type PropertyProps = {
 };
 const PropertyCard = ({
   id,
+  slug,
   image,
   title,
   price,
@@ -35,7 +37,7 @@ const PropertyCard = ({
   const address = `${streetAddress}, ${lga}, ${state} ${country}`;
   const navigate = useNavigate();
   const handleViewProperty = () => {
-    navigate(`/properties/${id}`);
+    navigate(`/dashboard/properties/${slug}`);
   };
 
   return (

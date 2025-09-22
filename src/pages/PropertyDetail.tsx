@@ -89,7 +89,7 @@ const PropertyDetail = () => {
     <div className="flex flex-col w-full px-4 md:px-0 pb-0">
       <div className="w-full flex flex-col md:flex-row justify-between md:items-start my-5">
         <div className="flex flex-col gap-4  md:w-[70%]">
-          <h4 className="font-bold text-3xl md:text-6x line-clamp-2">
+          <h4 className="font-bold text-3xl md:text-6xl">
             {/* Treasure Parks and Gardens */}
             {data?.data.properties[0].name}
           </h4>
