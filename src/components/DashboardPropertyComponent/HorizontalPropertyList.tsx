@@ -68,8 +68,8 @@ const HorizontalPropertyList: React.FC<Props> = ({ title, properties }) => {
                 squareFeet={property.size}
                 hasLights={property.hasLights}
                 hasGym={property.hasGym}
-                isLand={property.isLand}
-              />
+                isLand={property.isLand} 
+                slug={property.slug}/>
             ))}
           </div>
         </div>

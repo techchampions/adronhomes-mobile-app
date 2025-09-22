@@ -40,6 +40,7 @@ const PropertyDetail = () => {
   const navigate = useNavigate();
   const [showMap, setshowMap] = useState(false);
 
+  const [showFiles, setshowFiles] = useState(false);
 
   const id = params?.id;
   const { showToast } = useToastStore();
@@ -89,7 +90,7 @@ const PropertyDetail = () => {
     <div className="flex flex-col w-full px-4 md:px-0 pb-0">
       <div className="w-full flex flex-col md:flex-row justify-between md:items-start my-5">
         <div className="flex flex-col gap-4  md:w-[70%]">
-          <h4 className="font-bold text-3xl md:text-6x line-clamp-2">
+          <h4 className="font-bold text-3xl md:text-6xl">
             {/* Treasure Parks and Gardens */}
             {data?.data.properties[0].name}
           </h4>
@@ -399,13 +400,6 @@ const PropertyDetail = () => {
                     {/* Split details in half for two tables */}
                     {item?.details && item.details.length > 0 ? (
                       <>
-                        <div className="bg-white font-extrabold p-3 border-b flex justify-between border-gray-200 min-w-0">
-                          Bungalow
-                        </div>
-                        <div className="bg-white font-extrabold p-3 border-b flex justify-between border-gray-200 min-w-0">
-                          Duplex
-                        </div>
-
                         <div className="relative overflow-x-hidden">
                           <div className="bg-white font-extrabold p-3 border-b flex justify-between border-gray-200 min-w-0">
                             Bungalow
