@@ -146,17 +146,17 @@ export default function SwiperPropertyCard({ property }: Props) {
           <FaChevronRight size={30} />
         </button>
         {property.is_discount && (
-          <div className="bg-red-600 text-white text-xs px-3 py-1 rounded-full absolute top-2 right-5 z-50">
+          <div className="bg-red-600 text-white text-xs px-3 py-1 rounded-full absolute top-2 right-5 z-10">
             {property.discount_percentage}% off
           </div>
         )}
         {property.unit_available < 1 && (
-          <div className="bg-red-600 text-white text-xs px-3 py-1 rounded-full absolute top-2 left-5 z-50">
+          <div className="bg-red-600 text-white text-xs px-3 py-1 rounded-full absolute top-2 left-5 z-10">
             sold out
           </div>
         )}
         {/* {property.purpose && (
-          <div className="absolute bottom-3 right-5 bg-black/60 py-1 px-4 rounded-lg z-50 text-white text-xs">
+          <div className="absolute bottom-3 right-5 bg-black/60 py-1 px-4 rounded-lg z-10 text-white text-xs">
             {property.purpose}
           </div>
         )} */}
