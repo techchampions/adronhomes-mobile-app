@@ -262,7 +262,7 @@ const navigate = useNavigate()
   return (
     <div className=" bg-transparent flex flex-col">
       <header
-        className="fixed top-0 left-0 right-0 px-4 py-2 z-20 bg-[#0e760e]"
+        className="fixed top-0 left-0 right-0 px-4 py-2 z-50 bg-[#0e760e]"
       >
         <div className="flex justify-between items-start relative z-10 max-w-7xl mx-auto">
           <div className="flex items-center space-x-4">

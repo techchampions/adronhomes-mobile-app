@@ -27,11 +27,11 @@ export default function PropertyList({
               state={property.state}
               lga={property.lga}
               country={property.country}
-              //   location={address}
               squareFeet={property.size}
               hasLights={property.hasLights}
               hasGym={property.hasGym}
               isLand={property.isLand}
+              slug={property.slug}
             />
           ))}
         </div>
