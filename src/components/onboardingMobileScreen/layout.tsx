@@ -35,9 +35,9 @@ const CopyButton = ({ text }: { text: any }) => {
       document.body.appendChild(textArea);
       textArea.select();
       try {
-            document.execCommand("copy");
-            setCopied(true);
-            setTimeout(() => setCopied(false), 2000);
+        document.execCommand("copy");
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
       } catch (err) {
         console.error("Failed to copy", err);
       }
@@ -52,17 +52,25 @@ const CopyButton = ({ text }: { text: any }) => {
   );
 };
 
-const Sidebar = ({ isOpen, onClose }: { isOpen: any; onClose: any }) => {
+const Sidebar = ({
+  isOpen,
+  onClose,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+}) => {
   const navigate = useNavigate();
-  
+
   const { user } = useUserStore();
   const { data: notificationData } = useGetNotifications();
   const unReadCount = notificationData?.unread || 0;
   const sidebarRef = useRef<HTMLDivElement>(null);
 
+  // Handle click outside to close sidebar
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
+        isOpen &&
         sidebarRef.current &&
         event.target instanceof Node &&
         !sidebarRef.current.contains(event.target)
@@ -71,37 +79,54 @@ const Sidebar = ({ isOpen, onClose }: { isOpen: any; onClose: any }) => {
       }
     };
 
-    document.addEventListener("mousedown", handleClickOutside);
+    if (isOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [onClose, isOpen]);
 
-  const goTpProfile = () => {
-    navigate("/dashboard/my-profile");
+  // Handle logout
+  const handleLogout = () => {
+    Auth.logout();
     onClose();
   };
 
   return (
     <>
+      {/* Backdrop overlay */}
+      {isOpen && (
+        <div
+          className="fixed inset-0 bg-black/30 bg-opacity-50 z-[59]"
+          onClick={onClose}
+        />
+      )}
+
+      {/* Sidebar */}
       <div
         ref={sidebarRef}
-        className={`fixed left-0 top-0 z-[60] transition-transform duration-300 h-screen  ${
+        className={`fixed left-0 top-0 z-[60] transition-transform duration-300 h-screen w-64 bg-white shadow-lg ${
           isOpen ? "translate-x-0" : "-translate-x-full"
-        } flex`}
+        }`}
       >
-        <div className="flex-1 bg-black" onClick={() => onClose()} />
-
-        <div className="w-64 bg-white h-screen p-6 shadow-lg flex flex-col">
+        <div className="p-6 flex flex-col h-full">
+          {/* Header */}
           <div className="flex flex-col gap-4">
-            <div className="flex justify-between">
+            <div className="flex justify-between items-center">
               <Link to="/" onClick={onClose}>
-                <img src="/logo.png" alt="logo" className=" w-[60%]" />
+                <img src="/logo.png" alt="logo" className="w-[60%]" />
               </Link>
-              <button onClick={onClose}>
+              <button
+                onClick={onClose}
+                className="p-1 hover:bg-gray-100 rounded"
+              >
                 <X size={24} />
               </button>
             </div>
+
+            {/* Customer ID */}
             <div className="border border-gray-300 rounded-xl px-4 py-1 gap-1 flex flex-col">
               <div className="flex justify-between w-full gap-4">
                 <p className="text-[10px] text-gray-400">Customer ID</p>
@@ -112,120 +137,110 @@ const Sidebar = ({ isOpen, onClose }: { isOpen: any; onClose: any }) => {
               </p>
             </div>
 
+            {/* Search */}
             <input
               placeholder="Search..."
               className="px-6 bg-gray-100 rounded-full py-2 text-xs"
             />
           </div>
 
+          {/* Navigation */}
           <div className="flex-grow overflow-y-auto scrollbar-hide py-1.5 bg-white rounded-2xl mt-4">
             <nav className="space-y-2 p-2">
               <NavItem
-                onSlideBack={() => {
-                  onClose();
-                }}
+                onSlideBack={(mobileOpen) => !mobileOpen && onClose()}
                 label="Dashboard"
                 icon={<MdDashboardCustomize className="w-4 h-4" />}
                 path="/dashboard/home"
               />
               <NavItem
-                onSlideBack={() => {
-                  onClose();
-                }}
+                onSlideBack={(mobileOpen) => !mobileOpen && onClose()}
                 label="My Wallet"
-                icon={<RiWallet3Fill className=" w-4 h-4" />}
+                icon={<RiWallet3Fill className="w-4 h-4" />}
                 path="/dashboard/wallet"
               />
               <NavItem
-                onSlideBack={() => {
-                  onClose();
-                }}
+                onSlideBack={(mobileOpen) => !mobileOpen && onClose()}
                 label="Payments"
-                icon={<FaArrowRightArrowLeft className=" w-4 h-4" />}
+                icon={<FaArrowRightArrowLeft className="w-4 h-4" />}
                 path="/dashboard/payments"
               />
               <NavItem
-                onSlideBack={() => {
-                  onClose();
-                }}
+                onSlideBack={(mobileOpen) => !mobileOpen && onClose()}
                 label="Notifications"
-                icon={<RiNotificationBadgeFill className=" w-4 h-4" />}
+                icon={<RiNotificationBadgeFill className="w-4 h-4" />}
                 path="/dashboard/notifications"
                 badge={unReadCount || 0}
               />
+
               <h4 className="text-adron-gray-400 font-bold px-7 mt-7 text-[13px]">
                 LISTINGS
               </h4>
+
               <NavItem
-                onSlideBack={() => {
-                  onClose();
-                }}
+                onSlideBack={(mobileOpen) => !mobileOpen && onClose()}
                 label="My Properties"
-                icon={<MdAddHome className=" w-4 h-4" />}
+                icon={<MdAddHome className="w-4 h-4" />}
                 path="/dashboard/my-properties"
               />
               <NavItem
-                onSlideBack={() => {
-                  onClose();
-                }}
+                onSlideBack={(mobileOpen) => !mobileOpen && onClose()}
                 label="New Properties"
-                icon={<MdAddHome className=" w-4 h-4" />}
+                icon={<MdAddHome className="w-4 h-4" />}
                 path="/dashboard/new-properties"
               />
               <NavItem
-                onSlideBack={() => {
-                  onClose();
-                }}
+                onSlideBack={(mobileOpen) => !mobileOpen && onClose()}
                 label="Saved Properties"
-                icon={<RiHomeHeartFill className=" w-4 h-4" />}
+                icon={<RiHomeHeartFill className="w-4 h-4" />}
                 path="/dashboard/saved-properties"
               />
+
               <h4 className="text-adron-gray-400 font-bold px-7 mt-7 text-[13px]">
                 PROFILE
               </h4>
+
               <NavItem
-                onSlideBack={() => {
-                  onClose();
-                }}
+                onSlideBack={(mobileOpen) => !mobileOpen && onClose()}
                 label="My Profile"
-                icon={<FaUserAlt className=" w-4 h-4" />}
+                icon={<FaUserAlt className="w-4 h-4" />}
                 path="/dashboard/my-profile"
               />
               <NavItem
-                onSlideBack={() => {
-                  onClose();
-                }}
+                onSlideBack={(mobileOpen) => !mobileOpen && onClose()}
                 label="Account Settings"
-                icon={<IoSettingsSharp className=" w-4 h-4" />}
+                icon={<IoSettingsSharp className="w-4 h-4" />}
                 path="/dashboard/settings"
               />
-
               <NavItem
-                onSlideBack={() => {
-                  onClose();
-                }}
+                onSlideBack={(mobileOpen) => !mobileOpen && onClose()}
                 label="Support"
-                icon={<MdOutlineHelp className=" w-4 h-4" />}
+                icon={<MdOutlineHelp className="w-4 h-4" />}
                 path="/dashboard/support"
               />
             </nav>
+
+            {/* Footer actions */}
             <nav className="space-y-2 p-2 mt-auto">
               <button
-                onClick={() => {
-                  Auth.logout();
-                  onClose();
-                }}
+                onClick={handleLogout}
                 className="flex items-center w-full px-7 py-2 text-[15px] text-red-500 rounded-full bg-[#FFE6E6] hover:bg-red-200 transition-colors duration-200"
               >
                 <RiLogoutBoxRFill className="mr-2 w-4 h-4" />
                 Logout
               </button>
-              <a
-                href="https://adronhomes.com/"
-                className="text-green-500 text-[15px] w-full block font-bold px-7 py-2 text-center mx-auto"
+              <button
+                onClick={() =>
+                  window.open(
+                    "https://adronhomes.com/",
+                    "_blank",
+                    "noopener,noreferrer"
+                  )
+                }
+                className="text-green-500 text-[15px] w-full block font-bold px-7 py-2 text-center mx-auto hover:text-green-600 transition-colors"
               >
                 Go to Website
-              </a>
+              </button>
             </nav>
           </div>
         </div>
@@ -247,7 +262,7 @@ export const Layout = ({ children }: { children: any }) => {
     typeof window !== "undefined" ? window.innerWidth : 0
   );
   const [showBoundary, setShowBoundary] = useState(false);
-const navigate = useNavigate()
+  const navigate = useNavigate();
   useEffect(() => {
     const handleResize = () => {
       const width = window.innerWidth;
@@ -261,9 +276,7 @@ const navigate = useNavigate()
 
   return (
     <div className=" bg-transparent flex flex-col">
-      <header
-        className="fixed top-0 left-0 right-0 px-4 py-2 z-50 bg-[#0e760e]"
-      >
+      <header className="fixed top-0 left-0 right-0 px-4 py-2 z-50 bg-[#0e760e]">
         <div className="flex justify-between items-start relative z-10 max-w-7xl mx-auto">
           <div className="flex items-center space-x-4">
             <button
@@ -289,7 +302,10 @@ const navigate = useNavigate()
             </div>
           </div>
 
-          <div className="w-8 h-8 rounded-full bg-white overflow-hidden border-2 border-white hover:border-gray-200 transition-colors duration-200" onClick={()=>navigate("/dashboard/settings")}>
+          <div
+            className="w-8 h-8 rounded-full bg-white overflow-hidden border-2 border-white hover:border-gray-200 transition-colors duration-200"
+            onClick={() => navigate("/dashboard/my-profile")}
+          >
             {userHasProfilePicture ? (
               <img
                 src={userData.profile_picture!}
@@ -297,9 +313,7 @@ const navigate = useNavigate()
                 className="w-full h-full object-cover"
               />
             ) : (
-              <div
-                className="w-full h-full flex items-center justify-center text-adron-black text-xs font-bold "
-              >
+              <div className="w-full h-full flex items-center justify-center text-adron-black text-xs font-bold ">
                 {initials.toUpperCase()}
               </div>
             )}

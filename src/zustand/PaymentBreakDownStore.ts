@@ -6,7 +6,7 @@ type PaymentBreakDownStore = {
   otherFees: number;
   weeklyAmount: number;
   totalAmount: number;
-  propertyId: number | null;
+  propertyId: number | null |string;
   planId: number | null;
   propertyPrice: number;
   propertyName: string;

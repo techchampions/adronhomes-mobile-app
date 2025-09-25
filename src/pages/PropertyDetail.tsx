@@ -2,13 +2,14 @@ import { Form, Formik } from "formik";
 import { PiRoadHorizonDuotone } from "react-icons/pi";
 import { FaHeart, FaMapMarker } from "react-icons/fa";
 import { GrDocumentUser } from "react-icons/gr";
-import { IoIosCheckmarkCircleOutline, IoMdBed } from "react-icons/io";
+import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 import { LuFence } from "react-icons/lu";
 import { useNavigate, useParams } from "react-router-dom";
 import InputField from "../components/InputField";
 import Button from "../components/Button";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
+import DOMPurify from "dompurify";
 import "swiper/css";
 import "swiper/css/navigation";
 import { GiGate, GiStreetLight } from "react-icons/gi";
@@ -22,39 +23,43 @@ import {
   IoCarSportOutline,
   IoClose,
   IoConstructOutline,
-  IoDocument,
   IoLogoWhatsapp,
 } from "react-icons/io5";
 import { useUserStore } from "../zustand/UserStore";
 import { useToastStore } from "../zustand/useToastStore";
 import HorizontalPropertyList from "../components/DashboardPropertyComponent/HorizontalPropertyList";
-
 import { FileStack, MapPinned, PhoneCall } from "lucide-react";
-
 import { MdOutlineLandscape } from "react-icons/md";
-import { useModalStore } from "../zustand/useModalStore";
 import { useState } from "react";
+import { useModalStore } from "../zustand/useModalStore";
+// import DiscountBanner from "../components/DashboardPropertyComponent/DiscountBanner";
 const PropertyDetail = () => {
+  const modal = useModalStore();
   const params = useParams();
   const { user } = useUserStore();
   const navigate = useNavigate();
   const [showMap, setshowMap] = useState(false);
-
   const [showFiles, setshowFiles] = useState(false);
-
   const id = params?.id;
   const { showToast } = useToastStore();
   const { data, isError, isLoading } = useGetPropertyByID(id ?? "");
   const { mutate: enquire, isPending } = useEnquireProperty();
+  const [showDiscountBanner, setshowDiscountBanner] = useState(
+    data?.data.properties[0].is_discount || false
+  );
   if (isError) return <ApiErrorBlock />;
   if (isLoading || !data) return <Loader />;
   const item = data?.data.properties[0];
   const photoLenght = item?.photos.length || 0;
   const features = item?.features || [];
-
-
+  // useEffect(() => {
+  //   if (item?.is_discount) {
+  //     setshowDiscountBanner(true);
+  //   }
+  // }, [item?.is_discount]);
   const isRented =
     item?.purpose?.includes("rent") || item?.purpose?.includes("Rent") || false;
+
   let address = "All Adron locations.";
   if (
     data?.data.properties[0].street_address &&
@@ -86,11 +91,20 @@ const PropertyDetail = () => {
     (sum, item) => sum + item.value,
     0
   );
+  const description = data.data.properties[0].description;
+  const sanitizedHTML = DOMPurify.sanitize(description);
   return (
     <div className="flex flex-col w-full px-4 md:px-0 pb-0">
+      {/* <DiscountBanner
+        discount_name={item.discount_name}
+        discount_percent={item.discount_percentage}
+        discount_unit={item.discount_percentage}
+        isOpen={showDiscountBanner}
+        close={() => setshowDiscountBanner(false)}
+      /> */}
       <div className="w-full flex flex-col md:flex-row justify-between md:items-start my-5">
         <div className="flex flex-col gap-4  md:w-[70%]">
-          <h4 className="font-bold text-3xl md:text-6xl">
+          <h4 className="font-bold text-3xl md:text-6x">
             {/* Treasure Parks and Gardens */}
             {data?.data.properties[0].name}
           </h4>
@@ -137,7 +151,7 @@ const PropertyDetail = () => {
             <div className="relative w-full h-[300px] rounded-xl overflow-hidden mt-4">
               <Swiper
                 spaceBetween={10}
-                slidesPerView={1.3}
+                slidesPerView={1}
                 navigation={true}
                 modules={[Navigation]}
                 breakpoints={{
@@ -303,9 +317,22 @@ const PropertyDetail = () => {
 
                 <div className="flex flex-col gap-2">
                   <h4 className="font-bold text-md">Description</h4>
-                  <p className="text-sm ml-5 break-words">
-                    {item?.description}
-                  </p>
+                  <div className="text-sm ml-5 break-words text-left">
+                    {/* <div
+                      dangerouslySetInnerHTML={{ __html: sanitizedHTML }}
+                      className="rich-text-content"
+                      style={{
+                        contain: "content", // Isolates the content from parent styles
+                        all: "initial", // Reset all inherited styles
+                      }}
+                    /> */}
+                    <div
+                      dangerouslySetInnerHTML={{ __html: sanitizedHTML }}
+                      // className="prose max-w-none rich-text-content"
+                      className="prose  prose-lg
+                      max-w-none prose-headings:font-bold [&>*]:text-gray-700 [&>*]:text-xs prose-headings:text-gray-900 [&>h2]:!font-adron-bold [&>h1]:text-3xl [&>h2]:text-2xl [&>h3]:text-xl [&>p]:my-5 [&>p]:text-gray-700 [&>p]:leading-relaxed [&>p]:text-xs [&>a]:text-blue-600 [&>a]:no-underline [&>a]:border-b-2 [&>a]:border-blue-300 [&>a]:hover:border-blue-600 [&>strong]:text-gray-900 [&>ul]:list-disc [&>ol]:list-decimal [&>li]:my-1 blockquote:border-l-4 blockquote:border-gray-300 blockquote:pl-4 blockquote:italic [&>img]:rounded-lg [&>img]:shadow-md [&>table]:border [&>table]:border-gray-200 [&>th]:bg-gray-50 [&>th]:p-2 [&>td]:p-2 "
+                    />
+                  </div>
                 </div>
                 <div className="flex flex-col gap-2">
                   <h4 className="font-bold text-md">Features</h4>
@@ -729,7 +756,6 @@ const PropertyDetail = () => {
         </div>
       )}
 
-
       {showFiles && (
         <div
           className="fixed inset-0 flex items-center justify-center bg-black/50 z-50"
@@ -759,7 +785,6 @@ const PropertyDetail = () => {
           </div>
         </div>
       )}
-
     </div>
   );
 };
