@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import NavItem from "../NavigationComponents/NavItem";
-import { FaUserAlt, FaUserCircle } from "react-icons/fa";
+import { FaSpinner, FaUserAlt, FaUserCircle } from "react-icons/fa";
 import { FaArrowRightArrowLeft } from "react-icons/fa6";
 import { MdAddHome, MdDashboardCustomize, MdOutlineHelp } from "react-icons/md";
 import { IoSettingsSharp } from "react-icons/io5";
@@ -249,30 +249,62 @@ const Sidebar = ({
   );
 };
 
+
+import { Formik, Form } from 'formik';
+// import { InputField } from 'path/to/InputField'; // Adjust import as needed
+import { FaSearch, FaTimes } from 'react-icons/fa'; // Added FaTimes for cancel button
+import { useQueryClient } from '@tanstack/react-query';
+import { searchProperties } from "../../data/api";
+import InputField from "../InputField";
+import { useSearchStore } from "../../zustand/SearchStore";
+// import { searchProperties } from 'path/to/searchProperties'; // Adjust import as needed
+
 export const Layout = ({ children }: { children: any }) => {
   const { data, isLoading } = useGetUser();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false); // State to toggle search input
   const userData = data?.user;
-
+  const { setSearchResults, setLoading,isLoading:loadingSearch } = useSearchStore();
   const userHasProfilePicture = userData?.profile_picture;
   const initials =
-    (userData?.first_name?.[0] || "") + (userData?.last_name?.[0] || "");
+    (userData?.first_name?.[0] || '') + (userData?.last_name?.[0] || '');
 
   const [screenWidth, setScreenWidth] = useState(
-    typeof window !== "undefined" ? window.innerWidth : 0
+    typeof window !== 'undefined' ? window.innerWidth : 0
   );
   const [showBoundary, setShowBoundary] = useState(false);
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  // const [loading, setLoading] = useState(false);
+
+
   useEffect(() => {
     const handleResize = () => {
       const width = window.innerWidth;
       setScreenWidth(width);
       setShowBoundary(width >= 525 && width <= 767);
     };
-    window.addEventListener("resize", handleResize);
+    window.addEventListener('resize', handleResize);
     handleResize();
-    return () => window.removeEventListener("resize", handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+  const handleSearchSubmit = async (values: { search: string }) => {
+    setLoading(true);
+    try {
+      const data = await queryClient.fetchQuery({
+        queryKey: ['search-properties-results', values.search],
+        queryFn: () => searchProperties({ search: values.search }),
+      });
+      setSearchResults(data);
+      navigate('/dashboard/search-properties');
+      setIsSearchOpen(false); 
+    } catch (error) {
+      console.error('Search error:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className=" bg-transparent flex flex-col">
@@ -296,36 +328,95 @@ export const Layout = ({ children }: { children: any }) => {
             <div className="text-white">
               <div className="text-[10px] font-normal opacity-90">Welcome,</div>
               <div
-                className="text-sm md:text-sm font-bold  max-w-[200px] md:max-w-[300px] truncate"
-                title={userData?.first_name || ""}
+                className="text-sm md:text-sm font-bold max-w-[150px] md:max-w-[200px] truncate"
+                title={userData?.first_name || ''}
               >
-                {userData?.first_name || ""}
+                {userData?.first_name || ''}
               </div>
             </div>
           </div>
 
-          <div
-            className="w-8 h-8 rounded-full bg-white overflow-hidden border-2 border-white hover:border-gray-200 transition-colors duration-200"
-            onClick={() => navigate("/dashboard/my-profile")}
-          >
-            {userHasProfilePicture ? (
-              <img
-                src={userData.profile_picture!}
-                alt="User profile picture"
-                className="w-full h-full object-cover"
-              />
-            ) : (
-              <div className="w-full h-full flex items-center justify-center text-adron-black text-xs font-bold ">
-                {initials.toUpperCase()}
+          {/* Search Icon and Form */}
+          <div className="flex items-center">
+            {isSearchOpen ? (
+              <div className="fixed inset-x-0 top-0 bg-[#0e760e] px-4 py-2 z-50 flex items-center justify-between md:static md:flex md:items-center md:max-w-md">
+                <Formik
+                  initialValues={{ search: '' }}
+                  onSubmit={handleSearchSubmit}
+                >
+                  {({ resetForm }) => (
+                    <Form className="flex items-center gap-2 w-full">
+                      <InputField
+                        name="search"
+                        type="text"
+                        placeholder="Search properties..."
+                        className="w-full text-adron-black bg-white/20 border border-white/30 rounded-md px-3 py-1.5 text-sm placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white"
+                        // disabled={loading}
+                        // autoFocus
+                      />
+                      <div className="flex items-center gap-1">
+                        <button
+                          type="submit"
+                          disabled={loadingSearch}
+                          className="p-1.5 text-white hover:text-gray-200"
+                        >
+                          {loadingSearch ? (
+                            <FaSpinner className="animate-spin" size={14} />
+                          ) : (
+                            <FaSearch size={14} />
+                          )}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setIsSearchOpen(false);
+                            resetForm();
+                          }}
+                          className="p-1.5 text-white hover:text-gray-200"
+                        >
+                          <FaTimes size={14} />
+                        </button>
+                      </div>
+                    </Form>
+                  )}
+                </Formik>
               </div>
+            ) : (
+              <><button
+                  className="p-2 text-white hover:text-gray-200 mr-2 md:mr-5"
+                  onClick={() => setIsSearchOpen(true)}
+                  aria-label="Open search"
+                >
+                  <FaSearch size={16} />
+                </button><div
+                  className="w-8 h-8 rounded-full bg-white overflow-hidden border-2 border-white hover:border-gray-200 transition-colors duration-200 flex-shrink-0"
+                  onClick={() => navigate('/dashboard/my-profile')}
+                >
+                    {userHasProfilePicture ? (
+                      <img
+                        src={userData.profile_picture!}
+                        alt="User profile picture"
+                        className="w-full h-full object-cover" />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-adron-black text-xs font-bold">
+                        {initials.toUpperCase()}
+                      </div>
+                    )}
+                  </div></>
             )}
           </div>
+
+         
         </div>
       </header>
 
       <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
 
-      <main className="flex-1 overflow-auto pt-[70px] md:pt-[70px] pb-32 overflow-y-auto">
+      <main
+        className={`flex-1 overflow-auto pt-[70px] ${
+          isSearchOpen ? 'md:pt-[70px]' : 'md:pt-[70px]'
+        } pb-32 overflow-y-auto transition-all duration-300`}
+      >
         {children}
       </main>
 

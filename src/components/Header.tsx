@@ -49,7 +49,7 @@ const Header = ({ pageTitle }: { pageTitle: string }) => {
         <Formik
           initialValues={{ search: "" }}
           onSubmit={async (values) => {
-            setLoading(true); // ✅ Start loading
+            setLoading(true);
 
             try {
               const data = await queryClient.fetchQuery({
@@ -58,10 +58,10 @@ const Header = ({ pageTitle }: { pageTitle: string }) => {
               });
 
               setSearchResults(data);
-              navigate("/search-properties");
+              navigate("/dashboard/search-properties");
             } catch (error) {
               console.error("Search error:", error);
-              setLoading(false); // ✅ Stop loading on error
+              setLoading(false);
             }
           }}
         >
