@@ -122,14 +122,18 @@ const PropertyDetail = () => {
             <FaHeart />
           </div>
           {data?.data.properties[0].whatsapp_link && isRented ? (
+
             <a>
+
               <Button
                 label="Inquire on WhatsApp"
                 icon={<IoLogoWhatsapp size={18} />}
                 className="px-6 py-3 text-sm"
+
                 onClick={() =>
                   window.open(data.data.properties[0].whatsapp_link, "_blank")
                 }
+
               />
             </a>
           ) : unitsAvialable < 1 ? (
@@ -648,6 +652,7 @@ const PropertyDetail = () => {
                         disabled={isPending}
                         className="border bg-transparent !text-black border-adron-black mt-8"
                       />
+
                       {data?.data.properties[0].whatsapp_link && (
                         <Button
                           label="Chat on WhatsApp"
@@ -660,6 +665,7 @@ const PropertyDetail = () => {
                           }
                         />
                       )}
+
 
                       {data?.data.properties[0].contact_number && (
                         <a
@@ -710,9 +716,11 @@ const PropertyDetail = () => {
                 <Button
                   label="Inquire on WhatsApp"
                   icon={<IoLogoWhatsapp size={18} />}
+
                   onClick={() =>
                     window.open(data.data.properties[0].whatsapp_link, "_blank")
                   }
+
                   className="px-6 py-3 text-sm"
                 />
               </a>
