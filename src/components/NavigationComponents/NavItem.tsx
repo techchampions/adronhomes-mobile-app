@@ -20,10 +20,16 @@ const NavItem: React.FC<NavItemProps> = ({
   onSlideBack,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
+  
   const closeNav = () => {
     if (onSlideBack) {
       onSlideBack(false);
     }
+  };
+
+  const handleChildClick = () => {
+    // Close sidebar when child item is clicked
+    closeNav();
   };
 
   return (
@@ -33,6 +39,7 @@ const NavItem: React.FC<NavItemProps> = ({
         <NavLink
           to={path}
           end={true}
+          onClick={closeNav} // Close sidebar when main nav item is clicked
           className={({ isActive }) =>
             `flex items-center justify-between px-7 py-[7px] rounded-full transition ${
               isActive
@@ -41,7 +48,7 @@ const NavItem: React.FC<NavItemProps> = ({
             }`
           }
         >
-          <div className="flex items-center space-x-2" onClick={closeNav}>
+          <div className="flex items-center space-x-2">
             {icon}
             <span className=" text-[12px]">{label}</span>
             {badge != undefined && (
@@ -74,13 +81,14 @@ const NavItem: React.FC<NavItemProps> = ({
               key={index}
               to={child.path}
               end={true}
+              onClick={handleChildClick} // Close sidebar when child item is clicked
               className={({ isActive }) =>
                 `block py-[7px] px-2 rounded-md transition text-left text-[12px] ${
                   isActive
                     ? "bg-brand-400 text-adron-gray-400"
                     : "text-adron-gray-400 hover:bg-brand-400"
                 }`
-              }
+                }
             >
               {child.label}
             </NavLink>

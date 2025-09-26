@@ -1,14 +1,15 @@
 import { useEffect, useState } from "react";
 
 interface CarouselImage {
-  src: any;
-  alt: any;
+  src: string;
+  alt: string;
 }
 
 interface ImageCarouselProps {
   images: CarouselImage[];
   interval?: number;
 }
+
 const ImageCarousel: React.FC<ImageCarouselProps> = ({
   images,
   interval = 5000,
@@ -46,31 +47,31 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
 
   return (
     <div className="mb-[32px] px-4 relative group">
-      <div className="w-full h-full overflow-hidden rounded-[20px] relative">
+      <div className="w-full min-h-[160px] md:min-h-[250px] lg:min-h-[400px] overflow-hidden rounded-[20px] relative">
         <div
-          className="flex transition-transform duration-500 ease-in-out"
+          className="flex transition-transform duration-500 ease-in-out h-full"
           style={{ transform: `translateX(-${currentIndex * 100}%)` }}
         >
           {images.map((image, index) => (
-            <div key={index} className="w-full flex-shrink-0">
+            <div key={index} className="w-full flex-shrink-0 h-full">
               <img
                 src={image.src}
                 alt={image.alt}
-                className="w-full h-full object-cover min-h-[160px] max-h-[160px] md:min-h-[200px] md:max-h-[200px]  "
+                className="w-full h-full object-contain"
               />
             </div>
           ))}
         </div>
 
-        {/* Navigation arrows (visible on hover) */}
+        {/* Navigation arrows (visible on hover for desktop/tablet, always visible on mobile) */}
         <button
           onClick={goToPrev}
-          className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black/30 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+          className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/30 text-white p-2 rounded-full opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300 z-10"
           aria-label="Previous slide"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            className="h-5 w-5"
+            className="h-5 w-5 md:h-6 md:w-6"
             viewBox="0 0 20 20"
             fill="currentColor"
           >
@@ -83,12 +84,12 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
         </button>
         <button
           onClick={goToNext}
-          className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black/30 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+          className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/30 text-white p-2 rounded-full opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300 z-10"
           aria-label="Next slide"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            className="h-5 w-5"
+            className="h-5 w-5 md:h-6 md:w-6"
             viewBox="0 0 20 20"
             fill="currentColor"
           >
@@ -102,12 +103,12 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
       </div>
 
       {/* Circular dots indicator */}
-      <div className="flex justify-center mt-3 space-x-2 absolute bottom-3 right-1/2">
+      <div className="flex justify-center absolute bottom-4 left-1/2 -translate-x-1/2 space-x-2 z-10">
         {images.map((_, index) => (
           <button
             key={index}
             onClick={() => goToSlide(index)}
-            className={`w-2 h-2 rounded-full transition-all duration-300 ${
+            className={`w-2 h-2 rounded-full transition-all duration-300 md:w-3 md:h-3 ${
               index === currentIndex ? "bg-[#79B833] scale-125" : "bg-gray-300"
             }`}
             aria-label={`Go to slide ${index + 1}`}
@@ -117,4 +118,5 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
     </div>
   );
 };
-export  default ImageCarousel
+
+export default ImageCarousel;

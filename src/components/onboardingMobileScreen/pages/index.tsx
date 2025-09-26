@@ -64,7 +64,7 @@ const dashboardItems = [
 const PropertiesPage = () => {
   const { data, isLoading, isError } = useGetFeatured();
   const { data: dashboardSlider, isLoading: sliderLoading } =
-    useGetSlidersByType("dashboard");
+    useGetSlidersByType("home");
 
 
 
