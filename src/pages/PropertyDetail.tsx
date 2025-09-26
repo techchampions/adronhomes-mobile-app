@@ -39,7 +39,9 @@ const PropertyDetail = () => {
   const { user } = useUserStore();
   const navigate = useNavigate();
   const [showMap, setshowMap] = useState(false);
+
   const [showFiles, setshowFiles] = useState(false);
+
   const id = params?.id;
   const { showToast } = useToastStore();
   const { data, isError, isLoading } = useGetPropertyByID(id ?? "");
@@ -104,7 +106,9 @@ const PropertyDetail = () => {
       /> */}
       <div className="w-full flex flex-col md:flex-row justify-between md:items-start my-5">
         <div className="flex flex-col gap-4  md:w-[70%]">
+
           <h4 className="font-bold text-3xl md:text-6x">
+
             {/* Treasure Parks and Gardens */}
             {data?.data.properties[0].name}
           </h4>
