@@ -59,6 +59,7 @@ export default function FilterBar({
       enableReinitialize
       onSubmit={(values) => {
         console.log("Filter values:", values);
+        setShowModal(false)
         onFilter(values);
       }}
     >
