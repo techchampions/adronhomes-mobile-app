@@ -25,7 +25,9 @@ import apiClient from "../../data/apiClient";
 import { useToastStore } from "../../zustand/useToastStore";
 import { Property, PropertyType } from "../../data/types/propertiesPageTypes";
 import { IoGiftOutline, IoLogoWhatsapp } from "react-icons/io5";
-// import { useToggleSaveProperty } from "../../data/hooks";
+import LinkButton from "../LinkButton";
+import { useToggleSaveProperty } from "../../data/hooks";
+import InlineLoader from "../InlineLoader";
 
 interface Props {
   property: Property;
@@ -34,19 +36,20 @@ interface Props {
 export default function SwiperPropertyCard({ property }: Props) {
   const navigate = useNavigate();
   const { showToast } = useToastStore();
+  const { mutate: toggleSave, isPending: isSaving } = useToggleSaveProperty();
   const features = property.features;
   const allowedFeatures = ["Gym", "Light"];
   const displayFeatures = features.filter((item) =>
     allowedFeatures.includes(item)
   );
 
-  const isRented = property?.purpose?.includes("Rent") || false;
-  console.log(isRented);
-  // const { mutate: toggleSavePropertyHook, isLoading } = useToggleSaveProperty();
+  const isRented =
+    property?.purpose?.includes("rent") ||
+    property?.purpose?.includes("Rent") ||
+    false;
 
   const prevRef = useRef<HTMLButtonElement>(null);
   const nextRef = useRef<HTMLButtonElement>(null);
-  const [isSaved, setIsSaved] = useState(property.is_saved);
   const [swiper, setSwiper] = useState<SwiperType | null>(null);
 
   useEffect(() => {
@@ -70,41 +73,14 @@ export default function SwiperPropertyCard({ property }: Props) {
       swiper.navigation.update();
     }
   }, [swiper]);
-
-  // useEffect(() => {
-  //   if (swiper) {
-  //     swiper.params.navigation.prevEl = prevRef.current;
-  //     swiper.params.navigation.nextEl = nextRef.current;
-  //     swiper.navigation.update(); // Ensure the navigation buttons are updated after initialization
-  //   }
-  // }, [swiper]); // Ensure this effect runs when the swiper instance is available
-
-  const address = `${property.street_address}, ${property.state} ${property.country}`;
+  let address = "All Adron locations";
+  if (property.street_address && property.state && property.country) {
+    address = `${property.street_address}, ${property.state} ${property.country}`;
+  }
   // const features = property.features;
   const toggleSaveProperty = async () => {
-    try {
-      const formData = new FormData();
-      formData.append("property_id", String(property.id));
-      const res = await apiClient.post("/user/save-property-toggle", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-      showToast(res.data.message, "success");
-      setIsSaved(!isSaved);
-    } catch (error) {
-      showToast(`${error}`, "error");
-    }
+    toggleSave(property.id);
   };
-  // const toggleSaveProperty = async () => {
-  //   toggleSavePropertyHook(property.id, {
-  //     onSuccess: () => {
-  //       showToast("Property removed successfully", "success");
-
-  //       setIsSaved(!isSaved);
-  //     },
-  //   });
-  // };
 
   return (
     <div className="rounded-3xl">
@@ -146,17 +122,17 @@ export default function SwiperPropertyCard({ property }: Props) {
           <FaChevronRight size={30} />
         </button>
         {property.is_discount && (
-          <div className="bg-red-600 text-white text-xs px-3 py-1 rounded-full absolute top-2 right-5 z-10">
+          <div className="bg-red-600 text-white text-xs px-3 py-1 rounded-full absolute top-2 right-5 z-50">
             {property.discount_percentage}% off
           </div>
         )}
         {property.unit_available < 1 && (
-          <div className="bg-red-600 text-white text-xs px-3 py-1 rounded-full absolute top-2 left-5 z-10">
+          <div className="bg-red-600 text-white text-xs px-3 py-1 rounded-full absolute top-2 left-5 z-50">
             sold out
           </div>
         )}
         {/* {property.purpose && (
-          <div className="absolute bottom-3 right-5 bg-black/60 py-1 px-4 rounded-lg z-10 text-white text-xs">
+          <div className="absolute bottom-3 right-5 bg-black/60 py-1 px-4 rounded-lg z-50 text-white text-xs">
             {property.purpose}
           </div>
         )} */}
@@ -173,17 +149,21 @@ export default function SwiperPropertyCard({ property }: Props) {
         </div>
         {/* {`${property.street_address}, ${property.lga}, ${property.state} ${property.country}`} */}
 
-        <div className="text-lg font-black text-adron-black mt-4 flex justify-between">
-          <span className="w-[70%] truncate">
-            {formatPrice(property.price ?? 0)}
+        <div className="text-lg font-black text-adron-black mt-4 flex justify-between items-center">
+          <span className={`w-[70%] truncate ${isRented && "text-cyan-700"}`}>
+            {isRented ? "for rent" : formatPrice(property.price ?? 0)}
           </span>
-          <div className="mr-2" onClick={toggleSaveProperty}>
-            {isSaved ? (
-              <FaHeart className="text-adron-green" size={20} />
-            ) : (
-              <FaRegHeart className="text-gray-500" size={20} />
-            )}
-          </div>
+          {isSaving ? (
+            <InlineLoader />
+          ) : (
+            <div className="mr-2 cursor-pointer" onClick={toggleSaveProperty}>
+              {property.is_saved ? (
+                <FaHeart className="text-adron-green" size={20} />
+              ) : (
+                <FaRegHeart className="text-gray-500" size={20} />
+              )}
+            </div>
+          )}
         </div>
 
         <div className="flex justify-between items-center">
@@ -236,10 +216,11 @@ export default function SwiperPropertyCard({ property }: Props) {
             onClick={() => navigate(`/dashboard/properties/${property.slug}`)}
           />
           {isRented ? (
-            <Button
-              label="For rent"
+            <LinkButton
+              href={property.whatsapp_link}
+              label="Inquire"
               icon={<IoLogoWhatsapp className="h-4 w-4" />}
-              className="text-xs py-3 !bg-transparent !text-gray-700"
+              className="text-xs py-3 !bg-transparent !text-green-700 border hover:!bg-green-700 hover:!text-white"
             />
           ) : property.unit_available < 1 ? (
             <Button

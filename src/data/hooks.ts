@@ -279,23 +279,45 @@ export const useGetUserTransactions = (page: number) => {
     queryFn: () => getUserTransactions(page),
   });
 };
-
 export const useToggleSaveProperty = () => {
   const queryClient = useQueryClient();
-
+  const toast = useToastStore();
   return useMutation({
     mutationFn: toggleSaveProperty,
-    onSuccess: () => {
+    onSuccess: (data) => {
       // Refetch relevant data if needed
+      queryClient.invalidateQueries({
+        queryKey: ["property"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["properties"],
+      });
       queryClient.invalidateQueries({
         queryKey: ["saved-properties"],
       });
       queryClient.invalidateQueries({
         queryKey: ["properties-page"],
       });
+      toast.showToast(data.message, "success");
     },
   });
 };
+// export const useToggleSaveProperty = () => {
+//   const queryClient = useQueryClient();
+
+//   return useMutation({
+//     mutationFn: toggleSaveProperty,
+//     onSuccess: () => {
+//       // Refetch relevant data if needed
+//       queryClient.invalidateQueries({
+//         queryKey: ["saved-properties"],
+//       });
+//       queryClient.invalidateQueries({
+//         queryKey: ["properties-page"],
+//       });
+//     },
+//   });
+// };
 export const useFundWallet = () => {
   const queryClient = useQueryClient();
 

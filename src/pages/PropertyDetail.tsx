@@ -1,6 +1,11 @@
 import { Form, Formik } from "formik";
 import { PiRoadHorizonDuotone } from "react-icons/pi";
-import { FaHeart, FaMapMarker } from "react-icons/fa";
+import {
+  FaChevronLeft,
+  FaChevronRight,
+  FaHeart,
+  FaMapMarker,
+} from "react-icons/fa";
 import { GrDocumentUser } from "react-icons/gr";
 import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 import { LuFence } from "react-icons/lu";
@@ -8,12 +13,18 @@ import { useNavigate, useParams } from "react-router-dom";
 import InputField from "../components/InputField";
 import Button from "../components/Button";
 import { Swiper, SwiperSlide } from "swiper/react";
+import { Swiper as SwiperType } from "swiper/types";
+
 import { Navigation } from "swiper/modules";
 import DOMPurify from "dompurify";
 import "swiper/css";
 import "swiper/css/navigation";
 import { GiGate, GiStreetLight } from "react-icons/gi";
-import { useEnquireProperty, useGetPropertyByID } from "../data/hooks";
+import {
+  useEnquireProperty,
+  useGetPropertyByID,
+  useToggleSaveProperty,
+} from "../data/hooks";
 import { formatDate, formatPrice } from "../data/utils";
 import ApiErrorBlock from "../components/ApiErrorBlock";
 import Loader from "../components/Loader";
@@ -28,10 +39,11 @@ import {
 import { useUserStore } from "../zustand/UserStore";
 import { useToastStore } from "../zustand/useToastStore";
 import HorizontalPropertyList from "../components/DashboardPropertyComponent/HorizontalPropertyList";
-import { FileStack, MapPinned, PhoneCall } from "lucide-react";
+import { FileStack, LoaderCircle, MapPinned, PhoneCall } from "lucide-react";
 import { MdOutlineLandscape } from "react-icons/md";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useModalStore } from "../zustand/useModalStore";
+import InlineLoader from "../components/InlineLoader";
 // import DiscountBanner from "../components/DashboardPropertyComponent/DiscountBanner";
 const PropertyDetail = () => {
   const modal = useModalStore();
@@ -39,36 +51,53 @@ const PropertyDetail = () => {
   const { user } = useUserStore();
   const navigate = useNavigate();
   const [showMap, setshowMap] = useState(false);
-
   const [showFiles, setshowFiles] = useState(false);
-
   const id = params?.id;
   const { showToast } = useToastStore();
   const { data, isError, isLoading } = useGetPropertyByID(id ?? "");
+  const { mutate: toggleSave, isPending: isSaving } = useToggleSaveProperty();
   const { mutate: enquire, isPending } = useEnquireProperty();
-  const [showDiscountBanner, setshowDiscountBanner] = useState(
-    data?.data.properties[0].is_discount || false
-  );
+  // const [showDiscountBanner, setshowDiscountBanner] = useState(
+  //   data?.data.properties[0].is_discount || false
+  // );
+  // Refs for navigation
+  const [swiper, setSwiper] = useState<SwiperType | null>(null);
+  const prevRef = useRef(null);
+  const nextRef = useRef(null);
+
+  useEffect(() => {
+    if (swiper && prevRef.current && nextRef.current) {
+      if (
+        typeof swiper.params.navigation === "object" &&
+        swiper.params.navigation !== null
+      ) {
+        swiper.params.navigation = {
+          ...swiper.params.navigation,
+          prevEl: prevRef.current,
+          nextEl: nextRef.current,
+        };
+      } else {
+        swiper.params.navigation = {
+          prevEl: prevRef.current,
+          nextEl: nextRef.current,
+        };
+      }
+      swiper.navigation.init();
+      swiper.navigation.update();
+    }
+  }, [swiper]);
+
   if (isError) return <ApiErrorBlock />;
   if (isLoading || !data) return <Loader />;
-  const item = data?.data.properties[0];
+  const item = data?.data.properties;
   const photoLenght = item?.photos.length || 0;
   const features = item?.features || [];
-  // useEffect(() => {
-  //   if (item?.is_discount) {
-  //     setshowDiscountBanner(true);
-  //   }
-  // }, [item?.is_discount]);
   const isRented =
     item?.purpose?.includes("rent") || item?.purpose?.includes("Rent") || false;
 
   let address = "All Adron locations.";
-  if (
-    data?.data.properties[0].street_address &&
-    data?.data.properties[0].state &&
-    data?.data.properties[0].country
-  ) {
-    address = `${data?.data.properties[0].street_address}, ${data?.data.properties[0].state} ${data?.data.properties[0].country}`;
+  if (item.street_address && item.state && item.country) {
+    address = `${item.street_address}, ${item.state} ${item.country}`;
   }
 
   const unitsAvialable = item?.unit_available || 0;
@@ -89,12 +118,13 @@ const PropertyDetail = () => {
     // navigate(`/invest-property/${id}`);
     navigate(`/dashboard/invest-property-form/${id}`);
   };
-  const totalFees = data?.data.properties[0].details.reduce(
+  const totalFees = data?.data.properties.details.reduce(
     (sum, item) => sum + item.value,
     0
   );
-  const description = data.data.properties[0].description;
+  const description = data.data.properties.description;
   const sanitizedHTML = DOMPurify.sanitize(description);
+
   return (
     <div className="flex flex-col w-full px-4 md:px-0 pb-0">
       {/* <DiscountBanner
@@ -106,11 +136,9 @@ const PropertyDetail = () => {
       /> */}
       <div className="w-full flex flex-col md:flex-row justify-between md:items-start my-5">
         <div className="flex flex-col gap-4  md:w-[70%]">
-
           <h4 className="font-bold text-3xl md:text-6x">
-
             {/* Treasure Parks and Gardens */}
-            {data?.data.properties[0].name}
+            {data?.data.properties.name}
           </h4>
           <p className="flex gap-2">
             <FaMapMarker />
@@ -118,18 +146,26 @@ const PropertyDetail = () => {
           </p>
         </div>
         <div className="flex justify-between gap-4 mt-3 md:mt-0">
-          <div className="p-4 rounded-full bg-white w-fit">
-            <FaHeart />
+          <div
+            className="p-4 rounded-full bg-white/50 w-fit cursor-pointer"
+            onClick={() => toggleSave(item.id)}
+          >
+            {isSaving ? (
+              <InlineLoader />
+            ) : (
+              <FaHeart
+                className={`${
+                  item.is_saved ? "text-adron-green" : "text-black"
+                }`}
+              />
+            )}
           </div>
-          {data?.data.properties[0].whatsapp_link && isRented ? (
-            <a>
+          {item.whatsapp_link && isRented ? (
+            <a href={item.whatsapp_link}>
               <Button
                 label="Inquire on WhatsApp"
                 icon={<IoLogoWhatsapp size={18} />}
                 className="px-6 py-3 text-sm"
-                onClick={() =>
-                  window.open(data.data.properties[0].whatsapp_link, "_blank")
-                }
               />
             </a>
           ) : unitsAvialable < 1 ? (
@@ -158,14 +194,19 @@ const PropertyDetail = () => {
             <div className="relative w-full h-[300px] rounded-xl overflow-hidden mt-4">
               <Swiper
                 spaceBetween={10}
-                slidesPerView={1}
-                navigation={true}
+                slidesPerView={1.3}
+                // navigation={true}
+                onInit={(swiperInstance) => setSwiper(swiperInstance)} // Store swiper instance when it's initialized
+                navigation={{
+                  prevEl: prevRef.current,
+                  nextEl: nextRef.current,
+                }}
                 modules={[Navigation]}
-                // breakpoints={{
-                //   320: {
-                //     slidesPerView: photoLenght < 2 ? 1 : 2.3,
-                //   },
-                // }}
+                breakpoints={{
+                  320: {
+                    slidesPerView: photoLenght < 2 ? 1 : 1.1,
+                  },
+                }}
                 className="w-full h-full rounded-xl"
               >
                 {item?.photos.map((img, idx) => (
@@ -178,6 +219,18 @@ const PropertyDetail = () => {
                   </SwiperSlide>
                 ))}
               </Swiper>
+              <button
+                ref={prevRef}
+                className="absolute cursor-pointer left-2 top-1/2 -translate-y-1/2 z-10 bg-white/50 bg-opacity-60 rounded-full p-2 shadow hover:bg-opacity-90"
+              >
+                <FaChevronLeft size={30} />
+              </button>
+              <button
+                ref={nextRef}
+                className="absolute cursor-pointer right-2 top-1/2 -translate-y-1/2 z-10 bg-white/50 bg-opacity-60 rounded-full p-2 shadow hover:bg-opacity-90"
+              >
+                <FaChevronRight size={30} />
+              </button>
             </div>
           )}
 
@@ -361,18 +414,14 @@ const PropertyDetail = () => {
                             <div className="font-medium text-gray-900 whitespace-nowrap truncate">
                               Country
                             </div>
-                            <div className=" truncate ">
-                              {data?.data.properties[0].country}
-                            </div>
+                            <div className=" truncate ">{item.country}</div>
                           </div>
 
                           <div className="p-3 flex justify-between gap-2 bg-white border-b border-gray-200">
                             <div className=" font-medium text-gray-900 whitespace-nowrap ">
                               State
                             </div>
-                            <div className="">
-                              {data?.data.properties[0].state}
-                            </div>
+                            <div className="">{item.state}</div>
                           </div>
                         </div>
                       </div>
@@ -384,9 +433,7 @@ const PropertyDetail = () => {
                             <div className=" font-medium text-gray-900 whitespace-nowrap">
                               Nearby Landmark
                             </div>
-                            <div className="">
-                              {data?.data.properties[0].nearby_landmarks}
-                            </div>
+                            <div className="">{item.nearby_landmarks}</div>
                           </div>
 
                           <div className="p-3 flex justify-between gap-2 bg-white border-b border-gray-200">
@@ -394,13 +441,13 @@ const PropertyDetail = () => {
                               Address
                             </div>
                             <div className=" line-clamp-1 truncate">
-                              {data?.data.properties[0].street_address}
+                              {item.street_address}
                             </div>
                           </div>
                         </div>
                       </div>
                     </div>
-                    {data.data.properties[0].nearby_landmarks && (
+                    {item.nearby_landmarks && (
                       <div className="relative overflow-x-hidden">
                         <div className="w-full text-sm text-left rtl:text-right text-gray-500">
                           <div>
@@ -408,9 +455,7 @@ const PropertyDetail = () => {
                               <div className=" font-medium text-gray-900 whitespace-nowrap">
                                 Near-by Landmark
                               </div>
-                              <div className="">
-                                {data?.data.properties[0].nearby_landmarks}
-                              </div>
+                              <div className="">{item.nearby_landmarks}</div>
                             </div>
                           </div>
                         </div>
@@ -423,7 +468,7 @@ const PropertyDetail = () => {
                   <h4 className="font-bold text-md">Property Document Type</h4>
                   <div className="flex items-center gap-2 ml-5 text-gray-500">
                     <GrDocumentUser />
-                    <span>{data.data.properties[0].title_document_type}</span>
+                    <span>{item.title_document_type}</span>
                   </div>
                 </div>
                 {/* New Additional details */}
@@ -555,16 +600,14 @@ const PropertyDetail = () => {
                         Payment Duration Limit
                       </p>
                       <p className="text-sm">
-                        Maximum of{" "}
-                        {data?.data.properties[0].property_duration_limit}{" "}
-                        Months
+                        Maximum of {item.property_duration_limit} Months
                       </p>
                     </div>
                     <div className="flex-flex-col">
                       <p className="text-xs text-gray-500">Payment Schedule</p>
-                      {data?.data.properties[0].payment_schedule ? (
+                      {item.payment_schedule ? (
                         <p className="text-sm capitalize">
-                          {data?.data.properties[0].payment_schedule.map(
+                          {item.payment_schedule.map(
                             (item, index) => `${item} `
                           )}
                         </p>
@@ -648,23 +691,16 @@ const PropertyDetail = () => {
                         disabled={isPending}
                         className="border bg-transparent !text-black border-adron-black mt-8"
                       />
-                      {data?.data.properties[0].whatsapp_link && (
-                        <Button
-                          label="Chat on WhatsApp"
-                          icon={<IoLogoWhatsapp size={18} />}
-                          onClick={() =>
-                            window.open(
-                              data.data.properties[0].whatsapp_link,
-                              "_blank"
-                            )
-                          }
-                        />
+                      {item.whatsapp_link && (
+                        <a href={item.whatsapp_link}>
+                          <Button
+                            label="Chat on WhatsApp"
+                            icon={<IoLogoWhatsapp size={18} />}
+                          />
+                        </a>
                       )}
-
-                      {data?.data.properties[0].contact_number && (
-                        <a
-                          href={`tel:${data.data.properties[0].contact_number}`}
-                        >
+                      {item.contact_number && (
+                        <a href={`tel:${item.contact_number}`}>
                           <Button
                             label="Call Marketer"
                             className="!bg-blue-950"
@@ -675,7 +711,7 @@ const PropertyDetail = () => {
                     </div>
                   </Form>
                 </Formik>
-                {data?.data.properties[0].property_map && (
+                {item.property_map && (
                   <Button
                     rightIcon={<MapPinned size={16} />}
                     label="See Property on map"
@@ -683,36 +719,32 @@ const PropertyDetail = () => {
                   />
                 )}
 
-                {data?.data.properties[0].video_link && (
+                {item.video_link && (
                   <div className="video-responsive w-full h-[250px] md:h-[150px] rounded-2xl overflow-hidden">
                     <iframe
                       className="w-full h-full"
-                      src={data?.data.properties[0].video_link || ""}
+                      src={item.video_link || ""}
                       title="YouTube video player"
                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                       allowFullScreen
                     ></iframe>
                   </div>
                 )}
-                {data?.data.properties[0].property_files &&
-                  data.data.properties[0].property_files.length > 0 && (
-                    <Button
-                      rightIcon={<FileStack />}
-                      label="See Property file"
-                      onClick={() => setshowFiles(!showFiles)}
-                      className="!bg-gray-700"
-                    />
-                  )}
+                {item.property_files && item.property_files.length > 0 && (
+                  <Button
+                    rightIcon={<FileStack />}
+                    label="See Property file"
+                    onClick={() => setshowFiles(!showFiles)}
+                    className="!bg-gray-700"
+                  />
+                )}
               </div>
             </div>
-            {data?.data.properties[0].whatsapp_link && isRented ? (
-              <a className="w-fit">
+            {item.whatsapp_link && isRented ? (
+              <a href={item.whatsapp_link} className="w-fit">
                 <Button
                   label="Inquire on WhatsApp"
                   icon={<IoLogoWhatsapp size={18} />}
-                  onClick={() =>
-                    window.open(data.data.properties[0].whatsapp_link, "_blank")
-                  }
                   className="px-6 py-3 text-sm"
                 />
               </a>
@@ -760,7 +792,7 @@ const PropertyDetail = () => {
             <div className="w-full md:w-[600px] h-[360px] rounded-lg overflow-hidden">
               {/* <StreetView lat={40.748817} lng={-73.985428} /> */}
               <iframe
-                src={data?.data.properties[0].property_map || ""}
+                src={item.property_map || ""}
                 className="w-full h-full"
                 allowFullScreen
                 loading="lazy"
@@ -790,7 +822,7 @@ const PropertyDetail = () => {
 
             <div className="w-full md:w-[600px] h-[360px] rounded-lg overflow-hidden">
               <iframe
-                src={data?.data.properties[0].property_files[0] || ""}
+                src={item.property_files[0] || ""}
                 className="w-full h-full"
                 allowFullScreen
                 loading="lazy"

@@ -36,7 +36,7 @@ export interface GetPropertyByIdResponse {
   status: string;
   message: string;
   data: {
-    properties: Property[];
+    properties: Property;
     similar_property_user: P[];
   };
 }

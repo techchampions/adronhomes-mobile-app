@@ -258,11 +258,18 @@ export const getAllPropertyType = async (): Promise<PropertiesTypeResponse> => {
 };
 
 // Toggle Save Property
-export const toggleSaveProperty = async (propertyId: number): Promise<void> => {
+interface SavedStatusResponse {
+  status: boolean;
+  message: string;
+}
+export const toggleSaveProperty = async (
+  propertyId: number
+): Promise<SavedStatusResponse> => {
   const formData = new FormData();
   formData.append("property_id", propertyId.toString());
 
-  await apiClient.post("/user/save-property-toggle", formData);
+  const response = await apiClient.post("/user/save-property-toggle", formData);
+  return response.data;
 };
 
 // Fund Wallet
