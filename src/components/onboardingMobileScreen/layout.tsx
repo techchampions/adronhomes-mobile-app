@@ -337,7 +337,6 @@ export const Layout = ({ children }: { children: any }) => {
             </div>
           </div>
 
-
           {/* Search Icon and Form */}
           <div className="flex items-center">
             {isSearchOpen ? (

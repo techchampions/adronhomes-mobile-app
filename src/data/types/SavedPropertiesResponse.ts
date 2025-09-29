@@ -1,3 +1,5 @@
+import { Property } from "./propertiesPageTypes";
+
 export interface SavedPropertiesResponse {
   success: boolean;
   saved_property: SavedPropertyPagination;
@@ -22,7 +24,7 @@ export interface SavedPropertyPagination {
 export interface SavedProperty {
   id: number;
   property_id: number;
-  property: PropertyDetails | null;
+  property: Property;
 }
 
 export interface PropertyDetails {

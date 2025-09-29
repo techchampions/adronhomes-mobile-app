@@ -30,3 +30,8 @@ export interface WalletTransactionByIDResponse {
   message: string;
   data: WalletTransaction;
 }
+export interface TransactionRecieptResponse {
+  status: boolean;
+  message: string;
+  download_url: string;
+}

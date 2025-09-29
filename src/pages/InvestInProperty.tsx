@@ -19,6 +19,7 @@ import { paymentTypeWatcher } from "../utils/PaymentTypeWatcher";
 import InputField from "../components/InputField";
 import { formatPrice } from "../data/utils";
 import NoPropertyFound from "../components/NoPropertyFound";
+import { BadgePercent } from "lucide-react";
 
 export default function InvestmentForm() {
   const { openModal } = useModalStore();
@@ -27,10 +28,10 @@ export default function InvestmentForm() {
   const { setPaymentDetails } = usePaymentBreakDownStore();
   const [selectedPaymentType, setSelectedPaymentType] = useState("");
   const { data, isError, isLoading } = useGetPropertyByID(id || 0);
-  const number_of_unit = data?.data.properties[0].number_of_unit || 0;
-  const property = data?.data.properties[0];
+  const number_of_unit = data?.data.properties.number_of_unit || 0;
+  const property = data?.data.properties;
   let paymentTypeOptions = [];
-  if (data?.data.properties[0].payment_type === "full") {
+  if (data?.data.properties.payment_type === "full") {
     paymentTypeOptions = ["One Time"];
   } else {
     paymentTypeOptions = ["One Time", "Installment"];
@@ -45,8 +46,7 @@ export default function InvestmentForm() {
       />
     );
 
-  const PropertyDurationLimit =
-    data?.data.properties[0].property_duration_limit;
+  const PropertyDurationLimit = data?.data.properties.property_duration_limit;
   function generateOptions(max: number) {
     const options = [];
     for (let i = 2; i <= max; i++) {
@@ -77,7 +77,7 @@ export default function InvestmentForm() {
       : {
           paymentType: Yup.string().required("Required"),
           units: Yup.number()
-            .max(data?.data.properties[0].number_of_unit || 0)
+            .max(data?.data.properties.number_of_unit || 0)
             .required("Required"),
         }),
     ...(property?.type.name === "Land" && {
@@ -116,7 +116,7 @@ export default function InvestmentForm() {
         infrastructureFees: infrastructureFees,
         otherFees: otherFees,
         numberOfUnits: values.units,
-        propertyId: id ? Number(id) : null,
+        propertyId: id ? id : null,
         propertyPurpose:
           property?.type.name === "Land" ? values.propertyPurpose : null,
       };
@@ -137,7 +137,7 @@ export default function InvestmentForm() {
         infrastructureFees: infrastructureFees,
         otherFees: otherFees,
         numberOfUnits: values.units,
-        propertyId: id ? Number(id) : null, // Convert string ID to number
+        propertyId: id ? id : null, // Convert string ID to number
         propertyPurpose:
           property?.type.name === "Land" ? values.propertyPurpose : null,
       };
@@ -186,7 +186,21 @@ export default function InvestmentForm() {
           <Form className="space-y-10">
             <AutoEndDateUpdater /> {/* 👈 place this inside Formik form */}
             {/* Property Summary */}
-            <div className=" ">
+            <div className="space-y-4">
+              {/* {property?.is_discount && (
+                <div className=" bg-adron-green-200 px-4 py-2 rounded-2xl flex gap-4 text-adron-green">
+                  <BadgePercent size={30} />
+                  <div className="">
+                    <h3 className="!font-adron-bold">
+                      {property?.discount_name} Promo !
+                    </h3>
+                    <p className="text-sm">
+                      purchase {property.discount_units} units to get{" "}
+                      {property?.discount_percentage}% off
+                    </p>
+                  </div>
+                </div>
+              )} */}
               <PropertySummary id={id ?? ""} units={values.units} />
             </div>
             {/* Investment Section */}

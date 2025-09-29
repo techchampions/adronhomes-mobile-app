@@ -23,59 +23,22 @@ import { formatPrice } from "../../data/utils";
 import { useToastStore } from "../../zustand/useToastStore";
 import { useToggleSaveProperty } from "../../data/hooks";
 import { PropertyDetails } from "../../data/types/SavedPropertiesResponse";
+import LinkButton from "../LinkButton";
+import { IoLogoWhatsapp } from "react-icons/io5";
+import { Property } from "../../data/types/propertiesPageTypes";
 
 interface Props {
-  // saved_property: {
-  //   id: number;
-  //   property_id: number;
-  //   property: {
-  //     id: number;
-  //     name: string;
-  //     street_address: string;
-  //     lga: string;
-  //     state: string;
-  //     country: string;
-  //     price: number;
-  //     features: string[];
-  //     photos: string[];
-  //     type: PropertyType;
-  //     is_saved: boolean;
-  //   };
-  // };
-  saved_property: PropertyDetails | null;
+  saved_property: Property;
 }
 
 export default function SavedSwiperPropertyCard({ saved_property }: Props) {
   const navigate = useNavigate();
   const { showToast } = useToastStore();
   const { mutate: toggleSave } = useToggleSaveProperty();
-
-  // const prevRef = useRef(null);
-  // const nextRef = useRef(null);
   const prevRef = useRef<HTMLButtonElement>(null);
   const nextRef = useRef<HTMLButtonElement>(null);
   const [isSaved, setIsSaved] = useState(true);
-  // const [swiper, setSwiper] = useState(null); // State to store the swiper instance
   const [swiper, setSwiper] = useState<SwiperType | null>(null);
-
-  // useEffect(() => {
-  //   if (swiper) {
-  //     swiper.params.navigation.prevEl = prevRef.current;
-  //     swiper.params.navigation.nextEl = nextRef.current;
-  //     swiper.navigation.update(); // Ensure the navigation buttons are updated after initialization
-  //   }
-  // }, [swiper]); // Ensure this effect runs when the swiper instance is available
-  // useEffect(() => {
-  //   if (swiper && prevRef.current && nextRef.current) {
-  //     // Update TypeScript knows these are NavigationParams
-  //     swiper.params.navigation = {
-  //       ...swiper.params.navigation,
-  //       prevEl: prevRef.current,
-  //       nextEl: nextRef.current
-  //     };
-  //     swiper.navigation.update();
-  //   }
-  // }, [swiper]);
   useEffect(() => {
     if (swiper && prevRef.current && nextRef.current) {
       if (
@@ -98,7 +61,10 @@ export default function SavedSwiperPropertyCard({ saved_property }: Props) {
     }
   }, [swiper]);
 
-  console.log(saved_property);
+  const isRented =
+    saved_property?.purpose?.includes("rent") ||
+    saved_property?.purpose?.includes("Rent") ||
+    false;
 
   const address = `${saved_property?.street_address}, ${saved_property?.lga}, ${saved_property?.state} ${saved_property?.country}`;
   // const features = property.features;
@@ -191,22 +157,46 @@ export default function SavedSwiperPropertyCard({ saved_property }: Props) {
               {saved_property?.features[2]}
             </span>
           </div>
-          <div className="text-gray-400 flex items-center gap-1 text-xs">
-            {saved_property?.type}
+        </div>
+        <div className="flex items-center gap-2 text-[10px]">
+          <div className="">Payment Duration:</div>
+          <div className=" font-bold">
+            {saved_property?.property_duration_limit} month(s) max
           </div>
         </div>
 
-        <div className="flex items-center justify-between mt-[20px] md:mt-[43px] gap-2">
+        <div className="grid grid-cols-2 items-center justify-between gap-2">
           <Button
             label="View Property"
             className="bg-adron-green text-xs py-3"
-            onClick={() => navigate(`/properties/${saved_property?.id}`)}
+            onClick={() =>
+              navigate(`/dashboard/properties/${saved_property?.id}`)
+            }
           />
-          <Button
-            label="Invest in Property"
-            className="!bg-transparent !text-black border hover:!text-white hover:!bg-black text-xs py-3"
-            onClick={() => navigate(`/invest-property/${saved_property?.id}`)}
-          />
+          {isRented ? (
+            <LinkButton
+              href={saved_property?.whatsapp_link || ""}
+              label="Inquire"
+              icon={<IoLogoWhatsapp className="h-4 w-4" />}
+              className="text-xs py-3 !bg-transparent !text-green-700 border hover:!bg-green-700 hover:!text-white"
+            />
+          ) : saved_property?.unit_available < 1 ? (
+            <Button
+              label="Sold out"
+              className="!bg-transparent !text-red-500 border text-xs py-3"
+              onClick={() => showToast("This Property is sold out", "error")}
+            />
+          ) : (
+            <Button
+              label="Subscribe"
+              className="!bg-transparent !text-black border hover:!text-white hover:!bg-black text-xs py-3"
+              onClick={() =>
+                navigate(
+                  `/dashboard/invest-property-form/${saved_property?.id}`
+                )
+              }
+            />
+          )}
         </div>
       </div>
     </div>

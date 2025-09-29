@@ -4,6 +4,7 @@ interface ButtonProps {
   label: string;
   href: string;
   target?: boolean;
+  download?: boolean;
   isLoading?: boolean;
   loadingText?: string;
   className?: string;
@@ -16,6 +17,7 @@ const LinkButton: React.FC<ButtonProps> = ({
   loadingText,
   href,
   target = false,
+  download = false,
   isLoading = false,
   className = "",
   icon,
@@ -24,6 +26,7 @@ const LinkButton: React.FC<ButtonProps> = ({
   return (
     <a
       href={href}
+      download={download ? "download.pdf" : ""}
       target={`${target ? "_blank" : "_self"}`}
       className={`w-full bg-adron-green py-2 rounded-full transition duration-300 text-white ${className}
         `}

@@ -147,7 +147,7 @@ const InlineLoader = () => {
             className={`absolute top-0 left-0 flex items-center justify-start w-full h-full ${rotation}`}
           >
             <div
-              className="w-[20%] h-[20%] rounded-full bg-white opacity-50 animate-pulse-dot shadow-[0_0_20px_rgba(18,31,53,0.3)]"
+              className="w-[20%] h-[20%] rounded-full bg-adron-green-300 opacity-50 animate-pulse-dot shadow-[0_0_20px_rgba(18,31,53,0.3)]"
               style={{
                 animationDelay: `${delay}s`,
               }}

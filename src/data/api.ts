@@ -15,6 +15,9 @@ import { PlanPropertiesDetailResponse } from "./types/PropertyPlanDetailTypes";
 import { NotificationsResponse } from "./types/notificationTypes";
 import {
   TransactionByIDResponse,
+
+  TransactionRecieptResponse,
+
   WalletTransactionByIDResponse,
 } from "./types/userTransactionByIDTypes";
 import { NotificationByIDResponse } from "./types/NotificationByIDTypes";
@@ -110,6 +113,18 @@ export const getWalletTransactionByID = async (
   const res = await apiClient.get(`/user/wallet-transaction/${id}`);
   return res.data;
 };
+export const getWalletTransactionReciept = async (
+  id: number | string
+): Promise<TransactionRecieptResponse> => {
+  const res = await apiClient.get(`/get-receipt/transaction/${id}`);
+  return res.data;
+};
+export const getPaymentReciept = async (
+  id: number | string
+): Promise<TransactionRecieptResponse> => {
+  const res = await apiClient.get(`/get-receipt/payment/${id}`);
+  return res.data;
+};
 
 //get Notifications
 export const getNotifications = async (
@@ -185,6 +200,7 @@ export const filterProperties = async (
   filters: PropertyFilters = {} // Use the defined type
 ): Promise<PaginatedProperties> => {
   const params = new URLSearchParams({
+    is_auth: String(1),
     page: String(page),
   });
   if (filters.state) {
@@ -258,11 +274,18 @@ export const getAllPropertyType = async (): Promise<PropertiesTypeResponse> => {
 };
 
 // Toggle Save Property
-export const toggleSaveProperty = async (propertyId: number): Promise<void> => {
+interface SavedStatusResponse {
+  status: boolean;
+  message: string;
+}
+export const toggleSaveProperty = async (
+  propertyId: number
+): Promise<SavedStatusResponse> => {
   const formData = new FormData();
   formData.append("property_id", propertyId.toString());
 
-  await apiClient.post("/user/save-property-toggle", formData);
+  const response = await apiClient.post("/user/save-property-toggle", formData);
+  return response.data;
 };
 
 // Fund Wallet
@@ -611,8 +634,6 @@ export const getSettings = async (type: string): Promise<SettingsResponse> => {
   const response = await apiClient.get(`/settings?type=${type}`);
   return response.data;
 };
-
-
 export const getFeaturedProperties = async (): Promise<PropertiesResponse> => {
   const response = await apiClient.get("/filter-property?page=1&is_featured=1&is_auth=1");
   return response.data;

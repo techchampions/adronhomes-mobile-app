@@ -72,6 +72,8 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
       navigate(`/dashboard/properties/${id}`);
     }
   };
+  
+  
 
   const toggleSaveProperty = async (e: React.MouseEvent) => {
     e.stopPropagation();

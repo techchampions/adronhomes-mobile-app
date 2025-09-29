@@ -2,7 +2,6 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   ApiError,
   createPropertyPlan,
-  // estatePropertiesResponse,
   fetchPropertiesPageData,
   fetchSavedProperties,
   filterProperties,
@@ -16,6 +15,7 @@ import {
   getFeaturedProperties,
   getNotificationByID,
   getNotifications,
+  getPaymentReciept,
   getPropertyByID,
   getPropertyPlanByID,
   getSettings,
@@ -27,6 +27,7 @@ import {
   getUserTransactions,
   getUserWallet,
   getWalletTransactionByID,
+  getWalletTransactionReciept,
   infrastructurePayment,
   InitiatePropertyPurchaseResponse,
   makeEnquire,
@@ -57,6 +58,7 @@ import { PlanPropertiesDetailResponse } from "./types/PropertyPlanDetailTypes";
 import { NotificationsResponse } from "./types/notificationTypes";
 import {
   TransactionByIDResponse,
+  TransactionRecieptResponse,
   WalletTransactionByIDResponse,
 } from "./types/userTransactionByIDTypes";
 import { NotificationByIDResponse } from "./types/NotificationByIDTypes";
@@ -247,6 +249,20 @@ export const useGetWalletTransactionByID = (id: number | string) => {
     enabled: !!id,
   });
 };
+export const useGetTransactionReciept = (id: number | string) => {
+  return useQuery<TransactionRecieptResponse>({
+    queryKey: ["tranaction-reciept", id],
+    queryFn: () => getWalletTransactionReciept(id),
+    enabled: !!id,
+  });
+};
+export const useGetPaymentReciept = (id: number | string) => {
+  return useQuery<TransactionRecieptResponse>({
+    queryKey: ["payment-reciept", id],
+    queryFn: () => getPaymentReciept(id),
+    enabled: !!id,
+  });
+};
 
 // Query hook for Transsaction by ID
 export const useGetNotificationByID = (id: number | string) => {
@@ -279,20 +295,29 @@ export const useGetUserTransactions = (page: number) => {
     queryFn: () => getUserTransactions(page),
   });
 };
-
+interface Response {
+  status: boolean;
+}
 export const useToggleSaveProperty = () => {
   const queryClient = useQueryClient();
-
+  const toast = useToastStore();
   return useMutation({
     mutationFn: toggleSaveProperty,
-    onSuccess: () => {
+    onSuccess: (data) => {
       // Refetch relevant data if needed
+      queryClient.invalidateQueries({
+        queryKey: ["property"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["properties"],
+      });
       queryClient.invalidateQueries({
         queryKey: ["saved-properties"],
       });
       queryClient.invalidateQueries({
         queryKey: ["properties-page"],
       });
+      toast.showToast(data.message, "success");
     },
   });
 };
@@ -444,8 +469,6 @@ export const useGetEquiryInfo = () => {
     queryFn: () => getSettings("enquiry"),
   });
 };
-
-
 
 
 export const useGetFeatured = () => {
