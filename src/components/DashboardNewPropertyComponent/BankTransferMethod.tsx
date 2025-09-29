@@ -7,15 +7,17 @@ import InputField from "../InputField";
 import { Form, Formik } from "formik";
 import {
   useCreatePropertyPlan,
+  useGetPropertyByID,
   usePropertyPlanRepayment,
 } from "../../data/hooks";
 import { usePaymentBreakDownStore } from "../../zustand/PaymentBreakDownStore";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import PaymentPending from "../PaymentPending";
 import { ApiError } from "../DashboardHomeComponents/SelectPaymentMethod";
 import { useUserStore } from "../../zustand/UserStore";
 import StatusFailed from "../StatusFailed";
 import { useContractDeatilStore } from "../../zustand/ContractDetailsStore";
+import SmallLoader from "../SmallLoader";
 const BankTransfer = ({
   goBack,
   amount,
@@ -25,6 +27,9 @@ const BankTransfer = ({
   amount: number;
   isBuyNow?: boolean;
 }) => {
+  const params = useParams();
+  const id = params?.id;
+  const { data: propertyData, isLoading } = useGetPropertyByID(id);
   const initialValues = { proof: null as File | null, bank_name: "" };
   const { accounts } = useUserStore();
   const propertyAccount = accounts.find((item) => item.type === "property");
@@ -46,10 +51,10 @@ const BankTransfer = ({
     planId,
     numberOfUnits,
     propertyPurpose,
-    resetPaymentDetails,
+    // resetPaymentDetails,
   } = usePaymentBreakDownStore();
   const { showToast } = useToastStore();
-  const { closeModal, openModal } = useModalStore();
+  const { openModal } = useModalStore();
   const contractDetails = useContractDeatilStore();
 
   const contractDetailPayload = {
@@ -91,7 +96,7 @@ const BankTransfer = ({
             payment_method: "bank_transfer",
             payment_type: 1,
             monthly_duration: Number(paymentDuration),
-            property_id: Number(propertyId),
+            property_id: Number(propertyData?.data.properties.id),
             start_date: startDate,
             end_date: endDate,
             repayment_schedule: paymentSchedule,
@@ -108,7 +113,7 @@ const BankTransfer = ({
             payment_method: "bank_transfer",
             payment_type: 2,
             monthly_duration: Number(paymentDuration),
-            property_id: Number(propertyId),
+            property_id: Number(propertyData?.data.properties.id),
             start_date: startDate,
             end_date: endDate,
             repayment_schedule: paymentSchedule,
@@ -165,7 +170,9 @@ const BankTransfer = ({
       }
     }
   };
-
+  if (isLoading) {
+    return <SmallLoader />;
+  }
   return (
     <div className="flex flex-col">
       <div className="flex flex-col gap-4 mt-4 min-h-[400px] justify-between">

@@ -1,20 +1,25 @@
 import CopyButton from "../CopyButton";
 import Button from "../Button";
-import { useGetWalletTransactionByID } from "../../data/hooks";
+import {
+  useGetTransactionReciept,
+  useGetWalletTransactionByID,
+} from "../../data/hooks";
 import ApiErrorBlock from "../ApiErrorBlock";
 import { formatPrice } from "../../data/utils";
 import { TransactionStatus } from "../../data/types/userTransactionsTypes";
 import SmallLoader from "../SmallLoader";
+import LinkButton from "../LinkButton";
 
 const WalletTransactionDetail = ({ id }: { id: number }) => {
   const { data, isLoading, isError } = useGetWalletTransactionByID(id);
+  const { data: recieptData, isLoading: gettingReciept } =
+    useGetTransactionReciept(id);
   if (isLoading) {
     return <SmallLoader />;
   }
   if (isError) {
     return <ApiErrorBlock />;
   }
-
   const renderStatusBadge = (status: TransactionStatus) => {
     const statusMap: Record<
       TransactionStatus,
@@ -116,7 +121,15 @@ const WalletTransactionDetail = ({ id }: { id: number }) => {
           label="Share"
           className="bg-transparent !text-black !w-fir px-6 text-xs"
         />
-        <Button label="Download" className="bg-black !w-fir px-6 text-xs" />
+        <LinkButton
+          download={true}
+          href={recieptData?.download_url || ""}
+          target={true}
+          label="Download"
+          className="bg-black !w-fir px-6 text-xs"
+          isLoading={gettingReciept}
+          loadingText="Getting Reciept"
+        />
       </div>
     </div>
   );

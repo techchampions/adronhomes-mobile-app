@@ -5,6 +5,7 @@ import BankTransfer from "./BankTransferMethod";
 import { FaWallet } from "react-icons/fa";
 import {
   useCreatePropertyPlan,
+  useGetPropertyByID,
   useGetUserWalletdata,
   usePropertyPlanRepayment,
 } from "../../data/hooks";
@@ -13,7 +14,7 @@ import { useToastStore } from "../../zustand/useToastStore";
 import { usePaymentBreakDownStore } from "../../zustand/PaymentBreakDownStore";
 import PaymentSuccessfull from "../PaymentSuccessfull";
 import SmallLoader from "../SmallLoader";
-import { useNavigate } from "react-router-dom";
+import { data, useNavigate, useParams } from "react-router-dom";
 import { usePaystackPayment } from "../../hooks/usePaystackPayment";
 import { useUserStore } from "../../zustand/UserStore";
 import { ApiError } from "../DashboardHomeComponents/SelectPaymentMethod";
@@ -29,11 +30,16 @@ const SelectPaymentMethod = ({
   amount: number;
   isBuyNow?: boolean;
 }) => {
+  const params = useParams();
+  const id = params?.id;
   const { showToast } = useToastStore();
   const { user } = useUserStore();
   const contractDetails = useContractDeatilStore();
   const paystack = usePaystackPayment();
   const { data: userWalletData, isLoading, isError } = useGetUserWalletdata();
+  const { data: propertyData, isLoading: gettingProperty } =
+    useGetPropertyByID(id);
+  const property = propertyData?.data.properties;
   const navigate = useNavigate();
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<
     string | null
@@ -109,7 +115,7 @@ const SelectPaymentMethod = ({
             ...contractDetailPayload,
             payment_method: "paystack",
             payment_type: 1,
-            property_id: Number(propertyId),
+            property_id: Number(property?.id),
             paid_amount: totalAmount,
             marketer_code: marketerId,
             number_of_unit: numberOfUnits,
@@ -121,7 +127,7 @@ const SelectPaymentMethod = ({
             payment_method: "paystack",
             payment_type: 2,
             monthly_duration: Number(paymentDuration),
-            property_id: Number(propertyId),
+            property_id: Number(property?.id),
             start_date: startDate,
             end_date: endDate,
             repayment_schedule: paymentSchedule,
@@ -209,7 +215,7 @@ const SelectPaymentMethod = ({
               ...contractDetailPayload,
               payment_method: "virtual_wallet",
               payment_type: 1,
-              property_id: Number(propertyId),
+              property_id: Number(property?.id),
               paid_amount: totalAmount,
               marketer_code: marketerId,
               number_of_unit: numberOfUnits,
@@ -221,7 +227,7 @@ const SelectPaymentMethod = ({
               payment_method: "virtual_wallet",
               payment_type: 2,
               monthly_duration: Number(paymentDuration),
-              property_id: Number(propertyId),
+              property_id: Number(property?.id),
               start_date: startDate,
               end_date: endDate,
               repayment_schedule: paymentSchedule,
@@ -461,7 +467,12 @@ const SelectPaymentMethod = ({
             isLoading={isPaying || isRepaying}
             className="!w-fit px-12 py-2 text-xs bg-black text-white"
             onClick={handleContinue}
-            disabled={!selectedPaymentMethod || isPaying || isRepaying}
+            disabled={
+              !selectedPaymentMethod ||
+              isPaying ||
+              isRepaying ||
+              gettingProperty
+            }
           />
         </div>
       </div>
