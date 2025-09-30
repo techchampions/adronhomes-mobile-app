@@ -22,13 +22,15 @@ import Button from "../Button";
 import { formatPrice } from "../../data/utils";
 import { useToastStore } from "../../zustand/useToastStore";
 import { useToggleSaveProperty } from "../../data/hooks";
-import { PropertyDetails } from "../../data/types/SavedPropertiesResponse";
+
 import LinkButton from "../LinkButton";
 import { IoLogoWhatsapp } from "react-icons/io5";
 import { Property } from "../../data/types/propertiesPageTypes";
 
 interface Props {
-  saved_property: Property;
+
+  saved_property: Property | null;
+
 }
 
 export default function SavedSwiperPropertyCard({ saved_property }: Props) {
@@ -39,6 +41,7 @@ export default function SavedSwiperPropertyCard({ saved_property }: Props) {
   const nextRef = useRef<HTMLButtonElement>(null);
   const [isSaved, setIsSaved] = useState(true);
   const [swiper, setSwiper] = useState<SwiperType | null>(null);
+
   useEffect(() => {
     if (swiper && prevRef.current && nextRef.current) {
       if (
@@ -61,22 +64,47 @@ export default function SavedSwiperPropertyCard({ saved_property }: Props) {
     }
   }, [swiper]);
 
+
+  // Handle null property case
+  if (!saved_property) {
+    return (
+      <div className="rounded-3xl">
+        <div className="relative w-full h-[250px] rounded-xl overflow-hidden bg-gray-200 animate-pulse">
+          <div className="w-full h-full rounded-[40px] bg-gray-300"></div>
+        </div>
+        <div className="mt-4 space-y-2 bg-white p-6 rounded-3xl">
+          <div className="h-6 bg-gray-200 rounded animate-pulse"></div>
+          <div className="h-4 bg-gray-200 rounded animate-pulse"></div>
+          <div className="h-8 bg-gray-200 rounded animate-pulse mt-4"></div>
+        </div>
+      </div>
+    );
+  }
+
+
   const isRented =
     saved_property?.purpose?.includes("rent") ||
     saved_property?.purpose?.includes("Rent") ||
     false;
 
-  const address = `${saved_property?.street_address}, ${saved_property?.lga}, ${saved_property?.state} ${saved_property?.country}`;
-  // const features = property.features;
+
+  const address = `${saved_property?.street_address || ''}, ${saved_property?.lga || ''}, ${saved_property?.state || ''} ${saved_property?.country || ''}`;
+  
+  const features = saved_property?.features || [];
+  const hasFeatures = features.length > 0;
+
+
   const toggleSaveProperty = async () => {
     toggleSave(saved_property?.id || 0, {
       onSuccess: () => {
         showToast("Property removed successfully", "success");
-
         setIsSaved(!isSaved);
       },
     });
   };
+
+  const photos = Array.isArray(saved_property?.photos) ? saved_property.photos : [];
+  const hasPhotos = photos.length > 0;
 
   return (
     <div className="rounded-3xl">
@@ -85,7 +113,7 @@ export default function SavedSwiperPropertyCard({ saved_property }: Props) {
         <Swiper
           spaceBetween={10}
           slidesPerView={1}
-          onInit={(swiperInstance) => setSwiper(swiperInstance)} // Store swiper instance when it's initialized
+          onInit={(swiperInstance) => setSwiper(swiperInstance)}
           navigation={{
             prevEl: prevRef.current,
             nextEl: nextRef.current,
@@ -93,15 +121,25 @@ export default function SavedSwiperPropertyCard({ saved_property }: Props) {
           modules={[Navigation]}
           className="w-full h-full rounded-[40px]"
         >
-          {saved_property?.photos.map((img, idx) => (
-            <SwiperSlide key={idx}>
+          {hasPhotos ? (
+            photos.map((img, idx) => (
+              <SwiperSlide key={idx}>
+                <img
+                  src={img}
+                  alt={`Image ${idx + 1}`}
+                  className="object-cover rounded-3xl h-full w-full"
+                />
+              </SwiperSlide>
+            ))
+          ) : (
+            <SwiperSlide>
               <img
-                src={img}
-                alt={`Image ${idx + 1}`}
+                src="/placeholder.jpg"
+                alt="No property images available"
                 className="object-cover rounded-3xl h-full w-full"
               />
             </SwiperSlide>
-          ))}
+          )}
         </Swiper>
 
         {/* Navigation Buttons */}
@@ -122,46 +160,53 @@ export default function SavedSwiperPropertyCard({ saved_property }: Props) {
       {/* Property Info */}
       <div className="mt-4 space-y-2 bg-white p-6 rounded-3xl">
         <h4 className="text-lg font-adron-text-body font-semibold truncate">
-          {saved_property?.name}
+          {saved_property?.name || "Property Name"}
         </h4>
-        <p className="text-xs text-gray-400 flex items-center mt-1 truncate">
-          <FaMapMarkerAlt className="mr-1" /> {address}
-          {/* {`${property.street_address}, ${property.lga}, ${property.state} ${property.country}`} */}
-        </p>
+        <div className="text-xs text-gray-400 flex items-center mt-1 truncate">
+          <FaMapMarkerAlt className="mr-1" /> 
+          {address}
+        </div>
 
-        <p className="text-lg font-black text-adron-black mt-4 flex justify-between">
-          {formatPrice(saved_property?.price ?? 0)}
-          <div className="mr-2" onClick={toggleSaveProperty}>
+        {/* Fixed: Replaced <p> with <div> to fix hydration error */}
+        <div className="text-lg font-black text-adron-black mt-4 flex justify-between items-center">
+          <span>{formatPrice(saved_property?.price ?? 0)}</span>
+          <div className="mr-2 cursor-pointer" onClick={toggleSaveProperty}>
             {isSaved ? (
               <FaHeart className="text-adron-green" size={20} />
             ) : (
               <FaRegHeart className="text-gray-500" size={20} />
             )}
           </div>
-        </p>
+        </div>
 
         <div className="flex justify-between items-center">
           <div className="flex items-center text-[10px] font-bold text-gray-500 gap-2">
-            <span className="flex items-center gap-1 truncate">
-              {/* <TfiRulerAlt2 />  */}
-              <img src="/ruler.svg" width={14} height={14} alt="dumbbell" />
-
-              {saved_property?.features[0]}
-            </span>
-            <span className="flex items-center gap-1 truncate">
-              <GiStreetLight /> {saved_property?.features[1]}
-            </span>
-            <span className="flex items-center gap-1 truncate">
-              {/* <FaDumbbell /> */}
-              <img src="/dumbbell.svg" width={14} height={14} alt="dumbbell" />
-              {saved_property?.features[2]}
-            </span>
+            {hasFeatures ? (
+              <>
+                <span className="flex items-center gap-1 truncate">
+                  <img src="/ruler.svg" width={14} height={14} alt="ruler" />
+                  {features[0] || "Size"}
+                </span>
+                <span className="flex items-center gap-1 truncate">
+                  <GiStreetLight /> {features[1] || "Feature"}
+                </span>
+                <span className="flex items-center gap-1 truncate">
+                  <img src="/dumbbell.svg" width={14} height={14} alt="dumbbell" />
+                  {features[2] || "Gym"}
+                </span>
+              </>
+            ) : (
+              <span className="text-gray-400">No features available</span>
+            )}
           </div>
         </div>
+
+        
         <div className="flex items-center gap-2 text-[10px]">
-          <div className="">Payment Duration:</div>
-          <div className=" font-bold">
-            {saved_property?.property_duration_limit} month(s) max
+          <div>Payment Duration:</div>
+          <div className="font-bold">
+            {saved_property?.property_duration_limit || 0} month(s) max
+
           </div>
         </div>
 
@@ -175,12 +220,15 @@ export default function SavedSwiperPropertyCard({ saved_property }: Props) {
           />
           {isRented ? (
             <LinkButton
-              href={saved_property?.whatsapp_link || ""}
+
+              href={saved_property?.whatsapp_link || "#"}
               label="Inquire"
               icon={<IoLogoWhatsapp className="h-4 w-4" />}
               className="text-xs py-3 !bg-transparent !text-green-700 border hover:!bg-green-700 hover:!text-white"
             />
-          ) : saved_property?.unit_available < 1 ? (
+
+          ) : (saved_property?.unit_available ?? 0) < 1 ? (
+
             <Button
               label="Sold out"
               className="!bg-transparent !text-red-500 border text-xs py-3"

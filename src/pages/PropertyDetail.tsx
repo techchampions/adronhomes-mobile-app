@@ -143,9 +143,7 @@ const PropertyDetail = () => {
       /> */}
       <div className="w-full flex flex-col md:flex-row justify-between md:items-start my-5">
         <div className="flex flex-col gap-4  md:w-[70%]">
-
           <h4 className="font-bold text-3xl md:text-6x">
-
             {/* Treasure Parks and Gardens */}
             {data?.data.properties.name}
           </h4>
@@ -172,16 +170,11 @@ const PropertyDetail = () => {
 
           {item.whatsapp_link && isRented ? (
             <a href={item.whatsapp_link}>
-
+=
               <Button
                 label="Inquire on WhatsApp"
                 icon={<IoLogoWhatsapp size={18} />}
                 className="px-6 py-3 text-sm"
-
-                onClick={() =>
-                  window.open(data.data.properties[0].whatsapp_link, "_blank")
-                }
-
               />
             </a>
           ) : unitsAvialable < 1 ? (
@@ -720,8 +713,7 @@ const PropertyDetail = () => {
                       )}
                       {item.contact_number && (
                         <a href={`tel:${item.contact_number}`}>
-
-                          <Button
+            <Button
                             label="Call Marketer"
                             className="!bg-blue-950"
                             icon={<PhoneCall size={18} />}
@@ -767,11 +759,6 @@ const PropertyDetail = () => {
                 <Button
                   label="Inquire on WhatsApp"
                   icon={<IoLogoWhatsapp size={18} />}
-
-                  onClick={() =>
-                    window.open(data.data.properties[0].whatsapp_link, "_blank")
-                  }
-
                   className="px-6 py-3 text-sm"
                 />
               </a>
