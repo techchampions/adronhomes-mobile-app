@@ -13,7 +13,7 @@ type Prop = {
 };
 const NotificationPropertySummary: React.FC<Prop> = ({ id, units }) => {
   const { data, isError, isLoading } = useGetPropertyByID(id);
-  const property = data?.data.properties[0];
+  const property = data?.data.properties;
   if (isLoading) return <SmallLoader />;
   if (isError) return <ApiErrorBlock />;
   const viewProperty = () => {

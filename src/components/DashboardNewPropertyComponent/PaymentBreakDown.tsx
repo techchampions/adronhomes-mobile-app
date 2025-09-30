@@ -18,7 +18,7 @@ const PaymentBreakDown: React.FC<PaymentBreakDownProps> = ({
   propertyId,
 }) => {
   const { data, isError, isLoading } = useGetPropertyByID(propertyId);
-  const property = data?.data.properties[0];
+  const property = data?.data.properties;
   if (isLoading) return <SmallLoader />;
   if (isError) return <ApiErrorBlock />;
 

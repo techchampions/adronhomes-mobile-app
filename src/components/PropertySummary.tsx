@@ -13,8 +13,8 @@ type Prop = {
 };
 const PropertySummary: React.FC<Prop> = ({ id, units }) => {
   const { data, isError, isLoading } = useGetPropertyByID(id);
-  const property = data?.data.properties[0];
-  const features = data?.data.properties[0].features || [];
+  const property = data?.data.properties;
+  const features = data?.data.properties.features || [];
   const allowedFeatures = ["Gym", "Light"];
   const displayFeatures = features.filter((item) =>
     allowedFeatures.includes(item)
@@ -44,7 +44,7 @@ const PropertySummary: React.FC<Prop> = ({ id, units }) => {
               {/* 648 Sq M */}
               {property?.size} Sq M
             </span>
-            {displayFeatures.map((feature, index) => (
+            {displayFeatures.map((feature:any) => (
               <span className="flex items-center gap-1 truncate">
                 {feature === "Gym" ? (
                   <img
