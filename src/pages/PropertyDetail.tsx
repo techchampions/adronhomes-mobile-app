@@ -39,11 +39,13 @@ import {
 import { useUserStore } from "../zustand/UserStore";
 import { useToastStore } from "../zustand/useToastStore";
 import HorizontalPropertyList from "../components/DashboardPropertyComponent/HorizontalPropertyList";
+
 import { FileStack, LoaderCircle, MapPinned, PhoneCall } from "lucide-react";
 import { MdOutlineLandscape } from "react-icons/md";
 import { useEffect, useRef, useState } from "react";
 import { useModalStore } from "../zustand/useModalStore";
 import InlineLoader from "../components/InlineLoader";
+
 // import DiscountBanner from "../components/DashboardPropertyComponent/DiscountBanner";
 const PropertyDetail = () => {
   const modal = useModalStore();
@@ -57,6 +59,7 @@ const PropertyDetail = () => {
   const { data, isError, isLoading } = useGetPropertyByID(id ?? "");
   const { mutate: toggleSave, isPending: isSaving } = useToggleSaveProperty();
   const { mutate: enquire, isPending } = useEnquireProperty();
+
   // const [showDiscountBanner, setshowDiscountBanner] = useState(
   //   data?.data.properties[0].is_discount || false
   // );
@@ -87,11 +90,13 @@ const PropertyDetail = () => {
     }
   }, [swiper]);
 
+
   if (isError) return <ApiErrorBlock />;
   if (isLoading || !data) return <Loader />;
   const item = data?.data.properties;
   const photoLenght = item?.photos.length || 0;
   const features = item?.features || [];
+
   const isRented =
     item?.purpose?.includes("rent") || item?.purpose?.includes("Rent") || false;
 
@@ -122,8 +127,10 @@ const PropertyDetail = () => {
     (sum, item) => sum + item.value,
     0
   );
+
   const description = data.data.properties.description;
   const sanitizedHTML = DOMPurify.sanitize(description);
+
 
   return (
     <div className="flex flex-col w-full px-4 md:px-0 pb-0">
@@ -160,8 +167,10 @@ const PropertyDetail = () => {
               />
             )}
           </div>
+
           {item.whatsapp_link && isRented ? (
             <a href={item.whatsapp_link}>
+=
               <Button
                 label="Inquire on WhatsApp"
                 icon={<IoLogoWhatsapp size={18} />}
@@ -194,6 +203,7 @@ const PropertyDetail = () => {
             <div className="relative w-full h-[300px] rounded-xl overflow-hidden mt-4">
               <Swiper
                 spaceBetween={10}
+
                 slidesPerView={1.3}
                 // navigation={true}
                 onInit={(swiperInstance) => setSwiper(swiperInstance)} // Store swiper instance when it's initialized
@@ -207,6 +217,7 @@ const PropertyDetail = () => {
                     slidesPerView: photoLenght < 2 ? 1 : 1.1,
                   },
                 }}
+
                 className="w-full h-full rounded-xl"
               >
                 {item?.photos.map((img, idx) => (
@@ -691,6 +702,7 @@ const PropertyDetail = () => {
                         disabled={isPending}
                         className="border bg-transparent !text-black border-adron-black mt-8"
                       />
+
                       {item.whatsapp_link && (
                         <a href={item.whatsapp_link}>
                           <Button
@@ -701,7 +713,7 @@ const PropertyDetail = () => {
                       )}
                       {item.contact_number && (
                         <a href={`tel:${item.contact_number}`}>
-                          <Button
+            <Button
                             label="Call Marketer"
                             className="!bg-blue-950"
                             icon={<PhoneCall size={18} />}
@@ -740,8 +752,10 @@ const PropertyDetail = () => {
                 )}
               </div>
             </div>
+
             {item.whatsapp_link && isRented ? (
               <a href={item.whatsapp_link} className="w-fit">
+
                 <Button
                   label="Inquire on WhatsApp"
                   icon={<IoLogoWhatsapp size={18} />}
