@@ -97,15 +97,16 @@ export default function SwiperPropertyCard({ property }: Props) {
           modules={[Navigation]}
           className="w-full h-full rounded-[40px]"
         >
-          {property.photos.map((img, idx) => (
-            <SwiperSlide key={idx}>
-              <img
-                src={img}
-                alt={`Image ${idx + 1}`}
-                className="object-cover rounded-3xl h-full w-full"
-              />
-            </SwiperSlide>
-          ))}
+          {property?.photos != null &&
+            property?.photos?.map((img, idx) => (
+              <SwiperSlide key={idx}>
+                <img
+                  src={img}
+                  alt={`Image ${idx + 1}`}
+                  className="object-cover rounded-3xl h-full w-full"
+                />
+              </SwiperSlide>
+            ))}
         </Swiper>
 
         {/* Navigation Buttons */}
