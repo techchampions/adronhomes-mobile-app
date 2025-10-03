@@ -168,14 +168,14 @@ const Sidebar = ({
             { noNfx? <NavItem
                 onSlideBack={(mobileOpen) => !mobileOpen && onClose()}
                 label="Notifications"
-                icon={<TbSquareDashed color="white"/>}
+                icon={<RiNotificationBadgeFill className="w-4 h-4"/>}
                 path="/dashboard/notifications"
-                // badge={unReadCount || 0}÷
+                // badge={unReadCount || 0}
               />:
   <NavItem
                 onSlideBack={(mobileOpen) => !mobileOpen && onClose()}
                 label="Notifications"
-                icon={<TbSquareDashed color="white"/>}
+                icon={<RiNotificationBadgeFill className="w-4 h-4"/>}
                 path="/dashboard/notifications"
                 badge={unReadCount || 0}
               />}
