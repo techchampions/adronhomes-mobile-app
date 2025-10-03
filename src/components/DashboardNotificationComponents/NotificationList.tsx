@@ -4,7 +4,7 @@ import NotificationDetail from "./NotificationDetail";
 import { Notification } from "../../data/types/notificationTypes";
 import { formatDate } from "../../data/utils";
 import ApiErrorBlock from "../ApiErrorBlock";
-import NotFound from "../NotFound";
+import NotFound, { NotFoun2 } from "../NotFound";
 import SmallLoader from "../SmallLoader";
 
 // export type NotificationStatus = "All" | "Read" | "Unread";
@@ -38,7 +38,7 @@ const NotificationList: React.FC<Props> = ({ data, isError, isLoading }) => {
       return <ApiErrorBlock />;
     }
     if (filteredData.length <= 0) {
-      return <NotFound />;
+      return <NotFoun2  />;
     }
     return renderList();
   };

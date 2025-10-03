@@ -5,7 +5,7 @@ import { FaChevronDown } from "react-icons/fa";
 interface NavItemProps {
   label: string;
   badge?: number;
-  icon: JSX.Element;
+  icon?: JSX.Element;
   path?: string;
   children?: { label: string; path: string }[];
   onSlideBack?: (mobileOpen: boolean) => void;

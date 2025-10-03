@@ -12,13 +12,12 @@ import {
   RiNotificationBadgeFill,
   RiWallet3Fill,
 } from "react-icons/ri";
-import { useGetUser } from "../../data/hooks";
+import { useGetNotifications, useGetUser } from "../../data/hooks";
 import { Navbar } from "./onboardingComponents/Bottomnavigation";
 import { useUserStore } from "../../zustand/UserStore";
 import Auth from "../../utils/Auth";
 
-// Placeholder for external hooks and utilities to make the file runnable
-const useGetNotifications = () => ({ data: { unread: 3 } });
+
 
 const CopyButton = ({ text }: { text: any }) => {
   const [copied, setCopied] = useState(false);
@@ -62,8 +61,9 @@ const Sidebar = ({
   const navigate = useNavigate();
 
   const { user } = useUserStore();
-  const { data: notificationData } = useGetNotifications();
+  const { data: notificationData } = useGetNotifications(1);
   const unReadCount = notificationData?.unread || 0;
+  const noNfx=unReadCount===0
   const sidebarRef = useRef<HTMLDivElement>(null);
 
   // Handle click outside to close sidebar
@@ -165,14 +165,20 @@ const Sidebar = ({
                 icon={<FaArrowRightArrowLeft className="w-4 h-4" />}
                 path="/dashboard/payments"
               />
-              <NavItem
+            { noNfx? <NavItem
                 onSlideBack={(mobileOpen) => !mobileOpen && onClose()}
                 label="Notifications"
-                icon={<RiNotificationBadgeFill className="w-4 h-4" />}
+                icon={<TbSquareDashed color="white"/>}
+                path="/dashboard/notifications"
+                // badge={unReadCount || 0}÷
+              />:
+  <NavItem
+                onSlideBack={(mobileOpen) => !mobileOpen && onClose()}
+                label="Notifications"
+                icon={<TbSquareDashed color="white"/>}
                 path="/dashboard/notifications"
                 badge={unReadCount || 0}
-              />
-
+              />}
               <h4 className="text-adron-gray-400 font-bold px-7 mt-7 text-[13px]">
                 LISTINGS
               </h4>
@@ -257,6 +263,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { searchProperties } from "../../data/api";
 import InputField from "../InputField";
 import { useSearchStore } from "../../zustand/SearchStore";
+import { TbSquareDashed } from "react-icons/tb";
 // import { searchProperties } from 'path/to/searchProperties'; // Adjust import as needed
 
 export const Layout = ({ children }: { children: any }) => {

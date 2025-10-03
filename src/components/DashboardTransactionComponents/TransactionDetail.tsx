@@ -42,7 +42,7 @@ const TransactionDetail = ({ id }: { id: number }) => {
   };
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-5">property?.photos != null &&
       <h4 className="absolute top-4 left-4 font-bold text-lg">
         {`${
           data?.user_transaction.purpose === "property"

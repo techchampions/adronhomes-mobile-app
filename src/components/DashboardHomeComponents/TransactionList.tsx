@@ -6,6 +6,7 @@ import { formatDate, formatPrice } from "../../data/utils";
 import SmallLoader from "../SmallLoader";
 import ApiErrorBlock from "../ApiErrorBlock";
 import NotFound from "../NotFound";
+import WalletTransactionDetail from "../DashboardWalletComponents/WalletTransactionDetail";
 // types.ts
 type Props = {
   data: Transaction[];
@@ -22,7 +23,7 @@ const TransactionsList: React.FC<Props> = ({ data, isLoading, isError }) => {
           <li
             key={index}
             className="p-4 gap-2 cursor-pointer rounded-3xl flex justify-between items-center even:bg-gray-100"
-            onClick={() => openModal(<TransactionDetail id={t.id} />)}
+            onClick={() => openModal(<WalletTransactionDetail id={t.id} />)}
           >
             <div className="w-[70%]">
               <p className="font-semibold text-gray-500 text-xs md:text-sm truncate">
