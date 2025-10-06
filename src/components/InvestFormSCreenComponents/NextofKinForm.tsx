@@ -11,7 +11,9 @@ import { useNavigate, useParams } from "react-router-dom";
 const customerInfoSchema = Yup.object({
   nextOfKin: Yup.string().required("Required"),
   relationship: Yup.string().required("Required"),
-  phone: Yup.mixed().required("Required"),
+phone: Yup.number()
+      .typeError("Phone number must be a valid number")
+      .required("Phone is Required"),
   address: Yup.string().required("Required"),
 });
 type Props = {

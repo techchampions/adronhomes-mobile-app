@@ -1,13 +1,18 @@
 import CopyButton from "../CopyButton";
 import Button from "../Button";
-import { useGetTransactionByID } from "../../data/hooks";
+import { useGetPaymentReciept, useGetTransactionByID } from "../../data/hooks";
 import ApiErrorBlock from "../ApiErrorBlock";
 import { formatPrice } from "../../data/utils";
 import { TransactionStatus } from "../../data/types/userTransactionsTypes";
 import SmallLoader from "../SmallLoader";
+import LinkButton from "../LinkButton";
+import ShareButton from "../onboardingMobileScreen/onboardingComponents/ShareButton";
+// import ShareButton from "../ShareButton";
 
 const TransactionDetail = ({ id }: { id: number }) => {
   const { data, isLoading, isError } = useGetTransactionByID(id);
+  const { data: recieptData, isLoading: gettingReciept } =
+    useGetPaymentReciept(id);
   if (isLoading) {
     return <SmallLoader />;
   }
@@ -42,7 +47,7 @@ const TransactionDetail = ({ id }: { id: number }) => {
   };
 
   return (
-    <div className="space-y-5">property?.photos != null &&
+    <div className="space-y-5">
       <h4 className="absolute top-4 left-4 font-bold text-lg">
         {`${
           data?.user_transaction.purpose === "property"
@@ -123,11 +128,19 @@ const TransactionDetail = ({ id }: { id: number }) => {
         </div>
       </div>
       <div className="flex justify-between">
-        <Button
-          label="Share"
-          className="bg-transparent !text-black !w-fir px-6 text-xs"
+        <ShareButton
+          url={recieptData?.download_url}
+          className="text-xs bg-transparent !text-black hover:!bg-transparent"
         />
-        <Button label="Download" className="bg-black !w-fir px-6 text-xs" />
+        <LinkButton
+          download={true}
+          target={true}
+          href={recieptData?.download_url || ""}
+          label="Download"
+          className="bg-black !w-fit px-6 text-xs"
+          isLoading={gettingReciept}
+          loadingText="Getting Reciept"
+        />
       </div>
     </div>
   );

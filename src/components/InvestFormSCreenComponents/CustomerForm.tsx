@@ -52,7 +52,9 @@ export const CustomerForm: React.FC<Props> = ({ activeTab, setActiveTab }) => {
   };
   const customerInfoSchema = Yup.object({
     email: Yup.string().email("Invalid email").required("Email is required"),
-    phoneSMS: Yup.string().required("Phone is required"),
+    phoneSMS: Yup.number()
+      .typeError("Phone number must be a valid number")
+      .required("Phone is Required"),
     occupation: Yup.string().required("Required"),
     businessType: Yup.string().required("Required"),
     subscriberName1: Yup.string().required("Required"),
