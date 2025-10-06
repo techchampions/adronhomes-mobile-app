@@ -9,6 +9,7 @@ import { formatPrice } from "../../data/utils";
 import { TransactionStatus } from "../../data/types/userTransactionsTypes";
 import SmallLoader from "../SmallLoader";
 import LinkButton from "../LinkButton";
+import ShareButton from "../onboardingMobileScreen/onboardingComponents/ShareButton";
 
 const WalletTransactionDetail = ({ id }: { id: number }) => {
   const { data, isLoading, isError } = useGetWalletTransactionByID(id);
@@ -117,9 +118,9 @@ const WalletTransactionDetail = ({ id }: { id: number }) => {
         </div>
       </div>
       <div className="flex justify-between">
-        <Button
-          label="Share"
-          className="bg-transparent !text-black !w-fir px-6 text-xs"
+       <ShareButton
+          url={recieptData?.download_url}
+          className="text-xs bg-transparent !text-black hover:!bg-transparent"
         />
         <LinkButton
           download={true}
