@@ -39,9 +39,9 @@ import {
 import { useUserStore } from "../zustand/UserStore";
 import { useToastStore } from "../zustand/useToastStore";
 import HorizontalPropertyList from "../components/DashboardPropertyComponent/HorizontalPropertyList";
-
 import { FileStack, LoaderCircle, MapPinned, PhoneCall } from "lucide-react";
 import { MdOutlineLandscape } from "react-icons/md";
+
 import { useEffect, useRef, useState } from "react";
 import { useModalStore } from "../zustand/useModalStore";
 import InlineLoader from "../components/InlineLoader";
@@ -90,7 +90,6 @@ const PropertyDetail = () => {
     }
   }, [swiper]);
 
-
   if (isError) return <ApiErrorBlock />;
   if (isLoading || !data) return <Loader />;
   const item = data?.data.properties;
@@ -127,10 +126,8 @@ const PropertyDetail = () => {
     (sum, item) => sum + item.value,
     0
   );
-
   const description = data.data.properties.description;
   const sanitizedHTML = DOMPurify.sanitize(description);
-
 
   return (
     <div className="flex flex-col w-full px-4 md:px-0 pb-0">
@@ -167,10 +164,8 @@ const PropertyDetail = () => {
               />
             )}
           </div>
-
           {item.whatsapp_link && isRented ? (
             <a href={item.whatsapp_link}>
-=
               <Button
                 label="Inquire on WhatsApp"
                 icon={<IoLogoWhatsapp size={18} />}
@@ -203,7 +198,6 @@ const PropertyDetail = () => {
             <div className="relative w-full h-[300px] rounded-xl overflow-hidden mt-4">
               <Swiper
                 spaceBetween={10}
-
                 slidesPerView={1.3}
                 // navigation={true}
                 onInit={(swiperInstance) => setSwiper(swiperInstance)} // Store swiper instance when it's initialized
@@ -217,7 +211,6 @@ const PropertyDetail = () => {
                     slidesPerView: photoLenght < 2 ? 1 : 1.1,
                   },
                 }}
-
                 className="w-full h-full rounded-xl"
               >
                 {item?.photos.map((img, idx) => (
@@ -300,7 +293,7 @@ const PropertyDetail = () => {
             <div className="flex flex-col md:flex-row gap-4">
               <div className="flex flex-col w-full md:w-[70%] gap-10">
                 {item?.nearby_landmarks !== null && (
-                  <div className="flex flex-col gap-2">
+                  <div className="flex flex-col gap-2 ">
                     <div className="flex">
                       <LiaLandmarkSolid />
                       <h4 className="font-bold text-md">Landmarks:</h4>
@@ -389,19 +382,9 @@ const PropertyDetail = () => {
                 <div className="flex flex-col gap-2">
                   <h4 className="font-bold text-md">Description</h4>
                   <div className="text-sm ml-5 break-words text-left">
-                    {/* <div
-                      dangerouslySetInnerHTML={{ __html: sanitizedHTML }}
-                      className="rich-text-content"
-                      style={{
-                        contain: "content", // Isolates the content from parent styles
-                        all: "initial", // Reset all inherited styles
-                      }}
-                    /> */}
                     <div
                       dangerouslySetInnerHTML={{ __html: sanitizedHTML }}
-                      // className="prose max-w-none rich-text-content"
-                      className="prose  prose-lg
-                      max-w-none prose-headings:font-bold [&>*]:text-gray-700 [&>*]:text-xs prose-headings:text-gray-900 [&>h2]:!font-adron-bold [&>h1]:text-3xl [&>h2]:text-2xl [&>h3]:text-xl [&>p]:my-5 [&>p]:text-gray-700 [&>p]:leading-relaxed [&>p]:text-xs [&>a]:text-blue-600 [&>a]:no-underline [&>a]:border-b-2 [&>a]:border-blue-300 [&>a]:hover:border-blue-600 [&>strong]:text-gray-900 [&>ul]:list-disc [&>ol]:list-decimal [&>li]:my-1 blockquote:border-l-4 blockquote:border-gray-300 blockquote:pl-4 blockquote:italic [&>img]:rounded-lg [&>img]:shadow-md [&>table]:border [&>table]:border-gray-200 [&>th]:bg-gray-50 [&>th]:p-2 [&>td]:p-2 "
+                      className="prose prose-lg max-w-none prose-headings:font-bold [&>*]:text-gray-700 [&>*]:text-xs prose-headings:text-gray-900 [&>h2]:!font-adron-bold [&>h1]:text-3xl [&>h2]:text-2xl [&>h3]:text-xl [&>p]:my-5 [&>p]:text-gray-700 [&>p]:leading-relaxed [&>p]:text-xs [&>a]:text-blue-600 [&>a]:no-underline [&>a]:border-b-2 [&>a]:border-blue-300 [&>a]:hover:border-blue-600 [&>strong]:text-gray-900 [&>ul]:list-disc [&>ol]:list-decimal [&>ul]:list-inside [&>ol]:list-inside [&>li]:my-1 blockquote:border-l-4 blockquote:border-gray-300 blockquote:pl-4 blockquote:italic [&>img]:rounded-lg [&>img]:shadow-md [&>table]:border [&>table]:border-gray-200 [&>th]:bg-gray-50 [&>th]:p-2 [&>td]:p-2 "
                     />
                   </div>
                 </div>
@@ -458,20 +441,7 @@ const PropertyDetail = () => {
                         </div>
                       </div>
                     </div>
-                    {item.nearby_landmarks && (
-                      <div className="relative overflow-x-hidden">
-                        <div className="w-full text-sm text-left rtl:text-right text-gray-500">
-                          <div>
-                            <div className="p-3 flex justify-between gap-2 bg-white border-b border-gray-200">
-                              <div className=" font-medium text-gray-900 whitespace-nowrap">
-                                Near-by Landmark
-                              </div>
-                              <div className="">{item.nearby_landmarks}</div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    )}
+                   
                   </div>
                 </div>
 
@@ -702,7 +672,6 @@ const PropertyDetail = () => {
                         disabled={isPending}
                         className="border bg-transparent !text-black border-adron-black mt-8"
                       />
-
                       {item.whatsapp_link && (
                         <a href={item.whatsapp_link}>
                           <Button
@@ -713,7 +682,7 @@ const PropertyDetail = () => {
                       )}
                       {item.contact_number && (
                         <a href={`tel:${item.contact_number}`}>
-            <Button
+                          <Button
                             label="Call Marketer"
                             className="!bg-blue-950"
                             icon={<PhoneCall size={18} />}
@@ -752,10 +721,8 @@ const PropertyDetail = () => {
                 )}
               </div>
             </div>
-
             {item.whatsapp_link && isRented ? (
               <a href={item.whatsapp_link} className="w-fit">
-
                 <Button
                   label="Inquire on WhatsApp"
                   icon={<IoLogoWhatsapp size={18} />}
