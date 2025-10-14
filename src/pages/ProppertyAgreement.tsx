@@ -11,7 +11,6 @@ const PropertyAgreement = () => {
   const id = params?.id;
   const { data } = useGetPropertyByID(id);
   const { numberOfUnits } = usePaymentBreakDownStore();
-
   const agreement = data?.data.properties.property_agreement || "";
 
   // Configure DOMPurify to remove styles and classes
@@ -19,7 +18,6 @@ const PropertyAgreement = () => {
     ALLOWED_ATTR: ["href", "src", "alt", "title"], // Only allow specific attributes
     FORBID_ATTR: ["style", "class", "id"], // Explicitly forbid style and class attributes
   });
-
 
   return (
     <div>
@@ -31,9 +29,7 @@ const PropertyAgreement = () => {
         <div className="text-gray-500 bg-white p-6 rounded-2xl">
           <div
             dangerouslySetInnerHTML={{ __html: sanitizedHTML }}
-
-            className="prose prose-lg max-w-none prose-headings:font-bold prose-headings:text-gray-900 [&>h2]:!font-adron-bold [&>h1]:text-3xl [&>h2]:text-2xl [&>h3]:text-xl [&>p]:my-5 [&>p]:text-gray-700 [&>p]:leading-relaxed [&>p]:text-xs [&>a]:text-blue-600 [&>a]:no-underline [&>a]:border-b-2 [&>a]:border-blue-300 [&>a]:hover:border-blue-600 [&>strong]:text-gray-900 [&>ul]:list-disc [&>ol]:list-decimal [&>li]:my-1 blockquote:border-l-4 blockquote:border-gray-300 blockquote:pl-4 blockquote:italic [&>img]:rounded-lg [&>img]:shadow-md [&>table]:border [&>table]:border-gray-200 [&>th]:bg-gray-50 [&>th]:p-2 [&>td]:p-2 "
-
+            className="prose prose-lg max-w-none prose-headings:font-bold [&>*]:text-gray-700 [&>*]:text-xs prose-headings:text-gray-900 [&>h2]:!font-adron-bold [&>h1]:text-3xl [&>h2]:text-2xl [&>h3]:text-xl [&>p]:my-5 [&>p]:text-gray-700 [&>p]:leading-relaxed [&>p]:text-xs [&>a]:text-blue-600 [&>a]:no-underline [&>a]:border-b-2 [&>a]:border-blue-300 [&>a]:hover:border-blue-600 [&>strong]:text-gray-900 [&>ul]:list-disc [&>ol]:list-decimal [&>ul]:list-inside [&>ol]:list-inside [&>li]:my-1 blockquote:border-l-4 blockquote:border-gray-300 blockquote:pl-4 blockquote:italic [&>img]:rounded-lg [&>img]:shadow-md [&>table]:border [&>table]:border-gray-200 [&>th]:bg-gray-50 [&>th]:p-2 [&>td]:p-2 "
           />{" "}
         </div>
 
@@ -56,6 +52,4 @@ const PropertyAgreement = () => {
   );
 };
 
-
 export default PropertyAgreement;
-
