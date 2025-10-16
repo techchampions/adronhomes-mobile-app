@@ -103,7 +103,7 @@ const HomeNoLogin = () => {
               Explore Properties
             </p>
             {/* You could add a "View All" button here for estates if needed */}
-            <Link to="/login" className="font-adron-mid text-sm text-[#79B833]">
+            <Link to="/all-properties" className="font-adron-mid text-sm text-[#79B833]">
               View All
             </Link>
           </div>

@@ -142,6 +142,7 @@ const AllRoutes = () => {
            <Route element={<LoginHeader />}>
   <Route index element={<HomeNoLogin />} />
   <Route path="adrone-properties/:id" element={<PropertyDetail />} />
+   <Route path="all-properties" element={<NewPropertyScreen />} />
 </Route>
 
 
