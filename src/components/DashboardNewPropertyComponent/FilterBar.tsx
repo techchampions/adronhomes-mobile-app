@@ -59,7 +59,6 @@ export default function FilterBar({
       enableReinitialize
       onSubmit={(values) => {
         console.log("Filter values:", values);
-        setShowModal(false)
         onFilter(values);
       }}
     >
@@ -178,7 +177,7 @@ export default function FilterBar({
           </Form>
           <div className="flex w-full justify-end mb-4">
             <div
-              className="flex md:hidden bg-white rounded-full w-fit items-center px-5 py-1 gap-2"
+              className="flex md:hidden cursor-pointer bg-white rounded-full w-fit items-center px-5 py-1 gap-2"
               onClick={() => setShowModal(true)}
             >
               Sort
@@ -186,9 +185,9 @@ export default function FilterBar({
             </div>
           </div>
 
-          <Form className="block md:hidden">
+          <Form className="block md:hidden  relative z-[99]">
             <Modal show={showModal} onClose={() => setShowModal(false)}>
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-2 ">
                 {!location && (
                   <div className="flex flex-col gap-2">
                     <label
@@ -215,41 +214,52 @@ export default function FilterBar({
                     options={propertyTypes || []}
                   />
                 </div>
-                <div className="flex flex-col gap-2">
-                  <label htmlFor="location" className="flex gap-2 items-center">
-                    <FaBed /> No. of Bedrooms
-                  </label>
+                {values.propertyType !== "1" && (
+                  <div className="flex flex-col gap-2">
+                    <label
+                      htmlFor="location"
+                      className="flex gap-2 items-center"
+                    >
+                      <FaBed /> No. of Bedrooms
+                    </label>
 
-                  <SelectField
-                    name="bedrooms"
-                    placeholder="Bedrooms"
-                    options={["1", "2", "3", "4", "5+"]}
-                  />
-                </div>
-                <div className="flex flex-col gap-2">
-                  <label htmlFor="location" className="flex gap-2 items-center">
-                    <FaCheckCircle /> Availability status
-                  </label>
+                    <SelectField
+                      name="bedrooms"
+                      placeholder="Bedrooms"
+                      options={["1", "2", "3", "4", "5+"]}
+                    />
+                  </div>
+                )}
+                {values.propertyType !== "1" && (
+                  <div className="flex flex-col gap-2">
+                    <label
+                      htmlFor="location"
+                      className="flex gap-2 items-center"
+                    >
+                      <FaCheckCircle /> Availability status
+                    </label>
 
-                  <SelectField
-                    name="status"
-                    placeholder="Status"
-                    options={["For Sale", "For Rent"]}
-                  />
-                </div>
+                    <SelectField
+                      name="status"
+                      placeholder="Status"
+                      options={["For Sale", "For Rent"]}
+                    />
+                  </div>
+                )}
+
                 <div className="flex flex-col gap-2">
                   <label htmlFor="location" className="flex gap-2 items-center">
                     <IoPricetag /> Price
                   </label>
                   <div className="flex justify-between gap-2">
                     <InputField
-                      className="py-4"
+                      className="py-1"
                       placeholder="Min"
                       type="number"
                       name="min"
                     />
                     <InputField
-                      className="py-4"
+                      className="py-1"
                       placeholder="Max"
                       type="number"
                       name="max"
@@ -259,7 +269,7 @@ export default function FilterBar({
                 <Button
                   label="Apply"
                   type="submit"
-                  className="bg-adron-green mt-8 py-4"
+                  className="bg-adron-green mt-8 py-1"
                 />
               </div>
             </Modal>

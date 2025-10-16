@@ -15,8 +15,8 @@ const PropertyAgreement = () => {
 
   // Configure DOMPurify to remove styles and classes
   const sanitizedHTML = DOMPurify.sanitize(agreement, {
-    ALLOWED_ATTR: ["href", "src", "alt", "title"], // Only allow specific attributes
-    FORBID_ATTR: ["style", "class", "id"], // Explicitly forbid style and class attributes
+    ALLOWED_ATTR: ["href", "src", "alt", "title"],
+    FORBID_ATTR: ["style", "class", "id"],
   });
 
   return (

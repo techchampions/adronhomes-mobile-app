@@ -41,9 +41,13 @@ import ForgotPassword from "../pages/ForgotPassword";
 import ResetPassword from "../pages/ResetPassword";
 import { Layout } from "../components/onboardingMobileScreen/layout";
 import { AdronSplashScreensWrapper } from "../components/onboardingMobileScreen/pages/Stepscreens";
-import PropertiesPage from "../components/onboardingMobileScreen/pages";
+// import PropertiesPage from "../components/onboardingMobileScreen/pages";
 import HomeScreen from "../pages/HomeScreen";
 import ScrollToTop from "./ScrollToTop";
+// import HomeNoLogin from "../components/onboardingMobileScreen/pages/homloginpage";
+import PropertiesPage from "../components/onboardingMobileScreen/pages";
+import HomeNoLogin from "../components/onboardingMobileScreen/pages/homloginpage";
+import { LoginHeader } from "../components/onboardingMobileScreen/onboardingComponents/loginheader";
 // import ScrollToTop from "./ScrollToTop";
 
 const DashboardScreen = lazy(() => import("../pages/DashboardScreen"));
@@ -93,12 +97,12 @@ const AllRoutes = () => {
               }
             >
               <Route index element={<PropertiesPage />} />
-               <Route path="home" element={<HomeScreen />} />
+              <Route path="home" element={<HomeScreen />} />
               <Route path="wallet" element={<WalletScreen />} />
               <Route path="payments" element={<TransactionsPage />} />
               <Route path="notifications" element={<NotificationsPage />} />
               <Route path="my-properties" element={<MyPropertyScreen />} />
-              <Route path="new-properties" element={<NewPropertyScreen />} />
+              {/* <Route path="new-properties" element={<NewPropertyScreen />} /> */}
               <Route
                 path="search-properties"
                 element={<PropertySearchResultScreen />}
@@ -135,8 +139,15 @@ const AllRoutes = () => {
 
           {/* Login & Auth Routes */}
           <Route path="/" element={<AuthRoutes />}>
+           <Route element={<LoginHeader />}>
+  <Route index element={<HomeNoLogin />} />
+  <Route path="adrone-properties/:id" element={<PropertyDetail />} />
+</Route>
+
+
+            {/* Routes wrapped in OnboardingScreen */}
             <Route element={<OnboardingScreen />}>
-              <Route path="/login" index element={<Login />} />
+              <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<SignUp />} />
               <Route path="/verify-otp" element={<OTPScreen />} />
               <Route path="/forgot-password" element={<ForgotPassword />} />
@@ -183,8 +194,6 @@ const AppWrapper = () => {
     );
   }
 
-
-  
   return <AllRoutes />;
 };
 
