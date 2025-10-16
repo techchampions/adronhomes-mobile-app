@@ -200,7 +200,7 @@ export const filterProperties = async (
   filters: PropertyFilters = {} // Use the defined type
 ): Promise<PaginatedProperties> => {
   const params = new URLSearchParams({
-    is_auth: String(1),
+    // is_auth: String(1),
     page: String(page),
   });
   if (filters.state) {
@@ -635,7 +635,7 @@ export const getSettings = async (type: string): Promise<SettingsResponse> => {
   return response.data;
 };
 export const getFeaturedProperties = async (): Promise<PropertiesResponse> => {
-  const response = await apiClient.get("/filter-property?page=1&is_featured=1&is_auth=1");
+  const response = await apiClient.get("/filter-property?page=1&is_featured=1");
   return response.data;
 };
 

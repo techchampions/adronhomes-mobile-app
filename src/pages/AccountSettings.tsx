@@ -279,9 +279,7 @@ const ProfileSettings = () => {
             )}
           </Formik>
         </div>
-        <div className="pt-20 w-full flex justify-center">
-          <DeleteConfirmationPage />
-        </div>
+
       </>
     );
   };
@@ -638,6 +636,10 @@ const ProfileSettings = () => {
           </button>
         ))}
       </div>
+
+              <div className="pt-20 w-full flex justify-center">
+          <DeleteConfirmationPage />
+        </div>
     </div>
   );
 
@@ -648,6 +650,7 @@ const ProfileSettings = () => {
       {currentPage === "edit-profile" && <EditProfile />}
       {currentPage === "change-password" && <ChangePassword />}
       {currentPage === "notifications" && <Notifications />}
+
     </div>
   );
 };
