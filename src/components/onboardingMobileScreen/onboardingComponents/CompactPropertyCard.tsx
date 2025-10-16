@@ -36,7 +36,7 @@ const CompactPropertyCard: React.FC<CompactPropertyCardProps> = ({
 
   const handleCardClick = () => {
     if (!loading) {
-      navigate(`/dashboard/properties/${id}`);
+      navigate(`/adrone-properties/${id}`);
     }
   };
 
