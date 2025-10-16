@@ -102,7 +102,7 @@ const AllRoutes = () => {
               <Route path="payments" element={<TransactionsPage />} />
               <Route path="notifications" element={<NotificationsPage />} />
               <Route path="my-properties" element={<MyPropertyScreen />} />
-              <Route path="new-properties" element={<NewPropertyScreen />} />
+              {/* <Route path="new-properties" element={<NewPropertyScreen />} /> */}
               <Route
                 path="search-properties"
                 element={<PropertySearchResultScreen />}

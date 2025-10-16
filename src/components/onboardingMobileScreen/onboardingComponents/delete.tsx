@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+
 import Button from "../../Button"; // Assuming this is your custom Button component
 
 const DeleteConfirmationPage = () => {
@@ -9,6 +10,7 @@ const DeleteConfirmationPage = () => {
   const handleDeleteClick = () => {
     setShowConfirmation(true);
   };
+
 
   const handleConfirmDelete = async () => {
     setIsLoading(true);
@@ -33,6 +35,7 @@ const DeleteConfirmationPage = () => {
       // Optionally hide success message after a few seconds
       setTimeout(() => setShowSuccessMessage(false), 3000);
     }
+
   };
 
   const handleCancelDelete = () => {
