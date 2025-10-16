@@ -52,4 +52,6 @@ const PropertyAgreement = () => {
   );
 };
 
+
 export default PropertyAgreement;
+
