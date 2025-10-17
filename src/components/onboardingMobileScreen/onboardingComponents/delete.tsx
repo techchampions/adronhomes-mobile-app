@@ -33,7 +33,9 @@ const DeleteConfirmationPage = () => {
       setIsLoading(false);
       setShowConfirmation(false);
       // Optionally hide success message after a few seconds
-      setTimeout(() => setShowSuccessMessage(false), 3000);
+
+      setTimeout(() => setShowSuccessMessage(false), 5000);
+
     }
 
   };

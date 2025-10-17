@@ -48,6 +48,7 @@ import ScrollToTop from "./ScrollToTop";
 import PropertiesPage from "../components/onboardingMobileScreen/pages";
 import HomeNoLogin from "../components/onboardingMobileScreen/pages/homloginpage";
 import { LoginHeader } from "../components/onboardingMobileScreen/onboardingComponents/loginheader";
+import NewPropertyScreennoauth from "../components/onboardingMobileScreen/pages/NewPropertyScreen";
 // import ScrollToTop from "./ScrollToTop";
 
 const DashboardScreen = lazy(() => import("../pages/DashboardScreen"));
@@ -102,7 +103,7 @@ const AllRoutes = () => {
               <Route path="payments" element={<TransactionsPage />} />
               <Route path="notifications" element={<NotificationsPage />} />
               <Route path="my-properties" element={<MyPropertyScreen />} />
-              {/* <Route path="new-properties" element={<NewPropertyScreen />} /> */}
+              <Route path="new-properties" element={<NewPropertyScreen />} />
               <Route
                 path="search-properties"
                 element={<PropertySearchResultScreen />}
@@ -142,7 +143,7 @@ const AllRoutes = () => {
            <Route element={<LoginHeader />}>
   <Route index element={<HomeNoLogin />} />
   <Route path="adrone-properties/:id" element={<PropertyDetail />} />
-   <Route path="all-properties" element={<NewPropertyScreen />} />
+   <Route path="all-properties" element={<NewPropertyScreennoauth />} />
 </Route>
 
 
