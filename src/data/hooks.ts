@@ -5,6 +5,7 @@ import {
   fetchPropertiesPageData,
   fetchSavedProperties,
   filterProperties,
+  filterPropertiesnoauth,
   fundWallet,
   getAllAccountDetails,
   getAllPropertyLocations,
@@ -198,7 +199,17 @@ export const usePropertiespage = (
   });
 };
 
+
 export const useFilterProperties = (
+  page: number,
+  filters?: PropertyFilters
+) => {
+  return useQuery<PaginatedProperties>({
+    queryKey: ["properties", page, filters],
+    queryFn: () => filterProperties(page, filters),
+  });
+};
+export const useFilterPropertiesnoauth = (
   page: number,
     is_auth?:any,
   filters?: PropertyFilters,
@@ -206,7 +217,7 @@ export const useFilterProperties = (
 ) => {
   return useQuery<PaginatedProperties>({
     queryKey: ["properties", page, is_auth, filters,],
-    queryFn: () => filterProperties(page,is_auth,filters),
+    queryFn: () => filterPropertiesnoauth(page,is_auth,filters),
   });
 };
 

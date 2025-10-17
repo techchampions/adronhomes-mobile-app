@@ -173,7 +173,7 @@ export interface PropertyFilters {
 }
 export const fetchPropertiesPageData = async (
   page: number,
-  filters: PropertyFilters = {}
+  filters: PropertyFilters = {} // Use the defined type
 ): Promise<PropertiesResponse> => {
   const hasFilters = Object.values(filters).some(
     (v) => v !== "" && v !== undefined
@@ -197,11 +197,10 @@ export const fetchPropertiesPageData = async (
 
 export const filterProperties = async (
   page: number,
-  is_auth?:number,
   filters: PropertyFilters = {} // Use the defined type
 ): Promise<PaginatedProperties> => {
   const params = new URLSearchParams({
-    is_auth: String(is_auth),
+    is_auth: String(1),
     page: String(page),
   });
   if (filters.state) {
@@ -636,7 +635,7 @@ export const getSettings = async (type: string): Promise<SettingsResponse> => {
   return response.data;
 };
 export const getFeaturedProperties = async (): Promise<PropertiesResponse> => {
-  const response = await apiClient.get("/filter-property?page=1&is_featured=1");
+  const response = await apiClient.get("/filter-property?page=1&is_featured=1&is_auth=1");
   return response.data;
 };
 
@@ -646,3 +645,36 @@ export const getEstates = async (): Promise<estatePropertiesResponse> => {
 };
 
 
+export const filterPropertiesnoauth = async (
+  page: number,
+  is_auth?:number,
+  filters: PropertyFilters = {} // Use the defined type
+): Promise<PaginatedProperties> => {
+  const params = new URLSearchParams({
+    is_auth: String(is_auth),
+    page: String(page),
+  });
+  if (filters.state) {
+    params.append("state", String(filters.state));
+  }
+  if (filters.propertyType) {
+    params.append("type", String(filters.propertyType));
+  }
+  if (filters.status) {
+    params.append("status", String(filters.status));
+  }
+  if (filters.bedrooms) {
+    params.append("no_of_bedrooms", String(filters.bedrooms));
+  }
+  if (filters.max) {
+    params.append("maxPrice", String(filters.max));
+  }
+  if (filters.min) {
+    params.append("minPrice", String(filters.min));
+  }
+
+  const endpoint = `/filter-property?${params.toString()}`;
+
+  const response = await apiClient.get(endpoint);
+  return response.data;
+};

@@ -1,23 +1,24 @@
 import { useState } from "react";
-import SwiperPropertyList from "../components/DashboardNewPropertyComponent/SwiperPropertyList";
-import FilterBar from "../components/DashboardNewPropertyComponent/FilterBar";
-import { useFilterProperties, usePropertiespage } from "../data/hooks";
-import { PropertyFilters } from "../data/api";
-import Button from "../components/Button";
-import { IoArrowBack, IoArrowForward } from "react-icons/io5";
-import Pagination from "../components/Pagination";
+import { PropertyFilters } from "../../../data/api";
+// import { Pagination } from "swiper/modules";
+import { usePropertiespage, useFilterProperties, useFilterPropertiesnoauth } from "../../../data/hooks";
+import FilterBar from "../../DashboardNewPropertyComponent/FilterBar";
+import SwiperPropertyList from "../../DashboardNewPropertyComponent/SwiperPropertyList";
+import Pagination from "../../Pagination";
 
-const NewPropertyScreen = () => {
+
+const NewPropertyScreennoauth = () => {
   const [page, setPage] = useState(1);
   // const [filters, setFilters] = useState<Record<string, any>>({});
   const [filters, setFilters] = useState<PropertyFilters>({});
-
+const numb=1
   const { data, isLoading, isError } = usePropertiespage(page);
   const {
     data: propertyData,
     isLoading: loadingProperties,
     isError: errorProperty,
-  } = useFilterProperties(page, filters);
+  } = useFilterPropertiesnoauth(page,"",filters,);
+
   const totalPages = propertyData?.last_page || 0;
   const handleNext = () => {
     setPage(page + 1);
@@ -80,4 +81,4 @@ const NewPropertyScreen = () => {
   );
 };
 
-export default NewPropertyScreen;
+export default NewPropertyScreennoauth;

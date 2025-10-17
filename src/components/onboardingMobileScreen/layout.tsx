@@ -91,6 +91,8 @@ const Sidebar = ({
   // Handle logout
   const handleLogout = () => {
     Auth.logout();
+    
+
     onClose();
   };
 
