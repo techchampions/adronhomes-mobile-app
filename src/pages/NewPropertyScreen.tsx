@@ -6,18 +6,25 @@ import { PropertyFilters } from "../data/api";
 import Button from "../components/Button";
 import { IoArrowBack, IoArrowForward } from "react-icons/io5";
 import Pagination from "../components/Pagination";
+import { useLocation } from "react-router-dom";
 
 const NewPropertyScreen = () => {
   const [page, setPage] = useState(1);
   // const [filters, setFilters] = useState<Record<string, any>>({});
   const [filters, setFilters] = useState<PropertyFilters>({});
-
+  const location = useLocation();
   const { data, isLoading, isError } = usePropertiespage(page);
+  const path = location.pathname;
+  const basePath = path.startsWith("/all-properties");
+
+const isAuth = basePath ? "" : "1";
+
   const {
     data: propertyData,
     isLoading: loadingProperties,
     isError: errorProperty,
-  } = useFilterProperties(page, filters);
+  } = useFilterProperties(page, isAuth, filters);
+
   const totalPages = propertyData?.last_page || 0;
   const handleNext = () => {
     setPage(page + 1);

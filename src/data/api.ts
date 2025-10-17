@@ -173,7 +173,7 @@ export interface PropertyFilters {
 }
 export const fetchPropertiesPageData = async (
   page: number,
-  filters: PropertyFilters = {} // Use the defined type
+  filters: PropertyFilters = {}
 ): Promise<PropertiesResponse> => {
   const hasFilters = Object.values(filters).some(
     (v) => v !== "" && v !== undefined
@@ -197,10 +197,11 @@ export const fetchPropertiesPageData = async (
 
 export const filterProperties = async (
   page: number,
+  is_auth?:number,
   filters: PropertyFilters = {} // Use the defined type
 ): Promise<PaginatedProperties> => {
   const params = new URLSearchParams({
-    // is_auth: String(1),
+    is_auth: String(is_auth),
     page: String(page),
   });
   if (filters.state) {

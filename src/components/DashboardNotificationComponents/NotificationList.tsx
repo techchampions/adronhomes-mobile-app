@@ -22,8 +22,7 @@ const NotificationList: React.FC<Props> = ({ data, isError, isLoading }) => {
   const [activeTab, setActiveTab] = useState<Tab>("All");
 
   const { setAllNotifications, markAsRead, isRead,setreadNotifications } = useNotificationStore();
-
-
+  
  useEffect(() => {
   if (!data || data.length === 0) return;
 

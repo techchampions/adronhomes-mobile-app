@@ -200,11 +200,13 @@ export const usePropertiespage = (
 
 export const useFilterProperties = (
   page: number,
-  filters?: PropertyFilters
+    is_auth?:any,
+  filters?: PropertyFilters,
+
 ) => {
   return useQuery<PaginatedProperties>({
-    queryKey: ["properties", page, filters],
-    queryFn: () => filterProperties(page, filters),
+    queryKey: ["properties", page, is_auth, filters,],
+    queryFn: () => filterProperties(page,is_auth,filters),
   });
 };
 
