@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   ApiError,
   createPropertyPlan,
+  deleteAccount,
   fetchPropertiesPageData,
   fetchSavedProperties,
   filterProperties,
@@ -65,7 +66,7 @@ import {
 import { NotificationByIDResponse } from "./types/NotificationByIDTypes";
 import { PropertyPlanPaymentResponse } from "./types/PropertyPlanPaymentListTypes";
 import { PropertiesSearchResultResponse } from "./types/SearchPropertiesResultTypes";
-import { useEffect } from "react";
+import { use, useEffect } from "react";
 import { SavedPropertiesResponse } from "./types/SavedPropertiesResponse";
 import { AccountDetailsResponse } from "./types/AccountDetailsTypes";
 import { EnquirePayload } from "./types/EnquirePayload";
@@ -136,6 +137,12 @@ export const useGetSlidersByType = (type: string) => {
   return useQuery<SliderByTypeResponse>({
     queryKey: ["Sliders", type],
     queryFn: () => getSliderByType(type),
+  });
+};
+
+export const useDeleteAccount = () => {
+  return useMutation({
+    mutationFn: deleteAccount,
   });
 };
 

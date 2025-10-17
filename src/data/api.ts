@@ -644,6 +644,10 @@ export const getEstates = async (): Promise<estatePropertiesResponse> => {
   return response.data;
 };
 
+export const deleteAccount = async () => {
+  const response = await apiClient.get('/delete-account-request');
+  return response.data;
+};
 
 export const filterPropertiesnoauth = async (
   page: number,
