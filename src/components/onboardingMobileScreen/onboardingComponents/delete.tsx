@@ -1,44 +1,36 @@
 import React, { useState } from "react";
 
 import Button from "../../Button"; // Assuming this is your custom Button component
+import { deleteAccount } from "../../../data/api";
+import { useDeleteAccount } from "../../../data/hooks";
 
 const DeleteConfirmationPage = () => {
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
-
+const { mutate: deleteAccount, isPending, isSuccess, isError, error } = useDeleteAccount();
   const handleDeleteClick = () => {
     setShowConfirmation(true);
   };
 
 
-  const handleConfirmDelete = async () => {
+   const handleConfirmDelete = () => {
+    deleteAccount(undefined, {
+      onSuccess: () => {
+        setShowSuccessMessage(true);
+        setTimeout(() => setShowSuccessMessage(false), 5000);
+      },
+      onError: (err) => {
+        console.error("Error deleting account:", err);
+      },
+      onSettled: () => {
+        setIsLoading(false);
+        setShowConfirmation(false);
+      },
+    });
     setIsLoading(true);
-    try {
-      // Simulate an API call
-      await new Promise((resolve) => setTimeout(resolve, 2000)); // 2-second delay
-      // Replace with actual delete logic, e.g., an API call
-      // const response = await deleteItem(itemId);
-      // if (response.success) {
-      setShowSuccessMessage(true);
-      // } else {
-      //   // Handle error
-      //   alert("Error deleting item.");
-      // }
-    } catch (error) {
-      console.error("Error during deletion:", error);
-      // Handle error, e.g., display an error message
-      // alert("An error occurred during deletion.");
-    } finally {
-      setIsLoading(false);
-      setShowConfirmation(false);
-      // Optionally hide success message after a few seconds
-
-      setTimeout(() => setShowSuccessMessage(false), 5000);
-
-    }
-
   };
+
 
   const handleCancelDelete = () => {
     setShowConfirmation(false);

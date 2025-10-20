@@ -1,3 +1,14 @@
+
+
+
+
+
+export interface PropertiesHeader {
+  header: string;
+  description: string;
+  list_description: string[];
+}
+
 export interface estatePropertiesResponse {
   status: string;
   message: string;

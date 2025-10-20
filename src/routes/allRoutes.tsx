@@ -104,6 +104,7 @@ const AllRoutes = () => {
               <Route path="notifications" element={<NotificationsPage />} />
               <Route path="my-properties" element={<MyPropertyScreen />} />
               <Route path="new-properties" element={<NewPropertyScreen />} />
+              <Route path="my-property/:id" element={<MyPropertyDetail />} />
               <Route
                 path="search-properties"
                 element={<PropertySearchResultScreen />}

@@ -50,7 +50,7 @@ const InfrastructureBankTransfer = ({
             openModal(
               <PaymentPending text="Your payment is being confrimed by Admin" />
             );
-            navigate(`/my-property/${planID}`);
+            navigate(`/dashboard/my-property/${planID}`);
           },
           onError: (error: ApiError) => {
             const message =

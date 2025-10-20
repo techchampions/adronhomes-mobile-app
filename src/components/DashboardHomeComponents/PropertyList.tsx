@@ -20,7 +20,7 @@ const PropertyPlanList: React.FC<Props> = ({ plans, isError, isLoading }) => {
       <ul className="space-y-2">
         {plans.map((plan) => (
           <li
-            onClick={() => navigate(`/my-property/${plan.id}`)}
+            onClick={() => navigate(`/dashboard/my-property/${plan.id}`)}
             key={plan.id}
             className={`p-4 cursor-pointer rounded-3xl gap-2 even:bg-gray-100 flex justify-between items-center`}
           >

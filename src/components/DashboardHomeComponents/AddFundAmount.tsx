@@ -46,7 +46,7 @@ const AddFundAmount = ({ goBack }: { goBack: () => void }) => {
                   type="number"
                   placeholder="₦0.00"
                   className="text-2xl font-bold"
-                  
+                  formatAsNaira
                 />
                 <p className="text-xs text-gray-400 w-[80%]"></p>
               </div>

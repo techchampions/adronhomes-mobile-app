@@ -1,6 +1,6 @@
-import { Field, ErrorMessage, useField } from "formik";
+import { Field, ErrorMessage, useField, useFormikContext } from "formik";
 import { FaExclamationCircle } from "react-icons/fa";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 interface InputFieldProps {
   type?:
@@ -19,7 +19,17 @@ interface InputFieldProps {
   rows?: number;
   isReadOnly?: boolean;
   autocomplete?: string;
+  formatAsNaira?: boolean;
 }
+
+const formatToNaira = (value: string | number | null | undefined): string => {
+  if (value === null || value === undefined || value === "") return "";
+
+  const numberValue = parseFloat(value.toString().replace(/[^0-9.]/g, ""));
+  if (isNaN(numberValue)) return "";
+
+  return "₦" + numberValue.toLocaleString("en-NG", { minimumFractionDigits: 0 });
+};
 
 const InputField: React.FC<InputFieldProps> = ({
   type = "text",
@@ -31,10 +41,34 @@ const InputField: React.FC<InputFieldProps> = ({
   rows = 4,
   isReadOnly = false,
   autocomplete,
+  formatAsNaira = false,
 }) => {
-  const [field, meta] = useField(name);
+  const [field, meta, helpers] = useField(name);
+  const { setValue } = helpers;
+  const [displayValue, setDisplayValue] = useState<string>("");
+
   const isTextarea = type === "textarea";
   const hasError = meta.touched && meta.error;
+
+  useEffect(() => {
+    if (formatAsNaira && field.value !== undefined) {
+      setDisplayValue(formatToNaira(field.value));
+    }
+  }, [field.value, formatAsNaira]);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let inputVal = e.target.value.replace(/[^0-9]/g, "");
+    if (formatAsNaira) {
+      setValue(inputVal);
+      setDisplayValue(formatToNaira(inputVal));
+    } else {
+      setValue(inputVal);
+    }
+  };
+
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    field.onBlur(e); // Mark field as touched
+  };
 
   return (
     <div className="w-full">
@@ -51,18 +85,32 @@ const InputField: React.FC<InputFieldProps> = ({
         )}
 
         {/* Field */}
-        <Field
-          as={isTextarea ? "textarea" : "input"}
-          {...field}
-          type={isTextarea ? undefined : type}
-          placeholder={placeholder}
-          rows={isTextarea ? rows : undefined}
-          readOnly={isReadOnly}
-          autoComplete={autocomplete}
-          className={` text-gray-900 text-base rounded-lg focus:ring-0 block w-full px-5 outline-none resize-none h-4 placeholder:text-sm ${
-            isTextarea ? "min-h-[60px]" : ""
-          }`}
-        />
+        {formatAsNaira ? (
+          <input
+            type="text"
+            name={name}
+            value={displayValue}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            placeholder={placeholder}
+            readOnly={isReadOnly}
+            autoComplete={autocomplete}
+            className={`text-gray-900 text-base rounded-lg focus:ring-0 block w-full px-5 outline-none resize-none h-4 placeholder:text-sm`}
+          />
+        ) : (
+          <Field
+            as={isTextarea ? "textarea" : "input"}
+            {...field}
+            type={isTextarea ? undefined : type}
+            placeholder={placeholder}
+            rows={isTextarea ? rows : undefined}
+            readOnly={isReadOnly}
+            autoComplete={autocomplete}
+            className={` text-gray-900 text-base rounded-lg focus:ring-0 block w-full px-5 outline-none resize-none h-4 placeholder:text-sm ${
+              isTextarea ? "min-h-[60px]" : ""
+            }`}
+          />
+        )}
 
         {/* Error Icon */}
         {!isTextarea && hasError && (
