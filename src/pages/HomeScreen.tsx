@@ -90,7 +90,7 @@ const HomeScreen = () => {
             </div>
           </div>
           <a
-            href="/my-properties"
+            href="/dashboard/my-properties"
             className="md:mt-4 text-adron-green font-bold text-sm"
           >
             View Properties

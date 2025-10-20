@@ -65,6 +65,7 @@ const InputInfrastructureAmount = ({
                   type="text"
                   placeholder="₦0.00"
                   className="text-2xl font-bold"
+                  formatAsNaira
                 />
                 <p className="text-xs text-gray-400 w-[80%]"></p>
               </div>

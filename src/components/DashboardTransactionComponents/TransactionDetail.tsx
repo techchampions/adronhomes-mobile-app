@@ -32,15 +32,15 @@ const TransactionDetail = ({ id }: { id: number }) => {
     > = {
       1: {
         label: "Completed",
-        style: "bg-[#79B833]", // Replaced bg-adron-green
+        style: "bg-[#79B833]",
       },
       2: {
         label: "Failed",
-        style: "bg-[#DC2626]", // Replaced bg-red-600
+        style: "bg-[#DC2626]", 
       },
       0: {
         label: "Pending",
-        style: "bg-[#4B5563]", // Replaced bg-gray-600
+        style: "bg-[#4B5563]", 
       },
     };
 
