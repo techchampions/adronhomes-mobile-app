@@ -3,7 +3,7 @@ import CopyButton from "../components/CopyButton";
 // import WalletHistory from "../components/DashboardWalletComponents/WalletHistoryList";
 import { useModalStore } from "../zustand/useModalStore";
 import AddFundAmount from "../components/DashboardHomeComponents/AddFundAmount";
-import { useGetUserWalletdata } from "../data/hooks";
+import { useGetUserWalletdata, useResolveVirtualAccount } from "../data/hooks";
 import { formatPrice } from "../data/utils";
 import TransactionsList from "../components/DashboardTransactionComponents/TransactionsList";
 import ApiErrorBlock from "../components/ApiErrorBlock";
@@ -13,6 +13,8 @@ import WalletHistoryList from "../components/DashboardWalletComponents/WalletHis
 
 const WalletScreen = () => {
   const openModal = useModalStore((state) => state.openModal);
+  const { mutate: generateVirtualAccount, isPending: generating } =
+    useResolveVirtualAccount();
   const startFundWallet = () => {
     openModal(<AddFundAmount goBack={startFundWallet} />);
   };
@@ -24,7 +26,10 @@ const WalletScreen = () => {
     return <SmallLoader />;
   }
   const transactions = data?.user_transactions ?? [];
-
+  let hasVA = true;
+  if (!data?.virtual_account || !data?.virtual_account.account_number) {
+    hasVA = false;
+  }
   return (
     <div className="flex flex-col gap-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -44,12 +49,24 @@ const WalletScreen = () => {
             {data?.total_property} active contracts
           </p>
         </div>
-        <div className="row-span- md:row-span-2 col-span-2 md:col-span-1 p-10 bg-white rounded-3xl flex flex-col gap-4 justify-between">
+        <div className="relative overflow-hidden md:row-span-2 col-span-2 md:col-span-1 p-10 bg-white rounded-3xl flex flex-col gap-4 justify-between">
+          {(!hasVA || generating) && (
+            <div className="absolute inset-0 bg-white/90 flex justify-center items-center">
+              <Button
+                label="Generate Virtual Account"
+                loadingText="Generating Account"
+                isLoading={generating}
+                disabled={generating}
+                onClick={() => generateVirtualAccount()}
+                className="!w-[80%] md:!w-[60%] text-sm"
+              />
+            </div>
+          )}
           <p className="text-md font-semibold">Wallet Details</p>
           <div className="flex justify-between items-start w-full">
             <div className="flex flex-col">
               <p className="text-sm">
-                {data?.virtual_account?.account_number || "loading..."}
+                {data?.virtual_account?.account_number || "Not Available"}
               </p>
               <p className="text-[9px] text-gray-400">Account Number</p>
             </div>
@@ -57,14 +74,14 @@ const WalletScreen = () => {
           </div>
           <div className="flex flex-col">
             <p className="text-sm">
-              {data?.virtual_account?.account_bank || "loading..."}
+              {data?.virtual_account?.account_bank || "Not Available"}
             </p>
             <p className="text-[9px] text-gray-400">Bank Name</p>
           </div>
           <div className="flex flex-col">
             <p className="text-sm">
               {" "}
-              {data?.virtual_account?.account_name || "loading..."}{" "}
+              {data?.virtual_account?.account_name || "Not Available"}{" "}
             </p>
             <p className="text-[9px] text-gray-400">Account Name</p>
           </div>
