@@ -10,9 +10,18 @@ import ApiErrorBlock from "../components/ApiErrorBlock";
 import SmallLoader from "../components/SmallLoader";
 import { IoInformationCircle } from "react-icons/io5";
 import WalletHistoryList from "../components/DashboardWalletComponents/WalletHistoryList";
+import { useIsFetching, useQueryClient } from "@tanstack/react-query";
+import { RefreshCcw } from "lucide-react";
+import { useToastStore } from "../zustand/useToastStore";
 
 const WalletScreen = () => {
+  const query = useQueryClient();
+  const isFetchingWallet =
+    useIsFetching({
+      queryKey: ["user-wallet"],
+    }) > 0;
   const openModal = useModalStore((state) => state.openModal);
+  const { showToast } = useToastStore();
   const { mutate: generateVirtualAccount, isPending: generating } =
     useResolveVirtualAccount();
   const startFundWallet = () => {
@@ -30,15 +39,32 @@ const WalletScreen = () => {
   if (!data?.virtual_account || !data?.virtual_account.account_number) {
     hasVA = false;
   }
+  const refreshWalletBalance = () => {
+    query.invalidateQueries({
+      queryKey: ["user-wallet"],
+    });
+    showToast("Refreshing wallet balance", "success");
+  };
   return (
     <div className="flex flex-col gap-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="md:row-span-2 col-span-2 md:col-span-1 p-6 rounded-3xl flex flex-col gap-4 justify-between items-center">
           <p className="text-xs">My Wallet</p>
-          <p className="text-3xl font-bold">
-            {" "}
-            {formatPrice(data?.wallet_balance ?? 0)}{" "}
-          </p>
+          <div className="flex items-center gap-4">
+            <p className="text-3xl font-bold">
+              {" "}
+              {formatPrice(data?.wallet_balance ?? 0)}{" "}
+            </p>
+            <div
+              className="bg-white rounded-full p-2 cursor-pointer hover:bg-white/50"
+              onClick={refreshWalletBalance}
+            >
+              <RefreshCcw
+                size={25}
+                className={`${isFetchingWallet ? "animate-spin" : ""}`}
+              />
+            </div>
+          </div>
           <p className="text-xs">Wallet balance</p>
           <Button
             label="Fund Wallet"

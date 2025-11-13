@@ -8,6 +8,7 @@ import PaymentSuccessfull from "../PaymentSuccessfull";
 import { useFundWallet, useGetUserWalletdata } from "../../data/hooks";
 import SmallLoader from "../SmallLoader";
 import ApiErrorBlock from "../ApiErrorBlock";
+import { useQueryClient } from "@tanstack/react-query";
 
 const VirtualBankTransfer = ({
   goBack,
@@ -18,8 +19,8 @@ const VirtualBankTransfer = ({
 }) => {
   const { closeModal, openModal } = useModalStore();
   const { data, isLoading, isError } = useGetUserWalletdata();
-
-  const { mutate: fundWallet, isPending: fundingWallet } = useFundWallet();
+  const query = useQueryClient();
+  // const { mutate: fundWallet, isPending: fundingWallet } = useFundWallet();
   const { showToast } = useToastStore();
   const GoToSelectPaymentMethod = () => {
     openModal(<SelectPaymentMethod goBack={goBack} amount={amount} />);
@@ -32,26 +33,29 @@ const VirtualBankTransfer = ({
   }
   const handlePaymentSuccess = () => {
     closeModal();
+    query.invalidateQueries({
+      queryKey: ["user-wallet"],
+    });
 
     showToast("Payment Recieved Successfully", "success");
-    fundWallet(
-      {
-        amount: amount || 0,
-        payment_method: "virtual_wallet",
-      },
-      {
-        onSuccess() {
-          openModal(
-            <PaymentSuccessfull text={"Payment received successfully."} />
-          );
-        },
-        onError: (error: any) => {
-          const message =
-            error?.response?.data?.message || "Something went wrong";
-          showToast(message, "error");
-        },
-      }
-    );
+    // fundWallet(
+    //   {
+    //     amount: amount || 0,
+    //     payment_method: "virtual_wallet",
+    //   },
+    //   {
+    //     onSuccess() {
+    //       openModal(
+    //         <PaymentSuccessfull text={"Payment received successfully."} />
+    //       );
+    //     },
+    //     onError: (error: any) => {
+    //       const message =
+    //         error?.response?.data?.message || "Something went wrong";
+    //       showToast(message, "error");
+    //     },
+    //   }
+    // );
   };
 
   return (
@@ -112,8 +116,8 @@ const VirtualBankTransfer = ({
             label="Done"
             className="!w-fit px-12 py-2 text-xs bg-black text-white"
             onClick={handlePaymentSuccess}
-            isLoading={fundingWallet}
-            disabled={fundingWallet}
+            // isLoading={fundingWallet}
+            // disabled={fundingWallet}
           />
         </div>
       </div>
