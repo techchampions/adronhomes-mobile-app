@@ -194,11 +194,11 @@ const PropertyDetail = () => {
         <div className="w-full mx-auto">
           {/* Main slider */}
 
-          {photoLenght > 0 && (
+          {photoLenght > 0 ? (
             <div className="relative w-full h-[300px] rounded-xl overflow-hidden mt-4">
               <Swiper
                 spaceBetween={10}
-                slidesPerView={1.3}
+                slidesPerView={1}
                 // navigation={true}
                 onInit={(swiperInstance) => setSwiper(swiperInstance)} // Store swiper instance when it's initialized
                 navigation={{
@@ -223,6 +223,50 @@ const PropertyDetail = () => {
                   </SwiperSlide>
                 ))}
               </Swiper>
+              <button
+                ref={prevRef}
+                className="absolute cursor-pointer left-2 top-1/2 -translate-y-1/2 z-10 bg-white/50 bg-opacity-60 rounded-full p-2 shadow hover:bg-opacity-90"
+              >
+                <FaChevronLeft size={30} />
+              </button>
+              <button
+                ref={nextRef}
+                className="absolute cursor-pointer right-2 top-1/2 -translate-y-1/2 z-10 bg-white/50 bg-opacity-60 rounded-full p-2 shadow hover:bg-opacity-90"
+              >
+                <FaChevronRight size={30} />
+              </button>
+            </div>
+          ):(
+            <div className="relative w-full h-[300px] rounded-xl overflow-hidden mt-4">
+              {/* <Swiper
+                spaceBetween={10}
+                slidesPerView={1}
+                // navigation={true}
+                onInit={(swiperInstance) => setSwiper(swiperInstance)} // Store swiper instance when it's initialized
+                navigation={{
+                  prevEl: prevRef.current,
+                  nextEl: nextRef.current,
+                }}
+                modules={[Navigation]}
+                breakpoints={{
+                  320: {
+                    slidesPerView: data.data.properties.display_image.length < 2 ? 1 : 1.1,
+                  },
+                }}
+                className="w-full h-full rounded-xl"
+              >
+                
+                
+              </Swiper>
+               */}
+
+                  <SwiperSlide >
+                    <img
+                      src={data.data.properties.display_image}
+                      alt={`Image `}
+                      className="object-cover h-full w-full"
+                    />
+                  </SwiperSlide>
               <button
                 ref={prevRef}
                 className="absolute cursor-pointer left-2 top-1/2 -translate-y-1/2 z-10 bg-white/50 bg-opacity-60 rounded-full p-2 shadow hover:bg-opacity-90"

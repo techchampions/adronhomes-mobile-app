@@ -85,31 +85,50 @@ export default function SwiperPropertyCard({ property }: Props) {
   return (
     <div className="rounded-3xl">
       <div className="relative w-full h-[250px] rounded-xl overflow-hidden">
-        {/* Swiper Carousel */}
-        <Swiper
-          spaceBetween={10}
-          slidesPerView={1}
-          onInit={(swiperInstance) => setSwiper(swiperInstance)} // Store swiper instance when it's initialized
-          navigation={{
-            prevEl: prevRef.current,
-            nextEl: nextRef.current,
-          }}
-          modules={[Navigation]}
-          className="w-full h-full rounded-[40px]"
-        >
-          {property?.photos != null &&
-            property?.photos?.map((img, idx) => (
-              <SwiperSlide key={idx}>
-                <img
-                  src={img}
-                  alt={`Image ${idx + 1}`}
-                  className="object-cover rounded-3xl h-full w-full"
-                />
-              </SwiperSlide>
-            ))}
-        </Swiper>
-
-        {/* Navigation Buttons */}
+{property?.photos && property.photos.length > 0 ? (
+  <Swiper
+    spaceBetween={10}
+    slidesPerView={1}
+    onInit={(swiperInstance) => setSwiper(swiperInstance)}
+    navigation={{
+      prevEl: prevRef.current,
+      nextEl: nextRef.current,
+    }}
+    modules={[Navigation]}
+    className="w-full h-full rounded-[40px]"
+  >
+    {property.photos.map((img, idx) => (
+      <SwiperSlide key={idx}>
+        <img
+          src={img}
+          alt={`Image ${idx + 1}`}
+          className="object-cover rounded-3xl h-full w-full"
+        />
+      </SwiperSlide>
+    ))}
+  </Swiper>
+) : (
+  <Swiper
+    spaceBetween={10}
+    slidesPerView={1}
+    onInit={(swiperInstance) => setSwiper(swiperInstance)}
+    navigation={{
+      prevEl: prevRef.current,
+      nextEl: nextRef.current,
+    }}
+    modules={[Navigation]}
+    className="w-full h-full rounded-[40px]"
+  >
+    <SwiperSlide>
+      <img
+        src={property?.display_image}
+        alt="Image"
+        className="object-cover rounded-3xl h-full w-full"
+      />
+    </SwiperSlide>
+  </Swiper>
+)}
+     {/* Navigation Buttons */}
         <button
           ref={prevRef}
           className="absolute cursor-pointer left-2 top-1/2 -translate-y-1/2 z-10 bg-white/50 bg-opacity-60 rounded-full p-2 shadow hover:bg-opacity-90"
