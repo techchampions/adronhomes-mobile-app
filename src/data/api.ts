@@ -682,3 +682,9 @@ export const filterPropertiesnoauth = async (
   const response = await apiClient.get(endpoint);
   return response.data;
 };
+
+
+export const resolveVirtualAccount = async () => {
+  const response = await apiClient.post(`/resolve-virtual-account`);
+  return response.data;
+};

@@ -134,7 +134,7 @@ export default function SavedSwiperPropertyCard({ saved_property }: Props) {
           ) : (
             <SwiperSlide>
               <img
-                src="/placeholder.jpg"
+                src={saved_property.display_image}
                 alt="No property images available"
                 className="object-cover rounded-3xl h-full w-full"
               />
