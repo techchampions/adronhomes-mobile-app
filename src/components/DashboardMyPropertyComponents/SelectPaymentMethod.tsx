@@ -167,35 +167,7 @@ const SelectPaymentMethod = ({
             </div>
           </div>
 
-          {/* Virtual Bank Transfer */}
-          {/* <div
-            className={`flex items-center gap-4 p-4 rounded-xl cursor-pointer transition-all ${
-              selectedPaymentMethod === "Virtual Bank Transfer"
-                ? "bg-adron-green text-white border-none "
-                : "bg-transparent border  border-gray-300"
-            }`}
-            onClick={() => setSelectedPaymentMethod("Virtual Bank Transfer")}
-          >
-            <img
-              src="/bank-transfer-icon.svg"
-              alt="Virtual bank transfer"
-              className="h-10 w-10"
-            />
-            <div>
-              <p className="font-adron-mid text-sm">Virtual Bank Transfer</p>
-              <p
-                className={`text-xs ${
-                  selectedPaymentMethod == "Virtual Bank Transfer"
-                    ? `text-white`
-                    : `text-gray-500`
-                } `}
-              >
-                Transfer to generated Virtual bank account
-              </p>
-            </div>
-          </div> */}
-
-          {/* <div
+          <div
             className={`flex items-center gap-4 p-4 rounded-xl cursor-pointer transition-all ${
               selectedPaymentMethod === "Paystack"
                 ? "bg-adron-green text-white border-none "
@@ -220,7 +192,7 @@ const SelectPaymentMethod = ({
                 Pay through Paystack
               </p>
             </div>
-          </div> */}
+          </div>
 
           <div
             className={`flex items-center gap-4 p-4 rounded-xl cursor-pointer transition-all ${

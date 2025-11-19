@@ -9,6 +9,8 @@ import { useToastStore } from "../../zustand/useToastStore";
 import { useFundWallet } from "../../data/hooks";
 import ApiErrorBlock from "../ApiErrorBlock";
 import SmallLoader from "../SmallLoader";
+import { useInterswitchPayment } from "../../hooks/useInterswitchPayment";
+// import { useInterswitchPayment } from "../../hooks/useInterswitchPyament";
 
 export interface ApiError {
   response?: {
@@ -23,6 +25,9 @@ export interface ApiError {
 export type FundWalletResponse = {
   success: boolean;
   message: string;
+  merchant_code: string;
+  payment_item_id: string;
+  reference: string;
   payment: {
     user_id: number;
     property_id: number | null;
@@ -51,6 +56,7 @@ const SelectPaymentMethod = ({
   const { openModal, closeModal } = useModalStore();
   const { showToast } = useToastStore();
   const paystack = usePaystackPayment();
+  const interswitch = useInterswitchPayment();
   const { mutate: fundWallet, isPending: isFunding } = useFundWallet();
 
   const { user } = useUserStore();
@@ -72,6 +78,43 @@ const SelectPaymentMethod = ({
               email: user?.email || "",
               amount: Number(amount), // in Naira
               reference: res.payment.reference,
+              onSuccess: (ref) => {
+                showToast("Payment successful!", "success");
+                console.log("Payment successful!", ref);
+                // TODO: call your backend API to confirm payment
+              },
+              onClose: () => {
+                showToast("Payment Canceled", "error");
+              },
+            });
+
+            closeModal();
+          },
+          onError: (error: ApiError) => {
+            const message =
+              error?.response?.data?.message ||
+              error?.message ||
+              "Something went wrong";
+            showToast(message, "error");
+            openModal(<ApiErrorBlock />);
+          },
+        }
+      );
+    } else if (selectedPaymentMethod == "Interswitch") {
+      fundWallet(
+        {
+          amount: amount || 0,
+          payment_method: "interswitch",
+        },
+        {
+          onSuccess(res) {
+            interswitch({
+              email: user?.email || "",
+              customerName: user?.last_name,
+              amount: Number(amount), // in Naira
+              reference: res.reference,
+              merchant_code: res.merchant_code,
+              payment_item_id: res.payment_item_id,
               onSuccess: (ref) => {
                 showToast("Payment successful!", "success");
                 console.log("Payment successful!", ref);
@@ -190,6 +233,34 @@ const SelectPaymentMethod = ({
               </p>
             </div>
           </div> */}
+          <div
+            className={`flex items-center gap-4 p-4 rounded-xl cursor-pointer transition-all ${
+              selectedPaymentMethod === "Interswitch"
+                ? "bg-adron-green text-white border-none "
+                : "bg-transparent border  border-gray-300"
+            }`}
+            onClick={() => setSelectedPaymentMethod("Interswitch")}
+          >
+            <div className="bg-adron-green-100 rounded-full h-10 w-10 flex justify-center items-center">
+              <img
+                src="/Interswitch.svg"
+                alt="paystack"
+                className="h-7 w-7 rounded-full"
+              />
+            </div>
+            <div>
+              <p className="font-adron-mid text-sm">Interswitch</p>
+              <p
+                className={`text-xs ${
+                  selectedPaymentMethod == "Interswitch"
+                    ? `text-white`
+                    : `text-gray-500`
+                } `}
+              >
+                Pay with Interswitch
+              </p>
+            </div>
+          </div>
         </div>
 
         <div className="flex justify-between w-full gap-4 mt-4">
