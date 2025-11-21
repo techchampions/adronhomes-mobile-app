@@ -36,14 +36,15 @@ const CompactPropertyCard: React.FC<CompactPropertyCardProps> = ({
 
   const handleCardClick = () => {
     if (!loading) {
-      navigate(`/adrone-properties/${id}`);
+      navigate(`/dashboard/properties/${id}`);
     }
   };
+  
 
 
   if (loading) {
     return (
-      <div className={`rounded-[15px] bg-white p-3 max-w-[174px] min-w-[174px] animate-pulse ${className}`}>
+      <div className={`rounded-[15px] bg-white p-3 max-w-[174px] min-w-[174px] animate-pulse ${className}` }onClick={()=>handleCardClick()}>
         <div className="mb-3">
           <div className="rounded-xl h-[104px] w-full bg-gray-300" />
         </div>
