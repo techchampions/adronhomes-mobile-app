@@ -110,7 +110,7 @@ const SelectPaymentMethod = ({
           onSuccess(res) {
             interswitch({
               email: user?.email || "",
-              customerName: user?.last_name,
+              customerName: `${user?.last_name} ${user?.first_name}`,
               amount: Number(amount), // in Naira
               reference: res.reference,
               merchant_code: res.merchant_code,

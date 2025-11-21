@@ -46,7 +46,7 @@ const CompactPropertyCard: React.FC<CompactPropertyCardProps> = ({
     return (
       <div className={`rounded-[15px] bg-white p-3 max-w-[174px] min-w-[174px] animate-pulse ${className}` }onClick={()=>handleCardClick()}>
         <div className="mb-3">
-          <div className="rounded-xl h-[104px] w-full bg-gray-300" />
+          <div className="rounded-xl h -[104px] w-full bg-gray-300" />
         </div>
         <div className="h-3 w-2/3 bg-gray-300 rounded mb-1" />
         <div className="flex items-center">
