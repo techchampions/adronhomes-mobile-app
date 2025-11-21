@@ -96,7 +96,7 @@ const WalletScreen = () => {
               </p>
               <p className="text-[9px] text-gray-400">Account Number</p>
             </div>
-            <CopyButton text="8394839302" />
+            <CopyButton text={data?.virtual_account?.account_number || ""} />
           </div>
           <div className="flex flex-col">
             <p className="text-sm">
