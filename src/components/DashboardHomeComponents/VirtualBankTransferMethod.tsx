@@ -21,7 +21,7 @@ const VirtualBankTransfer = ({
   const { data, isLoading, isError } = useGetUserWalletdata();
   const query = useQueryClient();
   // const { mutate: fundWallet, isPending: fundingWallet } = useFundWallet();
-  const { showToast } = useToastStore();
+  // const { showToast } = useToastStore();
   const GoToSelectPaymentMethod = () => {
     openModal(<SelectPaymentMethod goBack={goBack} amount={amount} />);
   };
@@ -37,7 +37,7 @@ const VirtualBankTransfer = ({
       queryKey: ["user-wallet"],
     });
 
-    showToast("Payment Recieved Successfully", "success");
+    // showToast("Payment Recieved Successfully", "success");
     // fundWallet(
     //   {
     //     amount: amount || 0,

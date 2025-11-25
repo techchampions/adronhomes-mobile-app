@@ -79,7 +79,7 @@ const SelectPaymentMethod = ({
               amount: Number(amount), // in Naira
               reference: res.payment.reference,
               onSuccess: (ref) => {
-                showToast("Payment successful!", "success");
+                // showToast("Payment successful!", "success");
                 console.log("Payment successful!", ref);
                 // TODO: call your backend API to confirm payment
               },
@@ -116,7 +116,7 @@ const SelectPaymentMethod = ({
               merchant_code: res.merchant_code,
               payment_item_id: res.payment_item_id,
               onSuccess: (ref) => {
-                showToast("Payment successful!", "success");
+                // showToast("Payment successful!", "success");
                 console.log("Payment successful!", ref);
                 // TODO: call your backend API to confirm payment
               },
