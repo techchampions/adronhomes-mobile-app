@@ -8,9 +8,22 @@ import SmallLoader from "../SmallLoader";
 import ShareButton from "../onboardingMobileScreen/onboardingComponents/ShareButton";
 import { jsPDF } from "jspdf";
 import React, { useState } from "react";
-import domtoimage from 'dom-to-image';
-import Toast from "../Toast";
-// import Toast from "../Toast";
+import domtoimage from "dom-to-image";
+
+// Extend Window interface for ReactNativeWebView
+declare global {
+  interface Window {
+    ReactNativeWebView?: {
+      postMessage: (message: string) => void;
+    };
+  }
+}
+
+interface PDFMessage {
+  type: "DOWNLOAD_PDF";
+  filename: string;
+  base64: string;
+}
 
 const TransactionDetail = ({ id }: { id: number }) => {
   const { data, isLoading, isError } = useGetTransactionByID(id);
@@ -18,34 +31,17 @@ const TransactionDetail = ({ id }: { id: number }) => {
   const { data: receiptData, isLoading: gettingReceipt } = useGetPaymentReciept(id);
   const [isDownloading, setIsDownloading] = useState(false);
 
-  if (isLoading) {
-    return <SmallLoader />;
-  }
-  if (isError) {
-    return <ApiErrorBlock />;
-  }
+  if (isLoading) return <SmallLoader />;
+  if (isError) return <ApiErrorBlock />;
 
   const renderStatusBadge = (status: TransactionStatus) => {
-    const statusMap: Record<
-      TransactionStatus,
-      { label: string; style: string }
-    > = {
-      1: {
-        label: "Completed",
-        style: "bg-[#79B833]",
-      },
-      2: {
-        label: "Failed",
-        style: "bg-[#DC2626]", 
-      },
-      0: {
-        label: "Pending",
-        style: "bg-[#4B5563]", 
-      },
+    const statusMap: Record<TransactionStatus, { label: string; style: string }> = {
+      1: { label: "Completed", style: "bg-[#79B833]" },
+      2: { label: "Failed", style: "bg-[#DC2626]" },
+      0: { label: "Pending", style: "bg-[#4B5563]" },
     };
 
     const { label, style } = statusMap[status];
-
     return (
       <div className="flex gap-1 items-center">
         <span className={`h-2 w-2 rounded-full ${style}`}></span>
@@ -54,182 +50,210 @@ const TransactionDetail = ({ id }: { id: number }) => {
     );
   };
 
-  const handleDownloadPdf = async () => {
+  const handleDownloadPdf = async (): Promise<void> => {
     const element = printref.current;
     if (!element) {
-      console.error('Element to capture is not available');
-
+      console.warn("No element found for PDF generation");
       return;
     }
 
     setIsDownloading(true);
 
     try {
-      // Get the actual rendered dimensions of the element
       const rect = element.getBoundingClientRect();
       const elementWidth = rect.width;
       const elementHeight = rect.height;
 
-      // Define a scale factor for better quality
-      const scale = 4; // Reduced from 4 to balance quality and file size
-
-      // dom-to-image options
+      const scale = 3;
       const imageOptions = {
-        quality: 0.95, // High quality PNG
-        bgcolor: '#ffffff', // Ensure white background
+        quality: 0.98,
+        bgcolor: "#ffffff",
         width: elementWidth * scale,
         height: elementHeight * scale,
         style: {
           transform: `scale(${scale})`,
-          transformOrigin: 'top left',
+          transformOrigin: "top left",
           width: `${elementWidth}px`,
           height: `${elementHeight}px`,
         },
       };
 
-      // Generate the image
       const imgData = await domtoimage.toPng(element, imageOptions);
 
-      // Initialize jsPDF with points (pt) for A4
       const pdf = new jsPDF({
-        orientation: 'portrait',
-        unit: 'pt',
-        format: 'a4',
+        orientation: "portrait",
+        unit: "pt",
+        format: "a4",
       });
 
-      // A4 dimensions in points: 595 x 842
-      const pdfWidth = pdf.internal.pageSize.getWidth(); // 595 pt
-      const pdfHeight = pdf.internal.pageSize.getHeight(); // 842 pt
-      const margin = 20; // 20pt margin
-      const usablePdfWidth = pdfWidth - 2 * margin;
-      const usablePdfHeight = pdfHeight - 2 * margin;
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = pdf.internal.pageSize.getHeight();
+      const margin = 20;
+      const usableWidth = pdfWidth - margin * 2;
+      const usableHeight = pdfHeight - margin * 2;
 
-      // Load the image to get its natural dimensions
       const img = new Image();
       img.src = imgData;
       await new Promise((resolve) => (img.onload = resolve));
 
-      const imgWidth = img.naturalWidth / scale; // Adjust for scale
+      const imgWidth = img.naturalWidth / scale;
       const imgHeight = img.naturalHeight / scale;
-      const aspectRatio = imgWidth / imgHeight;
+      const ratio = imgWidth / imgHeight;
 
-      // Calculate dimensions to fit within usable PDF area
-      let finalImgWidth = usablePdfWidth;
-      let finalImgHeight = usablePdfWidth / aspectRatio;
+      let finalWidth = usableWidth;
+      let finalHeight = finalWidth / ratio;
 
-      // If height exceeds usable PDF height, scale by height instead
-      if (finalImgHeight > usablePdfHeight) {
-        finalImgHeight = usablePdfHeight;
-        finalImgWidth = usablePdfHeight * aspectRatio;
+      if (finalHeight > usableHeight) {
+        finalHeight = usableHeight;
+        finalWidth = finalHeight * ratio;
       }
 
-      // Center the image on the page
-      const xOffset = (pdfWidth - finalImgWidth) / 2;
-      const yOffset = margin; // Start from top margin
+      const x = (pdfWidth - finalWidth) / 2;
+      const y = margin;
 
-      pdf.addImage(imgData, 'PNG', xOffset, yOffset, finalImgWidth, finalImgHeight);
-      pdf.save('adron-receipt.pdf');
-    } catch (error) {
-      console.error('Error generating PDF:', error);
-      // alert('Failed to generate receipt. Please try again.');
+      pdf.addImage(imgData, "PNG", x, y, finalWidth, finalHeight);
+
+      const pdfOutput = pdf.output("arraybuffer");
+      const pdfOutputBase64 = btoa(
+        new Uint8Array(pdfOutput).reduce(
+          (data, byte) => data + String.fromCharCode(byte),
+          ""
+        )
+      );
+
+      const message: PDFMessage = {
+        type: "DOWNLOAD_PDF",
+        filename: `transaction-receipt-${data?.user_transaction.reference || id}.pdf`,
+        base64: pdfOutputBase64,
+      };
+
+      if (window.ReactNativeWebView) {
+        window.ReactNativeWebView.postMessage(JSON.stringify(message));
+      } else {
+        // Fallback for web environment
+        pdf.save(`transaction-receipt-${data?.user_transaction.reference || id}.pdf`);
+      }
+    } catch (err) {
+      console.error("PDF generation error:", err);
     } finally {
       setIsDownloading(false);
     }
   };
 
   return (
-    <div className="space-y-5" style={{ backgroundColor: '#ffffff', color: '#000000' }}>
-      <div ref={printref} style={{ backgroundColor: '#ffffff', color: '#000000' }}>
-      <div className="w-full justify-center flex ">
-         {/* <div className=""> */}
-           <img
+    <div className="space-y-5 bg-white text-black">
+      {/* ---- CAPTURED AREA (PDF ONLY) ---- */}
+      <div ref={printref} className="bg-white text-black p-4">
+        <div className="w-full flex justify-center">
+          <img
             src="/logo.png"
             alt="Company Logo"
-            className="h-10 md:h-10 mr-1 md:mr-2 flex-shrink-0"
+            className="h-10 md:h-10 mr-2 flex-shrink-0"
           />
-       
-         {/* </div> */}
+        </div>
 
-        
-      </div>
-         <h3 className="  pt-4 font-[500] text-2xl w-full text-center">
+        <h3 className="pt-4 font-[500] text-2xl text-center">
           {data?.user_transaction.purpose === "property"
             ? `Payment Details`
             : `Transaction Details`}
         </h3>
-        <div className="flex flex-col mt-5" style={{ borderColor: '#E5E7EB' }}>
-          <div className="flex justify-between items-center py-3" style={{ borderBottom: '1px solid #E5E7EB' }}>
-            <div className="flex flex-col">
-              <p className="text-[#9CA3AF] text-xs">From</p>
-              <p className="font-bold text-xs">
-                {data?.user_transaction.beneficiary_name}
-              </p>
+
+        <div className="flex flex-col mt-5 border-t border-gray-200">
+          {/* From */}
+          <div className="flex justify-between py-3 border-b border-gray-200">
+            <div>
+              <p className="text-gray-400 text-xs">From</p>
+              <p className="font-bold text-xs">{data?.user_transaction.beneficiary_name}</p>
             </div>
           </div>
-          <div className="flex justify-between items-start py-3" style={{ borderBottom: '1px solid #E5E7EB' }}>
-            <div className="flex flex-col">
-              <p className="text-[#9CA3AF] text-xs">Description</p>
-              <p className="font-bold text-xs">
-                {data?.user_transaction.description}
-              </p>
+
+          {/* Description */}
+          <div className="flex justify-between py-3 border-b border-gray-200">
+            <div>
+              <p className="text-gray-400 text-xs">Description</p>
+              <p className="font-bold text-xs">{data?.user_transaction.description}</p>
             </div>
           </div>
-          <div className="flex justify-between items-start py-3" style={{ borderBottom: '1px solid #E5E7EB' }}>
-            <div className="flex flex-col">
-              <p className="text-[#9CA3AF] text-xs">Payment Method</p>
-              <p className="font-bold text-xs">
-                {data?.user_transaction.payment_type}
-              </p>
+
+          {/* Payment Method */}
+          <div className="flex justify-between py-3 border-b border-gray-200">
+            <div>
+              <p className="text-gray-400 text-xs">Payment Method</p>
+              <p className="font-bold text-xs">{data?.user_transaction.payment_type}</p>
             </div>
           </div>
-          <div className="flex justify-between items-start py-3" style={{ borderBottom: '1px solid #E5E7EB' }}>
-            <div className="flex flex-col">
-              <p className="text-[#9CA3AF] text-xs">Payment Type</p>
+
+          {/* Payment Type + Amount */}
+          <div className="flex justify-between py-3 border-b border-gray-200">
+            <div>
+              <p className="text-gray-400 text-xs">Payment Type</p>
               <p className="font-bold text-xs">
-                {data?.user_transaction.transaction_type
-                  ? data.user_transaction.transaction_type
-                  : data?.user_transaction.purpose === "fund"
-                  ? "Credit"
-                  : "Debit"}
+                {data?.user_transaction.transaction_type ||
+                  (data?.user_transaction.purpose === "fund" ? "Credit" : "Debit")}
               </p>
             </div>
-            <div className="flex flex-col text-left">
-              <p className="text-[#9CA3AF] text-xs">Amount Paid</p>
+
+            <div>
+              <p className="text-gray-400 text-xs">Amount Paid</p>
               <p className="font-bold text-xs">
                 {formatPrice(data?.user_transaction.amount_paid ?? 0)}
               </p>
             </div>
           </div>
-          <div className="flex justify-between items-center py-3" style={{ borderBottom: '1px solid #E5E7EB' }}>
-            <div className="flex flex-col">
-              <p className="text-[#9CA3AF] text-xs">Transaction Reference</p>
+
+          {/* Reference */}
+          <div className="flex justify-between py-3 border-b border-gray-200">
+            <div>
+              <p className="text-gray-400 text-xs">Reference</p>
               <p className="font-bold text-xs">
                 {data?.user_transaction.reference}
               </p>
             </div>
-            <CopyButton text={data?.user_transaction.reference} />
+            <CopyButton text={data?.user_transaction.reference || ""} />
           </div>
-          <div className="flex justify-between items-center py-3" style={{ borderBottom: '1px solid #E5E7EB' }}>
-            <div className="flex flex-col">
-              <p className="text-[#9CA3AF] text-xs">Status</p>
+
+          {/* Status */}
+          <div className="flex justify-between py-3 border-b border-gray-200">
+            <div>
+              <p className="text-gray-400 text-xs">Status</p>
               <div className="font-bold text-xs">
                 {renderStatusBadge(data?.user_transaction.status ?? 2)}
               </div>
             </div>
           </div>
+
+          {/* Date */}
+          <div className="flex justify-between py-3 border-b border-gray-200">
+            <div>
+              <p className="text-gray-400 text-xs">Date</p>
+              <p className="font-bold text-xs">
+                {data?.user_transaction.created_at 
+                  ? new Date(data.user_transaction.created_at).toLocaleDateString('en-US', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric',
+                      hour: '2-digit',
+                      minute: '2-digit'
+                    })
+                  : 'N/A'
+                }
+              </p>
+            </div>
+          </div>
         </div>
       </div>
-      <div className="flex justify-between">
-      
+
+      {/* ---- BUTTONS (NOT INCLUDED IN PDF) ---- */}
+      <div className="flex justify-between px-4">
         <ShareButton
           url={receiptData?.download_url}
-          className="text-xs bg-transparent !text-black hover:!bg-transparent"
+          className="text-xs bg-transparent !text-black hover:!bg-transparent border border-gray-300 px-4 py-2 rounded"
         />
 
         <Button
           onClick={handleDownloadPdf}
-          label={isDownloading ? 'Generating...' : 'Download'}
-          className="bg-[#000000] !w-fit px-6 text-xs text-[#ffffff]"
+          label={isDownloading ? "Generating..." : "Download PDF"}
+          className="bg-black !w-fit px-6 text-xs text-white hover:bg-gray-800"
           disabled={isDownloading || gettingReceipt}
         />
       </div>
