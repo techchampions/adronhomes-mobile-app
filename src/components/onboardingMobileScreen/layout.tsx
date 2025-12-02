@@ -191,6 +191,12 @@ const Sidebar = ({
                 icon={<MdAddHome className="w-4 h-4" />}
                 path="/dashboard/my-properties"
               />
+                <NavItem
+                onSlideBack={(mobileOpen) => !mobileOpen && onClose()}
+                label="My Contracts"
+                icon={<MdAddHome className="w-4 h-4" />}
+                path="/dashboard/my-contracts"
+              />
               <NavItem
                 onSlideBack={(mobileOpen) => !mobileOpen && onClose()}
                 label="New Properties"

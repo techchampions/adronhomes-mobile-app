@@ -38,6 +38,7 @@ import { SliderByTypeResponse } from "./types/SliderByTypeTypes";
 import { FAQResponse } from "./types/FAQTypes";
 import { SettingsResponse } from "./types/SettingsTypes";
 import { estatePropertiesResponse } from "./types/estatePropertiesResponse";
+import { ApiResponse, ContactParams } from "./types/contractTypes";
 
 export type ApiError = {
   response?: {
@@ -138,6 +139,15 @@ export const getNotificationByID = async (
   id: number | string
 ): Promise<NotificationByIDResponse> => {
   const res = await apiClient.get(`/notification/${id}`);
+  return res.data;
+};
+
+export const getContact = async (
+  params: ContactParams
+): Promise<ApiResponse> => {
+  const res = await apiClient.get<ApiResponse>("/user/erp-contracts", {
+    params,
+  });
   return res.data;
 };
 

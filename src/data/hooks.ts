@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   ApiError,
   createPropertyPlan,
@@ -11,6 +11,7 @@ import {
   getAllAccountDetails,
   getAllPropertyLocations,
   getAllPropertyType,
+  getContact,
   getDashboardHomeData,
   getEstates,
   getFAQs,
@@ -78,6 +79,7 @@ import { useModalStore } from "../zustand/useModalStore";
 import { FAQResponse } from "./types/FAQTypes";
 import { SettingsResponse } from "./types/SettingsTypes";
 import { estatePropertiesResponse } from "./types/estatePropertiesResponse";
+import { ApiResponse, ContactParams } from "./types/contractTypes";
 
 //Query hook for User profile
 export const useGetUser = () => {
@@ -523,5 +525,14 @@ export const useResolveVirtualAccount = () => {
     onError: () => {
       showToast("Virtual Account Resolve Failed.", "error");
     },
+  });
+};
+
+export const useGetContact = (params: ContactParams) => {
+  return useQuery<ApiResponse, Error>({
+    queryKey: ["get-contact", params],
+    queryFn: () => getContact(params),
+  placeholderData: keepPreviousData,
+    // staleTime: 1000 * 60,  
   });
 };
