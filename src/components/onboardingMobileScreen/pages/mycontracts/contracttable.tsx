@@ -4,6 +4,7 @@ import { useGetContact } from "../../../../data/hooks";
 import { ReusableTable } from "../Table_one";
 import { Link } from "react-router-dom";
 import Pagination from "../Pagination";
+import SmallLoader from "../../../SmallLoader";
 
 interface ContractData {
   id: number;
@@ -46,7 +47,7 @@ export default function ContractsPage() {
           onSearch={handleSearch}
         >
           {isLoading ? (
-            <div className="text-center py-20">Loading contracts...</div>
+            <div className="text-center py-20">  <SmallLoader />;</div>
           ) : (
             <>
               <div
@@ -136,7 +137,7 @@ export default function ContractsPage() {
                               Contract Details
                             </Link>
                             <Link
-                              to={`/transactions/${contract.id}`}
+                              to={`/dashboard/view-transacions/${contract.id}`}
                               className=" px-4 py-2 rounded-full text-sm whitespace-nowrap transition-all bg-[#79B833] items-center justify-center text-white  text-[10px]  font-medium   "
                             >
                               TNX History

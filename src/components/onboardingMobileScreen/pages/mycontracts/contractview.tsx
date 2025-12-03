@@ -202,7 +202,12 @@ export default function ContractDetailsPage() {
         {/* Header */}
         <div className="mb-8 flex items-center justify-between">
           <div className="flex items-center gap-4">
-           
+            {/* <Link
+              to="/dashboard/my-contracts"
+              className="p-2 hover:bg-gray-200 rounded-full transition"
+            >
+              <ArrowLeft className="w-6 h-6" />
+            </Link> */}
             <div>
               <h1 className="text-3xl font-bold text-gray-900">Contract Details</h1>
               <p className="text-gray-600">Contract ID: {contract.contractId}</p>

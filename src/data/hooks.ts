@@ -12,6 +12,7 @@ import {
   getAllPropertyLocations,
   getAllPropertyType,
   getContact,
+  getContractTransactions,
   getDashboardHomeData,
   getEstates,
   getFAQs,
@@ -80,6 +81,7 @@ import { FAQResponse } from "./types/FAQTypes";
 import { SettingsResponse } from "./types/SettingsTypes";
 import { estatePropertiesResponse } from "./types/estatePropertiesResponse";
 import { ApiResponse, ContactParams } from "./types/contractTypes";
+import { TransactionApiResponse, TransactionParams } from "./types/transaction";
 
 //Query hook for User profile
 export const useGetUser = () => {
@@ -532,7 +534,14 @@ export const useGetContact = (params: ContactParams) => {
   return useQuery<ApiResponse, Error>({
     queryKey: ["get-contact", params],
     queryFn: () => getContact(params),
-  placeholderData: keepPreviousData,
-    // staleTime: 1000 * 60,  
+  placeholderData: keepPreviousData, 
+  });
+};
+
+export const useGetContractTransactions = (params: TransactionParams) => {
+  return useQuery<TransactionApiResponse, Error>({
+    queryKey: ["contract-transactions", params],
+    queryFn: () => getContractTransactions(params),
+     placeholderData: keepPreviousData, 
   });
 };

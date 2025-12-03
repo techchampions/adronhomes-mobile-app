@@ -15,9 +15,7 @@ import { PlanPropertiesDetailResponse } from "./types/PropertyPlanDetailTypes";
 import { NotificationsResponse } from "./types/notificationTypes";
 import {
   TransactionByIDResponse,
-
   TransactionRecieptResponse,
-
   WalletTransactionByIDResponse,
 } from "./types/userTransactionByIDTypes";
 import { NotificationByIDResponse } from "./types/NotificationByIDTypes";
@@ -39,6 +37,7 @@ import { FAQResponse } from "./types/FAQTypes";
 import { SettingsResponse } from "./types/SettingsTypes";
 import { estatePropertiesResponse } from "./types/estatePropertiesResponse";
 import { ApiResponse, ContactParams } from "./types/contractTypes";
+import { TransactionApiResponse, TransactionParams } from "./types/transaction";
 
 export type ApiError = {
   response?: {
@@ -148,6 +147,19 @@ export const getContact = async (
   const res = await apiClient.get<ApiResponse>("/user/erp-contracts", {
     params,
   });
+  return res.data;
+};
+export const getContractTransactions = async (
+  params: TransactionParams
+): Promise<TransactionApiResponse> => {
+    const { contractId,search, page = 1, per_page = 15 } = params;
+    
+  const res = await apiClient.get<TransactionApiResponse>(
+    `/user/erp-contract/${contractId}/transactions`,
+    {
+      params
+    }
+  );
   return res.data;
 };
 
@@ -645,7 +657,9 @@ export const getSettings = async (type: string): Promise<SettingsResponse> => {
   return response.data;
 };
 export const getFeaturedProperties = async (): Promise<PropertiesResponse> => {
-  const response = await apiClient.get("/filter-property?page=1&is_featured=1&is_auth=1");
+  const response = await apiClient.get(
+    "/filter-property?page=1&is_featured=1&is_auth=1"
+  );
   return response.data;
 };
 
@@ -655,13 +669,13 @@ export const getEstates = async (): Promise<estatePropertiesResponse> => {
 };
 
 export const deleteAccount = async () => {
-  const response = await apiClient.get('/delete-account-request');
+  const response = await apiClient.get("/delete-account-request");
   return response.data;
 };
 
 export const filterPropertiesnoauth = async (
   page: number,
-  is_auth?:number,
+  is_auth?: number,
   filters: PropertyFilters = {} // Use the defined type
 ): Promise<PaginatedProperties> => {
   const params = new URLSearchParams({
@@ -692,7 +706,6 @@ export const filterPropertiesnoauth = async (
   const response = await apiClient.get(endpoint);
   return response.data;
 };
-
 
 export const resolveVirtualAccount = async () => {
   const response = await apiClient.post(`/resolve-virtual-account`);

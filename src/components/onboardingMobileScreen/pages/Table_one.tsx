@@ -22,6 +22,7 @@ interface ReusableTableProps {
   sort?: boolean;
   showTabs?: boolean;
   showSearchandSort?: boolean;
+  shouldOpenModal?: boolean;
 }
 
 // Validation Schema
@@ -39,16 +40,19 @@ export const ReusableTable: React.FC<ReusableTableProps> = ({
   onSearch,
   showTabs = true,
   showSearchandSort = true,
+  shouldOpenModal=true
 }) => {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [modalOpen, setModalOpen] = useState(false);
 
-  const handleTabClick = (tab: string) => {
-    onTabChange?.(tab);
+ const handleTabClick = (tab: string, shouldOpenModal?: boolean) => {
+  onTabChange?.(tab);
 
-    // OPEN MODAL WHEN ACTIVE TAB IS CLICKED
+  if (shouldOpenModal) {
     setModalOpen(true);
-  };
+  }
+};
+
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const query = e.target.value;
@@ -74,7 +78,7 @@ export const ReusableTable: React.FC<ReusableTableProps> = ({
                       ? "bg-[#79B833] text-white font-semibold"
                       : "bg-[#F2F2F2] text-[#6B6B6B]"
                   }`}
-                onClick={() => handleTabClick(tab)}
+                onClick={() => handleTabClick(tab,shouldOpenModal)}
               >
                 {tab}
               </button>
