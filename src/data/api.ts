@@ -162,7 +162,12 @@ export const getContractTransactions = async (
   );
   return res.data;
 };
-
+export const linkExistingContracts = async (formData: FormData) => {
+  const response = await apiClient.post(`/user/erp-contracts-link`, formData, {
+    headers: { "Content-Type": "application/json" },
+  });
+  return response.data;
+};
 // types.ts (or at the top of your file)
 //Get Properties
 // export const fetchPropertiesPageData = async (

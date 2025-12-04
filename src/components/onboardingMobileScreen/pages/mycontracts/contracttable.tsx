@@ -96,17 +96,17 @@ export default function ContractsPage() {
                         </td>
                         <td className="px-6 py-4 text-sm text-gray-900">
                         <div
-                            // to={`/contractview/${contract.id}`}
+                            
                             className="max-w-48 truncate"
-                            title={contract.propertyName || "-"} // Shows full name on hover
+                            title={contract.propertyEstate || "-"} 
                           >
                              <Link
                              className="text-blue-600 hover:text-blue-800 font-medium underline"
                             to={`/dashboard/properties/${contract.propertyId}`}
                            
-                            title={contract.propertyName || "-"} // Shows full name on hover
+                            title={contract.propertyEstate || "-"} 
                           >
-                            {contract.propertyName || "-"}
+                            {contract.propertyEstate || "-"}
                           </Link> 
                           </div>
 
@@ -123,9 +123,9 @@ export default function ContractsPage() {
                         </td>
                         <td className="px-6 py-4 text-sm text-gray-600">
                           {contract.contractDate
-                            ? new Date(
+                            ? 
                                 contract.contractDate
-                              ).toLocaleDateString()
+                              
                             : "-"}
                         </td>
                         <td className="px-6 py-4 text-center">

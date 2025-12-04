@@ -44,7 +44,7 @@ const CustomDateInput: React.FC<CustomDateInputProps> = ({
           value={formatDateForInput(field.value)}
           max={maxDate}
           min={minDate}
-          className={`w-full py-2 px-4 bg-adron-body rounded-full ${
+          className={` bg-adron-body rounded-fulltext-gray-900 h-[35px]  text-base rounded-full focus:ring-0 block w-full px-5 outline-none resize-none  placeholder:text-sm ${
             hasError ? "border border-red-500" : "border-gray-300"
           }`}
         />
@@ -52,7 +52,7 @@ const CustomDateInput: React.FC<CustomDateInputProps> = ({
         {hasError && (
           <div className="flex items-center mt-1 text-red-500">
             <FaExclamationCircle className="mr-1" />
-            <span className="text-xs">{meta.error}</span>
+            <span className="text-[10px]">{meta.error}</span>
           </div>
         )}
       </div>

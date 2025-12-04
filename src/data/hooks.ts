@@ -1,4 +1,5 @@
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+
 import {
   ApiError,
   createPropertyPlan,
@@ -34,6 +35,7 @@ import {
   getWalletTransactionReciept,
   infrastructurePayment,
   InitiatePropertyPurchaseResponse,
+  linkExistingContracts,
   makeEnquire,
   makePendingPropertyPlanPayment,
   PropertyFilters,
@@ -543,5 +545,24 @@ export const useGetContractTransactions = (params: TransactionParams) => {
     queryKey: ["contract-transactions", params],
     queryFn: () => getContractTransactions(params),
      placeholderData: keepPreviousData, 
+  });
+};
+export const useLinkExistingContracts = () => {
+  const queryClient = useQueryClient();
+  const { showToast } = useToastStore();
+
+  return useMutation({
+    mutationFn: linkExistingContracts,
+    onSuccess: (data) => {
+      showToast("Contracts linked successfully!", "success");
+      queryClient.invalidateQueries({ queryKey: ["erp-contracts"] });
+    },
+    onError: (error: any) => {
+      console.error("Full error:", error.response?.data); // Log full error
+      const msg =
+        error?.response?.data?.message ||
+        "Failed to link contract. Try again.";
+      showToast(msg, "error");
+    },
   });
 };

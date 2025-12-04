@@ -93,6 +93,7 @@ const register = async (
     phone: string;
     password: string;
     marketerReferralCode: string;
+    dob: string;
   },
   { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void },
   navigate?: (path: string) => void
@@ -110,6 +111,7 @@ const register = async (
       email: values.email,
       phone_number: values.phone,
       password: values.password,
+      dob: values.dob,
       referral_code: values.marketerReferralCode,
     });
 
@@ -120,6 +122,8 @@ const register = async (
       if (navigate) {
         navigate("/verify-Otp");
       }
+    } else if (!response.data.success) {
+      showToast("Internal Server Error", "error");
     } else if (response.data.errors) {
       const errorMessages = Object.values(response.data.errors)
         .flat()

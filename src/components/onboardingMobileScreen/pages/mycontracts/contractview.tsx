@@ -355,7 +355,7 @@ export default function ContractDetailsPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div>
               <p className="text-sm text-gray-500">Contract Date</p>
-              <p className="font-medium">{formatDate(contract.contractDate)}</p>
+              <p className="font-medium">{contract.contractDate}</p>
             </div>
             <div>
               <p className="text-sm text-gray-500">Created</p>

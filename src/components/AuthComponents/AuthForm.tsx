@@ -7,6 +7,7 @@ import Button from "../Button";
 import { useOnboardingStore } from "../../zustand/OnboardingStore";
 import Auth from "../../utils/Auth";
 import { useLocation, useNavigate } from "react-router-dom";
+import CustomDateInput from "../CustomDateInput";
 
 type AuthFormProps = {
   isLogin?: boolean;
@@ -34,6 +35,7 @@ const AuthForm = ({
     email: "",
     phone: "",
     password: "",
+    dob: "",
     confirmPassword: "",
     OTP: "",
     marketerReferralCode: "",
@@ -69,6 +71,7 @@ const AuthForm = ({
             .required("Required"),
           password: Yup.string().required("Required"),
           marketerReferralCode: Yup.string().optional(),
+          dob: Yup.string().required("Required"),
         }
       : {
           fullName: Yup.string().required("Required"),
@@ -120,7 +123,7 @@ const AuthForm = ({
       }
     >
       {({ isSubmitting }) => (
-        <Form className="space-y-3 flex flex-col px-4 md:px-10 lg:px-20">
+        <Form className="space-y-2 flex flex-col px-4 md:px-10 lg:px-12">
           <h1 className="font-bold text-2xl font text-black text-center py-4">
             {isForgotPassword
               ? "Forgot Password"
@@ -206,17 +209,26 @@ const AuthForm = ({
           )}
           {/* Marketer Referral Code (Only for Signup) */}
           {isSignup && (
-            <div className="">
-              <label htmlFor="" className="text-gray-400 text-sm">
-                Marketer Referral Code
-              </label>
+            <div className="grid grid-cols-2 gap-2">
+              <div className="">
+                <label htmlFor="" className="text-gray-400 text-sm">
+                  Referral Code
+                </label>
 
-              <InputField
-                name="marketerReferralCode"
-                type="text"
-                placeholder="Marketer Referral Code"
-                className="input"
-              />
+                <InputField
+                  name="marketerReferralCode"
+                  type="text"
+                  placeholder="Marketer Referral Code"
+                  className="input"
+                />
+              </div>
+              <div className="">
+                <label htmlFor="" className="text-gray-400 text-sm">
+                  Date of birth
+                </label>
+
+                <CustomDateInput name="dob" />
+              </div>
             </div>
           )}
           {/* Confirm Password (Only for reset) */}

@@ -4,6 +4,8 @@ import React, { ReactNode, useState } from "react";
 import { IoSearch } from "react-icons/io5";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
+import { useUserStore } from "../../../zustand/UserStore";
+import { useLinkExistingContracts } from "../../../data/hooks";
 
 interface SortOption {
   value: number;
@@ -40,20 +42,19 @@ export const ReusableTable: React.FC<ReusableTableProps> = ({
   onSearch,
   showTabs = true,
   showSearchandSort = true,
-  shouldOpenModal=true
+  shouldOpenModal = true,
 }) => {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [modalOpen, setModalOpen] = useState(false);
+  const { user, isLoggedIn } = useUserStore();
+  const handleTabClick = (tab: string, shouldOpenModal?: boolean) => {
+    onTabChange?.(tab);
 
- const handleTabClick = (tab: string, shouldOpenModal?: boolean) => {
-  onTabChange?.(tab);
-
-  if (shouldOpenModal) {
-    setModalOpen(true);
-  }
-};
-
-
+    if (shouldOpenModal) {
+      setModalOpen(true);
+    }
+  };
+  const linkMutation = useLinkExistingContracts();
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const query = e.target.value;
     setSearchQuery(query);
@@ -62,10 +63,8 @@ export const ReusableTable: React.FC<ReusableTableProps> = ({
 
   return (
     <div className="bg-white rounded-[25px] w-full px-[20px] py-[20px] lg:px-[40px] lg:py-[30px]">
-
       {/* Header */}
       <div className="w-full flex flex-col gap-4 pb-[20px] lg:flex-row lg:justify-between lg:items-center lg:pb-[30px]">
-
         {/* Tabs */}
         {showTabs && (
           <div className="flex w-full overflow-x-auto gap-2 scrollbar-hide pb-1">
@@ -78,7 +77,7 @@ export const ReusableTable: React.FC<ReusableTableProps> = ({
                       ? "bg-[#79B833] text-white font-semibold"
                       : "bg-[#F2F2F2] text-[#6B6B6B]"
                   }`}
-                onClick={() => handleTabClick(tab,shouldOpenModal)}
+                onClick={() => handleTabClick(tab, shouldOpenModal)}
               >
                 {tab}
               </button>
@@ -111,7 +110,6 @@ export const ReusableTable: React.FC<ReusableTableProps> = ({
       {modalOpen && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 px-4">
           <div className="bg-white rounded-[30px] w-full max-w-md p-6 relative">
-
             {/* Close Button */}
             <button
               onClick={() => setModalOpen(false)}
@@ -120,39 +118,51 @@ export const ReusableTable: React.FC<ReusableTableProps> = ({
               ×
             </button>
 
-            <h2 className="text-xl font-semibold mb-4">Enter Customer Details</h2>
+            <h2 className="text-xl font-semibold mb-4">
+              Enter Customer Details
+            </h2>
 
             <Formik
-              initialValues={{ customer_code: "", dob: "" }}
+              initialValues={{
+                customer_code: user?.unique_customer_id || "",
+                dob: "",
+              }}
               validationSchema={ValidationSchema}
               onSubmit={(values) => {
-                console.log("Submitted:", values);
-                setModalOpen(false);
+                // Convert Formik values to FormData
+                const formData = new FormData();
+                formData.append("customer_code", values.customer_code);
+                formData.append("dob", values.dob);
+
+                // Call mutation
+                linkMutation.mutate(formData, {
+                  onSuccess: () => setModalOpen(false),
+                });
               }}
             >
               {({ errors, touched }) => (
                 <Form className="space-y-4">
-
                   {/* Customer Code */}
                   <div>
-                    <label className="block mb-1 text-sm font-medium">Customer Code</label>
+                    <label className="block mb-1 text-sm font-medium">
+                      Customer Code
+                    </label>
                     <Field
                       name="customer_code"
                       type="text"
                       placeholder="PS120493"
                       className="w-full border rounded-full px-3 py-2 focus:outline-none"
                     />
-                    {errors.customer_code && touched.customer_code && (
-                      <p className="text-red-500 text-sm mt-1">{errors.customer_code}</p>
-                    )}
                   </div>
 
                   {/* DOB */}
                   <div>
-                    <label className="block mb-1 text-sm font-medium">Date of Birth</label>
+                    <label className="block mb-1 text-sm font-medium">
+                      Date of Birth
+                    </label>
                     <Field
                       name="dob"
-                      type="datetime-local"
+                      type="date"
                       className="w-full border rounded-full px-3 py-2 focus:outline-none"
                     />
                     {errors.dob && touched.dob && (
@@ -162,16 +172,15 @@ export const ReusableTable: React.FC<ReusableTableProps> = ({
 
                   {/* Submit */}
                   <button
+                    className={`w-full py-2 rounded-full text-white font-semibold ${linkMutation.isPending?"bg-[#99bb73]":"bg-[#79B833]"}`}
                     type="submit"
-                    className="w-full py-2 rounded-full text-white font-semibold bg-[#79B833]"
+                    disabled={linkMutation.isPending}
                   >
-                    Submit
+                    {linkMutation.isPending ? "Linking..." : "Link Contracts"}
                   </button>
-
                 </Form>
               )}
             </Formik>
-
           </div>
         </div>
       )}
