@@ -209,7 +209,7 @@ const AuthForm = ({
           )}
           {/* Marketer Referral Code (Only for Signup) */}
           {isSignup && (
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid  md:grid-cols-2 gap-2">
               <div className="">
                 <label htmlFor="" className="text-gray-400 text-sm">
                   Referral Code
