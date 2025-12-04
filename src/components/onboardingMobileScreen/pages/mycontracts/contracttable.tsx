@@ -45,6 +45,7 @@ export default function ContractsPage() {
           activeTab="Link Existing Contracts"
           searchPlaceholder="Search by contract ID or property name..."
           onSearch={handleSearch}
+          showTabs={false}
         >
           {isLoading ? (
             <div className="text-center py-20">  <SmallLoader />;</div>

@@ -172,7 +172,9 @@ export const ReusableTable: React.FC<ReusableTableProps> = ({
 
                   {/* Submit */}
                   <button
-                    className={`w-full py-2 rounded-full text-white font-semibold ${linkMutation.isPending?"bg-[#99bb73]":"bg-[#79B833]"}`}
+                    className={`w-full py-2 rounded-full text-white font-semibold ${
+                      linkMutation.isPending ? "bg-[#99bb73]" : "bg-[#79B833]"
+                    }`}
                     type="submit"
                     disabled={linkMutation.isPending}
                   >
