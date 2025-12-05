@@ -9,6 +9,8 @@ import { CompactCardSkeleton } from "../onboardingComponents/skeleton";
 import ImageCarousel from "../onboardingComponents/ImageCarousel";
 import { LoginHeader } from "../onboardingComponents/loginheader";
 import { Link } from "react-router-dom";
+import SwiperPropertyList from "./newexplorepage";
+import NewPropertyScreen from "./explorepage";
 
 const dashboardItems = [
   {
@@ -95,21 +97,38 @@ const HomeNoLogin = () => {
       <div className="pt-3 mb-6">
         <ImageCarousel images={imgapi ?? carouselImages} interval={5000} />
       </div>
-
-      <div className="space-y-[30px]">
+  {/* Quick Links Section */}
+      <div>
+        <div className="flex justify-between items-center mb-[15px] pr-4 mt-8 px-4">
+          <p className="font-adron-mid text-lg text-[#272727]">Quick Access</p>
+        </div>
+        <div className="grid grid-cols-3 gap-y-6 gap-x-3 px-4">
+          {dashboardItems.map((item, index) => (
+            <DashboardCard
+              key={index}
+              imageSrc={item.imageSrc}
+              imageAlt={item.imageAlt}
+              label={item.label}
+              url={item.url} 
+            />
+          ))}
+        </div>
+      </div>
+      <div className="space-y-[30px] mt-4">
         <div className="px-4">
           <div className="flex justify-between items-center mb-[15px]">
             <p className="font-adron-mid text-lg text-[#272727]">
               Explore Properties
             </p>
             {/* You could add a "View All" button here for estates if needed */}
-            <Link to="/all-properties" className="font-adron-mid text-sm text-[#79B833]">
+            {/* <Link to="/all-properties" className="font-adron-mid text-sm text-[#79B833]">
               View All
-            </Link>
+            </Link> */}
           </div>
 
           <div className="flex overflow-x-auto space-x-4 py-2 scrollbar-hide">
-            {isloadingestate ? (
+            <NewPropertyScreen/>
+            {/* {isloadingestate ? (
               <>
                 <CompactCardSkeleton />
                 <CompactCardSkeleton />
@@ -136,28 +155,13 @@ const HomeNoLogin = () => {
                   />
                 </div>
               ))
-            )}
+            )} */}
+            {/* <SwiperPropertyList properties={[]} isLoading={false} isError={false} isSavePropertyList={false}/> */}
           </div>
         </div>
       </div>
 
-      {/* Quick Links Section */}
-      <div>
-        <div className="flex justify-between items-center mb-[15px] pr-4 mt-8 px-4">
-          <p className="font-adron-mid text-lg text-[#272727]">Quick Access</p>
-        </div>
-        <div className="grid grid-cols-3 gap-y-6 gap-x-3 px-4">
-          {dashboardItems.map((item, index) => (
-            <DashboardCard
-              key={index}
-              imageSrc={item.imageSrc}
-              imageAlt={item.imageAlt}
-              label={item.label}
-              url={item.url}
-            />
-          ))}
-        </div>
-      </div>
+    
     </div>
   );
 };

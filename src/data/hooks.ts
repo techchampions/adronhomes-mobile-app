@@ -225,13 +225,13 @@ export const useFilterProperties = (
 };
 export const useFilterPropertiesnoauth = (
   page: number,
-    is_auth?:any,
+    // is_auth?:any,
   filters?: PropertyFilters,
 
 ) => {
   return useQuery<PaginatedProperties>({
-    queryKey: ["properties", page, is_auth, filters,],
-    queryFn: () => filterPropertiesnoauth(page,is_auth,filters),
+    queryKey: ["properties", page, filters,],
+    queryFn: () => filterPropertiesnoauth(page,filters),
   });
 };
 

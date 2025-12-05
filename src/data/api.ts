@@ -680,11 +680,11 @@ export const deleteAccount = async () => {
 
 export const filterPropertiesnoauth = async (
   page: number,
-  is_auth?: number,
+  // is_auth?: number,
   filters: PropertyFilters = {} // Use the defined type
 ): Promise<PaginatedProperties> => {
   const params = new URLSearchParams({
-    is_auth: String(is_auth),
+    // is_auth: String(is_auth),
     page: String(page),
   });
   if (filters.state) {

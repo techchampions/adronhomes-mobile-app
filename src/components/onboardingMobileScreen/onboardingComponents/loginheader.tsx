@@ -16,17 +16,17 @@ export const LoginHeader = () => {
 
         {/* Login and Register Buttons */}
         <div className="flex items-center space-x-2 md:space-x-4">
-          <Link
+          {/* <Link
             to="/login"
             className="px-3 py-1 md:px-4 md:py-2 text-gray-700 hover:text-[#79B833] font-medium text-sm md:text-base"
           >
             Login
-          </Link>
+          </Link> */}
           <Link
-            to="/signup"
-            className="px-3 py-1 md:px-4 md:py-2 bg-[linear-gradient(180deg,#B5E67E_0%,#619B21_100%)] text-white rounded-md shadow-md hover:brightness-110 text-sm md:text-base"
+            to="/login"
+            className="px-3 truncate py-1 md:px-4 md:py-2 bg-[linear-gradient(180deg,#B5E67E_0%,#619B21_100%)] text-white rounded-md shadow-md hover:brightness-110 text-sm md:text-base"
           >
-            Sign Up
+          Login to Dashboard
           </Link>
         </div>
       </nav>

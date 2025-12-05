@@ -48,7 +48,7 @@ export default function ContractsPage() {
           showTabs={false}
         >
           {isLoading ? (
-            <div className="text-center py-20">  <SmallLoader />;</div>
+            <div className="text-center py-20">  <SmallLoader /></div>
           ) : (
             <>
               <div
