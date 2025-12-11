@@ -2,11 +2,12 @@ import { create } from "zustand";
 
 type PaymentBreakDownStore = {
   initialDeposit: number;
+  subscriptionForm: number;
   infrastructureFees: number;
   otherFees: number;
   weeklyAmount: number;
   totalAmount: number;
-  propertyId: number | null |string;
+  propertyId: string | number | null;
   planId: number | null;
   propertyPrice: number;
   propertyName: string;
@@ -29,6 +30,7 @@ type PaymentBreakDownStore = {
 export const usePaymentBreakDownStore = create<PaymentBreakDownStore>(
   (set) => ({
     initialDeposit: 0,
+    subscriptionForm: 0,
     infrastructureFees: 0,
     otherFees: 0,
     weeklyAmount: 0,
@@ -51,6 +53,7 @@ export const usePaymentBreakDownStore = create<PaymentBreakDownStore>(
     resetPaymentDetails: () =>
       set({
         initialDeposit: 0,
+        subscriptionForm: 0,
         infrastructureFees: 0,
         otherFees: 0,
         weeklyAmount: 0,

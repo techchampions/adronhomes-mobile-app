@@ -14,6 +14,13 @@ import React, { useState } from "react";
 import jsPDF from "jspdf";
 import domtoimage from 'dom-to-image';
 
+
+
+interface PDFMessage {
+  type: "DOWNLOAD_PDF";
+  filename: string;
+  base64: string;
+}
 const WalletTransactionDetail = ({ id }: { id: number }) => {
   const printref=React.useRef<HTMLDivElement>(null)
     const [isDownloading, setIsDownloading] = useState(false);
@@ -52,84 +59,96 @@ const WalletTransactionDetail = ({ id }: { id: number }) => {
     );
   };
 
-const handleDownloadPdf= async()=>{
-  const element=printref.current;
-  if(!element){
-    return
-  }
-  setIsDownloading(true)
+const handleDownloadPdf = async (): Promise<void> => {
+    const element = printref.current;
+    if (!element) {
+      console.warn("No element found for PDF generation");
+      return;
+    }
+
+    setIsDownloading(true);
+
     try {
-      // Get the actual rendered dimensions of the element
       const rect = element.getBoundingClientRect();
       const elementWidth = rect.width;
       const elementHeight = rect.height;
 
-      // Define a scale factor for better quality
-      const scale = 4; // Reduced from 4 to balance quality and file size
-
-      // dom-to-image options
+      const scale = 3;
       const imageOptions = {
-        quality: 0.95, // High quality PNG
-        bgcolor: '#ffffff', // Ensure white background
+        quality: 0.98,
+        bgcolor: "#ffffff",
         width: elementWidth * scale,
         height: elementHeight * scale,
         style: {
           transform: `scale(${scale})`,
-          transformOrigin: 'top left',
+          transformOrigin: "top left",
           width: `${elementWidth}px`,
           height: `${elementHeight}px`,
         },
       };
 
-      // Generate the image
       const imgData = await domtoimage.toPng(element, imageOptions);
 
-      // Initialize jsPDF with points (pt) for A4
       const pdf = new jsPDF({
-        orientation: 'portrait',
-        unit: 'pt',
-        format: 'a4',
+        orientation: "portrait",
+        unit: "pt",
+        format: "a4",
       });
 
-      // A4 dimensions in points: 595 x 842
-      const pdfWidth = pdf.internal.pageSize.getWidth(); // 595 pt
-      const pdfHeight = pdf.internal.pageSize.getHeight(); // 842 pt
-      const margin = 20; // 20pt margin
-      const usablePdfWidth = pdfWidth - 2 * margin;
-      const usablePdfHeight = pdfHeight - 2 * margin;
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = pdf.internal.pageSize.getHeight();
+      const margin = 20;
+      const usableWidth = pdfWidth - margin * 2;
+      const usableHeight = pdfHeight - margin * 2;
 
-      // Load the image to get its natural dimensions
       const img = new Image();
       img.src = imgData;
       await new Promise((resolve) => (img.onload = resolve));
 
-      const imgWidth = img.naturalWidth / scale; // Adjust for scale
+      const imgWidth = img.naturalWidth / scale;
       const imgHeight = img.naturalHeight / scale;
-      const aspectRatio = imgWidth / imgHeight;
+      const ratio = imgWidth / imgHeight;
 
-      // Calculate dimensions to fit within usable PDF area
-      let finalImgWidth = usablePdfWidth;
-      let finalImgHeight = usablePdfWidth / aspectRatio;
+      let finalWidth = usableWidth;
+      let finalHeight = finalWidth / ratio;
 
-      // If height exceeds usable PDF height, scale by height instead
-      if (finalImgHeight > usablePdfHeight) {
-        finalImgHeight = usablePdfHeight;
-        finalImgWidth = usablePdfHeight * aspectRatio;
+      if (finalHeight > usableHeight) {
+        finalHeight = usableHeight;
+        finalWidth = finalHeight * ratio;
       }
 
-      // Center the image on the page
-      const xOffset = (pdfWidth - finalImgWidth) / 2;
-      const yOffset = margin; // Start from top margin
+      const x = (pdfWidth - finalWidth) / 2;
+      const y = margin;
 
-      pdf.addImage(imgData, 'PNG', xOffset, yOffset, finalImgWidth, finalImgHeight);
-      pdf.save('adron-receipt.pdf');
-    } catch (error) {
-      console.error('Error generating PDF:', error);
-      // alert('Failed to generate receipt. Please try again.');
+      pdf.addImage(imgData, "PNG", x, y, finalWidth, finalHeight);
+
+      const pdfOutput = pdf.output("arraybuffer");
+      const pdfOutputBase64 = btoa(
+        new Uint8Array(pdfOutput).reduce(
+          (data, byte) => data + String.fromCharCode(byte),
+          ""
+        )
+      );
+
+      const message: PDFMessage = {
+        type: "DOWNLOAD_PDF",
+        filename: `transaction-receipt-${data?.data.reference || id}.pdf`,
+        base64: pdfOutputBase64,
+      };
+
+      if (window.ReactNativeWebView) {
+        window.ReactNativeWebView.postMessage(JSON.stringify(message));
+      } else {
+        // Fallback for web environment
+        pdf.save(`transaction-receipt-${data?.data.reference || id}.pdf`);
+      }
+    } catch (err) {
+      console.error("PDF generation error:", err);
     } finally {
       setIsDownloading(false);
     }
   };
+
 
   return (
     <div className="space-y-5">

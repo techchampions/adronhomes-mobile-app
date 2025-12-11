@@ -49,6 +49,9 @@ import PropertiesPage from "../components/onboardingMobileScreen/pages";
 import HomeNoLogin from "../components/onboardingMobileScreen/pages/homloginpage";
 import { LoginHeader } from "../components/onboardingMobileScreen/onboardingComponents/loginheader";
 import NewPropertyScreennoauth from "../components/onboardingMobileScreen/pages/NewPropertyScreen";
+import ContactPage from "../components/onboardingMobileScreen/pages/mycontracts/mycontracts";
+import ContractDetailsPage from "../components/onboardingMobileScreen/pages/mycontracts/contractview";
+import ContractsPage from "../components/onboardingMobileScreen/pages/mycontracts/transactiontable";
 // import ScrollToTop from "./ScrollToTop";
 
 const DashboardScreen = lazy(() => import("../pages/DashboardScreen"));
@@ -109,6 +112,21 @@ const AllRoutes = () => {
                 path="search-properties"
                 element={<PropertySearchResultScreen />}
               />
+              
+               <Route
+                path="my-contracts"
+                element={<ContactPage />}
+              />
+               <Route
+                path="view-contract/:id"
+                element={<ContractDetailsPage />}
+              />
+                <Route
+                path="view-transacions/:id"
+                element={<ContractsPage />}
+              />
+              
+              
               <Route
                 path="saved-properties"
                 element={<SavedPropertyScreen />}

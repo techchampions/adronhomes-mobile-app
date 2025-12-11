@@ -1,4 +1,5 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+
 import {
   ApiError,
   createPropertyPlan,
@@ -11,6 +12,8 @@ import {
   getAllAccountDetails,
   getAllPropertyLocations,
   getAllPropertyType,
+  getContact,
+  getContractTransactions,
   getDashboardHomeData,
   getEstates,
   getFAQs,
@@ -32,6 +35,7 @@ import {
   getWalletTransactionReciept,
   infrastructurePayment,
   InitiatePropertyPurchaseResponse,
+  linkExistingContracts,
   makeEnquire,
   makePendingPropertyPlanPayment,
   PropertyFilters,
@@ -78,6 +82,8 @@ import { useModalStore } from "../zustand/useModalStore";
 import { FAQResponse } from "./types/FAQTypes";
 import { SettingsResponse } from "./types/SettingsTypes";
 import { estatePropertiesResponse } from "./types/estatePropertiesResponse";
+import { ApiResponse, ContactParams } from "./types/contractTypes";
+import { TransactionApiResponse, TransactionParams } from "./types/transaction";
 
 //Query hook for User profile
 export const useGetUser = () => {
@@ -219,13 +225,13 @@ export const useFilterProperties = (
 };
 export const useFilterPropertiesnoauth = (
   page: number,
-    is_auth?:any,
+    // is_auth?:any,
   filters?: PropertyFilters,
 
 ) => {
   return useQuery<PaginatedProperties>({
-    queryKey: ["properties", page, is_auth, filters,],
-    queryFn: () => filterPropertiesnoauth(page,is_auth,filters),
+    queryKey: ["properties", page, filters,],
+    queryFn: () => filterPropertiesnoauth(page,filters),
   });
 };
 
@@ -522,6 +528,41 @@ export const useResolveVirtualAccount = () => {
     },
     onError: () => {
       showToast("Virtual Account Resolve Failed.", "error");
+    },
+  });
+};
+
+export const useGetContact = (params: ContactParams) => {
+  return useQuery<ApiResponse, Error>({
+    queryKey: ["get-contact", params],
+    queryFn: () => getContact(params),
+  placeholderData: keepPreviousData, 
+  });
+};
+
+export const useGetContractTransactions = (params: TransactionParams) => {
+  return useQuery<TransactionApiResponse, Error>({
+    queryKey: ["contract-transactions", params],
+    queryFn: () => getContractTransactions(params),
+     placeholderData: keepPreviousData, 
+  });
+};
+export const useLinkExistingContracts = () => {
+  const queryClient = useQueryClient();
+  const { showToast } = useToastStore();
+
+  return useMutation({
+    mutationFn: linkExistingContracts,
+    onSuccess: (data) => {
+      showToast("Contracts linked successfully!", "success");
+      queryClient.invalidateQueries({ queryKey: ["erp-contracts"] });
+    },
+    onError: (error: any) => {
+      console.error("Full error:", error.response?.data); // Log full error
+      const msg =
+        error?.response?.data?.message ||
+        "Failed to link contract. Try again.";
+      showToast(msg, "error");
     },
   });
 };

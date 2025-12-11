@@ -17,8 +17,6 @@ import { Navbar } from "./onboardingComponents/Bottomnavigation";
 import { useUserStore } from "../../zustand/UserStore";
 import Auth from "../../utils/Auth";
 
-
-
 const CopyButton = ({ text }: { text: any }) => {
   const [copied, setCopied] = useState(false);
 
@@ -63,7 +61,7 @@ const Sidebar = ({
   const { user } = useUserStore();
   const { data: notificationData } = useGetNotifications(1);
   const unReadCount = notificationData?.unread || 0;
-  const noNfx=unReadCount===0
+  const noNfx = unReadCount === 0;
   const sidebarRef = useRef<HTMLDivElement>(null);
 
   // Handle click outside to close sidebar
@@ -91,7 +89,6 @@ const Sidebar = ({
   // Handle logout
   const handleLogout = () => {
     Auth.logout();
-    
 
     onClose();
   };
@@ -167,20 +164,23 @@ const Sidebar = ({
                 icon={<FaArrowRightArrowLeft className="w-4 h-4" />}
                 path="/dashboard/payments"
               />
-            { noNfx? <NavItem
-                onSlideBack={(mobileOpen) => !mobileOpen && onClose()}
-                label="Notifications"
-                icon={<RiNotificationBadgeFill className="w-4 h-4"/>}
-                path="/dashboard/notifications"
-                // badge={unReadCount || 0}
-              />:
-  <NavItem
-                onSlideBack={(mobileOpen) => !mobileOpen && onClose()}
-                label="Notifications"
-                icon={<RiNotificationBadgeFill className="w-4 h-4"/>}
-                path="/dashboard/notifications"
-                badge={unReadCount || 0}
-              />}
+              {noNfx ? (
+                <NavItem
+                  onSlideBack={(mobileOpen) => !mobileOpen && onClose()}
+                  label="Notifications"
+                  icon={<RiNotificationBadgeFill className="w-4 h-4" />}
+                  path="/dashboard/notifications"
+                  // badge={unReadCount || 0}
+                />
+              ) : (
+                <NavItem
+                  onSlideBack={(mobileOpen) => !mobileOpen && onClose()}
+                  label="Notifications"
+                  icon={<RiNotificationBadgeFill className="w-4 h-4" />}
+                  path="/dashboard/notifications"
+                  badge={unReadCount || 0}
+                />
+              )}
               <h4 className="text-adron-gray-400 font-bold px-7 mt-7 text-[13px]">
                 LISTINGS
               </h4>
@@ -191,6 +191,7 @@ const Sidebar = ({
                 icon={<MdAddHome className="w-4 h-4" />}
                 path="/dashboard/my-properties"
               />
+
               <NavItem
                 onSlideBack={(mobileOpen) => !mobileOpen && onClose()}
                 label="New Properties"
@@ -203,7 +204,12 @@ const Sidebar = ({
                 icon={<RiHomeHeartFill className="w-4 h-4" />}
                 path="/dashboard/saved-properties"
               />
-
+              <NavItem
+                onSlideBack={(mobileOpen) => !mobileOpen && onClose()}
+                label="My Contracts"
+                icon={<MdAddHome className="w-4 h-4" />}
+                path="/dashboard/my-contracts"
+              />
               <h4 className="text-adron-gray-400 font-bold px-7 mt-7 text-[13px]">
                 PROFILE
               </h4>
@@ -257,11 +263,10 @@ const Sidebar = ({
   );
 };
 
-
-import { Formik, Form } from 'formik';
+import { Formik, Form } from "formik";
 // import { InputField } from 'path/to/InputField'; // Adjust import as needed
-import { FaSearch, FaTimes } from 'react-icons/fa'; // Added FaTimes for cancel button
-import { useQueryClient } from '@tanstack/react-query';
+import { FaSearch, FaTimes } from "react-icons/fa"; // Added FaTimes for cancel button
+import { useQueryClient } from "@tanstack/react-query";
 import { searchProperties } from "../../data/api";
 import InputField from "../InputField";
 import { useSearchStore } from "../../zustand/SearchStore";
@@ -273,13 +278,17 @@ export const Layout = ({ children }: { children: any }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false); // State to toggle search input
   const userData = data?.user;
-  const { setSearchResults, setLoading,isLoading:loadingSearch } = useSearchStore();
+  const {
+    setSearchResults,
+    setLoading,
+    isLoading: loadingSearch,
+  } = useSearchStore();
   const userHasProfilePicture = userData?.profile_picture;
   const initials =
-    (userData?.first_name?.[0] || '') + (userData?.last_name?.[0] || '');
+    (userData?.first_name?.[0] || "") + (userData?.last_name?.[0] || "");
 
   const [screenWidth, setScreenWidth] = useState(
-    typeof window !== 'undefined' ? window.innerWidth : 0
+    typeof window !== "undefined" ? window.innerWidth : 0
   );
   const [showBoundary, setShowBoundary] = useState(false);
   const navigate = useNavigate();
@@ -287,30 +296,29 @@ export const Layout = ({ children }: { children: any }) => {
   const queryClient = useQueryClient();
   // const [loading, setLoading] = useState(false);
 
-
   useEffect(() => {
     const handleResize = () => {
       const width = window.innerWidth;
       setScreenWidth(width);
       setShowBoundary(width >= 525 && width <= 767);
     };
-    window.addEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
     handleResize();
-    return () => window.removeEventListener('resize', handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   const handleSearchSubmit = async (values: { search: string }) => {
     setLoading(true);
     try {
       const data = await queryClient.fetchQuery({
-        queryKey: ['search-properties-results', values.search],
+        queryKey: ["search-properties-results", values.search],
         queryFn: () => searchProperties({ search: values.search }),
       });
       setSearchResults(data);
-      navigate('/dashboard/search-properties');
-      setIsSearchOpen(false); 
+      navigate("/dashboard/search-properties");
+      setIsSearchOpen(false);
     } catch (error) {
-      console.error('Search error:', error);
+      console.error("Search error:", error);
     } finally {
       setLoading(false);
     }
@@ -318,9 +326,7 @@ export const Layout = ({ children }: { children: any }) => {
 
   return (
     <div className=" bg-transparent flex flex-col">
-
       <header className="fixed top-0 left-0 right-0 px-4 py-2 z-50 bg-[#0e760e]">
-
         <div className="flex justify-between items-start relative z-10 max-w-7xl mx-auto">
           <div className="flex items-center space-x-4">
             <button
@@ -339,9 +345,9 @@ export const Layout = ({ children }: { children: any }) => {
               <div className="text-[10px] font-normal opacity-90">Welcome,</div>
               <div
                 className="text-sm md:text-sm font-bold max-w-[150px] md:max-w-[200px] truncate"
-                title={userData?.first_name || ''}
+                title={userData?.first_name || ""}
               >
-                {userData?.first_name || ''}
+                {userData?.first_name || ""}
               </div>
             </div>
           </div>
@@ -351,7 +357,7 @@ export const Layout = ({ children }: { children: any }) => {
             {isSearchOpen ? (
               <div className="fixed inset-x-0 top-0 bg-[#0e760e] px-4 py-2 z-50 flex items-center justify-between md:static md:flex md:items-center md:max-w-md">
                 <Formik
-                  initialValues={{ search: '' }}
+                  initialValues={{ search: "" }}
                   onSubmit={handleSearchSubmit}
                 >
                   {({ resetForm }) => (
@@ -390,34 +396,35 @@ export const Layout = ({ children }: { children: any }) => {
                     </Form>
                   )}
                 </Formik>
-
               </div>
             ) : (
-              <><button
+              <>
+                <button
                   className="p-2 text-white hover:text-gray-200 mr-2 md:mr-5"
                   onClick={() => setIsSearchOpen(true)}
                   aria-label="Open search"
                 >
                   <FaSearch size={16} />
-                </button><div
+                </button>
+                <div
                   className="w-8 h-8 rounded-full bg-white overflow-hidden border-2 border-white hover:border-gray-200 transition-colors duration-200 flex-shrink-0"
-                  onClick={() => navigate('/dashboard/my-profile')}
+                  onClick={() => navigate("/dashboard/my-profile")}
                 >
-                    {userHasProfilePicture ? (
-                      <img
-                        src={userData.profile_picture!}
-                        alt="User profile picture"
-                        className="w-full h-full object-cover" />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center text-adron-black text-xs font-bold">
-                        {initials.toUpperCase()}
-                      </div>
-                    )}
-                  </div></>
+                  {userHasProfilePicture ? (
+                    <img
+                      src={userData.profile_picture!}
+                      alt="User profile picture"
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-adron-black text-xs font-bold">
+                      {initials.toUpperCase()}
+                    </div>
+                  )}
+                </div>
+              </>
             )}
           </div>
-
-         
         </div>
       </header>
 
@@ -425,7 +432,7 @@ export const Layout = ({ children }: { children: any }) => {
 
       <main
         className={`flex-1 overflow-auto pt-[70px] ${
-          isSearchOpen ? 'md:pt-[70px]' : 'md:pt-[70px]'
+          isSearchOpen ? "md:pt-[70px]" : "md:pt-[70px]"
         } pb-32 overflow-y-auto transition-all duration-300`}
       >
         {children}

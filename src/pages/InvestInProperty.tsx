@@ -20,6 +20,7 @@ import InputField from "../components/InputField";
 import { formatPrice } from "../data/utils";
 import NoPropertyFound from "../components/NoPropertyFound";
 import { BadgePercent } from "lucide-react";
+import InputFieldFormatted from "../components/InputField+Format";
 
 export default function InvestmentForm() {
   const { openModal } = useModalStore();
@@ -63,6 +64,7 @@ export default function InvestmentForm() {
     endDate: "",
     units: 1,
     propertyPurpose: "",
+    initialDeposit: "",
   };
   const validationSchema = Yup.object({
     ...(selectedPaymentType === "Installment"
@@ -73,6 +75,7 @@ export default function InvestmentForm() {
           endDate: Yup.date().required("Required"),
           paymentType: Yup.string().required("Required"),
           units: Yup.number().required("Required"),
+          initialDeposit: Yup.number().required("Required"),
         }
       : {
           paymentType: Yup.string().required("Required"),
@@ -88,7 +91,7 @@ export default function InvestmentForm() {
   });
   const submit = (values: typeof initialValues) => {
     const {
-      initialDeposit,
+      subscriptionForm,
       weeklyAmount,
       infrastructureFees,
       otherFees,
@@ -110,15 +113,15 @@ export default function InvestmentForm() {
         paymentSchedule: values.paymentSchedule,
         startDate: formatedStartDate,
         endDate: formatedEndDate,
-        initialDeposit: initialDeposit,
+        subscriptionForm: subscriptionForm,
+        initialDeposit: Number(values.initialDeposit) + subscriptionForm,
         weeklyAmount: weeklyAmount,
         totalAmount: totalAmount,
         infrastructureFees: infrastructureFees,
         otherFees: otherFees,
         numberOfUnits: values.units,
         propertyId: id ? id : null,
-        propertyPurpose:
-          property?.type.name === "Land" ? values.propertyPurpose : null,
+        propertyPurpose: values.propertyPurpose,
       };
       setPaymentDetails(planDetails);
       openModal(<InputMarketerId />);
@@ -131,15 +134,15 @@ export default function InvestmentForm() {
         paymentSchedule: values.paymentSchedule,
         startDate: values.startDate,
         endDate: values.endDate,
-        initialDeposit: initialDeposit,
+        subscriptionForm: subscriptionForm,
+        initialDeposit: Number(values.initialDeposit) + subscriptionForm,
         weeklyAmount: weeklyAmount,
         totalAmount: totalAmount,
         infrastructureFees: infrastructureFees,
         otherFees: otherFees,
         numberOfUnits: values.units,
         propertyId: id ? id : null, // Convert string ID to number
-        propertyPurpose:
-          property?.type.name === "Land" ? values.propertyPurpose : null,
+        propertyPurpose: values.propertyPurpose,
       };
       setPaymentDetails(planDetails);
       openModal(<InputMarketerId />);
@@ -175,7 +178,7 @@ export default function InvestmentForm() {
         const {
           infrastructureFees,
           otherFees,
-          initialDeposit,
+          subscriptionForm,
           weeklyAmount,
           totalAmount,
         } = calculatePaymentDetails(values, property);
@@ -239,6 +242,19 @@ export default function InvestmentForm() {
 
                   {selectedPaymentType === "Installment" && (
                     <>
+                      <div className="">
+                        <label className="block text-sm mb-2">
+                          Initial Deposit
+                        </label>
+
+                        <InputFieldFormatted
+                          name="initialDeposit"
+                          type="number"
+                          formatAsNaira
+                          placeholder="Enter preferred initial deposit"
+                        />
+                      </div>
+
                       <div>
                         <label className="block text-sm mb-2">
                           Payment Duration
@@ -305,11 +321,9 @@ export default function InvestmentForm() {
                 <h4 className="font-semibold mb-4">Payment Breakdown</h4>
                 <div className="space-y-4 text-sm">
                   <p className="text-black flex justify-between gap-4">
-                    {formatPrice(initialDeposit)}
+                    {formatPrice(subscriptionForm)}
                     <span className="text-xs text-gray-400 text-right">
-                      {values.paymentType === "One Time"
-                        ? "Full Payment"
-                        : "Initial Deposit"}
+                      Subscription Form
                     </span>
                   </p>
                   {/* <p className="text-black flex justify-between gap-4">

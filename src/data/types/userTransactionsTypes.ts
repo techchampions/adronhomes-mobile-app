@@ -22,7 +22,7 @@ export interface Transaction {
   payment_type: string;
   transaction_method: string;
   reference: string;
-  created_at: string | null;
+  created_at: string | any;
   updated_at: string | null;
   status: TransactionStatus | null;
   property: Property;
