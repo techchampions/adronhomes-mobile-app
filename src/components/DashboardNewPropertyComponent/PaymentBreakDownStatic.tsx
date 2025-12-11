@@ -1,5 +1,6 @@
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 import { usePaymentBreakDownStore } from "../../zustand/PaymentBreakDownStore";
+import { Info } from "lucide-react";
 
 // interface PaymentBreakDownProps {
 //   values: {
@@ -20,6 +21,7 @@ const PaymentBreakDown2 = () => {
   const {
     paymentSchedule,
     initialDeposit,
+    subscriptionForm,
     infrastructureFees,
     otherFees,
     weeklyAmount,
@@ -32,11 +34,9 @@ const PaymentBreakDown2 = () => {
       <h4 className="font-semibold mb-4">Payment Breakdown</h4>
       <div className="space-y-4 text-sm">
         <p className="text-black flex justify-between gap-4">
-          ₦{initialDeposit?.toLocaleString()}
+          ₦{subscriptionForm?.toLocaleString()}
           <span className="text-xs text-gray-400 text-right">
-            {paymentType === "One Time"
-              ? "One Time Payment"
-              : "Initial Deposit"}
+            Subscription Form{" "}
           </span>
         </p>
         <p className="text-black flex justify-between gap-4">
@@ -58,21 +58,23 @@ const PaymentBreakDown2 = () => {
           </p>
         )}
         <p className="text-black flex justify-between gap-4">
-          ₦{totalAmount.toLocaleString()}
+          ₦{initialDeposit.toLocaleString()}
           <span className="text-xs text-gray-400 text-right">
-            Total Amount to be Paid
+            Initial deposit
           </span>
         </p>
       </div>
-      <div className="mt-6 bg-adron-green text-white text-start px-4 md:px-6 py-2 rounded-3xl font-semibold text-lg flex flex-col">
+      <div className="mt-6 bg-adron-green text-white text-start px-4 md:px-6 py-2 rounded-xl font-semibold text-lg flex flex-col">
         ₦{totalAmount.toLocaleString()}{" "}
-        <span className="text-xs text-white/50">Total</span>
+        <span className="text-xs text-white/50">Total Amount to be paid</span>
       </div>
-      <p className="text-xs text-gray-400 mt-2 flex items-start gap-2">
-        <HiOutlineExclamationCircle className="h-10 w-10" />
-        The breakdown updates based on your selection. Contact support if you
-        have questions.
-      </p>
+      <div className="text-xs text-gray-400 mt-2 flex items-start justify-between gap-2">
+        <Info size={18} />
+        <div className="flex-1">
+          The breakdown updates based on your selection. Contact support if you
+          have questions.
+        </div>
+      </div>
     </div>
   );
 };

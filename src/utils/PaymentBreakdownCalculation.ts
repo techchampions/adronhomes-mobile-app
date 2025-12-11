@@ -9,6 +9,7 @@ export const calculatePaymentDetails = (
     paymentSchedule: string;
     units: number;
     propertyPurpose: string;
+    initialDeposit: string | number;
   },
   property?: Property
 ) => {
@@ -34,12 +35,7 @@ export const calculatePaymentDetails = (
 
   const installmentPrice = property?.initial_deposit || 0;
   const installmentPriceTotal = installmentPrice * units;
-  const initialDeposit =
-    values.paymentType === "One Time"
-      ? oneTimeTotal
-      : // ? property?.price || 0 * values.units
-        installmentPriceTotal;
-  // property?.initial_deposit || 0 * values.units;
+  const subscriptionForm = installmentPriceTotal;
 
   const remPrice = (property?.price || 0) - (property?.initial_deposit || 0);
 
@@ -50,14 +46,15 @@ export const calculatePaymentDetails = (
       ? remPrice / (Number(values.paymentDuration || 1) / 3)
       : 0;
 
-  const totalAmount =
-    // values.paymentType === "One Time" ? initialDeposit :
-    initialDeposit;
+  let totalAmount = subscriptionForm + Number(values.initialDeposit);
+  if (values.paymentType === "One Time") {
+    totalAmount = oneTimeTotal + subscriptionForm;
+  }
   weeklyAmount = weeklyAmount * units;
   return {
     otherFees,
     infrastructureFees,
-    initialDeposit,
+    subscriptionForm,
     remPrice,
     weeklyAmount,
     totalAmount,
