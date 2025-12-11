@@ -224,9 +224,8 @@ export const useFilterProperties = (
   });
 };
 export const useFilterPropertiesnoauth = (
-  page: number,
-    // is_auth?:any,
-  filters?: PropertyFilters,
+page: number, p0: string, // is_auth?:any,
+filters?: PropertyFilters,
 
 ) => {
   return useQuery<PaginatedProperties>({

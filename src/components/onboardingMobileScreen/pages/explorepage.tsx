@@ -25,7 +25,7 @@ const NewPropertyScreen = () => {
     data: propertyData,
     isLoading: loadingProperties,
     isError: errorProperty,
-  } = useFilterPropertiesnoauth(page, filters);
+  } = useFilterPropertiesnoauth(page,"", filters);
   const totalPages = propertyData?.last_page || 0;
 
   const properties = propertyData?.data || [];
