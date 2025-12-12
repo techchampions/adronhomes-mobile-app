@@ -163,6 +163,7 @@ const AllRoutes = () => {
   <Route index element={<HomeNoLogin />} />
   <Route path="adrone-properties/:id" element={<PropertyDetail />} />
    <Route path="all-properties" element={<NewPropertyScreennoauth />} />
+    <Route path="/unauth/dashboard/properties/:id" element={<PropertyDetail />} />
 </Route>
 
 
@@ -173,6 +174,7 @@ const AllRoutes = () => {
               <Route path="/verify-otp" element={<OTPScreen />} />
               <Route path="/forgot-password" element={<ForgotPassword />} />
               <Route path="/reset-password" element={<ResetPassword />} />
+                
             </Route>
           </Route>
         </Routes>

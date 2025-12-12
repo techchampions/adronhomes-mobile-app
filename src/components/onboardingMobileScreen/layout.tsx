@@ -204,12 +204,12 @@ const Sidebar = ({
                 icon={<RiHomeHeartFill className="w-4 h-4" />}
                 path="/dashboard/saved-properties"
               />
-              <NavItem
+              {/* <NavItem
                 onSlideBack={(mobileOpen) => !mobileOpen && onClose()}
                 label="My Contracts"
                 icon={<MdAddHome className="w-4 h-4" />}
                 path="/dashboard/my-contracts"
-              />
+              /> */}
               <h4 className="text-adron-gray-400 font-bold px-7 mt-7 text-[13px]">
                 PROFILE
               </h4>

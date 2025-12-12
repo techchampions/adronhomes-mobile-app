@@ -2,7 +2,7 @@ import { GiStreetLight } from "react-icons/gi";
 import { HiOutlineLocationMarker } from "react-icons/hi";
 import { MdOutlinePower } from "react-icons/md";
 import Button from "./Button";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 type PropertyProps = {
   id: number;
   slug: string;
@@ -36,9 +36,16 @@ const PropertyCard = ({
   }).format(price);
   const address = `${streetAddress}, ${lga}, ${state} ${country}`;
   const navigate = useNavigate();
-  const handleViewProperty = () => {
-    navigate(`/dashboard/properties/${slug}`);
-  };
+  const location = useLocation();
+    const handleViewProperty = () => {
+    if (location.pathname === "/") {
+      navigate(`/unauth/dashboard/properties/${slug}`);
+    } else if (location.pathname.startsWith("/unauth")) {
+      navigate(`/unauth/dashboard/properties/${slug}`);
+    } else {
+      navigate(`/dashboard/properties/${slug}`);
+    }
+  };;
 
   return (
     <div className="w-full min-w-[300px] max-w-[472px] mx-auto rounded-[30px] overflow-hidden">

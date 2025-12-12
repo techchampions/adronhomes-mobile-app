@@ -1,5 +1,5 @@
 import { useRef, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Swiper as SwiperType } from "swiper/types";
@@ -43,6 +43,7 @@ export default function SwiperPropertyCard({ property }: Props) {
     allowedFeatures.includes(item)
   );
 
+const location = useLocation();
   const isRented =
     property?.purpose?.includes("rent") ||
     property?.purpose?.includes("Rent") ||
@@ -81,7 +82,15 @@ export default function SwiperPropertyCard({ property }: Props) {
   const toggleSaveProperty = async () => {
     toggleSave(property.id);
   };
-
+  const handleViewProperty = () => {
+    if (location.pathname === "/") {
+      navigate(`/unauth/dashboard/properties/${property.slug}`);
+    } else if (location.pathname.startsWith("/unauth")) {
+      navigate(`/unauth/dashboard/properties/${property.slug}`);
+    } else {
+      navigate(`/dashboard/properties/${property.slug}`);
+    }
+  };
   return (
     <div className="rounded-3xl">
       <div className="relative w-full h-[250px] rounded-xl overflow-hidden">
@@ -230,11 +239,13 @@ export default function SwiperPropertyCard({ property }: Props) {
         </div>
 
         <div className="grid grid-cols-2 items-center justify-between gap-2">
-          <Button
-            label="View Property"
-            className="bg-adron-green text-xs py-3"
-            onClick={() => navigate(`/dashboard/properties/${property.slug}`)}
-          />
+       <Button
+  label="View Property"
+  className="bg-adron-green text-xs py-3"
+  onClick={() => {
+   handleViewProperty()
+  }}
+/>
           {isRented ? (
             <LinkButton
               href={property.whatsapp_link}
