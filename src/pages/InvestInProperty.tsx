@@ -114,7 +114,7 @@ export default function InvestmentForm() {
         startDate: formatedStartDate,
         endDate: formatedEndDate,
         subscriptionForm: subscriptionForm,
-        initialDeposit: Number(values.initialDeposit) + subscriptionForm,
+        initialDeposit: Number(values.initialDeposit),
         weeklyAmount: weeklyAmount,
         totalAmount: totalAmount,
         infrastructureFees: infrastructureFees,
@@ -135,7 +135,7 @@ export default function InvestmentForm() {
         startDate: values.startDate,
         endDate: values.endDate,
         subscriptionForm: subscriptionForm,
-        initialDeposit: Number(values.initialDeposit) + subscriptionForm,
+        initialDeposit: Number(values.initialDeposit),
         weeklyAmount: weeklyAmount,
         totalAmount: totalAmount,
         infrastructureFees: infrastructureFees,
@@ -320,12 +320,20 @@ export default function InvestmentForm() {
 
                 <h4 className="font-semibold mb-4">Payment Breakdown</h4>
                 <div className="space-y-4 text-sm">
-                  <p className="text-black flex justify-between gap-4">
+                  <div className="text-black flex justify-between gap-4">
                     {formatPrice(subscriptionForm)}
                     <span className="text-xs text-gray-400 text-right">
                       Subscription Form
                     </span>
-                  </p>
+                  </div>
+                  {values.initialDeposit && (
+                    <div className="text-black flex justify-between gap-4">
+                      {formatPrice(Number(values.initialDeposit))}
+                      <span className="text-xs text-gray-400 text-right">
+                        Initial deposit
+                      </span>
+                    </div>
+                  )}
                   {/* <p className="text-black flex justify-between gap-4">
                     ₦{fees.toLocaleString()}
                     <span className="text-xs text-gray-400 text-right">

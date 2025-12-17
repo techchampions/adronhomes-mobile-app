@@ -9,6 +9,7 @@ import {
   filterProperties,
   filterPropertiesnoauth,
   fundWallet,
+  generateNewRef,
   getAllAccountDetails,
   getAllPropertyLocations,
   getAllPropertyType,
@@ -563,5 +564,42 @@ export const useLinkExistingContracts = () => {
         "Failed to link contract. Try again.";
       showToast(msg, "error");
     },
+  });
+};
+
+interface Payment {
+  id: number;
+  property_id: number;
+  user_id: number;
+  property_plan_id: number;
+  order_id: number | null;
+  amount_paid: number;
+  purpose: string;
+  payment_type: string;
+  status: number;
+  reference: string;
+  is_coupon: number;
+  created_at: string;
+  updated_at: string;
+  proof_of_payment: string | null;
+  bank_name: string;
+  description: string;
+  marketer_id: number | null;
+  director_id: number;
+}
+
+interface PaymentUpdateResponse {
+  success: boolean;
+  message: string;
+  payment: Payment;
+  merchant_code: string;
+  payable_code: string;
+}
+
+export const useGenerateNewRef = (payment_id: number) => {
+  return useQuery<PaymentUpdateResponse>({
+    queryKey: ["new-payment-ref", payment_id],
+    queryFn: () => generateNewRef(payment_id),
+    enabled: !!payment_id,
   });
 };

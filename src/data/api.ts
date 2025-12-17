@@ -342,6 +342,8 @@ export const fundWallet = async (
   return res.data;
 };
 export type InitiatePropertyPurchaseResponse = {
+  payable_code: string;
+  merchant_code: string;
   success: boolean;
   message: string;
   plan: {
@@ -714,5 +716,10 @@ export const filterPropertiesnoauth = async (
 
 export const resolveVirtualAccount = async () => {
   const response = await apiClient.post(`/resolve-virtual-account`);
+  return response.data;
+};
+
+export const generateNewRef = async (payment_id: number) => {
+  const response = await apiClient.get(`/payment-retry/${payment_id}`);
   return response.data;
 };

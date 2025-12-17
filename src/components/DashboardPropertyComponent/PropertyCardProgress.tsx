@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useModalStore } from "../../zustand/useModalStore";
 import SelectPaymentMethod from "../DashboardMyPropertyComponents/SelectPaymentMethod";
 import { formatDate } from "../../data/utils";
+import { useGetPropertyPlanByID } from "../../data/hooks";
 
 type PropertyCardProps = {
   id: number;
@@ -21,11 +22,13 @@ type PropertyCardProps = {
   status: number;
   payment_method: string;
   payment_type: number;
+  subscription_form: number;
 };
 
 const PropertyCard: React.FC<PropertyCardProps> = ({
   id,
   user_property_id,
+  subscription_form,
   createdAt,
   imageUrl,
   title,
@@ -41,6 +44,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
 }) => {
   const navigate = useNavigate();
   const { openModal, closeModal } = useModalStore();
+  const { data, isLoading } = useGetPropertyPlanByID(id);
   // const progressPercent = Math.min(
   //   100,
   //   (raisedAmount / targetAmount) * 100
@@ -49,14 +53,18 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
     navigate(`/dashboard/my-property/${id}`);
   };
   const makePayment = () => {
-    openModal(
-      <SelectPaymentMethod
-        goBack={closeModal}
-        amount={raisedAmount}
-        user_property_id={user_property_id}
-        payment_type={payment_type}
-      />
-    );
+    if (data?.payment.id) {
+      openModal(
+        <SelectPaymentMethod
+          goBack={closeModal}
+          subscription_form={data.plan_properties.property.initial_deposit}
+          amount={raisedAmount + subscription_form}
+          user_property_id={user_property_id}
+          payment_type={payment_type}
+          payment_id={data?.payment.id}
+        />
+      );
+    }
   };
   const location = `${lga}, ${state}`;
   // if (units > 1) {
@@ -114,13 +122,17 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
           className="!w-fit px-4 text-[9px] md:text-xs"
           onClick={handleNavigation}
         />
-        {status === 0 && payment_method === "paystack" && (
-          <Button
-            label="Make Payment"
-            className="!w-fit px-4 text-[9px] md:text-xs !bg-transparent !text-adron-green border-1 border-adron-green"
-            onClick={makePayment}
-          />
-        )}
+        {status === 0 &&
+          (payment_method === "paystack" ||
+            payment_method == "interswitch") && (
+            <Button
+              label="Make Payment"
+              isLoading={isLoading}
+              disabled={!data?.payment.id}
+              className="!w-fit px-4 text-[9px] md:text-xs !bg-transparent !text-adron-green border-1 border-adron-green"
+              onClick={makePayment}
+            />
+          )}
       </div>
     </div>
   );

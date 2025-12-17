@@ -20,7 +20,7 @@ const PropertyList: React.FC<PropertyListProps> = ({
       return <SmallLoader />;
     }
     if (properties.length <= 0) {
-      return <NotFound />;
+      return <NotFound/>;
     }
     if (isError) {
       return <ApiErrorBlock />;
@@ -30,7 +30,7 @@ const PropertyList: React.FC<PropertyListProps> = ({
         {properties.map((plan) => (
           <PropertyCardProgress
             payment_type={plan.plan?.payment_type}
-            // transactionRef ={plan.plan.ref}
+            subscription_form={plan.property.initial_deposit}
             createdAt={plan.created_at}
             key={plan.id}
             user_property_id={plan.id}
