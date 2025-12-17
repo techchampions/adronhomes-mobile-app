@@ -79,12 +79,7 @@ const HomeNoLogin = () => {
   // Removed showAllFeatured state as featured section is gone
   // const [showAllFeatured, setShowAllFeatured] = useState(false);
 
-  const carouselImages = [
-    { src: "/flag.svg", alt: "Featured property" },
-    { src: "/dot3.svg", alt: "Demo property 1" },
-    { src: "/dot2.svg", alt: "Demo property 2" },
-  ];
-
+  
   const imgapi = dashboardSlider?.data?.map((item) => ({
     src: item?.image,
     alt: "andron",
@@ -95,7 +90,14 @@ const HomeNoLogin = () => {
 
 
       <div className="pt-3 mb-6">
-        <ImageCarousel images={imgapi ?? carouselImages} interval={5000} />
+          {sliderLoading ? (
+        <div className="mb-[32px] px-4">
+          <div className="w-full min-h-[160px] md:min-h-[250px] lg:min-h-[400px] overflow-hidden rounded-[20px] bg-gray-100 animate-pulse" />
+        </div>
+      ) : (
+        <ImageCarousel images={imgapi!} interval={5000} />
+      )}
+
       </div>
   {/* Quick Links Section */}
       <div>
