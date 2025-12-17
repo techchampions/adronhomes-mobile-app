@@ -24,6 +24,7 @@ import { BsFillExclamationCircleFill } from "react-icons/bs";
 import MyPlanPaymentHistory from "../components/DashboardMyPropertyComponents/MyPropertyPaymentHistory";
 import SelectPaymentMethod from "../components/DashboardMyPropertyComponents/SelectPaymentMethod";
 import DownloadPropertyDocuments from "../components/DashboardMyPropertyComponents/DownloadPropertyDocuments";
+import { useToastStore } from "../zustand/useToastStore";
 
 const MyPropertyDetail = () => {
   // const { data, isLoading, isError } = useGetUserTransactions();
@@ -59,6 +60,7 @@ const MyPropertyDetail = () => {
   const { setPaymentDetails, resetPaymentDetails, planId } =
     usePaymentBreakDownStore();
   const { openModal, closeModal } = useModalStore();
+  const { showToast } = useToastStore();
   const navigate = useNavigate();
   const params = useParams();
   const id = params?.id;
@@ -89,21 +91,36 @@ const MyPropertyDetail = () => {
     data?.plan_properties.infrastructure_percentage || 0;
   const otherFeeProgress = data?.plan_properties.other_percentage || 0;
   const handleViewProperty = () => {
-    navigate(`/dashboard/properties/${data?.plan_properties.property.slug}`);
+    navigate(
+      `/dashboard/properties/${
+        data?.plan_properties.property.slug
+          ? data?.plan_properties.property.slug
+          : data?.plan_properties.property.id
+      }`
+    );
   };
   const completeInitialPropertyPayment = () => {
     resetPaymentDetails();
     setPaymentDetails({
       planId: data?.plan_properties.id,
     });
-    openModal(
-      <SelectPaymentMethod
-        amount={data?.plan_properties.paid_amount || 0}
-        user_property_id={data?.user_property.id || 0}
-        payment_type={Number(data?.plan_properties.payment_type)}
-        goBack={closeModal}
-      />
-    );
+    if (data?.payment.id) {
+      openModal(
+        <SelectPaymentMethod
+          subscription_form={data.plan_properties.property.initial_deposit}
+          amount={
+            (data?.plan_properties.paid_amount || 0) +
+            (data?.plan_properties.property.initial_deposit || 0)
+          }
+          user_property_id={data?.user_property.id || 0}
+          payment_id={data?.payment.id}
+          payment_type={Number(data?.plan_properties.payment_type)}
+          goBack={closeModal}
+        />
+      );
+    } else {
+      showToast("No Payment ID found", "error");
+    }
   };
   const makePaymentForProperty = () => {
     resetPaymentDetails();
@@ -177,7 +194,10 @@ const MyPropertyDetail = () => {
           </div>
         );
       }
-      if (data.payment.payment_type === "Paystack") {
+      if (
+        data.payment.payment_type === "Paystack" ||
+        data.payment.payment_type === "Interswitch"
+      ) {
         return (
           <div className="space-y-1">
             <Button
@@ -188,7 +208,8 @@ const MyPropertyDetail = () => {
             <div className="flex items-center gap-1 text-white/50">
               <BsFillExclamationCircleFill />
               <span className="text-xs">
-                Your Paystack Payment was not completed... Try again.
+                Your {data.payment.payment_type} Payment was not completed...
+                Try again.
               </span>
             </div>
           </div>
@@ -410,6 +431,13 @@ const MyPropertyDetail = () => {
                       {data?.contract?.unique_contract_id || "No contract ID"}
                     </p>
                   </div>
+                </div>
+                <div className="bg-white/50 rounded-lg px-5 py-1 w-fit text-sm text-white flex items-center">
+                  +{" "}
+                  {formatPrice(
+                    Number(data?.plan_properties.property.initial_deposit)
+                  )}{" "}
+                  Subscription-form
                 </div>
 
                 <div className="flex justify-between items-baseline text-sm mt-2 w-fit text-white">

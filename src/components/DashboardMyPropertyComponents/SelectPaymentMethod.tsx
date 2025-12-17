@@ -4,6 +4,7 @@ import { useModalStore } from "../../zustand/useModalStore";
 import { FaWallet } from "react-icons/fa";
 import {
   useCreatePropertyPlan,
+  useGenerateNewRef,
   useGetUserWalletdata,
   useMakePropertyPlanPendingPayment,
   usePropertyPlanRepayment,
@@ -18,26 +19,35 @@ import { usePaystackPayment } from "../../hooks/usePaystackPayment";
 import { useUserStore } from "../../zustand/UserStore";
 import { ApiError } from "../DashboardHomeComponents/SelectPaymentMethod";
 import BankTransfer from "./BankTransferMethod";
+import { Info } from "lucide-react";
+import { useInterswitchPayment } from "../../hooks/useInterswitchPayment";
+// import { useInterswitchPayment } from "../../hooks/useInterswitchPyament";
 
 const SelectPaymentMethod = ({
   goBack,
   amount,
   payment_type,
   user_property_id,
+  payment_id,
+  subscription_form,
 }: {
   goBack: () => void;
   amount: number;
   payment_type?: number;
   user_property_id: number;
+  payment_id: number;
+  subscription_form?: number;
 }) => {
   const { showToast } = useToastStore();
   const { user } = useUserStore();
   const paystack = usePaystackPayment();
+  const interswitch = useInterswitchPayment();
   const { data: userWalletData, isLoading, isError } = useGetUserWalletdata();
   const navigate = useNavigate();
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<
     string | null
   >(null);
+  const { data, isLoading: gettingNewRef } = useGenerateNewRef(payment_id);
   const { openModal } = useModalStore();
   const { mutate: makePayment, isPending: isPaying } =
     useMakePropertyPlanPendingPayment();
@@ -61,6 +71,9 @@ const SelectPaymentMethod = ({
   };
 
   const handleContinue = () => {
+    if (gettingNewRef) {
+      return <SmallLoader />;
+    }
     if (selectedPaymentMethod == "Bank Transfer") {
       openModal(
         <BankTransfer
@@ -70,11 +83,11 @@ const SelectPaymentMethod = ({
           user_property_id={user_property_id}
         />
       );
-    } else if (selectedPaymentMethod == "Paystack") {
+    } else if (selectedPaymentMethod == "Paystack" && data?.payment.reference) {
       paystack({
         email: user?.email || "",
         amount: amount, // in Naira
-        reference: "ffh9f0e9fhe9f",
+        reference: data?.payment.reference,
         onSuccess: (ref) => {
           payload = {
             payment_type: payment_type,
@@ -83,9 +96,11 @@ const SelectPaymentMethod = ({
           };
           makePayment(payload, {
             onSuccess: (res) => {
-              <PaymentSuccessfull text="Payment received successfully." />;
+              openModal(
+                <PaymentSuccessfull text="Payment received successfully." />
+              );
 
-              navigate(`/my-property/${res.plan?.id}`);
+              navigate(`/dashboard/my-property/${res.plan?.id}`);
             },
             onError: (error: ApiError) => {
               const message =
@@ -98,6 +113,44 @@ const SelectPaymentMethod = ({
         },
         onClose: () => {
           showToast("Payment popup closed", "error");
+        },
+      });
+    } else if (
+      selectedPaymentMethod == "Interswitch" &&
+      data?.payment.reference
+    ) {
+      interswitch({
+        email: user?.email || "",
+        customerName: `${user?.last_name} ${user?.first_name}`,
+        amount: Number(amount), // in Naira
+        reference: data.payment.reference,
+        merchant_code: data.merchant_code,
+        payment_item_id: data.payable_code,
+        onSuccess: (ref) => {
+          payload = {
+            payment_type: payment_type,
+            user_property_id: user_property_id,
+            payment_method: "interswitch",
+          };
+          makePayment(payload, {
+            onSuccess: (res) => {
+              openModal(
+                <PaymentSuccessfull text="Payment received successfully." />
+              );
+
+              navigate(`/dashboard/my-property/${res.plan?.id}`);
+            },
+            onError: (error: ApiError) => {
+              const message =
+                error?.response?.data?.message ||
+                error?.message ||
+                "Something went wrong";
+              showToast(message, "error");
+            },
+          });
+        },
+        onClose: () => {
+          showToast("Payment cancel...Please try again. ", "error");
         },
       });
     } else if (selectedPaymentMethod == "Virtual Wallet") {
@@ -129,13 +182,38 @@ const SelectPaymentMethod = ({
   }
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col min-w-sm">
       <div className="flex flex-col">
         <div className="text-2xl font-bold">Select Payment Method</div>
         <p className="text-gray-400 text-xs w-[80%]">
           Select your preferred payment method for your plan{" "}
-          <b className="text-black">({formatPrice(amount)})</b>.
+          {/* <b className="text-black">({formatPrice(amount)})</b>. */}
         </p>
+        <div className="border border-gray-200 rounded-lg p-2 text-xs text-gray-700 mt-2 divide divide-y-1 divide-gray-200">
+          <div className="flex items-center justify-between py-[2px] px-2">
+            <div className="">Subscription form:</div>
+            <div className="">{formatPrice(subscription_form || 0)}</div>
+          </div>
+          <div className="flex items-center justify-between py-[2px] px-2">
+            <div className="">Initial deposit:</div>
+            <div className="">
+              {formatPrice(amount - (subscription_form || 0))}
+            </div>
+          </div>
+          <div className="flex justify-end font-bold text-sm items-end pt-1 px-2">
+            <div className="flex items-center gap-2 ">
+              <div className="">Total:</div>
+              <div className="">{formatPrice(amount)}</div>
+            </div>
+          </div>
+        </div>
+        {/* <div className="mt-2 flex items-center text-gray-500 gap-1">
+          <Info size={16} />
+          <div className="text-xs">
+            You are paying a total of{" "}
+            <b className="text-black text-sm">({formatPrice(amount)})</b>.
+          </div>
+        </div> */}
       </div>
 
       <div className="flex flex-col gap-4 mt-4 min-h-[300px] justify-between">
@@ -167,6 +245,8 @@ const SelectPaymentMethod = ({
             </div>
           </div>
 
+          {/* PAYSTACK METHOD */}
+
           {/* <div
             className={`flex items-center gap-4 p-4 rounded-xl cursor-pointer transition-all ${
               selectedPaymentMethod === "Paystack"
@@ -193,6 +273,33 @@ const SelectPaymentMethod = ({
               </p>
             </div>
           </div>  */}
+
+          <div
+            className={`flex items-center gap-4 p-4 rounded-xl cursor-pointer transition-all ${
+              selectedPaymentMethod === "Interswitch"
+                ? "bg-adron-green text-white border-none "
+                : "bg-transparent border  border-gray-300"
+            }`}
+            onClick={() => setSelectedPaymentMethod("Interswitch")}
+          >
+            <img
+              src="/Interswitch.svg"
+              alt="Interswitch"
+              className="h-10 w-10 rounded-full bg-white p-2"
+            />
+            <div>
+              <p className="font-adron-mid text-sm">Interswitch</p>
+              <p
+                className={`text-xs ${
+                  selectedPaymentMethod == "Interswitch"
+                    ? `text-white`
+                    : `text-gray-500`
+                } `}
+              >
+                Pay through Interswitch
+              </p>
+            </div>
+          </div>
 
           <div
             className={`flex items-center gap-4 p-4 rounded-xl cursor-pointer transition-all ${
