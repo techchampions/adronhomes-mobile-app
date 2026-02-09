@@ -184,7 +184,12 @@ const Sidebar = ({
               <h4 className="text-adron-gray-400 font-bold px-7 mt-7 text-[13px]">
                 LISTINGS
               </h4>
-
+              <NavItem
+                onSlideBack={(mobileOpen) => !mobileOpen && onClose()}
+                label="My Contracts"
+                icon={<MdAddHome className="w-4 h-4" />}
+                path="/dashboard/my-contracts"
+              />
               <NavItem
                 onSlideBack={(mobileOpen) => !mobileOpen && onClose()}
                 label="My Properties"
@@ -204,12 +209,7 @@ const Sidebar = ({
                 icon={<RiHomeHeartFill className="w-4 h-4" />}
                 path="/dashboard/saved-properties"
               />
-              {/* <NavItem
-                onSlideBack={(mobileOpen) => !mobileOpen && onClose()}
-                label="My Contracts"
-                icon={<MdAddHome className="w-4 h-4" />}
-                path="/dashboard/my-contracts"
-              /> */}
+
               <h4 className="text-adron-gray-400 font-bold px-7 mt-7 text-[13px]">
                 PROFILE
               </h4>
@@ -248,7 +248,7 @@ const Sidebar = ({
                   window.open(
                     "https://adronhomes.com/",
                     "_blank",
-                    "noopener,noreferrer"
+                    "noopener,noreferrer",
                   )
                 }
                 className="text-green-500 text-[15px] w-full block font-bold px-7 py-2 text-center mx-auto hover:text-green-600 transition-colors"
@@ -288,7 +288,7 @@ export const Layout = ({ children }: { children: any }) => {
     (userData?.first_name?.[0] || "") + (userData?.last_name?.[0] || "");
 
   const [screenWidth, setScreenWidth] = useState(
-    typeof window !== "undefined" ? window.innerWidth : 0
+    typeof window !== "undefined" ? window.innerWidth : 0,
   );
   const [showBoundary, setShowBoundary] = useState(false);
   const navigate = useNavigate();
