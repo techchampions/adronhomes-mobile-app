@@ -13,9 +13,12 @@ import WalletHistoryList from "../components/DashboardWalletComponents/WalletHis
 import { useIsFetching, useQueryClient } from "@tanstack/react-query";
 import { RefreshCcw } from "lucide-react";
 import { useToastStore } from "../zustand/useToastStore";
+import { createPortal } from "react-dom";
+import { useState } from "react";
 
 const WalletScreen = () => {
   const query = useQueryClient();
+  const [showWarning, setShowWarning] = useState(false);
   const isFetchingWallet =
     useIsFetching({
       queryKey: ["user-wallet"],
@@ -28,6 +31,15 @@ const WalletScreen = () => {
     openModal(<AddFundAmount goBack={startFundWallet} />);
   };
   const { data, isLoading, isError } = useGetUserWalletdata();
+
+  const handleFundWalletClick = () => {
+    if (!hasVA) {
+      setShowWarning(true);
+    } else {
+      startFundWallet();
+    }
+  };
+
   if (isError) {
     return <ApiErrorBlock />;
   }
@@ -45,8 +57,55 @@ const WalletScreen = () => {
     });
     showToast("Refreshing wallet balance", "success");
   };
+
   return (
     <div className="flex flex-col gap-6">
+      {/* Warning Popup Modal */}
+      {showWarning &&
+        createPortal(
+          <div
+            className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
+            onClick={() => setShowWarning(false)}
+          >
+            <div
+              className="bg-white rounded-2xl p-8 max-w-md mx-4 relative"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button
+                onClick={() => setShowWarning(false)}
+                className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
+              >
+                ✕
+              </button>
+              <div className="text-center">
+                <div className="text-6xl mb-4">⚠️</div>
+                <h3 className="text-xl font-bold text-gray-800 mb-2">Ooops!</h3>
+                <p className="text-gray-600 mb-6">
+                  You cannot fund your wallet until virtual account number is
+                  generated. Click the "Generate Virtual Account" Button to
+                  generate your virtual account now
+                </p>
+                <div className="flex gap-3 justify-center">
+                  <Button
+                    label="Generate"
+                    onClick={() => {
+                      generateVirtualAccount();
+                      setShowWarning(false);
+                    }}
+                    className="px-3 py-1 text-sm"
+                  />
+                  <Button
+                    label="Close"
+                    onClick={() => setShowWarning(false)}
+                    className=" text-sm !bg-gray-200 !text-gray-800 hover:!bg-gray-300 px-3 py-1"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>,
+          document.body,
+        )}
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="md:row-span-2 col-span-2 md:col-span-1 p-6 rounded-3xl flex flex-col gap-4 justify-between items-center">
           <p className="text-xs">My Wallet</p>
@@ -69,7 +128,7 @@ const WalletScreen = () => {
           <Button
             label="Fund Wallet"
             className="!w-fit px-12 py-3 text-xs"
-            onClick={startFundWallet}
+            onClick={handleFundWalletClick}
           />
           <p className="text-xs bg-gray-200 px-6 py-1 rounded-full">
             {data?.total_property} active contracts
@@ -118,35 +177,13 @@ const WalletScreen = () => {
             </span>
           </div>
         </div>
-        {/* <div className="flex gap-4 row-span-1 col-span-2 h-fit">
-          <div className="p-4 bg-white rounded-3xl flex flex-col items-center h-fit w-full">
-            <p className="text-gray-400 text-sm">Total Invoice</p>
-            <p className="font-bold truncate">
-              {" "}
-              {formatPrice(data?.total_invoice ?? 0)}{" "}
-            </p>
-          </div>
-          <div className="p-4 bg-white rounded-3xl flex flex-col items-center h-fit w-full">
-            <p className="text-gray-400 text-sm">Amount Paid</p>
-            <p className="font-bold truncate">
-              {formatPrice(data?.total_amount_paid ?? 0)}
-            </p>
-          </div>
-        </div> */}
       </div>
-      {/* <TransactionsList
-        data={transactions}
-        type="transaction"
-        isLoading={isLoading}
-        isError={isError}
-      /> */}
       <WalletHistoryList
         data={transactions}
         type="transaction"
         isLoading={isLoading}
         isError={isError}
       />
-      {/* <WalletHistory /> */}
     </div>
   );
 };
