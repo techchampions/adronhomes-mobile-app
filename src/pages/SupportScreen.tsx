@@ -1,11 +1,11 @@
 import { useNavigate } from "react-router-dom";
 import Button from "../components/Button";
-import { useGetEquiryInfo } from "../data/hooks";
 import LinkButton from "../components/LinkButton";
+import { useGetClientInfo } from "../data/hooks";
 
 const SupportScreen = () => {
   const navigate = useNavigate();
-  const { data: equiryData, isLoading: loadingEnq } = useGetEquiryInfo();
+  const { data: equiryData, isLoading: loadingEnq } = useGetClientInfo();
   const enq = equiryData?.data.data ?? [];
   const email = enq.find((item) => item.name === "Email");
   const phone = enq.find((item) => item.name === "Phone Number");

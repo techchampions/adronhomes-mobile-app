@@ -1,7 +1,14 @@
-import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-
 import {
-  ApiError,
+  keepPreviousData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
+
+import { useEffect } from "react";
+import { useUserStore } from "../zustand/UserStore";
+import { useToastStore } from "../zustand/useToastStore";
+import {
   createPropertyPlan,
   deleteAccount,
   fetchPropertiesPageData,
@@ -35,7 +42,6 @@ import {
   getWalletTransactionByID,
   getWalletTransactionReciept,
   infrastructurePayment,
-  InitiatePropertyPurchaseResponse,
   linkExistingContracts,
   makeEnquire,
   makePendingPropertyPlanPayment,
@@ -49,42 +55,36 @@ import {
   StatementResponse,
   toggleSaveProperty,
 } from "./api";
+import { AccountDetailsResponse } from "./types/AccountDetailsTypes";
+import { FAQResponse } from "./types/FAQTypes";
+import { GetPropertyByIdResponse } from "./types/GetPropertyByIdResponse";
+import { NotificationByIDResponse } from "./types/NotificationByIDTypes";
+import { PropertyLocationResponse } from "./types/PropertyLocationTypes";
+import { PlanPropertiesDetailResponse } from "./types/PropertyPlanDetailTypes";
+import { PropertyPlanPaymentResponse } from "./types/PropertyPlanPaymentListTypes";
+import { SavedPropertiesResponse } from "./types/SavedPropertiesResponse";
+import { PropertiesSearchResultResponse } from "./types/SearchPropertiesResultTypes";
+import { SettingsResponse } from "./types/SettingsTypes";
+import { SliderByTypeResponse } from "./types/SliderByTypeTypes";
+import { GetUserResponse } from "./types/UserProfileTypes";
+import { ApiResponse, ContactParams } from "./types/contractTypes";
+import { UserDashboardResponseData } from "./types/dashboardHomeTypes";
+import { estatePropertiesResponse } from "./types/estatePropertiesResponse";
+import { NotificationsResponse } from "./types/notificationTypes";
 import {
   PaginatedProperties,
   PropertiesResponse,
 } from "./types/propertiesPageTypes";
-import { GetPropertyByIdResponse } from "./types/GetPropertyByIdResponse";
-import { PropertyLocationResponse } from "./types/PropertyLocationTypes";
 import { PropertiesTypeResponse } from "./types/propertyTypes";
-import { GetUserResponse } from "./types/UserProfileTypes";
-import { useUserStore } from "../zustand/UserStore";
-import { UserTransactionResponse } from "./types/userTransactionsTypes";
-import { UserDashboardResponseData } from "./types/dashboardHomeTypes";
-import { UserWalletResponse } from "./types/userWalletTypes";
+import { TransactionApiResponse, TransactionParams } from "./types/transaction";
 import { UserPropertyPlanResponse } from "./types/userPropertiesTypes";
-import { PlanPropertiesDetailResponse } from "./types/PropertyPlanDetailTypes";
-import { NotificationsResponse } from "./types/notificationTypes";
 import {
   TransactionByIDResponse,
   TransactionRecieptResponse,
   WalletTransactionByIDResponse,
 } from "./types/userTransactionByIDTypes";
-import { NotificationByIDResponse } from "./types/NotificationByIDTypes";
-import { PropertyPlanPaymentResponse } from "./types/PropertyPlanPaymentListTypes";
-import { PropertiesSearchResultResponse } from "./types/SearchPropertiesResultTypes";
-import { use, useEffect } from "react";
-import { SavedPropertiesResponse } from "./types/SavedPropertiesResponse";
-import { AccountDetailsResponse } from "./types/AccountDetailsTypes";
-import { EnquirePayload } from "./types/EnquirePayload";
-import { SliderByTypeResponse } from "./types/SliderByTypeTypes";
-import { PropertyPlanPayload } from "./types/CreatePropertyPayload";
-import { useToastStore } from "../zustand/useToastStore";
-import { useModalStore } from "../zustand/useModalStore";
-import { FAQResponse } from "./types/FAQTypes";
-import { SettingsResponse } from "./types/SettingsTypes";
-import { estatePropertiesResponse } from "./types/estatePropertiesResponse";
-import { ApiResponse, ContactParams } from "./types/contractTypes";
-import { TransactionApiResponse, TransactionParams } from "./types/transaction";
+import { UserTransactionResponse } from "./types/userTransactionsTypes";
+import { UserWalletResponse } from "./types/userWalletTypes";
 
 //Query hook for User profile
 export const useGetUser = () => {
@@ -214,7 +214,6 @@ export const usePropertiespage = (
   });
 };
 
-
 export const useFilterProperties = (
   page: number,
   filters?: PropertyFilters
@@ -225,13 +224,13 @@ export const useFilterProperties = (
   });
 };
 export const useFilterPropertiesnoauth = (
-page: number, p0: string, // is_auth?:any,
-filters?: PropertyFilters,
-
+  page: number,
+  p0: string, // is_auth?:any,
+  filters?: PropertyFilters
 ) => {
   return useQuery<PaginatedProperties>({
-    queryKey: ["properties", page, filters,],
-    queryFn: () => filterPropertiesnoauth(page,filters),
+    queryKey: ["properties", page, filters],
+    queryFn: () => filterPropertiesnoauth(page, filters),
   });
 };
 
@@ -496,7 +495,12 @@ export const useGetEquiryInfo = () => {
     queryFn: () => getSettings("enquiry"),
   });
 };
-
+export const useGetClientInfo = () => {
+  return useQuery<SettingsResponse>({
+    queryKey: ["settings", "client"],
+    queryFn: () => getSettings("client"),
+  });
+};
 
 export const useGetFeatured = () => {
   return useQuery<PropertiesResponse>({
@@ -511,8 +515,6 @@ export const useGetEstate = () => {
     queryFn: getEstates,
   });
 };
-
-
 
 export const useResolveVirtualAccount = () => {
   const { showToast } = useToastStore();
@@ -536,7 +538,7 @@ export const useGetContact = (params: ContactParams) => {
   return useQuery<ApiResponse, Error>({
     queryKey: ["get-contact", params],
     queryFn: () => getContact(params),
-  placeholderData: keepPreviousData, 
+    placeholderData: keepPreviousData,
   });
 };
 
@@ -544,7 +546,7 @@ export const useGetContractTransactions = (params: TransactionParams) => {
   return useQuery<TransactionApiResponse, Error>({
     queryKey: ["contract-transactions", params],
     queryFn: () => getContractTransactions(params),
-     placeholderData: keepPreviousData, 
+    placeholderData: keepPreviousData,
   });
 };
 export const useLinkExistingContracts = () => {
@@ -560,8 +562,7 @@ export const useLinkExistingContracts = () => {
     onError: (error: any) => {
       console.error("Full error:", error.response?.data); // Log full error
       const msg =
-        error?.response?.data?.message ||
-        "Failed to link contract. Try again.";
+        error?.response?.data?.message || "Failed to link contract. Try again.";
       showToast(msg, "error");
     },
   });
