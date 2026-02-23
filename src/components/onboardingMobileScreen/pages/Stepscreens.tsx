@@ -1,8 +1,11 @@
 import { useState } from "react";
-import { ChevronLeft, ChevronRight, Heart, MapPin } from "lucide-react";
 
 // Wrapper component for the splash screens
-export const AdronSplashScreensWrapper = ({ setHasSeenSplash }: { setHasSeenSplash: (value: boolean) => void }) => {
+export const AdronSplashScreensWrapper = ({
+  setHasSeenSplash,
+}: {
+  setHasSeenSplash: (value: boolean) => void;
+}) => {
   const [currentScreen, setCurrentScreen] = useState(0);
 
   const screens = [
@@ -11,21 +14,21 @@ export const AdronSplashScreensWrapper = ({ setHasSeenSplash }: { setHasSeenSpla
       title: "Homes for Every Lifestyle",
       description:
         "Browse through a diverse range of properties tailored to meet your unique preferences and budget. Your dream home is just a few clicks away!",
-      imgUrl: "/page1.svg",
+      imgUrl: "/page1.png",
     },
     {
       id: "partner",
       title: "Your Trusted Property Partner",
       description:
         "From finding the perfect property to completing the paperwork, our team is here to guide you every step of the way with expert advice and support.",
-      imgUrl: "/page2.svg",
+      imgUrl: "/page2.png",
     },
     {
       id: "trust",
       title: "A Journey Built on Trust",
       description:
         "Experience real estate with integrity. We ensure secure transactions and transparent processes to give you peace of mind throughout your journey.",
-      imgUrl: "/page3.svg",
+      imgUrl: "/page3.png",
     },
   ];
 
@@ -53,10 +56,10 @@ export const AdronSplashScreensWrapper = ({ setHasSeenSplash }: { setHasSeenSpla
     <div className="px-4 bg-white flex flex-col min-h-screen w-full overflow-hidden">
       {/* Header */}
       <div className="px-4 sm:px-6 pt-6 sm:pt-8 pb-4 sm:pb-6 flex justify-center relative">
-        <img 
-          src="/iconk.svg" 
-          alt="Logo" 
-          className="h-12 sm:h-14 md:h-16 w-auto max-w-[80%] sm:max-w-[200px]" 
+        <img
+          src="/iconk.svg"
+          alt="Logo"
+          className="h-12 sm:h-14 md:h-16 w-auto max-w-[80%] sm:max-w-[200px]"
         />
         {/* Skip Button */}
         <button
