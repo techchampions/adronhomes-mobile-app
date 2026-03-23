@@ -1,10 +1,9 @@
 // /utils/auth.tsx
-import apiClient from "./AxiosInstance";
-import { useUserStore } from "../zustand/UserStore";
-import { useOnboardingStore } from "../zustand/OnboardingStore";
-import { useToastStore } from "../zustand/useToastStore";
 import { ApiError } from "../data/api";
-import { useNavigate } from "react-router-dom";
+import { useOnboardingStore } from "../zustand/OnboardingStore";
+import { useUserStore } from "../zustand/UserStore";
+import { useToastStore } from "../zustand/useToastStore";
+import apiClient from "./AxiosInstance";
 
 const { showToast } = useToastStore.getState();
 const { setHasCompletedOnboarding, setStep } = useOnboardingStore.getState();
@@ -31,11 +30,11 @@ const login = async (
     email: string;
     password: string;
   },
-  { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void },
   navigate?: (path: string) => void
+  // { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void },
 ) => {
   try {
-    const response = await apiClient.post("/login", {
+    const response = await apiClient.post("/login?type=customer", {
       email: values.email,
       password: values.password,
     });
@@ -59,6 +58,9 @@ const login = async (
       if (navigate) {
         navigate("/verify-otp");
       }
+    } else if (!response.data.success && response.data.multiple_accounts) {
+      showToast(response.data.message, "success");
+      return response.data.accounts;
     } else if (response.data.errors) {
       const errorMessages = Object.values(response.data.errors)
         .flat()
@@ -82,10 +84,74 @@ const login = async (
       }
     }
   } finally {
-    setSubmitting(false);
+    // setSubmitting(false);
   }
 };
+const loginStep2 = async (
+  values: {
+    email: string;
+    password: string;
+  },
+  customer_code: string,
+  navigate?: (path: string) => void
+) => {
+  try {
+    const response = await apiClient.post(
+      `/login?type=customer&customer_code=${customer_code}`,
+      {
+        email: values.email,
+        password: values.password,
+      }
+    );
 
+    if (response.data.success && response.data.otpVerified) {
+      showToast("User LoggedIn successfully!", "success");
+      setToken(response.data.token); // Save token in store
+      setHasCompletedOnboarding(true); // Set onboarding state in store
+      setIsLoggedIn(true); // Set logged-in state in store
+      setStep("onboarding complete");
+    } else if (response.data.success && !response.data.otpVerified) {
+      showToast(
+        "User LoggedIn successfully!... please verify account",
+        "success"
+      );
+      setToken(response.data.token); // Save token in store
+      setIsLoggedIn(false); // Set logged-in state in store
+      // await getUser();
+      handleResendOTP();
+      setStep("verify OTP");
+      if (navigate) {
+        navigate("/verify-otp");
+      }
+    } else if (!response.data.success && response.data.multiple_accounts) {
+      showToast(response.data.message, "success");
+      return response.data.accounts;
+    } else if (response.data.errors) {
+      const errorMessages = Object.values(response.data.errors)
+        .flat()
+        .join("\n"); // Combine errors into a readable string
+      showToast(errorMessages, "error");
+    } else if (response.data.message) {
+      showToast(response.data.message, "error");
+    }
+  } catch (error: unknown) {
+    const apiError = error as ApiError;
+    if (apiError.response) {
+      const data = apiError.response.data;
+
+      if (data?.errors) {
+        const errorMessages = Object.values(data.errors).flat().join("\n");
+        showToast(errorMessages, "error");
+      } else if (data?.message) {
+        showToast(data.message, "error");
+      } else {
+        showToast("An unexpected error occurred. Please try again.", "error");
+      }
+    }
+  } finally {
+    // setSubmitting(false);
+  }
+};
 const register = async (
   values: {
     fullName: string;
@@ -93,7 +159,6 @@ const register = async (
     phone: string;
     password: string;
     marketerReferralCode: string;
-    dob: string;
   },
   { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void },
   navigate?: (path: string) => void
@@ -111,7 +176,6 @@ const register = async (
       email: values.email,
       phone_number: values.phone,
       password: values.password,
-      dob: values.dob,
       referral_code: values.marketerReferralCode,
     });
 
@@ -254,6 +318,7 @@ const handleForgotpassword = async (
 // Login function
 const Auth = {
   login,
+  loginStep2,
   register,
   logout,
   sessionExpire,
