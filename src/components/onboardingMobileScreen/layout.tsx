@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Menu, X } from "lucide-react";
+import { Menu, X, ChevronDown, RefreshCw, Building2 } from "lucide-react";
 import NavItem from "../NavigationComponents/NavItem";
 import { FaSpinner, FaUserAlt, FaUserCircle } from "react-icons/fa";
 import { FaArrowRightArrowLeft } from "react-icons/fa6";
@@ -16,6 +16,7 @@ import { useGetNotifications, useGetUser } from "../../data/hooks";
 import { Navbar } from "./onboardingComponents/Bottomnavigation";
 import { useUserStore } from "../../zustand/UserStore";
 import Auth from "../../utils/Auth";
+// import AccountSwitcher from "../AccountSwitcher";
 
 const CopyButton = ({ text }: { text: any }) => {
   const [copied, setCopied] = useState(false);
@@ -89,7 +90,6 @@ const Sidebar = ({
   // Handle logout
   const handleLogout = () => {
     Auth.logout();
-
     onClose();
   };
 
@@ -143,120 +143,128 @@ const Sidebar = ({
             />
           </div>
 
-          {/* Navigation */}
-          <div className="flex-grow overflow-y-auto scrollbar-hide py-1.5 bg-white rounded-2xl mt-4">
-            <nav className="space-y-2 p-2">
-              <NavItem
-                onSlideBack={(mobileOpen) => !mobileOpen && onClose()}
-                label="Dashboard"
-                icon={<MdDashboardCustomize className="w-4 h-4" />}
-                path="/dashboard/home"
-              />
-              <NavItem
-                onSlideBack={(mobileOpen) => !mobileOpen && onClose()}
-                label="My Wallet"
-                icon={<RiWallet3Fill className="w-4 h-4" />}
-                path="/dashboard/wallet"
-              />
-              <NavItem
-                onSlideBack={(mobileOpen) => !mobileOpen && onClose()}
-                label="Payments"
-                icon={<FaArrowRightArrowLeft className="w-4 h-4" />}
-                path="/dashboard/payments"
-              />
-              {noNfx ? (
-                <NavItem
-                  onSlideBack={(mobileOpen) => !mobileOpen && onClose()}
-                  label="Notifications"
-                  icon={<RiNotificationBadgeFill className="w-4 h-4" />}
-                  path="/dashboard/notifications"
-                  // badge={unReadCount || 0}
-                />
-              ) : (
-                <NavItem
-                  onSlideBack={(mobileOpen) => !mobileOpen && onClose()}
-                  label="Notifications"
-                  icon={<RiNotificationBadgeFill className="w-4 h-4" />}
-                  path="/dashboard/notifications"
-                  badge={unReadCount || 0}
-                />
-              )}
-              <h4 className="text-adron-gray-400 font-bold px-7 mt-7 text-[13px]">
-                LISTINGS
-              </h4>
-              <NavItem
-                onSlideBack={(mobileOpen) => !mobileOpen && onClose()}
-                label="My Contracts"
-                icon={<MdAddHome className="w-4 h-4" />}
-                path="/dashboard/my-contracts"
-              />
-              <NavItem
-                onSlideBack={(mobileOpen) => !mobileOpen && onClose()}
-                label="My Properties"
-                icon={<MdAddHome className="w-4 h-4" />}
-                path="/dashboard/my-properties"
-              />
+      {/* Navigation */}
+<div className="flex-grow overflow-y-auto scrollbar-hide py-1.5 bg-white rounded-2xl mt-4">
+  <nav className="space-y-2 p-2">
+    <NavItem
+      onSlideBack={(mobileOpen) => !mobileOpen && onClose()}
+      label="Dashboard"
+      icon={<MdDashboardCustomize className="w-4 h-4" />}
+      path="/dashboard/home"
+    />
+    <NavItem
+      onSlideBack={(mobileOpen) => !mobileOpen && onClose()}
+      label="My Wallet"
+      icon={<RiWallet3Fill className="w-4 h-4" />}
+      path="/dashboard/wallet"
+    />
+    <NavItem
+      onSlideBack={(mobileOpen) => !mobileOpen && onClose()}
+      label="Payments"
+      icon={<FaArrowRightArrowLeft className="w-4 h-4" />}
+      path="/dashboard/payments"
+    />
+    {noNfx ? (
+      <NavItem
+        onSlideBack={(mobileOpen) => !mobileOpen && onClose()}
+        label="Notifications"
+        icon={<RiNotificationBadgeFill className="w-4 h-4" />}
+        path="/dashboard/notifications"
+      />
+    ) : (
+      <NavItem
+        onSlideBack={(mobileOpen) => !mobileOpen && onClose()}
+        label="Notifications"
+        icon={<RiNotificationBadgeFill className="w-4 h-4" />}
+        path="/dashboard/notifications"
+        badge={unReadCount || 0}
+      />
+    )}
+    <h4 className="text-adron-gray-400 font-bold px-7 mt-7 text-[13px]">
+      LISTINGS
+    </h4>
+    <NavItem
+      onSlideBack={(mobileOpen) => !mobileOpen && onClose()}
+      label="My Contracts"
+      icon={<MdAddHome className="w-4 h-4" />}
+      path="/dashboard/my-contracts"
+    />
+    <NavItem
+      onSlideBack={(mobileOpen) => !mobileOpen && onClose()}
+      label="My Properties"
+      icon={<MdAddHome className="w-4 h-4" />}
+      path="/dashboard/my-properties"
+    />
 
-              <NavItem
-                onSlideBack={(mobileOpen) => !mobileOpen && onClose()}
-                label="New Properties"
-                icon={<MdAddHome className="w-4 h-4" />}
-                path="/dashboard/new-properties"
-              />
-              <NavItem
-                onSlideBack={(mobileOpen) => !mobileOpen && onClose()}
-                label="Saved Properties"
-                icon={<RiHomeHeartFill className="w-4 h-4" />}
-                path="/dashboard/saved-properties"
-              />
+    <NavItem
+      onSlideBack={(mobileOpen) => !mobileOpen && onClose()}
+      label="New Properties"
+      icon={<MdAddHome className="w-4 h-4" />}
+      path="/dashboard/new-properties"
+    />
+    <NavItem
+      onSlideBack={(mobileOpen) => !mobileOpen && onClose()}
+      label="Saved Properties"
+      icon={<RiHomeHeartFill className="w-4 h-4" />}
+      path="/dashboard/saved-properties"
+    />
 
-              <h4 className="text-adron-gray-400 font-bold px-7 mt-7 text-[13px]">
-                PROFILE
-              </h4>
+    <h4 className="text-adron-gray-400 font-bold px-7 mt-7 text-[13px]">
+      PROFILE
+    </h4>
 
-              <NavItem
-                onSlideBack={(mobileOpen) => !mobileOpen && onClose()}
-                label="My Profile"
-                icon={<FaUserAlt className="w-4 h-4" />}
-                path="/dashboard/my-profile"
-              />
-              <NavItem
-                onSlideBack={(mobileOpen) => !mobileOpen && onClose()}
-                label="Account Settings"
-                icon={<IoSettingsSharp className="w-4 h-4" />}
-                path="/dashboard/settings"
-              />
-              <NavItem
-                onSlideBack={(mobileOpen) => !mobileOpen && onClose()}
-                label="Support"
-                icon={<MdOutlineHelp className="w-4 h-4" />}
-                path="/dashboard/support"
-              />
-            </nav>
+    <NavItem
+      onSlideBack={(mobileOpen) => !mobileOpen && onClose()}
+      label="My Profile"
+      icon={<FaUserAlt className="w-4 h-4" />}
+      path="/dashboard/my-profile"
+    />
+    
+    {/* Add Accounts Navigation Item */}
+    <NavItem
+      onSlideBack={(mobileOpen) => !mobileOpen && onClose()}
+      label="My Accounts"
+      icon={<Building2 className="w-4 h-4" />}
+      path="/dashboard/accounts"
+    />
+    
+    <NavItem
+      onSlideBack={(mobileOpen) => !mobileOpen && onClose()}
+      label="Account Settings"
+      icon={<IoSettingsSharp className="w-4 h-4" />}
+      path="/dashboard/settings"
+    />
+    <NavItem
+      onSlideBack={(mobileOpen) => !mobileOpen && onClose()}
+      label="Support"
+      icon={<MdOutlineHelp className="w-4 h-4" />}
+      path="/dashboard/support"
+    />
+  </nav>
 
-            {/* Footer actions */}
-            <nav className="space-y-2 p-2 mt-auto">
-              <button
-                onClick={handleLogout}
-                className="flex items-center w-full px-7 py-2 text-[15px] text-red-500 rounded-full bg-[#FFE6E6] hover:bg-red-200 transition-colors duration-200"
-              >
-                <RiLogoutBoxRFill className="mr-2 w-4 h-4" />
-                Logout
-              </button>
-              <button
-                onClick={() =>
-                  window.open(
-                    "https://adronhomes.com/",
-                    "_blank",
-                    "noopener,noreferrer",
-                  )
-                }
-                className="text-green-500 text-[15px] w-full block font-bold px-7 py-2 text-center mx-auto hover:text-green-600 transition-colors"
-              >
-                Go to Website
-              </button>
-            </nav>
-          </div>
+  {/* Footer actions */}
+  <nav className="space-y-2 p-2 mt-auto">
+    <button
+      onClick={handleLogout}
+      className="flex items-center w-full px-7 py-2 text-[15px] text-red-500 rounded-full bg-[#FFE6E6] hover:bg-red-200 transition-colors duration-200"
+    >
+      <RiLogoutBoxRFill className="mr-2 w-4 h-4" />
+      Logout
+    </button>
+    <button
+      onClick={() =>
+        window.open(
+          "https://adronhomes.com/",
+          "_blank",
+          "noopener,noreferrer",
+        )
+      }
+      className="text-green-500 text-[15px] w-full block font-bold px-7 py-2 text-center mx-auto hover:text-green-600 transition-colors"
+    >
+      Go to Website
+    </button>
+  </nav>
+</div>
         </div>
       </div>
     </>
@@ -264,25 +272,28 @@ const Sidebar = ({
 };
 
 import { Formik, Form } from "formik";
-// import { InputField } from 'path/to/InputField'; // Adjust import as needed
-import { FaSearch, FaTimes } from "react-icons/fa"; // Added FaTimes for cancel button
+import { FaSearch, FaTimes } from "react-icons/fa";
 import { useQueryClient } from "@tanstack/react-query";
 import { searchProperties } from "../../data/api";
 import InputField from "../InputField";
 import { useSearchStore } from "../../zustand/SearchStore";
-import { TbSquareDashed } from "react-icons/tb";
-// import { searchProperties } from 'path/to/searchProperties'; // Adjust import as needed
+import AccountSwitcher from "./AccountSwitcher";
 
 export const Layout = ({ children }: { children: any }) => {
   const { data, isLoading } = useGetUser();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [isSearchOpen, setIsSearchOpen] = useState(false); // State to toggle search input
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isAccountSwitcherOpen, setIsAccountSwitcherOpen] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  
   const userData = data?.user;
   const {
     setSearchResults,
     setLoading,
     isLoading: loadingSearch,
   } = useSearchStore();
+  
   const userHasProfilePicture = userData?.profile_picture;
   const initials =
     (userData?.first_name?.[0] || "") + (userData?.last_name?.[0] || "");
@@ -294,7 +305,28 @@ export const Layout = ({ children }: { children: any }) => {
   const navigate = useNavigate();
 
   const queryClient = useQueryClient();
-  // const [loading, setLoading] = useState(false);
+
+  // Handle click outside for dropdown
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        isDropdownOpen &&
+        dropdownRef.current &&
+        event.target instanceof Node &&
+        !dropdownRef.current.contains(event.target)
+      ) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    if (isDropdownOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isDropdownOpen]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -325,7 +357,7 @@ export const Layout = ({ children }: { children: any }) => {
   };
 
   return (
-    <div className=" bg-transparent flex flex-col">
+    <div className="bg-transparent flex flex-col">
       <header className="fixed top-0 left-0 right-0 px-4 py-2 z-50 bg-[#0e760e]">
         <div className="flex justify-between items-start relative z-10 max-w-7xl mx-auto">
           <div className="flex items-center space-x-4">
@@ -353,7 +385,7 @@ export const Layout = ({ children }: { children: any }) => {
           </div>
 
           {/* Search Icon and Form */}
-          <div className="flex items-center">
+          <div className="flex items-center gap-2">
             {isSearchOpen ? (
               <div className="fixed inset-x-0 top-0 bg-[#0e760e] px-4 py-2 z-50 flex items-center justify-between md:static md:flex md:items-center md:max-w-md">
                 <Formik
@@ -367,8 +399,6 @@ export const Layout = ({ children }: { children: any }) => {
                         type="text"
                         placeholder="Search properties..."
                         className="w-full text-adron-black bg-white/20 border border-white/30 rounded-md px-3 py-1.5 text-sm placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white"
-                        // disabled={loading}
-                        // autoFocus
                       />
                       <div className="flex items-center gap-1">
                         <button
@@ -400,25 +430,94 @@ export const Layout = ({ children }: { children: any }) => {
             ) : (
               <>
                 <button
-                  className="p-2 text-white hover:text-gray-200 mr-2 md:mr-5"
+                  className="p-2 text-white hover:text-gray-200"
                   onClick={() => setIsSearchOpen(true)}
                   aria-label="Open search"
                 >
                   <FaSearch size={16} />
                 </button>
-                <div
-                  className="w-8 h-8 rounded-full bg-white overflow-hidden border-2 border-white hover:border-gray-200 transition-colors duration-200 flex-shrink-0"
-                  onClick={() => navigate("/dashboard/my-profile")}
-                >
-                  {userHasProfilePicture ? (
-                    <img
-                      src={userData.profile_picture!}
-                      alt="User profile picture"
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center text-adron-black text-xs font-bold">
-                      {initials.toUpperCase()}
+                
+                {/* User Profile Dropdown with Account Switching */}
+                <div className="relative" ref={dropdownRef}>
+                  <button
+                    onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                    className="flex items-center gap-2 p-1 hover:bg-white/10 rounded-lg transition-colors"
+                  >
+                    <div className="w-8 h-8 rounded-full bg-white overflow-hidden border-2 border-white hover:border-gray-200 transition-colors duration-200 flex-shrink-0">
+                      {userHasProfilePicture ? (
+                        <img
+                          src={userData.profile_picture!}
+                          alt="User profile picture"
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center text-adron-black text-xs font-bold">
+                          {initials.toUpperCase()}
+                        </div>
+                      )}
+                    </div>
+                    <ChevronDown className="h-4 w-4 text-white" />
+                  </button>
+
+                  {/* Dropdown Menu */}
+                  {isDropdownOpen && (
+                    <div className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden z-50">
+                      <div className="p-3 border-b border-gray-100">
+                        <p className="text-sm font-semibold text-gray-900">
+                          {userData?.first_name} {userData?.last_name}
+                        </p>
+                        <p className="text-xs text-gray-500 mt-0.5 truncate">
+                          {userData?.email}
+                        </p>
+                      </div>
+                      
+                      <div className="py-1">
+                        <button
+                          onClick={() => {
+                            setIsDropdownOpen(false);
+                            navigate("/dashboard/my-profile");
+                          }}
+                          className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2"
+                        >
+                          <FaUserAlt className="h-4 w-4 text-gray-400" />
+                          My Profile
+                        </button>
+                        
+                        <button
+                          onClick={() => {
+                            setIsDropdownOpen(false);
+                            setIsAccountSwitcherOpen(true);
+                          }}
+                          className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2"
+                        >
+                          <RefreshCw className="h-4 w-4 text-gray-400" />
+                          Switch Account
+                        </button>
+                        
+                        <button
+                          onClick={() => {
+                            setIsDropdownOpen(false);
+                            navigate("/dashboard/settings");
+                          }}
+                          className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2"
+                        >
+                          <IoSettingsSharp className="h-4 w-4 text-gray-400" />
+                          Settings
+                        </button>
+                      </div>
+                      
+                      <div className="border-t border-gray-100 py-1">
+                        <button
+                          onClick={() => {
+                            setIsDropdownOpen(false);
+                            Auth.logout();
+                          }}
+                          className="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50 flex items-center gap-2"
+                        >
+                          <RiLogoutBoxRFill className="h-4 w-4" />
+                          Logout
+                        </button>
+                      </div>
                     </div>
                   )}
                 </div>
@@ -429,6 +528,9 @@ export const Layout = ({ children }: { children: any }) => {
       </header>
 
       <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
+      
+      {/* Account Switcher Modal */}
+
 
       <main
         className={`flex-1 overflow-auto pt-[70px] ${
@@ -437,7 +539,12 @@ export const Layout = ({ children }: { children: any }) => {
       >
         {children}
       </main>
-
+  <div className="w-full">
+        <AccountSwitcher 
+        isOpen={isAccountSwitcherOpen} 
+        onClose={() => setIsAccountSwitcherOpen(false)} 
+      />
+  </div>
       <Navbar />
     </div>
   );

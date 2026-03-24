@@ -52,6 +52,7 @@ import NewPropertyScreennoauth from "../components/onboardingMobileScreen/pages/
 import ContactPage from "../components/onboardingMobileScreen/pages/mycontracts/mycontracts";
 import ContractDetailsPage from "../components/onboardingMobileScreen/pages/mycontracts/contractview";
 import ContractsPage from "../components/onboardingMobileScreen/pages/mycontracts/transactiontable";
+import AccountsPage from "../components/onboardingMobileScreen/accountsPage";
 // import ScrollToTop from "./ScrollToTop";
 
 const DashboardScreen = lazy(() => import("../pages/DashboardScreen"));
@@ -87,7 +88,7 @@ const AllRoutes = () => {
           <Route
             path="/"
             element={
-              <Navigate to={isLoggedIn ? "/dashboard" : "/login"} replace />
+              <Navigate to={isLoggedIn ? "/dashboard" : "/"} replace />
             }
           />
 
@@ -101,6 +102,8 @@ const AllRoutes = () => {
               }
             >
               <Route index element={<PropertiesPage />} />
+             
+               <Route path="accounts"element={<AccountsPage />} />
               <Route path="home" element={<HomeScreen />} />
               <Route path="wallet" element={<WalletScreen />} />
               <Route path="payments" element={<TransactionsPage />} />

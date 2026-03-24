@@ -1,3 +1,4 @@
+// zustand/UserStore.ts (updated)
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import apiClient from "../utils/AxiosInstance";
@@ -33,10 +34,14 @@ type UserState = {
   acceptCookies: boolean;
   token: string;
   isLoggedIn: boolean;
+  identifier: string | null;
+  deviceId: string | null;
   setToken: (token: string) => void;
   setIsLoggedIn: (status: boolean) => void;
-  setUser: (user: User) => void; // 👈 add this  getUser: () => Promise<void>;
+  setUser: (user: User) => void;
   setAccounts: (accounts: AccountDetail[]) => void;
+  setIdentifier: (identifier: string) => void;
+  setDeviceId: (deviceId: string) => void;
   setAcceptCookies: (accept: boolean) => void;
   reset: () => void;
 };
@@ -48,18 +53,24 @@ export const useUserStore = create<UserState>()(
       token: "",
       isLoggedIn: false,
       acceptCookies: false,
+      identifier: null,
+      deviceId: null,
+      accounts: [],
 
       setToken: (token) => set({ token }),
       setIsLoggedIn: (status) => set({ isLoggedIn: status }),
       setAcceptCookies: (accept) => set({ acceptCookies: accept }),
-      setUser: (user) => set({ user }), // 👈 add this below setIsLoggedIn
+      setUser: (user) => set({ user }),
+      setIdentifier: (identifier) => set({ identifier }),
+      setDeviceId: (deviceId) => set({ deviceId }),
+      
+      setAccounts: (accounts) => set({ accounts }),
 
       getUser: async () => {
         try {
           const response = await apiClient.get("/user-profile");
           if (response.data.success) {
             const userData = response.data.user;
-
             set({
               user: {
                 id: userData.id,
@@ -90,13 +101,8 @@ export const useUserStore = create<UserState>()(
           }
         } catch (error) {
           console.error("Failed to load user data:", error);
-          throw error; // Rethrow the error to handle it in the component
+          throw error;
         }
-      },
-
-      accounts: [],
-      setAccounts(accounts) {
-        set({ accounts });
       },
 
       reset: () =>
@@ -104,6 +110,7 @@ export const useUserStore = create<UserState>()(
           user: null,
           token: "",
           isLoggedIn: false,
+          accounts: [],
         }),
     }),
     {

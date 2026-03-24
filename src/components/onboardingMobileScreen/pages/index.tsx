@@ -21,6 +21,7 @@ import {
 } from "../onboardingComponents/skeleton";
 import ImageCarousel from "../onboardingComponents/ImageCarousel";
 import { formatToNaira } from "../../../data/utils";
+import Loader from "../../Loader";
 
 const dashboardItems = [
   {

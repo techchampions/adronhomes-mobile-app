@@ -3,4 +3,6 @@ export interface UserAccount {
   last_name: string;
   email: string;
   customer_code: string;
+  profile_image: string | null;
+    is_default: boolean;
 }
