@@ -125,6 +125,39 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
   const isCurrentImageError = errorImages.has(currentIndex);
   const showLoader = !isCurrentImageLoaded && !isCurrentImageError;
 
+  // If no images provided or images is undefined, show empty state
+  if (!images || images.length === 0) {
+    return (
+      <div className="mb-[32px] px-4">
+        <div className="w-full min-h-[160px] md:min-h-[250px] lg:min-h-[400px] overflow-hidden rounded-[20px] bg-gray-100 flex items-center justify-center">
+          <div className="text-center">
+            <div className="mx-auto w-16 h-16 md:w-20 md:h-20 text-gray-400 mb-4">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="w-full h-full"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1"
+              >
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2" strokeWidth="1.5" />
+                <circle cx="8.5" cy="8.5" r="1.5" strokeWidth="1" />
+                <polyline points="21 15 16 10 5 21" strokeWidth="1.5" />
+                <line x1="10" y1="9" x2="5" y2="14" strokeWidth="1.5" />
+                <line x1="19" y1="5" x2="14" y2="10" strokeWidth="1.5" />
+                <line x1="4" y1="4" x2="8" y2="8" strokeWidth="1.5" stroke="#ef4444" />
+                <line x1="20" y1="20" x2="16" y2="16" strokeWidth="1.5" stroke="#ef4444" />
+              </svg>
+            </div>
+            <span className="text-gray-500 text-sm md:text-base">
+              No images available
+            </span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="mb-[32px] px-4 relative group">
       <div className="w-full min-h-[160px] md:min-h-[250px] lg:min-h-[400px] overflow-hidden rounded-[20px] relative bg-gray-100">
