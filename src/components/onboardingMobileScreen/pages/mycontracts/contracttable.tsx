@@ -138,7 +138,7 @@ export default function ContractsPage() {
                               Contract Details
                             </Link>
                             <Link
-                              to={`/dashboard/view-transacions/${contract.id}`}
+                              to={`/dashboard/view-transacions/${contract.contractId}`}
                               className=" px-4 py-2 rounded-full text-sm whitespace-nowrap transition-all bg-[#79B833] items-center justify-center text-white  text-[10px]  font-medium   "
                             >
                               TNX History

@@ -38,6 +38,7 @@ import { SettingsResponse } from "./types/SettingsTypes";
 import { estatePropertiesResponse } from "./types/estatePropertiesResponse";
 import { ApiResponse, ContactParams } from "./types/contractTypes";
 import { TransactionApiResponse, TransactionParams } from "./types/transaction";
+// import { FetchAccountsResponse, SwitchAccountResponse } from "../utils/AccountTypes";
 
 export type ApiError = {
   response?: {
@@ -149,13 +150,16 @@ export const getContact = async (
   });
   return res.data;
 };
+
+
+// https://adron.microf10.sg-host.com/api/erp-contract/3000001759/transactions
 export const getContractTransactions = async (
   params: TransactionParams
 ): Promise<TransactionApiResponse> => {
     const { contractId,search, page = 1, per_page = 15 } = params;
     
   const res = await apiClient.get<TransactionApiResponse>(
-    `/user/erp-contract/${contractId}/transactions`,
+    `/erp-contract/${contractId}/transactions`,
     {
       params
     }
@@ -722,4 +726,108 @@ export const resolveVirtualAccount = async () => {
 export const generateNewRef = async (payment_id: number) => {
   const response = await apiClient.get(`/payment-retry/${payment_id}`);
   return response.data;
+};
+
+
+
+// data/api/accounts.ts or wherever your API functions are
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useUserStore } from "../zustand/UserStore";
+
+
+// Define types
+export interface Account {
+  first_name: string;
+  last_name: string;
+  email: string;
+  customer_code: string;
+  profile_image?: string;
+  is_default?: boolean;
+  phone_number?: string;
+}
+
+export interface FetchAccountsResponse {
+  success: boolean;
+  accounts: Account[];
+}
+
+export interface SwitchAccountResponse {
+  success: boolean;
+  token: string;
+  message: string;
+  account: Account;
+}
+
+// Fetch all accounts (GET request)
+export const useFetchAccounts = () => {
+  const { token, identifier, deviceId } = useUserStore.getState();
+  
+  return useQuery<FetchAccountsResponse>({
+    queryKey: ["user-accounts"],
+    queryFn: async () => {
+      const response = await apiClient.get<FetchAccountsResponse>("/user/fetch-accounts", {
+       
+      });
+      return response.data;
+    },
+    enabled: !!token,
+    staleTime: 5 * 60 * 1000,
+  });
+};
+
+// Switch between accounts (POST request)
+export const useSwitchAccount = () => {
+  const queryClient = useQueryClient();
+  const { setToken, setUser, identifier, deviceId, token } = useUserStore.getState();
+
+  return useMutation({
+    mutationFn: async (customerCode: string): Promise<SwitchAccountResponse> => {
+      const response = await apiClient.post<SwitchAccountResponse>(
+        "/user/switch-account",
+        {
+          customer_code: customerCode,
+        },
+       
+      );
+      return response.data;
+    },
+    onSuccess: (data) => {
+      if (data.success && data.token) {
+        // Update token with the new one from switch response
+        setToken(data.token);
+        
+        // Invalidate and refetch user profile with new token
+        queryClient.invalidateQueries({ queryKey: ["user-profile"] });
+        
+        // Update user store with new account info
+        if (data.account) {
+          // Get current user data to merge with new account info
+          const currentUser = useUserStore.getState().user;
+          
+          setUser({
+            ...currentUser,
+            first_name: data.account.first_name,
+            last_name: data.account.last_name,
+            email: data.account.email,
+            unique_customer_id: data.account.customer_code,
+          } as any);
+        }
+        
+        // Clear old account list cache to refresh with new token
+        queryClient.invalidateQueries({ queryKey: ["user-accounts"] });
+        
+        // Invalidate other queries that might depend on user data
+        queryClient.invalidateQueries({ queryKey: ["user-notifications"] });
+        queryClient.invalidateQueries({ queryKey: ["user-wallet"] });
+      }
+    },
+    onError: (error: any) => {
+      console.error("Failed to switch account:", error);
+      // You can add more detailed error handling here
+      if (error.response?.status === 401) {
+        // Handle unauthorized error
+        console.error("Unauthorized - token might be invalid");
+      }
+    },
+  });
 };
