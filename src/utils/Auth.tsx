@@ -214,6 +214,7 @@ const logout = () => {
   useOnboardingStore.getState().reset(); // Reset onboarding store
 
   localStorage.removeItem("user-state"); // Clear persisted user state
+  localStorage.removeItem("persist:profile"); // Clear persisted user state
   localStorage.removeItem("onboarding-state"); // Clear persisted onboarding state
 
   // window.location.reload(); // Optional: Refresh page to clear UI state
