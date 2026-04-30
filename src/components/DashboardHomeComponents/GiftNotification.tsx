@@ -13,7 +13,7 @@ const GiftNotification: React.FC<Prop> = ({ item }) => {
   // };
   return (
     <div className=" my-auto px-12 py-5 text-white space-y-2">
-      <div className="font-adron-bold text-lg">Gift avialable</div>
+      <div className="font-adron-bold text-lg">Gift available</div>
       <div className="text-sm">
         Gifts available for {item.property.name} {item.property.size} SqM
       </div>
