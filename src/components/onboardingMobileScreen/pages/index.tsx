@@ -1,27 +1,27 @@
-import React, { useState } from "react";
-import PropertyCard from "../onboardingComponents/PropertyCard";
+import { useState } from "react";
 import CompactPropertyCard from "../onboardingComponents/CompactPropertyCard";
 import DashboardCard from "../onboardingComponents/DashboardCard";
+import PropertyCard from "../onboardingComponents/PropertyCard";
 
 import {
   useGetEstate,
   useGetFeatured,
   useGetSlidersByType,
-  useGetUser,
+  useGetUserDashboardData,
   useGetUserWalletdata,
 } from "../../../data/hooks";
 
+import { formatToNaira } from "../../../data/utils";
+import GiftNotificationSlider from "../../DashboardHomeComponents/GiftNoficationSlider";
 import {
   EmptyEstates,
   EmptyFeaturedProperties,
 } from "../onboardingComponents/emptyStates";
+import ImageCarousel from "../onboardingComponents/ImageCarousel";
 import {
   CompactCardSkeleton,
   PropertyCardSkeleton,
 } from "../onboardingComponents/skeleton";
-import ImageCarousel from "../onboardingComponents/ImageCarousel";
-import { formatToNaira } from "../../../data/utils";
-import Loader from "../../Loader";
 
 const dashboardItems = [
   {
@@ -67,8 +67,6 @@ const PropertiesPage = () => {
   const { data: dashboardSlider, isLoading: sliderLoading } =
     useGetSlidersByType("home");
 
-
-
   const {
     data: dataestate,
     isLoading: isloadingestate,
@@ -79,14 +77,22 @@ const PropertiesPage = () => {
     isLoading: isLoadingTr,
     isError: isErrorTr,
   } = useGetUserWalletdata();
+  const { data: dashData } = useGetUserDashboardData();
+  const plans = dashData?.user_properties || [];
+  const plan_with_gifts = plans.filter((plan) => {
+    return (
+      plan.eligible_gifts.length > 0 &&
+      plan.eligible_gifts.some(
+        (eligible_gift) => eligible_gift.is_claimed === false
+      )
+    );
+  });
 
   const FeaturedProp = data?.data || [];
   const estatedProp = dataestate?.properties?.data || [];
   const transactions = dataTr?.user_transactions ?? [];
 
   const [showAllFeatured, setShowAllFeatured] = useState(false);
-
-
 
   const imgapi = dashboardSlider?.data?.map((item) => ({
     src: item?.image,
@@ -95,13 +101,19 @@ const PropertiesPage = () => {
 
   return (
     <>
-         {/* Image Carousel Section with Loading State */}
+      {/* Image Carousel Section with Loading State */}
       {sliderLoading ? (
         <div className="mb-[32px] px-4">
           <div className="w-full min-h-[160px] md:min-h-[250px] lg:min-h-[400px] overflow-hidden rounded-[20px] bg-gray-100 animate-pulse" />
         </div>
       ) : (
         <ImageCarousel images={imgapi!} interval={5000} />
+      )}
+
+      {plan_with_gifts.length > 0 && (
+        <div className="px-4 pb-4">
+          <GiftNotificationSlider plan_with_gifts={plan_with_gifts} />
+        </div>
       )}
 
       <div className="space-y-[30px]">
@@ -182,7 +194,7 @@ const PropertiesPage = () => {
                     imageUrl={estate.display_image}
                     imageAlt={estate.name}
                     title={estate.name}
-                    location={` ${estate.state??""}`}
+                    location={` ${estate.state ?? ""}`}
                     id={estate.id}
                     loading={false}
                   />

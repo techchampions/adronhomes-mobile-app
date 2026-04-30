@@ -1,29 +1,30 @@
+import useEmblaCarousel from "embla-carousel-react";
 import { useEffect, useState } from "react";
-import TransactionsList from "../components/DashboardTransactionComponents/TransactionsList";
-import Button from "../components/Button";
-import { HiOutlineLocationMarker } from "react-icons/hi";
 import { GiStreetLight } from "react-icons/gi";
+import { HiOutlineLocationMarker } from "react-icons/hi";
 import { MdOutlinePower } from "react-icons/md";
 import { useNavigate, useParams } from "react-router-dom";
-import { useModalStore } from "../zustand/useModalStore";
+import ApiErrorBlock from "../components/ApiErrorBlock";
+import Button from "../components/Button";
+import InlineLoader from "../components/InlineLoader";
+import Loader from "../components/Loader";
 import InputAmount from "../components/PaymentComponents/InputAmount";
 import { useGetPropertyPlanByID } from "../data/hooks";
-import Loader from "../components/Loader";
-import ApiErrorBlock from "../components/ApiErrorBlock";
 import { formatDate, formatPrice } from "../data/utils";
-import { Transaction } from "../data/types/userTransactionsTypes";
 import { usePaymentBreakDownStore } from "../zustand/PaymentBreakDownStore";
-import InlineLoader from "../components/InlineLoader";
-import useEmblaCarousel from "embla-carousel-react";
+import { useModalStore } from "../zustand/useModalStore";
 
-import RequestDocument from "../components/DashboardNewPropertyComponent/RequestDocument";
-import { FaCheckCircle, FaChevronLeft, FaChevronRight } from "react-icons/fa";
-import InputInfrastructureAmount from "../components/DashboardMyPropertyComponents/InputAmount";
-import CopyButton from "../components/CopyButton";
 import { BsFillExclamationCircleFill } from "react-icons/bs";
+import { FaCheckCircle, FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import CopyButton from "../components/CopyButton";
+import DownloadPropertyDocuments from "../components/DashboardMyPropertyComponents/DownloadPropertyDocuments";
+import InputInfrastructureAmount from "../components/DashboardMyPropertyComponents/InputAmount";
 import MyPlanPaymentHistory from "../components/DashboardMyPropertyComponents/MyPropertyPaymentHistory";
 import SelectPaymentMethod from "../components/DashboardMyPropertyComponents/SelectPaymentMethod";
-import DownloadPropertyDocuments from "../components/DashboardMyPropertyComponents/DownloadPropertyDocuments";
+import RequestDocument from "../components/DashboardNewPropertyComponent/RequestDocument";
+import GiftIndicator from "../components/DashboardPropertyComponent/GiftIndicator";
+import GiftRequestIndicator from "../components/DashboardPropertyComponent/GiftRequestIndicator";
+import { Transaction } from "../data/types/userTransactionsTypes";
 import { useToastStore } from "../zustand/useToastStore";
 
 const MyPropertyDetail = () => {
@@ -82,6 +83,11 @@ const MyPropertyDetail = () => {
   if (isError) {
     return <ApiErrorBlock />;
   }
+  const gifts = data?.plan_properties.eligible_gifts || [];
+  const eligible_gifts = gifts.filter((item) => !item.is_claimed);
+  const requested_gifts = gifts.filter(
+    (item) => item.is_claimed && item.gift_request
+  );
   const transactions: Transaction[] = data?.transactions.data ?? [];
   const infrastructureBreakDown = data?.infrastructure_break_down || [];
   const OtherFeesBreakDown = data?.others_fee_break_down || [];
@@ -388,6 +394,16 @@ const MyPropertyDetail = () => {
 
   return (
     <div className="space-y-4">
+      {eligible_gifts.length > 0 && (
+        <GiftIndicator
+          eligible_gifts={eligible_gifts}
+          property_id={data?.user_property.property_id || 0}
+          plan_id={data?.plan_properties.id}
+        />
+      )}
+      {requested_gifts.length > 0 && (
+        <GiftRequestIndicator gift_request={requested_gifts[0].gift_request} />
+      )}
       <div className="flex justify-between flex-col md:flex-row bg-adron-green rounded-3xl overflow-hidden">
         <div
           className="relative overflow-hidden flex w-full md:w-[60%]"

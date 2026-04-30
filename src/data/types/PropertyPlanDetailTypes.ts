@@ -10,7 +10,7 @@ export interface Property {
   lga: string;
   state: string;
   slug: String;
-  initial_deposit:any
+  initial_deposit: any;
 }
 
 // export interface PlanProperty {
@@ -70,6 +70,7 @@ type PlanProperty = {
   paid_infrastructure_amount: number;
   paid_other_amount: number;
   property: Property;
+  eligible_gifts: EligibleGift[];
 };
 
 interface UserProperty {
