@@ -1,9 +1,8 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import Button from "../components/Button";
+import AddFundAmount from "../components/DashboardHomeComponents/AddFundAmount";
 import PropertyPlanList from "../components/DashboardHomeComponents/PropertyList";
 import TransactionsList from "../components/DashboardHomeComponents/TransactionList";
-import { useModalStore } from "../zustand/useModalStore";
-import AddFundAmount from "../components/DashboardHomeComponents/AddFundAmount";
 import {
   useGetSlidersByType,
   useGetUserDashboardData,
@@ -12,13 +11,15 @@ import {
   useResolveVirtualAccount,
 } from "../data/hooks";
 import { Transaction } from "../data/types/userTransactionsTypes";
+import { useModalStore } from "../zustand/useModalStore";
 // import Loader from "../components/Loader";
 import ApiErrorBlock from "../components/ApiErrorBlock";
+import SmallLoader from "../components/SmallLoader";
 import { UserProperty } from "../data/types/dashboardHomeTypes";
 import { formatPrice } from "../data/utils";
-import SmallLoader from "../components/SmallLoader";
 // import WalletTransactionsList from "../components/DashboardHomeComponents/WalletTransactionList";
 import { createPortal } from "react-dom";
+import GiftNotificationSlider from "../components/DashboardHomeComponents/GiftNoficationSlider";
 
 const HomeScreen = () => {
   const [showWarning, setShowWarning] = useState(false);
@@ -67,13 +68,22 @@ const HomeScreen = () => {
   const transactions: Transaction[] = data?.user_transactions ?? [];
   const plans: UserProperty[] = data?.user_properties ?? [];
   const landData = data?.total_property.breakdown.find(
-    (item) => item.type_name === "Land",
+    (item) => item.type_name === "Land"
   );
   const numberofLands = landData?.count;
   const houseData = data?.total_property.breakdown.find(
-    (item) => item.type_name === "Residential",
+    (item) => item.type_name === "Residential"
   );
   const numberofHouses = houseData?.count;
+
+  const plan_with_gifts = plans.filter((plan) => {
+    return (
+      plan.eligible_gifts.length > 0 &&
+      plan.eligible_gifts.some(
+        (eligible_gift) => eligible_gift.is_claimed === false
+      )
+    );
+  });
 
   return (
     <div className="flex flex-col w-full gap-6">
@@ -123,17 +133,27 @@ const HomeScreen = () => {
               </div>
             </div>
           </div>,
-          document.body,
+          document.body
         )}
 
-      <div className="w-full">
-        <img
-          // src="/images/Lemon-Friday-hor.png"
-          src={dashboardSlider?.data[0].image || ""}
-          alt=""
-          className="h-[180px] w-full object-cover rounded-3xl"
-        />
+      <div className="w-full grid md:grid-cols-3 gap-2">
+        <div
+          className={`${
+            plan_with_gifts.length > 0 ? "md:col-span-2" : "md:col-span-3"
+          }`}
+        >
+          <img
+            // src="/images/Lemon-Friday-hor.png"
+            src={dashboardSlider?.data[0].image || ""}
+            alt=""
+            className="h-[180px] w-full object-cover rounded-3xl"
+          />
+        </div>
+        {plan_with_gifts.length > 0 && (
+          <GiftNotificationSlider plan_with_gifts={plan_with_gifts} />
+        )}
       </div>
+
       <div className="grid grid-cols-2 md:grid-cols-3 grid-rows-2 md:grid-rows-3 gap-4">
         {/* My Wallet */}
         <div className="col-span-2 md:row-span-2 bg-white rounded-3xl p-6 flex flex-col gap-4">

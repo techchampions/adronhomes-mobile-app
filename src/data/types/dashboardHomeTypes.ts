@@ -32,6 +32,7 @@ export interface UserProperty {
   next_payment_date: string;
   property: Property;
   property_plan: null;
+  eligible_gifts: EligibleGift[];
 }
 
 export interface PropertyBreakdown {
