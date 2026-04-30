@@ -1,9 +1,16 @@
 // components/AccountSwitcher.tsx
-import React, { useState, useEffect } from "react";
+import {
+  Building2,
+  CheckCircle,
+  ChevronRight,
+  RefreshCw,
+  User2,
+  X,
+} from "lucide-react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { X, User2, Building2, ChevronRight, RefreshCw, CheckCircle } from "lucide-react";
-import { useUserStore } from "../../zustand/UserStore";
 import { useFetchAccounts, useSwitchAccount } from "../../data/api";
+import { useUserStore } from "../../zustand/UserStore";
 import { useToastStore } from "../../zustand/useToastStore";
 
 // Define the Account type
@@ -27,54 +34,66 @@ interface AccountSwitcherProps {
   onClose: () => void;
 }
 
-const AccountSwitcher: React.FC<AccountSwitcherProps> = ({ isOpen, onClose }) => {
+const AccountSwitcher: React.FC<AccountSwitcherProps> = ({
+  isOpen,
+  onClose,
+}) => {
   const navigate = useNavigate();
   const { user, setUser } = useUserStore();
   const { data, isLoading, refetch } = useFetchAccounts();
   const switchAccountMutation = useSwitchAccount();
-  
+
   const [selectedAccount, setSelectedAccount] = useState<string | null>(null);
 
   // Type assertion for data
   const accounts: Account[] = (data as FetchAccountsResponse)?.accounts || [];
 
   const getUserInitials = (firstName: string, lastName: string): string => {
-    return `${firstName?.charAt(0) || ''}${lastName?.charAt(0) || ''}`.toUpperCase();
+    return `${firstName?.charAt(0) || ""}${
+      lastName?.charAt(0) || ""
+    }`.toUpperCase();
   };
-  
-  const { showToast } = useToastStore();
-  
-// In AccountSwitcher.tsx, the handleSwitchAccount function remains the same
-const handleSwitchAccount = async (customerCode: string): Promise<void> => {
-  if (customerCode === user?.unique_customer_id) {
-    showToast("You're already using this account", "error");
-    return;
-  }
 
-  setSelectedAccount(customerCode);
-  
-  try {
-    const result = await switchAccountMutation.mutateAsync(customerCode);
-    
-    if (result.success) {
-      showToast(result.message || `Switched to ${result.account.first_name} ${result.account.last_name}`, "success");
-      
-      // The user store will be updated automatically by the mutation's onSuccess
-      // Close modal
-      onClose();
-      
-      // Optional: Redirect or reload after a short delay
-      setTimeout(() => {
-        window.location.reload();
-      }, 1000);
+  const { showToast } = useToastStore();
+
+  // In AccountSwitcher.tsx, the handleSwitchAccount function remains the same
+  const handleSwitchAccount = async (customerCode: string): Promise<void> => {
+    if (customerCode === user?.unique_customer_id) {
+      showToast("You're already using this account", "error");
+      return;
     }
-  } catch (error: any) {
-    showToast(error.response?.data?.message || "Failed to switch account", "error");
-    console.error("Switch account error:", error);
-  } finally {
-    setSelectedAccount(null);
-  }
-};
+
+    setSelectedAccount(customerCode);
+
+    try {
+      const result = await switchAccountMutation.mutateAsync(customerCode);
+
+      if (result.success) {
+        showToast(
+          result.message ||
+            `Switched to ${result.account.first_name} ${result.account.last_name}`,
+          "success"
+        );
+
+        // The user store will be updated automatically by the mutation's onSuccess
+        // Close modal
+        onClose();
+
+        // Optional: Redirect or reload after a short delay
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
+      }
+    } catch (error: any) {
+      showToast(
+        error.response?.data?.message || "Failed to switch account",
+        "error"
+      );
+      console.error("Switch account error:", error);
+    } finally {
+      setSelectedAccount(null);
+    }
+  };
 
   const handleViewAll = (): void => {
     onClose();
@@ -110,7 +129,9 @@ const handleSwitchAccount = async (customerCode: string): Promise<void> => {
         {/* Header */}
         <div className=" bg-white border-b border-gray-100 px-5 py-4 flex items-center justify-between">
           <div className="bg-white">
-            <h2 className="text-xl font-semibold text-gray-900">Switch Account</h2>
+            <h2 className="text-xl font-semibold text-gray-900">
+              Switch Account
+            </h2>
             <p className="text-sm text-gray-500 mt-1">
               Select an account to continue
             </p>
@@ -138,9 +159,10 @@ const handleSwitchAccount = async (customerCode: string): Promise<void> => {
           ) : (
             <div className="divide-y divide-gray-100">
               {accounts.slice(0, 4).map((account: Account, index: number) => {
-                const isCurrentAccount = account.customer_code === user?.unique_customer_id;
+                const isCurrentAccount =
+                  account.customer_code === user?.unique_customer_id;
                 const isSelected = selectedAccount === account.customer_code;
-                
+
                 return (
                   <button
                     key={index}
@@ -152,18 +174,23 @@ const handleSwitchAccount = async (customerCode: string): Promise<void> => {
                   >
                     {/* Avatar */}
                     <div className="relative flex-shrink-0">
-                      <div className={`h-12 w-12 rounded-full flex items-center justify-center ${
-                        isCurrentAccount 
-                          ? "bg-gradient-to-br from-green-400 to-green-600" 
-                          : "bg-gradient-to-br from-adron-green to-adron-green-dark"
-                      }`}>
+                      <div
+                        className={`h-12 w-12 rounded-full flex items-center justify-center ${
+                          isCurrentAccount
+                            ? "bg-gradient-to-br from-green-400 to-green-600"
+                            : "bg-gradient-to-br from-adron-green to-adron-green-dark"
+                        }`}
+                      >
                         <span className="text-white font-semibold text-lg">
-                          {getUserInitials(account.first_name, account.last_name)}
+                          {getUserInitials(
+                            account.first_name,
+                            account.last_name
+                          )}
                         </span>
                       </div>
                       {isCurrentAccount && (
                         <div className="absolute -top-1 -right-1 bg-green-500 rounded-full p-0.5">
-                                 <CheckCircle className="h-3 w-3 text-white" />
+                          <CheckCircle className="h-3 w-3 text-white" />
                         </div>
                       )}
                     </div>

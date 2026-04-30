@@ -1,43 +1,43 @@
+import { FundWalletResponse } from "../components/DashboardHomeComponents/SelectPaymentMethod";
 import apiClient from "./apiClient";
-import { GetPropertyByIdResponse } from "./types/GetPropertyByIdResponse";
-import { GetUserResponse } from "./types/UserProfileTypes";
-import {
-  PaginatedProperties,
-  PropertiesResponse,
-} from "./types/propertiesPageTypes";
-import { PropertyLocationResponse } from "./types/PropertyLocationTypes";
-import { PropertiesTypeResponse } from "./types/propertyTypes";
-import { UserTransactionResponse } from "./types/userTransactionsTypes";
-import { UserDashboardResponseData } from "./types/dashboardHomeTypes";
-import { UserWalletResponse } from "./types/userWalletTypes";
-import { UserPropertyPlanResponse } from "./types/userPropertiesTypes";
-import { PlanPropertiesDetailResponse } from "./types/PropertyPlanDetailTypes";
-import { NotificationsResponse } from "./types/notificationTypes";
-import {
-  TransactionByIDResponse,
-  TransactionRecieptResponse,
-  WalletTransactionByIDResponse,
-} from "./types/userTransactionByIDTypes";
-import { NotificationByIDResponse } from "./types/NotificationByIDTypes";
+import { AccountDetailsResponse } from "./types/AccountDetailsTypes";
 import {
   NewPropertyPlanPayload,
   PendingPropertyPlanPayload,
   PropertyPlanPayload,
 } from "./types/CreatePropertyPayload";
-import { PropertyPlanPaymentResponse } from "./types/PropertyPlanPaymentListTypes";
-import { FundWalletPayload } from "./types/FundWalletPayloadTypes";
-import { PropertiesSearchResultResponse } from "./types/SearchPropertiesResultTypes";
-import { SavedPropertiesResponse } from "./types/SavedPropertiesResponse";
-import { FundWalletResponse } from "../components/DashboardHomeComponents/SelectPaymentMethod";
-import { AccountDetailsResponse } from "./types/AccountDetailsTypes";
 import { EnquirePayload } from "./types/EnquirePayload";
-import { PropertiesRequestResponse } from "./types/PropertyRequestTypes";
-import { SliderByTypeResponse } from "./types/SliderByTypeTypes";
 import { FAQResponse } from "./types/FAQTypes";
+import { FundWalletPayload } from "./types/FundWalletPayloadTypes";
+import { GetPropertyByIdResponse } from "./types/GetPropertyByIdResponse";
+import { NotificationByIDResponse } from "./types/NotificationByIDTypes";
+import { PropertyLocationResponse } from "./types/PropertyLocationTypes";
+import { PlanPropertiesDetailResponse } from "./types/PropertyPlanDetailTypes";
+import { PropertyPlanPaymentResponse } from "./types/PropertyPlanPaymentListTypes";
+import { PropertiesRequestResponse } from "./types/PropertyRequestTypes";
+import { SavedPropertiesResponse } from "./types/SavedPropertiesResponse";
+import { PropertiesSearchResultResponse } from "./types/SearchPropertiesResultTypes";
 import { SettingsResponse } from "./types/SettingsTypes";
-import { estatePropertiesResponse } from "./types/estatePropertiesResponse";
+import { SliderByTypeResponse } from "./types/SliderByTypeTypes";
+import { GetUserResponse } from "./types/UserProfileTypes";
 import { ApiResponse, ContactParams } from "./types/contractTypes";
+import { UserDashboardResponseData } from "./types/dashboardHomeTypes";
+import { estatePropertiesResponse } from "./types/estatePropertiesResponse";
+import { NotificationsResponse } from "./types/notificationTypes";
+import {
+  PaginatedProperties,
+  PropertiesResponse,
+} from "./types/propertiesPageTypes";
+import { PropertiesTypeResponse } from "./types/propertyTypes";
 import { TransactionApiResponse, TransactionParams } from "./types/transaction";
+import { UserPropertyPlanResponse } from "./types/userPropertiesTypes";
+import {
+  TransactionByIDResponse,
+  TransactionRecieptResponse,
+  WalletTransactionByIDResponse,
+} from "./types/userTransactionByIDTypes";
+import { UserTransactionResponse } from "./types/userTransactionsTypes";
+import { UserWalletResponse } from "./types/userWalletTypes";
 // import { FetchAccountsResponse, SwitchAccountResponse } from "../utils/AccountTypes";
 
 export type ApiError = {
@@ -151,17 +151,16 @@ export const getContact = async (
   return res.data;
 };
 
-
 // https://adron.microf10.sg-host.com/api/erp-contract/3000001759/transactions
 export const getContractTransactions = async (
   params: TransactionParams
 ): Promise<TransactionApiResponse> => {
-    const { contractId,search, page = 1, per_page = 15 } = params;
-    
+  const { contractId, search, page = 1, per_page = 15 } = params;
+
   const res = await apiClient.get<TransactionApiResponse>(
     `/erp-contract/${contractId}/transactions`,
     {
-      params
+      params,
     }
   );
   return res.data;
@@ -728,12 +727,9 @@ export const generateNewRef = async (payment_id: number) => {
   return response.data;
 };
 
-
-
 // data/api/accounts.ts or wherever your API functions are
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useUserStore } from "../zustand/UserStore";
-
 
 // Define types
 export interface Account {
@@ -761,33 +757,35 @@ export interface SwitchAccountResponse {
 // Fetch all accounts (GET request)
 export const useFetchAccounts = () => {
   const { token, identifier, deviceId } = useUserStore.getState();
-  
+
   return useQuery<FetchAccountsResponse>({
     queryKey: ["user-accounts"],
     queryFn: async () => {
-      const response = await apiClient.get<FetchAccountsResponse>("/user/fetch-accounts", {
-       
-      });
+      const response = await apiClient.get<FetchAccountsResponse>(
+        "/user/fetch-accounts",
+        {}
+      );
       return response.data;
     },
     enabled: !!token,
-    staleTime: 5 * 60 * 1000,
   });
 };
 
 // Switch between accounts (POST request)
 export const useSwitchAccount = () => {
   const queryClient = useQueryClient();
-  const { setToken, setUser, identifier, deviceId, token } = useUserStore.getState();
+  const { setToken, setUser, identifier, deviceId, token } =
+    useUserStore.getState();
 
   return useMutation({
-    mutationFn: async (customerCode: string): Promise<SwitchAccountResponse> => {
+    mutationFn: async (
+      customerCode: string
+    ): Promise<SwitchAccountResponse> => {
       const response = await apiClient.post<SwitchAccountResponse>(
         "/user/switch-account",
         {
           customer_code: customerCode,
-        },
-       
+        }
       );
       return response.data;
     },
@@ -795,15 +793,15 @@ export const useSwitchAccount = () => {
       if (data.success && data.token) {
         // Update token with the new one from switch response
         setToken(data.token);
-        
+
         // Invalidate and refetch user profile with new token
         queryClient.invalidateQueries({ queryKey: ["user-profile"] });
-        
+
         // Update user store with new account info
         if (data.account) {
           // Get current user data to merge with new account info
           const currentUser = useUserStore.getState().user;
-          
+
           setUser({
             ...currentUser,
             first_name: data.account.first_name,
@@ -812,10 +810,10 @@ export const useSwitchAccount = () => {
             unique_customer_id: data.account.customer_code,
           } as any);
         }
-        
+
         // Clear old account list cache to refresh with new token
         queryClient.invalidateQueries({ queryKey: ["user-accounts"] });
-        
+
         // Invalidate other queries that might depend on user data
         queryClient.invalidateQueries({ queryKey: ["user-notifications"] });
         queryClient.invalidateQueries({ queryKey: ["user-wallet"] });
