@@ -5,6 +5,9 @@ import { ReusableTable } from "../Table_one";
 import { Link } from "react-router-dom";
 import Pagination from "../Pagination";
 import SmallLoader from "../../../SmallLoader";
+import { useModalStore } from "../../../../zustand/useModalStore";
+import { PaymentModal } from "../../../payment";
+import { useUserStore } from "../../../../zustand/UserStore";
 
 interface ContractData {
   id: number;
@@ -32,7 +35,18 @@ export default function ContractsPage() {
     setSearch(value);
     setPage(1);
   };
-
+    const { openModal,closeModal } = useModalStore();
+  const handlePayForContract = (contractId: number) => {
+    const userData=useUserStore()
+    openModal(
+      <PaymentModal 
+        isOpen={true} 
+        onClose={() => {closeModal()}} 
+        contractId={contractId}
+        userEmail={userData.user?.email || ""} // Pass user email from store or default to empty string
+      />
+    );
+  };
   return (
     <div className="">
       <div className="">
@@ -143,6 +157,17 @@ export default function ContractsPage() {
                             >
                               TNX History
                             </Link>
+                             <button
+                  onClick={() => handlePayForContract(contract.id)}
+                  className="
+                    w-full py-2.5 px-3 text-sm font-medium rounded-lg
+                    bg-green-600 text-white 
+                    hover:bg-green-700 active:bg-green-800
+                    border border-green-500
+                  "
+                >
+                  Pay Now
+                </button>
                           </div>
                         </td>
                       </tr>
