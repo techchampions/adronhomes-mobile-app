@@ -94,7 +94,18 @@ export default function ContractsPage() {
       day: "numeric",
     });
   };
-
+    const { openModal,closeModal } = useModalStore();
+  const handlePayForContract = (contractId: number) => {
+    const userData=useUserStore()
+    openModal(
+      <PaymentModal 
+        isOpen={true} 
+        onClose={() => {closeModal()}} 
+        contractId={contractId}
+        userEmail={userData.user?.email || ""} // Pass user email from store or default to empty string
+      />
+    );
+  };
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
