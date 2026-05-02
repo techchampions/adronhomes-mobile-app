@@ -16,7 +16,7 @@ import { IoMdNotificationsOutline } from "react-icons/io";
 import { RiLockPasswordLine } from "react-icons/ri";
 import { CgProfile } from "react-icons/cg";
 import { ApiError } from "../data/api";
-import { useUserStore } from "./user_store";
+import { use_UserStore } from "./user_store";
 import DeleteConfirmationPage from "../components/onboardingMobileScreen/onboardingComponents/delete";
 
 const ProfileSettings = () => {
@@ -29,7 +29,7 @@ const ProfileSettings = () => {
     updateUser,
     currentPage,
     setCurrentPage,
-  } = useUserStore();
+  } = use_UserStore();
 
   const userData = zustandUser || data?.user;
 
