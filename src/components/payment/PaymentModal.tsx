@@ -173,7 +173,7 @@ export function PaymentModal({ isOpen, onClose, contractId = 23, userEmail = 'ka
       role="dialog"
       aria-labelledby="payment-modal-title"
       aria-describedby="payment-modal-description"
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4"
       onClick={(e) => {
         // Allow closing when clicking outside only if not processing payment
         if (e.target === e.currentTarget && !isProcessingPayment) {
@@ -182,7 +182,7 @@ export function PaymentModal({ isOpen, onClose, contractId = 23, userEmail = 'ka
       }}
     >
       <div 
-        className="rounded-2xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto relative"
+        className="rounded-2xl w-full max-w-md max-h-[90vh] overflow-y-auto relative"
         style={{ backgroundColor: 'white' }}
       >
         {/* Header with Progress */}
