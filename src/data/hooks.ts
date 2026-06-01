@@ -46,6 +46,7 @@ import {
   linkExistingContracts,
   makeEnquire,
   makePendingPropertyPlanPayment,
+  payForContract,
   PropertyFilters,
   propertyPlanRepayment,
   requestStatement,
@@ -683,3 +684,22 @@ export const useGetCittaBranches = () => {
     },
   });
 };
+export function usePayForContract() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: payForContract,
+    onSuccess: (data, variables) => {
+      // Invalidate relevant queries to refresh data
+      queryClient.invalidateQueries({ queryKey: ['erp-contracts'] });
+      queryClient.invalidateQueries({ queryKey: ['user-wallet'] });
+      queryClient.invalidateQueries({ queryKey: ['wallet-data'] });
+      
+      // You can also update cache directly if needed
+      console.log('Payment successful:', data);
+    },
+    onError: (error: Error) => {
+      console.error('Payment error:', error.message);
+    },
+  });
+}
