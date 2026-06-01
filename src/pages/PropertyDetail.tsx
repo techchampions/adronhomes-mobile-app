@@ -1,5 +1,4 @@
 import { Form, Formik } from "formik";
-import { PiRoadHorizonDuotone } from "react-icons/pi";
 import {
   FaChevronLeft,
   FaChevronRight,
@@ -9,42 +8,44 @@ import {
 import { GrDocumentUser } from "react-icons/gr";
 import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 import { LuFence } from "react-icons/lu";
+import { PiRoadHorizonDuotone } from "react-icons/pi";
 import { useNavigate, useParams } from "react-router-dom";
-import InputField from "../components/InputField";
-import Button from "../components/Button";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Swiper as SwiperType } from "swiper/types";
+import Button from "../components/Button";
+import InputField from "../components/InputField";
 
-import { Navigation } from "swiper/modules";
 import DOMPurify from "dompurify";
-import "swiper/css";
-import "swiper/css/navigation";
+import { FileStack, MapPinned, PhoneCall } from "lucide-react";
 import { GiGate, GiStreetLight } from "react-icons/gi";
-import {
-  useEnquireProperty,
-  useGetPropertyByID,
-  useToggleSaveProperty,
-} from "../data/hooks";
-import { formatDate, formatPrice } from "../data/utils";
-import ApiErrorBlock from "../components/ApiErrorBlock";
-import Loader from "../components/Loader";
-import { LiaLandmarkSolid, LiaToiletSolid } from "react-icons/lia";
-import { TbBed } from "react-icons/tb";
 import {
   IoCarSportOutline,
   IoClose,
   IoConstructOutline,
   IoLogoWhatsapp,
 } from "react-icons/io5";
+import { LiaLandmarkSolid, LiaToiletSolid } from "react-icons/lia";
+import { MdOutlineLandscape } from "react-icons/md";
+import { TbBed } from "react-icons/tb";
+import "swiper/css";
+import "swiper/css/navigation";
+import { Navigation } from "swiper/modules";
+import ApiErrorBlock from "../components/ApiErrorBlock";
+import HorizontalPropertyList from "../components/DashboardPropertyComponent/HorizontalPropertyList";
+import Loader from "../components/Loader";
+import {
+  useEnquireProperty,
+  useGetPropertyByID,
+  useToggleSaveProperty,
+} from "../data/hooks";
+import { formatDate, formatPrice } from "../data/utils";
 import { useUserStore } from "../zustand/UserStore";
 import { useToastStore } from "../zustand/useToastStore";
-import HorizontalPropertyList from "../components/DashboardPropertyComponent/HorizontalPropertyList";
-import { FileStack, LoaderCircle, MapPinned, PhoneCall } from "lucide-react";
-import { MdOutlineLandscape } from "react-icons/md";
 
 import { useEffect, useRef, useState } from "react";
-import { useModalStore } from "../zustand/useModalStore";
 import InlineLoader from "../components/InlineLoader";
+import Start from "../components/SubscribeComponents/Start";
+import { useModalStore } from "../zustand/useModalStore";
 
 // import DiscountBanner from "../components/DashboardPropertyComponent/DiscountBanner";
 const PropertyDetail = () => {
@@ -119,8 +120,8 @@ const PropertyDetail = () => {
   const duplexTotal = duplexes.reduce((sum, item) => sum + item.value, 0);
 
   const invest = () => {
-    // navigate(`/invest-property/${id}`);
-    navigate(`/dashboard/invest-property-form/${id}`);
+    // navigate(`/dashboard/invest-property-form/${id}`);
+    modal.openModal(<Start property={data.data.properties} />);
   };
   const totalFees = data?.data.properties.details.reduce(
     (sum, item) => sum + item.value,
@@ -236,7 +237,7 @@ const PropertyDetail = () => {
                 <FaChevronRight size={30} />
               </button>
             </div>
-          ):(
+          ) : (
             <div className="relative w-full h-[300px] rounded-xl overflow-hidden mt-4">
               {/* <Swiper
                 spaceBetween={10}
@@ -260,13 +261,13 @@ const PropertyDetail = () => {
               </Swiper>
                */}
 
-                  <SwiperSlide >
-                    <img
-                      src={data.data.properties.display_image}
-                      alt={`Image `}
-                      className="object-cover h-full w-full"
-                    />
-                  </SwiperSlide>
+              <SwiperSlide>
+                <img
+                  src={data.data.properties.display_image}
+                  alt={`Image `}
+                  className="object-cover h-full w-full"
+                />
+              </SwiperSlide>
               <button
                 ref={prevRef}
                 className="absolute cursor-pointer left-2 top-1/2 -translate-y-1/2 z-10 bg-white/50 bg-opacity-60 rounded-full p-2 shadow hover:bg-opacity-90"
@@ -485,7 +486,6 @@ const PropertyDetail = () => {
                         </div>
                       </div>
                     </div>
-                   
                   </div>
                 </div>
 

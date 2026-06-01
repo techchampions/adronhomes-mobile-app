@@ -1,8 +1,8 @@
-import { ErrorMessage, Field, useField } from "formik";
-import React, { useEffect, useState } from "react";
+import { Field, ErrorMessage, useField } from "formik";
 import { FaExclamationCircle } from "react-icons/fa";
+import React, { useEffect, useState } from "react";
 
-interface InputFieldProps {
+interface CurrencyInputFieldProps {
   type?:
     | "text"
     | "email"
@@ -12,7 +12,6 @@ interface InputFieldProps {
     | "checkbox"
     | "textarea";
   placeholder?: string;
-  label?: string;
   name: string;
   icon?: React.ReactNode;
   rightIcon?: React.ReactNode;
@@ -34,10 +33,9 @@ const formatToNaira = (value: string | number | null | undefined): string => {
   );
 };
 
-const InputField: React.FC<InputFieldProps> = ({
+const CurrencyInputField: React.FC<CurrencyInputFieldProps> = ({
   type = "text",
   placeholder,
-  label,
   name,
   icon,
   rightIcon,
@@ -61,7 +59,7 @@ const InputField: React.FC<InputFieldProps> = ({
   }, [field.value, formatAsNaira]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let inputVal = e.target.value.replace(/[^0-9]/g, "");
+    const inputVal = e.target.value.replace(/[^0-9]/g, "");
     if (formatAsNaira) {
       setValue(inputVal);
       setDisplayValue(formatToNaira(inputVal));
@@ -76,10 +74,6 @@ const InputField: React.FC<InputFieldProps> = ({
 
   return (
     <div className="w-full">
-      {label && (
-        <div className="font-bold text-sm text-gray-700 mb-2">{label}</div>
-      )}
-
       <div
         className={`w-full relative flex ${
           isTextarea ? "flex-col" : "flex-row"
@@ -141,4 +135,4 @@ const InputField: React.FC<InputFieldProps> = ({
   );
 };
 
-export default InputField;
+export default CurrencyInputField;
