@@ -26,6 +26,7 @@ import {
   getEstates,
   getFAQs,
   getFeaturedProperties,
+  getIfUserExists,
   getNotificationByID,
   getNotifications,
   getPaymentReciept,
@@ -55,7 +56,9 @@ import {
   StatementPayload,
   StatementResponse,
   toggleSaveProperty,
+  verifyMarketer,
 } from "./api";
+import apiClient from "./apiClient";
 import { AccountDetailsResponse } from "./types/AccountDetailsTypes";
 import { FAQResponse } from "./types/FAQTypes";
 import { GetPropertyByIdResponse } from "./types/GetPropertyByIdResponse";
@@ -68,7 +71,10 @@ import { PropertiesSearchResultResponse } from "./types/SearchPropertiesResultTy
 import { SettingsResponse } from "./types/SettingsTypes";
 import { SliderByTypeResponse } from "./types/SliderByTypeTypes";
 import { GetUserResponse } from "./types/UserProfileTypes";
-import { ApiResponse, ContactParams } from "./types/contractTypes";
+import {
+  ContactParams,
+  ApiResponse as NonGenericApiResponse,
+} from "./types/contractTypes";
 import { UserDashboardResponseData } from "./types/dashboardHomeTypes";
 import { estatePropertiesResponse } from "./types/estatePropertiesResponse";
 import { NotificationsResponse } from "./types/notificationTypes";
@@ -536,7 +542,7 @@ export const useResolveVirtualAccount = () => {
 };
 
 export const useGetContact = (params: ContactParams) => {
-  return useQuery<ApiResponse, Error>({
+  return useQuery<NonGenericApiResponse, Error>({
     queryKey: ["get-contact", params],
     queryFn: () => getContact(params),
     placeholderData: keepPreviousData,
@@ -607,7 +613,77 @@ export const useGenerateNewRef = (payment_id: number) => {
   });
 };
 
+export const useIsUserExist = (email: string) => {
+  return useQuery<UserExistsResponse>({
+    queryKey: ["is_user_exist", email],
+    queryFn: () => getIfUserExists(email),
+    enabled: !!email,
+    retry: false,
+  });
+};
 
+export const useVerifyMarkerter = (id: string) => {
+  return useQuery<VerifyMarketerResponse>({
+    queryKey: ["verify-marketer", id],
+    queryFn: () => verifyMarketer(id),
+    enabled: !!id,
+  });
+};
+
+export const useGetBusinessType = () => {
+  return useQuery<ApiResponse<BusinessType[]>>({
+    queryKey: ["citta-business-type"],
+    queryFn: async () => {
+      const res = await apiClient.get(`/citta/business-types`);
+      return res.data;
+    },
+  });
+};
+export const useGetCittaGenders = () => {
+  return useQuery<ApiResponse<BusinessType[]>>({
+    queryKey: ["citta-genders"],
+    queryFn: async () => {
+      const res = await apiClient.get(`/citta/genders`);
+      return res.data;
+    },
+  });
+};
+export const useGetCittaMaritalStatus = () => {
+  return useQuery<ApiResponse<BusinessType[]>>({
+    queryKey: ["citta-marital-statuses"],
+    queryFn: async () => {
+      const res = await apiClient.get(`/citta/marital-statuses`);
+      return res.data;
+    },
+  });
+};
+export const useGetCittaCountries = () => {
+  return useQuery<ApiResponse<BusinessType[]>>({
+    queryKey: ["citta-countries"],
+    queryFn: async () => {
+      const res = await apiClient.get(`/citta/countries`);
+      return res.data;
+    },
+  });
+};
+export const useGetCittaPurposes = () => {
+  return useQuery<ApiResponse<BusinessType[]>>({
+    queryKey: ["citta-purposes"],
+    queryFn: async () => {
+      const res = await apiClient.get(`/citta/purposes`);
+      return res.data;
+    },
+  });
+};
+export const useGetCittaBranches = () => {
+  return useQuery<ApiResponse<BusinessType[]>>({
+    queryKey: ["citta-branches"],
+    queryFn: async () => {
+      const res = await apiClient.get(`/citta/branches`);
+      return res.data;
+    },
+  });
+};
 export function usePayForContract() {
   const queryClient = useQueryClient();
 

@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -12,22 +12,23 @@ import "swiper/css/pagination";
 import "swiper/css/scrollbar";
 
 import {
-  FaMapMarkerAlt,
   FaChevronLeft,
   FaChevronRight,
   FaHeart,
+  FaMapMarkerAlt,
   FaRegHeart,
 } from "react-icons/fa";
 import { GiStreetLight } from "react-icons/gi";
-import Button from "../Button";
-import { formatPrice } from "../../data/utils";
-import apiClient from "../../data/apiClient";
-import { useToastStore } from "../../zustand/useToastStore";
-import { Property, PropertyType } from "../../data/types/propertiesPageTypes";
 import { IoGiftOutline, IoLogoWhatsapp } from "react-icons/io5";
-import LinkButton from "../LinkButton";
 import { useToggleSaveProperty } from "../../data/hooks";
+import { Property } from "../../data/types/propertiesPageTypes";
+import { formatPrice } from "../../data/utils";
+import { useModalStore } from "../../zustand/useModalStore";
+import { useToastStore } from "../../zustand/useToastStore";
+import Button from "../Button";
 import InlineLoader from "../InlineLoader";
+import LinkButton from "../LinkButton";
+import Start from "../SubscribeComponents/Start";
 
 interface Props {
   property: Property;
@@ -43,7 +44,7 @@ export default function SwiperPropertyCard({ property }: Props) {
     allowedFeatures.includes(item)
   );
 
-const location = useLocation();
+  const location = useLocation();
   const isRented =
     property?.purpose?.includes("rent") ||
     property?.purpose?.includes("Rent") ||
@@ -91,53 +92,57 @@ const location = useLocation();
       navigate(`/dashboard/properties/${property.slug}`);
     }
   };
+  const { openModal } = useModalStore();
+  const subscribe = () => {
+    openModal(<Start property={property} />);
+  };
   return (
     <div className="rounded-3xl">
       <div className="relative w-full h-[250px] rounded-xl overflow-hidden">
-{property?.photos && property.photos.length > 0 ? (
-  <Swiper
-    spaceBetween={10}
-    slidesPerView={1}
-    onInit={(swiperInstance) => setSwiper(swiperInstance)}
-    navigation={{
-      prevEl: prevRef.current,
-      nextEl: nextRef.current,
-    }}
-    modules={[Navigation]}
-    className="w-full h-full rounded-[40px]"
-  >
-    {property.photos.map((img, idx) => (
-      <SwiperSlide key={idx}>
-        <img
-          src={img}
-          alt={`Image ${idx + 1}`}
-          className="object-cover rounded-3xl h-full w-full"
-        />
-      </SwiperSlide>
-    ))}
-  </Swiper>
-) : (
-  <Swiper
-    spaceBetween={10}
-    slidesPerView={1}
-    onInit={(swiperInstance) => setSwiper(swiperInstance)}
-    navigation={{
-      prevEl: prevRef.current,
-      nextEl: nextRef.current,
-    }}
-    modules={[Navigation]}
-    className="w-full h-full rounded-[40px]"
-  >
-    <SwiperSlide>
-      <img
-        src={property?.display_image}
-        alt="Image"
-        className="object-cover rounded-3xl h-full w-full"
-      />
-    </SwiperSlide>
-  </Swiper>
-)}
-     {/* Navigation Buttons */}
+        {property?.photos && property.photos.length > 0 ? (
+          <Swiper
+            spaceBetween={10}
+            slidesPerView={1}
+            onInit={(swiperInstance) => setSwiper(swiperInstance)}
+            navigation={{
+              prevEl: prevRef.current,
+              nextEl: nextRef.current,
+            }}
+            modules={[Navigation]}
+            className="w-full h-full rounded-[40px]"
+          >
+            {property.photos.map((img, idx) => (
+              <SwiperSlide key={idx}>
+                <img
+                  src={img}
+                  alt={`Image ${idx + 1}`}
+                  className="object-cover rounded-3xl h-full w-full"
+                />
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        ) : (
+          <Swiper
+            spaceBetween={10}
+            slidesPerView={1}
+            onInit={(swiperInstance) => setSwiper(swiperInstance)}
+            navigation={{
+              prevEl: prevRef.current,
+              nextEl: nextRef.current,
+            }}
+            modules={[Navigation]}
+            className="w-full h-full rounded-[40px]"
+          >
+            <SwiperSlide>
+              <img
+                src={property?.display_image}
+                alt="Image"
+                className="object-cover rounded-3xl h-full w-full"
+              />
+            </SwiperSlide>
+          </Swiper>
+        )}
+        {/* Navigation Buttons */}
         <button
           ref={prevRef}
           className="absolute cursor-pointer left-2 top-1/2 -translate-y-1/2 z-10 bg-white/50 bg-opacity-60 rounded-full p-2 shadow hover:bg-opacity-90"
@@ -239,13 +244,13 @@ const location = useLocation();
         </div>
 
         <div className="grid grid-cols-2 items-center justify-between gap-2">
-       <Button
-  label="View Property"
-  className="bg-adron-green text-xs py-3"
-  onClick={() => {
-   handleViewProperty()
-  }}
-/>
+          <Button
+            label="View Property"
+            className="bg-adron-green text-xs py-3"
+            onClick={() => {
+              handleViewProperty();
+            }}
+          />
           {isRented ? (
             <LinkButton
               href={property.whatsapp_link}
@@ -262,12 +267,12 @@ const location = useLocation();
             />
           ) : (
             <Button
+              onClick={subscribe}
               label="Subscribe"
               className="!bg-transparent !text-black border hover:!text-white hover:!bg-black text-xs py-3"
-              // onClick={() => navigate(`/invest-property/${property.id}`)}
-              onClick={() =>
-                navigate(`/dashboard/invest-property-form/${property.id}`)
-              }
+              // onClick={() =>
+              //   navigate(`/dashboard/invest-property-form/${property.id}`)
+              // }
             />
           )}
         </div>
