@@ -42,7 +42,7 @@ const GuestPersonalInfo: React.FC<Props> = ({ property }) => {
     if (marketID) {
       action.openModal(<InputMarketerId property={property} />);
     } else {
-      action.openModal(<Start property={property} />);
+      action.openModal(<Start property_id={property?.id} />);
     }
   };
   const CheckEmail = ({ email }: { email: string }) => {

@@ -121,7 +121,7 @@ const PropertyDetail = () => {
 
   const invest = () => {
     // navigate(`/dashboard/invest-property-form/${id}`);
-    modal.openModal(<Start property={data.data.properties} />);
+    modal.openModal(<Start property_id={data.data.properties.id} />);
   };
   const totalFees = data?.data.properties.details.reduce(
     (sum, item) => sum + item.value,

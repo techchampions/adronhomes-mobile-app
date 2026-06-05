@@ -3,8 +3,6 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 import React from "react";
 import * as Yup from "yup";
 import { useGetPropertyByID } from "../../data/hooks";
-import { Property } from "../../data/types/GetPropertyByIdResponse";
-import { Property as PropertySimple } from "../../data/types/propertiesPageTypes";
 import { useModalStore } from "../../zustand/useModalStore";
 import { useUserStore } from "../../zustand/UserStore";
 import Button from "../Button";
@@ -25,18 +23,15 @@ const options = [
   { value: "no", label: "No" },
 ];
 interface Props {
-  property?: Property | PropertySimple;
-  clickProperty?: Property | PropertySimple;
+  property_id?: number;
 }
 const initialValues = {
   referred: "",
 };
-const Start: React.FC<Props> = ({ property, clickProperty }) => {
+const Start: React.FC<Props> = ({ property_id }) => {
   const modal = useModalStore();
   const { isLoggedIn } = useUserStore();
-  const { data, isLoading } = useGetPropertyByID(
-    String(clickProperty?.id || property?.id)
-  );
+  const { data, isLoading } = useGetPropertyByID(String(property_id));
   if (isLoading) {
     return (
       <div className="w-sm max-w-xs md:max-w-sm h-60 flex flex-col gap-3 justify-center items-center">

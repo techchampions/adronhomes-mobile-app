@@ -94,7 +94,7 @@ export default function SwiperPropertyCard({ property }: Props) {
   };
   const { openModal } = useModalStore();
   const subscribe = () => {
-    openModal(<Start property={property} />);
+    openModal(<Start property_id={property.id} />);
   };
   return (
     <div className="rounded-3xl">

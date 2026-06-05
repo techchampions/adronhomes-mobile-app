@@ -25,7 +25,7 @@ const InputMarketerId: React.FC<Props> = ({ property }) => {
   const initialValues = { marketerId: marketID };
   const { data, isLoading, isError } = useVerifyMarkerter(ID || "");
   const goBack = () => {
-    action.openModal(<Start property={property} />);
+    action.openModal(<Start property_id={property?.id} />);
   };
 
   const ValidateID = ({ marketerID }: { marketerID: string }) => {
