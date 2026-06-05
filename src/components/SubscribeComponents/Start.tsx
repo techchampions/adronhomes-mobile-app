@@ -25,18 +25,15 @@ const options = [
   { value: "no", label: "No" },
 ];
 interface Props {
-  property?: Property | PropertySimple;
-  clickProperty?: Property | PropertySimple;
+  property_id?: number;
 }
 const initialValues = {
   referred: "",
 };
-const Start: React.FC<Props> = ({ property, clickProperty }) => {
+const Start: React.FC<Props> = ({ property_id }) => {
   const modal = useModalStore();
   const { isLoggedIn } = useUserStore();
-  const { data, isLoading } = useGetPropertyByID(
-    String(clickProperty?.id || property?.id)
-  );
+  const { data, isLoading } = useGetPropertyByID(String(property_id));
   if (isLoading) {
     return (
       <div className="w-sm max-w-xs md:max-w-sm h-60 flex flex-col gap-3 justify-center items-center">
