@@ -1,5 +1,6 @@
 // /utils/auth.tsx
 import { ApiError } from "../data/api";
+import { use_UserStore } from "../pages/user_store";
 import { useOnboardingStore } from "../zustand/OnboardingStore";
 import { useUserStore } from "../zustand/UserStore";
 import { useToastStore } from "../zustand/useToastStore";
@@ -8,7 +9,7 @@ import apiClient from "./AxiosInstance";
 const { showToast } = useToastStore.getState();
 const { setHasCompletedOnboarding, setStep } = useOnboardingStore.getState();
 const { setToken, setIsLoggedIn } = useUserStore.getState();
-
+const { clearUser } = use_UserStore.getState();
 const handleResendOTP = async () => {
   try {
     const response = await apiClient.post("/resend-otp");
@@ -216,7 +217,7 @@ const logout = () => {
   localStorage.removeItem("user-state"); // Clear persisted user state
   localStorage.removeItem("persist:profile"); // Clear persisted user state
   localStorage.removeItem("onboarding-state"); // Clear persisted onboarding state
-
+clearUser()
   // window.location.reload(); // Optional: Refresh page to clear UI state
   showToast("Logged out successfully!", "success"); // Show logout success message
 };

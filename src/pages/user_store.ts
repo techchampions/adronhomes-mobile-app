@@ -11,7 +11,7 @@ interface UserState {
   setCurrentPage: (page: string) => void;
 }
 
-export const useUserStore = create<UserState>()(
+export const use_UserStore = create<UserState>()(
   persist(
     (set, get) => ({
       user: null,
@@ -26,7 +26,7 @@ export const useUserStore = create<UserState>()(
     }),
     {
       name: 'user-storage',
-      partialize: (state) => ({ user: state.user }), // Only persist `user`
+      // partialize: (state) => ({ user: state.user }), // Only persist `user`
     }
   )
 );

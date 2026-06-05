@@ -730,6 +730,7 @@ export const generateNewRef = async (payment_id: number) => {
 // data/api/accounts.ts or wherever your API functions are
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useUserStore } from "../zustand/UserStore";
+import { PayForContractRequest, PayForContractResponse } from "./types/PayForContractRequest";
 
 // Define types
 export interface Account {
@@ -850,3 +851,12 @@ export const subscribe = async (payload: Partial<BuyPropertyPayload>) => {
   });
   return response.data;
 };
+
+export const payForContract = async (params: PayForContractRequest): Promise<PayForContractResponse> => {
+  const formData = new FormData();
+  formData.append('amount', params.amount.toString());
+  formData.append('payment_type', params.payment_type);
+  formData.append('contract_id', params.contract_id);
+  const response = await apiClient.post('/user/pay-for-contract', formData);
+  return response.data;
+}
