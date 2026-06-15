@@ -82,7 +82,7 @@ const AllRoutes = () => {
 
   return (
     <BrowserRouter>
-      <ScrollToTop />
+      <ScrollToTop /> 
       <Suspense fallback={<Loader className="h-[100px] w-[100px]" />}>
         <Routes>
           <Route
