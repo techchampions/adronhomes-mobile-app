@@ -3,6 +3,8 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 import React from "react";
 import * as Yup from "yup";
 import { useGetPropertyByID } from "../../data/hooks";
+import { Property } from "../../data/types/GetPropertyByIdResponse";
+import { Property as PropertySimple } from "../../data/types/propertiesPageTypes";
 import { useModalStore } from "../../zustand/useModalStore";
 import { useUserStore } from "../../zustand/UserStore";
 import Button from "../Button";
