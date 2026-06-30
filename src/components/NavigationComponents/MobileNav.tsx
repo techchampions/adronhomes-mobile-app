@@ -1,23 +1,23 @@
+import { Menu, X } from "lucide-react"; // or use any icon you prefer
 import { useState } from "react";
 import { FaUserAlt, FaUserCircle } from "react-icons/fa";
 import { FaArrowRightArrowLeft } from "react-icons/fa6";
-import { MdAddHome, MdDashboardCustomize, MdOutlineHelp } from "react-icons/md";
 import { IoSettingsSharp } from "react-icons/io5";
+import { MdAddHome, MdDashboardCustomize, MdOutlineHelp } from "react-icons/md";
 import {
+  RiCommunityFill,
   RiHomeHeartFill,
   RiLogoutBoxRFill,
   RiNotificationBadgeFill,
   RiWallet3Fill,
 } from "react-icons/ri";
-import { Menu, X } from "lucide-react"; // or use any icon you prefer
 
-import NavItem from "./NavItem";
-import NavbarAddorder from "./NavbarAddorder";
+import { Link, useNavigate } from "react-router-dom";
+import { useGetNotifications } from "../../data/hooks";
 import Auth from "../../utils/Auth";
 import { useUserStore } from "../../zustand/UserStore";
-import { Link, useNavigate } from "react-router-dom";
 import CopyButton from "../CopyButton";
-import { useGetNotifications } from "../../data/hooks";
+import NavItem from "./NavItem";
 
 const MobileNav = () => {
   const { user } = useUserStore();
@@ -142,6 +142,13 @@ const MobileNav = () => {
                 icon={<MdAddHome className=" w-4 h-4" />}
                 path="/dashboard/my-properties"
               />
+              <NavItem
+                onSlideBack={setIsMobileMenuOpen}
+                label="Estate Communities"
+                icon={<RiCommunityFill className=" w-4 h-4" />}
+                path="/dashboard/estate"
+              />
+
               <NavItem
                 onSlideBack={setIsMobileMenuOpen}
                 label="New Properties"
