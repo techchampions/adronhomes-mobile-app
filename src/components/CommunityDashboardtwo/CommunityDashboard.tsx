@@ -127,7 +127,7 @@ const CommunityDashboard: React.FC<CommunityDashboardProps> = () => {
       return <Outlet context={contextValue} />;
     }
     return (
-      <div className="p-10 text-center flex flex-col gap-2 items-center">
+      <div className="p-10 text-center flex flex-col gap-2 items-center ">
         <div className="p-4 flex items-center justify-center rounded-full bg-gray-100 text-gray-500">
           <AlertTriangle size={40} />
         </div>
@@ -142,13 +142,6 @@ const CommunityDashboard: React.FC<CommunityDashboardProps> = () => {
   return (
     <section className="min-h-screen">
       <div className="mx-auto max-w-7xl space-y-5">
-        <div className="overflow-hidden rounded-2xl bg-white p-5">
-          <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-4">
-            {sectionRoutes.map((section, i) => (
-              <SectionRouteItem section={section} key={i} />
-            ))}{" "}
-          </div>
-        </div>
         {isLoading && (
           <div className="grid sm:grid-cols-3 gap-2">
             {[1, 2, 3].map(() => (
@@ -163,6 +156,14 @@ const CommunityDashboard: React.FC<CommunityDashboardProps> = () => {
             setSelected={setSelectedEstate}
           />
         )}
+        <div className="overflow-hidden rounded-2xl bg-white p-5 shadow-lg">
+          <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-4">
+            {sectionRoutes.map((section, i) => (
+              <SectionRouteItem section={section} key={i} />
+            ))}{" "}
+          </div>
+        </div>
+
         {isloadingDashboard && <EstateInfoSkeletons />}
         {dashboardData?.data && (
           <EstateInfoSection estate={dashboardData.data} />

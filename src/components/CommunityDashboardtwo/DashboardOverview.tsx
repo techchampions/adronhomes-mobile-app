@@ -102,24 +102,6 @@ const DashboardOverview = () => {
 
   return (
     <div className="space-y-6">
-      {/* Welcome Section */}
-      <div className="rounded-2xl bg-gradient-to-r from-[#79B833] to-[#8FD14F] p-6 text-white">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
-          <div>
-            <h2 className="text-2xl font-bold">
-              Welcome back, {user?.first_name}
-            </h2>
-            <p className="text-white/80 mt-1">
-              You're managing <strong>{context.data?.estate_info.name}</strong>{" "}
-              and 2 other properties
-            </p>
-          </div>
-          <button className="mt-4 md:mt-0 px-6 py-2 bg-white/20 backdrop-blur-sm rounded-xl hover:bg-white/30 transition-colors">
-            View All Properties
-          </button>
-        </div>
-      </div>
-
       {/* Stats Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {stats.map((stat, index) => {
