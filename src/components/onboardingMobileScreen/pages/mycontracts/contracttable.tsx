@@ -175,13 +175,13 @@ export default function ContractsPage() {
                         </td>
                         <td className="px-6 py-4">
                           <div className="max-w-48">
-                            <Link
-                              className="text-blue-600 hover:text-blue-800 font-medium hover:underline transition-colors"
-                              to={`/dashboard/properties/${contract.propertyId}`}
+                            <span
+                              // className="text-blue-600 hover:text-blue-800 font-medium hover:underline transition-colors"
+                              // to={`/dashboard/properties/${contract.propertyId}`}
                               title={contract.propertyEstate || "-"}
                             >
                               {contract.propertyEstate || "-"}
-                            </Link>
+                            </span>
                           </div>
                         </td>
                         <td className="px-6 py-4">

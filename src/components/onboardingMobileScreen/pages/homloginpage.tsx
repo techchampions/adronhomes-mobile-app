@@ -17,37 +17,37 @@ const dashboardItems = [
     imageSrc: "/q1.svg",
     imageAlt: "Dashboard",
     label: "Dashboard",
-    url: "/dashboard/home",
+    url: "/login",
   },
   {
     imageSrc: "/q2.svg",
     imageAlt: "Users",
     label: "Wallet",
-    url: "/dashboard/wallet",
+    url: "/login",
   },
   {
     imageSrc: "/q3.svg",
     imageAlt: "Reports",
     label: "Notifications",
-    url: "/dashboard/notifications",
+    url: "/login",
   },
   {
     imageSrc: "/q4.svg",
     imageAlt: "Payment",
     label: "Payment",
-    url: "/dashboard/payments",
+    url: "/login",
   },
   {
     imageSrc: "/q5.svg",
     imageAlt: "Saved Properties",
     label: "Saved Properties",
-    url: "/dashboard/saved-properties",
+    url: "/login",
   },
   {
     imageSrc: "/q6.svg",
     imageAlt: "Settings",
     label: "Settings",
-    url: "/dashboard/settings",
+    url: "/login",
   },
 ];
 
