@@ -1,6 +1,6 @@
-import { Field, ErrorMessage, useField, useFormikContext } from "formik";
-import { FaExclamationCircle } from "react-icons/fa";
+import { ErrorMessage, Field, useField } from "formik";
 import React, { useEffect, useState } from "react";
+import { FaExclamationCircle } from "react-icons/fa";
 
 interface InputFieldFormattedProps {
   type?:
@@ -12,6 +12,7 @@ interface InputFieldFormattedProps {
     | "checkbox"
     | "textarea";
   placeholder?: string;
+  label?: string;
   name: string;
   icon?: React.ReactNode;
   rightIcon?: React.ReactNode;
@@ -35,6 +36,7 @@ const formatToNaira = (value: string | number | null | undefined): string => {
 
 const InputFieldFormatted: React.FC<InputFieldFormattedProps> = ({
   type = "text",
+  label,
   placeholder,
   name,
   icon,
@@ -43,7 +45,7 @@ const InputFieldFormatted: React.FC<InputFieldFormattedProps> = ({
   rows = 4,
   isReadOnly = false,
   autocomplete,
-  formatAsNaira = false,
+  formatAsNaira = true,
 }) => {
   const [field, meta, helpers] = useField(name);
   const { setValue } = helpers;
@@ -74,11 +76,15 @@ const InputFieldFormatted: React.FC<InputFieldFormattedProps> = ({
 
   return (
     <div className="w-full">
+      {label && (
+        <div className="font-bold text-sm text-gray-700 mb-1">{label}</div>
+      )}
+
       <div
         className={`w-full relative flex ${
           isTextarea ? "flex-col" : "flex-row"
-        } border bg-adron-body rounded-full py-2 ${
-          hasError ? "border-red-500" : "border-transparent"
+        } bg-adron-body rounded-full py-2 ${
+          hasError && "border border-red-500"
         } ${className}`}
       >
         {/* Left Icon */}
@@ -97,7 +103,7 @@ const InputFieldFormatted: React.FC<InputFieldFormattedProps> = ({
             placeholder={placeholder}
             readOnly={isReadOnly}
             autoComplete={autocomplete}
-            className={`text-gray-900 text-base rounded-lg focus:ring-0 block w-full px-5 outline-none resize-none h-4 placeholder:text-sm`}
+            className={`text-gray-900 text-base rounded-lg focus:ring-0 block w-full px-5 outline-none resize-none placeholder:text-sm`}
           />
         ) : (
           <Field

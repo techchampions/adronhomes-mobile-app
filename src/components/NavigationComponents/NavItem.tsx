@@ -1,6 +1,6 @@
 import { JSX, useState } from "react";
-import { NavLink } from "react-router-dom";
 import { FaChevronDown } from "react-icons/fa";
+import { NavLink } from "react-router-dom";
 
 interface NavItemProps {
   label: string;
@@ -20,7 +20,7 @@ const NavItem: React.FC<NavItemProps> = ({
   onSlideBack,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  
+
   const closeNav = () => {
     if (onSlideBack) {
       onSlideBack(false);
@@ -41,7 +41,7 @@ const NavItem: React.FC<NavItemProps> = ({
           end={true}
           onClick={closeNav} // Close sidebar when main nav item is clicked
           className={({ isActive }) =>
-            `flex items-center justify-between px-7 py-[7px] rounded-full transition ${
+            `flex items-center justify-between px-4 py-[7px] rounded-full transition ${
               isActive
                 ? "bg-adron-green-200 text-adron-green"
                 : "text-adron-gray-400 hover:bg-brand-400"
@@ -50,7 +50,7 @@ const NavItem: React.FC<NavItemProps> = ({
         >
           <div className="flex items-center space-x-2">
             {icon}
-            <span className=" text-[12px]">{label}</span>
+            <span className="line-clamp-1 text-[12px]">{label}</span>
             {badge != undefined && (
               <div className="w-4 h-4 rounded-full bg-red-600 text-white text-[9px] flex items-center justify-center text-center">
                 {badge}
@@ -88,7 +88,7 @@ const NavItem: React.FC<NavItemProps> = ({
                     ? "bg-brand-400 text-adron-gray-400"
                     : "text-adron-gray-400 hover:bg-brand-400"
                 }`
-                }
+              }
             >
               {child.label}
             </NavLink>
