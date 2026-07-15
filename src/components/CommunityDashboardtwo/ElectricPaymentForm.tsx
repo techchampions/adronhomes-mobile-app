@@ -8,6 +8,7 @@ import { useInterswitchPayment } from "../../hooks/useInterswitchPyament";
 import { useUserStore } from "../../zustand/UserStore";
 import Button from "../Button";
 import InputField from "../InputField";
+import InputFieldFormatted from "../InputField+Format";
 import BankTransferModal from "./BankTransferModal";
 interface Prop {
   payment_method: string;
@@ -20,18 +21,19 @@ const ElectricPaymentForm: React.FC<Prop> = ({ payment_method }) => {
   const [showModal, setshowModal] = useState(false);
   const initialValues = {
     meter_id: "",
-    number_of_units: 1,
+    amount: null,
   };
   const validationSchema = Yup.object().shape({
     meter_id: Yup.string().required("required"),
-    number_of_units: Yup.number().required("required"),
+    amount: Yup.mixed().required("required"),
   });
 
   const submit = (values: typeof initialValues) => {
-    const amount = values.number_of_units * 245;
+    // const amount = values.number_of_units * 245;
     if (context.data?.estate_info.id) {
       const payload: UtitlityPayload = {
         chargeable_id: values.meter_id,
+        amount: values.amount || 0,
         estate_id: context.data?.estate_info.id,
         payment_method: payment_method,
         payment_type: "Electricity",
@@ -41,17 +43,17 @@ const ElectricPaymentForm: React.FC<Prop> = ({ payment_method }) => {
       } else {
         mutate(payload, {
           onSuccess(data) {
-            if (payment_method === "interswitch") {
-              interswitch({
-                email: user?.email || "",
-                amount: amount,
-                reference: data.data.reference,
-                merchant_code: data.data.reference,
-                payment_item_id: data.data.reference,
-                onSuccess: () => {},
-                onClose: () => {},
-              });
-            }
+            // if (payment_method === "interswitch") {
+            //   interswitch({
+            //     email: user?.email || "",
+            //     amount: amount,
+            //     reference: data.data.reference,
+            //     merchant_code: data.data.reference,
+            //     payment_item_id: data.data.reference,
+            //     onSuccess: () => {},
+            //     onClose: () => {},
+            //   });
+            // }
           },
         });
       }
@@ -74,11 +76,12 @@ const ElectricPaymentForm: React.FC<Prop> = ({ payment_method }) => {
                 placeholder="Enter meter number"
                 className="bg-white rounded-lg border border-gray-200"
               />
-              <InputField
-                name="number_of_units"
+              <InputFieldFormatted
+                name="amount"
                 type="number"
-                label="Units to purchase"
-                placeholder="Enter number of units"
+                formatAsNaira
+                label="Amount to purchase"
+                placeholder="Enter Amount"
                 className="bg-white rounded-lg border border-gray-200"
               />
             </div>
@@ -93,7 +96,7 @@ const ElectricPaymentForm: React.FC<Prop> = ({ payment_method }) => {
               <div className="flex justify-between items-center py-2 border-t border-gray-200">
                 <span className="text-gray-600">Total Amount</span>
                 <span className="text-2xl font-bold text-[#79B833]">
-                  {formatPrice(values.number_of_units * 245)}
+                  {formatPrice(values.amount || 0)}
                 </span>
               </div>
             </div>

@@ -1,13 +1,11 @@
-import React, { useState, useRef } from "react";
+import React, { useRef, useState } from "react";
 import {
+  FaFacebook,
+  FaLinkedin,
   FaShareAlt,
   FaTimes,
-  FaCopy,
-  FaFacebook,
   FaTwitter,
-  FaLinkedin,
   FaWhatsapp,
-  FaLink,
 } from "react-icons/fa";
 
 interface ShareButtonProps {
@@ -27,12 +25,6 @@ const ShareButton: React.FC<ShareButtonProps> = ({
   const menuRef = useRef<HTMLDivElement>(null);
 
   const shareOptions = [
-    {
-      name: "Copy Link",
-      icon: <FaCopy />,
-      action: () => copyToClipboard(url),
-      color: "bg-gray-500 hover:bg-gray-600",
-    },
     {
       name: "Facebook",
       icon: <FaFacebook />,

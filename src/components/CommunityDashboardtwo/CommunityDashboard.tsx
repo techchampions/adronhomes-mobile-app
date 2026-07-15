@@ -1,5 +1,5 @@
 import { AlertTriangle } from "lucide-react";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   FiCreditCard,
   FiFileText,
@@ -10,7 +10,7 @@ import {
   FiUsers,
   FiZap,
 } from "react-icons/fi";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import {
   useGetEstateCommunity,
   useGetSingleEstateCommunity,
@@ -100,6 +100,19 @@ const sectionRoutes: Array<{
 ];
 
 const CommunityDashboard: React.FC<CommunityDashboardProps> = () => {
+  const location = useLocation();
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const outletContainerRef = useRef<HTMLDivElement>(null);
+
   const { data, isLoading } = useGetEstateCommunity();
   const userEstates = data?.data || [];
   const [selectedEstate, setSelectedEstate] = useState<CommunityEstate>(
@@ -107,18 +120,23 @@ const CommunityDashboard: React.FC<CommunityDashboardProps> = () => {
   );
   const { data: dashboardData, isLoading: isloadingDashboard } =
     useGetSingleEstateCommunity(selectedEstate?.id);
-  // if (isLoading && isError) {
-  //   return (
-  //     <div className="space-y-4">
-  //       {[1, 2, 3].map(() => (
-  //         <EstateCardSkeleton />
-  //       ))}
-  //     </div>
-  //   );
-  // }
   const contextValue: CommunityOutletContext = {
     data: dashboardData?.data,
   };
+
+  // Auto-scroll to outlet container when route changes
+  // useEffect(() => {
+  //   const container = document.getElementById("main-layout");
+
+  //   if (!container || !outletContainerRef.current) return;
+
+  //   const top = outletContainerRef.current.offsetTop - container.offsetTop - 20; // adjust for spacing
+
+  //   container.scrollTo({
+  //     top: 100,
+  //     behavior: "smooth",
+  //   });
+  // }, [location.pathname]);
   const RenderContent = () => {
     if (isloadingDashboard) {
       return <OutletSkeleton />;
@@ -127,7 +145,7 @@ const CommunityDashboard: React.FC<CommunityDashboardProps> = () => {
       return <Outlet context={contextValue} />;
     }
     return (
-      <div className="p-10 text-center flex flex-col gap-2 items-center ">
+      <div className="p-10 text-center flex flex-col gap-2 items-center">
         <div className="p-4 flex items-center justify-center rounded-full bg-gray-100 text-gray-500">
           <AlertTriangle size={40} />
         </div>
@@ -156,8 +174,12 @@ const CommunityDashboard: React.FC<CommunityDashboardProps> = () => {
             setSelected={setSelectedEstate}
           />
         )}
-        <div className="overflow-hidden rounded-2xl bg-white p-5 shadow-lg">
-          <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-4">
+        <div
+          className={`overflow-hidden rounded-xl sm:rounded-2xl bg-white p-2 sm:p-5 ${
+            scrolled ? "fixed top-15 w-[95%] mx-auto left-2 right-2" : ""
+          } z-50 shadow-lg`}
+        >
+          <div className="flex overflow-x-scroll scrollbar-hide sm:grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-4">
             {sectionRoutes.map((section, i) => (
               <SectionRouteItem section={section} key={i} />
             ))}{" "}
@@ -169,7 +191,10 @@ const CommunityDashboard: React.FC<CommunityDashboardProps> = () => {
           <EstateInfoSection estate={dashboardData.data} />
         )}
 
-        <div className="rounded-2xl border border-slate-200 bg-white p-4 sm:p-6">
+        <div
+          ref={outletContainerRef}
+          className="rounded-2xl border border-slate-200 bg-white p-4 sm:p-6"
+        >
           <RenderContent />
           {/* {contextValue.data && dashboardData?.data ? (
             <Outlet context={contextValue} />

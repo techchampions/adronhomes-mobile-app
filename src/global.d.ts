@@ -263,12 +263,14 @@ interface RequestPaylaod {
 }
 interface UtitlityPayload {
   estate_id: number;
+  amount: number;
   payment_type: string;
   payment_method: string;
   chargeable_id: string;
 }
 interface AccessCodePayload {
   estate_id: number;
+  name: string;
   access_type: string;
   expiry_date: string;
 }
