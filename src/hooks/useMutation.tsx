@@ -9,6 +9,7 @@ interface Payload {
   plan_id: number;
   reward_group_id: number;
   property_id: number;
+  vendor_id: number;
   logic: "AND" | "OR";
   user_note: string;
   items: PayloadItem[];

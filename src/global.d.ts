@@ -320,3 +320,18 @@ interface GroupMessageResponse {
   conversation: GroupConversation;
   messages: PaginatedResponse<GroupMessage>;
 }
+
+interface PickupStation {
+  id: number;
+  name: string;
+  phone: string;
+  email: string;
+  address: string;
+  lga: string;
+  state: string;
+}
+interface AvailableVendorResponse {
+  success: boolean;
+  message: string;
+  data: PickupStation[];
+}
