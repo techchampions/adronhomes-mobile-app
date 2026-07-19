@@ -1,10 +1,14 @@
 import { Form, Formik } from "formik";
+import { Info, Store } from "lucide-react";
 import React from "react";
 import * as Yup from "yup";
+import { STATES } from "../../data/constants";
+import { useGetPickupStation } from "../../data/hooks";
 import { useMakeGiftRequest } from "../../hooks/useMutation";
 import { useModalStore } from "../../zustand/useModalStore";
 import Button from "../Button";
 import CheckboxGroup from "../CheckboxGroup";
+import { VendorListSkeleton } from "../CommunityDashboardtwo/Skeletons";
 import InputField from "../InputField";
 import RadioGroup from "../RadioGroup";
 import SelectFieldInput from "../SelectFieldInput";
@@ -22,9 +26,13 @@ const ClaimGift: React.FC<Prop> = ({ gift, property_id, plan_id }) => {
       "I have bought this property and I am interested in collecting my gifts.",
     gift: "",
     gifts: [] as string[],
+    state: "",
+    pickup_location: "",
   };
   const validationSchema = Yup.object().shape({
     reward_group: Yup.string().required("Reward group is required"),
+    state: Yup.string().required("Select your state"),
+    pickup_location: Yup.string().required("Select preferred pickup station"),
     gift: Yup.string().when("reward_group", (reward_group, schema) => {
       const selectedGroup = gift.reward_groups.find(
         (item) => Number(reward_group) === item.id
@@ -76,6 +84,7 @@ const ClaimGift: React.FC<Prop> = ({ gift, property_id, plan_id }) => {
         property_id: property_id,
         logic: selected_reward_group.logic,
         items: formatItemsForPayload(items),
+        vendor_id: Number(values.pickup_location),
         user_note:
           values.user_note ||
           "I am buying this properties and I am interested in the gift",
@@ -84,7 +93,7 @@ const ClaimGift: React.FC<Prop> = ({ gift, property_id, plan_id }) => {
     }
   };
   return (
-    <div className="w-sm max-w-sm">
+    <div className="w-sm sm:w-2xl max-w-2xl max-h-[75vh] overflow-y-auto scrollbar-hide">
       <Formik
         initialValues={initialValues}
         validateOnMount
@@ -99,51 +108,85 @@ const ClaimGift: React.FC<Prop> = ({ gift, property_id, plan_id }) => {
             value: String(item.item_id),
             label: `${item.qty} ${item.item_name}`,
           }));
+          const { data, isLoading } = useGetPickupStation(values.state);
+          const pickup_stations = data?.data || [];
+          const options = pickup_stations.map((item) => ({
+            value: item.id,
+            label: ` ${item.address}, ${item.state} state - ${item.name} (${item.phone})`,
+          }));
 
           return (
             <Form className="space-y-6">
               <div className="text-3xl font-adron-bold">Claim your gifts</div>
-              <div className="space-y-4">
-                <SelectFieldInput
-                  options={reward_group_option}
-                  label="Select Reward Group"
-                  name="reward_group"
-                  placeholder="Select Reward Group"
-                />
-                {selected_reward_group?.logic === "OR" && gift_options && (
-                  <RadioGroup
-                    options={gift_options}
-                    name="gift"
-                    label="Select a single Gift"
+              <div className="grid sm:grid-cols-2 gap-4">
+                <div className="space-y-4">
+                  <SelectFieldInput
+                    options={reward_group_option}
+                    label="Select Reward Group"
+                    name="reward_group"
+                    placeholder="Select Reward Group"
                   />
-                )}
-                {selected_reward_group?.logic === "AND" && gift_options && (
-                  <CheckboxGroup
-                    name="gifts"
-                    label="Select your Gifts"
-                    options={gift_options}
-                    defaultSelectAll
+                  {selected_reward_group?.logic === "OR" && gift_options && (
+                    <RadioGroup
+                      options={gift_options}
+                      name="gift"
+                      label="Select a single Gift"
+                    />
+                  )}
+                  {selected_reward_group?.logic === "AND" && gift_options && (
+                    <CheckboxGroup
+                      name="gifts"
+                      label="Select your Gifts"
+                      options={gift_options}
+                      defaultSelectAll
+                    />
+                  )}
+                  <InputField
+                    name="user_note"
+                    placeholder="Note"
+                    label="Note to vendor"
+                    type="textarea"
+                    rows={2}
+                    className="rounded-xl"
                   />
-                )}
-                <InputField
-                  name="user_note"
-                  placeholder="Note"
-                  type="textarea"
-                  rows={2}
-                  className="rounded-xl"
-                />
+                </div>
+                <div className="space-y-4 border border-gray-200 rounded-lg p-2">
+                  <div className="text-xl text-gray-700 font-adron-bold flex gap-1 border-b border-gray-200 p-1">
+                    <Store />
+                    Select Pickup Station
+                  </div>
+                  <SelectFieldInput
+                    options={STATES}
+                    name="state"
+                    label="Select your state"
+                  />
+                  {isLoading ? (
+                    <VendorListSkeleton />
+                  ) : options.length < 1 ? (
+                    <div className="flex flex-col text-gray-500 items-center gap-1 text-sm border border-gray-200 p-4 rounded-md">
+                      <Info />
+                      <div className="">No Pickup station in this State</div>
+                    </div>
+                  ) : (
+                    <RadioGroup
+                      options={options}
+                      name="pickup_location"
+                      label="Select preferred pickup stattion:"
+                    />
+                  )}
+                </div>
               </div>
               <div className="grid grid-cols-3 gap-2">
                 <Button
                   onClick={closeModal}
                   label="Cancel"
-                  className="bg-gray-700 hover:bg-black"
+                  className="bg-gray-700 hover:bg-black rounded-lg"
                 />
 
                 <Button
                   label="Submit"
                   type="submit"
-                  className="col-span-2"
+                  className="col-span-2 rounded-lg"
                   isLoading={isPending}
                   loadingText="Requesting..."
                   disabled={isPending || !isValid}

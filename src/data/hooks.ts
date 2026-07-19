@@ -691,15 +691,24 @@ export function usePayForContract() {
     mutationFn: payForContract,
     onSuccess: (data, variables) => {
       // Invalidate relevant queries to refresh data
-      queryClient.invalidateQueries({ queryKey: ['erp-contracts'] });
-      queryClient.invalidateQueries({ queryKey: ['user-wallet'] });
-      queryClient.invalidateQueries({ queryKey: ['wallet-data'] });
-      
+      queryClient.invalidateQueries({ queryKey: ["erp-contracts"] });
+      queryClient.invalidateQueries({ queryKey: ["user-wallet"] });
+      queryClient.invalidateQueries({ queryKey: ["wallet-data"] });
+
       // You can also update cache directly if needed
-      console.log('Payment successful:', data);
+      console.log("Payment successful:", data);
     },
     onError: (error: Error) => {
-      console.error('Payment error:', error.message);
+      console.error("Payment error:", error.message);
     },
   });
 }
+export const useGetPickupStation = (state: string) => {
+  return useQuery<AvailableVendorResponse>({
+    queryKey: ["pickup-stations", state],
+    queryFn: async () => {
+      const res = await apiClient.get(`available-vendors?state=${state}`);
+      return res.data;
+    },
+  });
+};

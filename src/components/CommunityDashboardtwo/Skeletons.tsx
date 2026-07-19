@@ -24,3 +24,14 @@ export const OutletSkeleton = () => {
     </div>
   );
 };
+
+export const VendorListSkeleton = () => {
+  return (
+    <div className="space-y-2">
+      <div className="bg-gray-300 h-7 rounded-lg animate-pulse" />
+      <div className="bg-gray-300 h-7 rounded-lg animate-pulse" />
+      <div className="bg-gray-300 h-7 rounded-lg animate-pulse" />
+      <div className="bg-gray-300 h-7 rounded-lg animate-pulse" />
+    </div>
+  );
+};
