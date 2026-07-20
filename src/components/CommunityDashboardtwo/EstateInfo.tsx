@@ -1,6 +1,4 @@
 import React from "react";
-import { FiCheckCircle, FiCreditCard, FiHome } from "react-icons/fi";
-import { formatPrice } from "../../data/utils";
 interface Prop {
   estate: EstateDashboardData;
 }
@@ -28,7 +26,7 @@ const EstateInfoSection: React.FC<Prop> = ({ estate }) => {
           </p>
         </div>
 
-        <div className="grid gap-3 sm:grid-cols-4">
+        {/* <div className="grid gap-3 sm:grid-cols-4">
           <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
             <div className="flex items-center gap-2 text-sm font-semibold text-slate-900">
               <FiCheckCircle className="text-[#79B833]" />
@@ -68,7 +66,7 @@ const EstateInfoSection: React.FC<Prop> = ({ estate }) => {
               {estate?.maintenance_requests.total}
             </p>
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );

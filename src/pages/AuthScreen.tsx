@@ -1,12 +1,11 @@
 // OnboardingScreen.tsx
+import { useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
-import AuthNavbar from "../components/AuthComponents/AuthNav";
 import Slideshow from "../components/AuthComponents/NewShildeshow";
 import SmallLoader from "../components/SmallLoader";
 import { useGetSlidersByType } from "../data/hooks";
 import { useOnboardingStore } from "../zustand/OnboardingStore";
 import { useUserStore } from "../zustand/UserStore";
-import { useState } from "react";
 import AccountSelect from "./AccountSelect";
 
 const OnboardingScreen = () => {
@@ -42,39 +41,40 @@ const OnboardingScreen = () => {
       </div>
 
       {/* Signup Form Section - This container now handles all scrolling */}
-      <div className="bg-white flex flex-col h-screen max-h-screen overflow-y-auto">
-        <div className="px-4 sm:px-6 pt-4 sm:pt-6 flex justify-center flex-shrink-0">
+      <div className="bg-white flex flex-col justify-between h-screen max-h-screen overflow-y-auto">
+        <div className="px-4 sm:px-6 pt-4 sm:pt-6 flex justify-center">
           <img
             src="/iconk.svg"
             alt="Logo"
             className="h-10 sm:h-12 md:h-14 w-auto max-w-[70%] sm:max-w-[180px]"
           />
         </div>
-
-        {/* Conditionally render illustration based on step */}
-        {loginStep === "login" && (
-          <div className="flex justify-center px-4 sm:px-6 flex-shrink-0 mb-[-20%]">
-            <img
-              src="/loginh.svg"
-              alt="Login Illustration"
-              className="w-full max-w-[70%] sm:max-w-[60%] md:max-w-[60%] h-auto max-h-[60%] sm:max-h-[65%] object-contain"
-            />
-          </div>
-        )}
-
-        {/* Form content - removed overflow-y-auto to prevent double scrolling */}
-        <div className="px-0 sm:px-6 lg:px-16 pb-8">
-          {loginStep === "select" ? (
-            <AccountSelect users={userAccounts} values={authValues} />
-          ) : (
-            <Outlet
-              context={{
-                onStepChange: setLoginStep,
-                setUserAccounts,
-                setAuthValues,
-              }}
-            />
+        <div className="space-y-4">
+          {/* Conditionally render illustration based on step */}
+          {loginStep === "login" && (
+            <div className="flex justify-center px-4 sm:px-6 flex-shrink-0 ">
+              <img
+                src="/loginh.svg"
+                alt="Login Illustration"
+                className="w-full max-w-[70%] sm:max-w-[60%] md:max-w-[60%] h-auto max-h-[60%] sm:max-h-[65%] object-contain"
+              />
+            </div>
           )}
+
+          {/* Form content - removed overflow-y-auto to prevent double scrolling */}
+          <div className="px-0 sm:px-6 lg:px-16 pb-8">
+            {loginStep === "select" ? (
+              <AccountSelect users={userAccounts} values={authValues} />
+            ) : (
+              <Outlet
+                context={{
+                  onStepChange: setLoginStep,
+                  setUserAccounts,
+                  setAuthValues,
+                }}
+              />
+            )}
+          </div>
         </div>
 
         <div className="w-full px-4 sm:px-6 pb-6 flex-shrink-0">
