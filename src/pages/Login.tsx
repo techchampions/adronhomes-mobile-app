@@ -14,21 +14,22 @@ interface OutletContextType {
 }
 
 const Login = () => {
-  const { onStepChange, setUserAccounts, setAuthValues } = useOutletContext<OutletContextType>();
-  
+  const { onStepChange, setUserAccounts, setAuthValues } =
+    useOutletContext<OutletContextType>();
+
   const initialValues = {
     email: "",
     password: "",
   };
-  
+
   const validationSchema = Yup.object({
     email: Yup.string().email("Invalid email").required("Required"),
     password: Yup.string().required("Required"),
   });
-  
+
   const navigate = useNavigate();
   const [lodaing, setlodaing] = useState(false);
-  
+
   const handleSubmit = async (values: typeof initialValues) => {
     setlodaing(true);
     const accounts = await Auth.login(values, navigate);
