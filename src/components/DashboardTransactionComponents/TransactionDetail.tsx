@@ -9,6 +9,8 @@ import ShareButton from "../onboardingMobileScreen/onboardingComponents/ShareBut
 import { jsPDF } from "jspdf";
 import React, { useState } from "react";
 import domtoimage from "dom-to-image";
+import { Download } from "lucide-react";
+import DownloadReceipt from "../receipt/DownloadReceipt";
 
 // Extend Window interface for ReactNativeWebView
 declare global {
@@ -43,7 +45,7 @@ const TransactionDetail = ({ id }: { id: number }) => {
 
     const { label, style } = statusMap[status];
     return (
-      <div className="flex gap-1 items-center">
+      <div className="flex items-center gap-1">
         <span className={`h-2 w-2 rounded-full ${style}`}></span>
         {label}
       </div>
@@ -142,118 +144,163 @@ const TransactionDetail = ({ id }: { id: number }) => {
 
   return (
     <div className="space-y-5 bg-white text-black">
-      {/* ---- CAPTURED AREA (PDF ONLY) ---- */}
-      <div ref={printref} className="bg-white text-black p-4">
-        <div className="w-full flex justify-center">
+      <div className="bg-white p-4 text-black">
+        <div className="flex w-full justify-center">
           <img
             src="/logo.png"
             alt="Company Logo"
-            className="h-10 md:h-10 mr-2 flex-shrink-0"
+            className="mr-2 h-10 flex-shrink-0 md:h-10"
           />
         </div>
 
-        <h3 className="pt-4 font-[500] text-2xl text-center">
+        <h3 className="pt-4 text-center text-2xl font-[500]">
           {data?.user_transaction.purpose === "property"
-            ? `Payment Details`
-            : `Transaction Details`}
+            ? "Payment Details"
+            : "Transaction Details"}
         </h3>
 
-        <div className="flex flex-col mt-5 border-t border-gray-200">
-          {/* From */}
-          <div className="flex justify-between py-3 border-b border-gray-200">
+        <div className="mt-5 flex flex-col border-t border-gray-200">
+          <div className="flex justify-between border-b border-gray-200 py-3">
             <div>
-              <p className="text-gray-400 text-xs">From</p>
-              <p className="font-bold text-xs">{data?.user_transaction.beneficiary_name}</p>
+              <p className="text-xs text-gray-400">From</p>
+              <p className="text-xs font-bold">
+                {data?.user_transaction.beneficiary_name}
+              </p>
             </div>
           </div>
-
-          {/* Description */}
-          <div className="flex justify-between py-3 border-b border-gray-200">
+          <div className="flex justify-between border-b border-gray-200 py-3">
             <div>
-              <p className="text-gray-400 text-xs">Description</p>
-              <p className="font-bold text-xs">{data?.user_transaction.description}</p>
+              <p className="text-xs text-gray-400">Description</p>
+              <p className="text-xs font-bold">
+                {data?.user_transaction.description}
+              </p>
             </div>
           </div>
-
-          {/* Payment Method */}
-          <div className="flex justify-between py-3 border-b border-gray-200">
+          <div className="flex justify-between border-b border-gray-200 py-3">
             <div>
-              <p className="text-gray-400 text-xs">Payment Method</p>
-              <p className="font-bold text-xs">{data?.user_transaction.payment_type}</p>
+              <p className="text-xs text-gray-400">Payment Method</p>
+              <p className="text-xs font-bold">
+                {data?.user_transaction.payment_type}
+              </p>
             </div>
           </div>
-
-          {/* Payment Type + Amount */}
-          <div className="flex justify-between py-3 border-b border-gray-200">
+          <div className="flex justify-between border-b border-gray-200 py-3">
             <div>
-              <p className="text-gray-400 text-xs">Payment Type</p>
-              <p className="font-bold text-xs">
+              <p className="text-xs text-gray-400">Payment Type</p>
+              <p className="text-xs font-bold">
                 {data?.user_transaction.transaction_type ||
                   (data?.user_transaction.purpose === "fund" ? "Credit" : "Debit")}
               </p>
             </div>
-
             <div>
-              <p className="text-gray-400 text-xs">Amount Paid</p>
-              <p className="font-bold text-xs">
+              <p className="text-xs text-gray-400">Amount Paid</p>
+              <p className="text-xs font-bold">
                 {formatPrice(data?.user_transaction.amount_paid ?? 0)}
               </p>
             </div>
           </div>
-
-          {/* Reference */}
-          <div className="flex justify-between py-3 border-b border-gray-200">
+          <div className="flex justify-between border-b border-gray-200 py-3">
             <div>
-              <p className="text-gray-400 text-xs">Reference</p>
-              <p className="font-bold text-xs">
+              <p className="text-xs text-gray-400">Reference</p>
+              <p className="text-xs font-bold">
                 {data?.user_transaction.reference}
               </p>
             </div>
             <CopyButton text={data?.user_transaction.reference || ""} />
           </div>
-
-          {/* Status */}
-          <div className="flex justify-between py-3 border-b border-gray-200">
+          <div className="flex justify-between border-b border-gray-200 py-3">
             <div>
-              <p className="text-gray-400 text-xs">Status</p>
-              <div className="font-bold text-xs">
+              <p className="text-xs text-gray-400">Status</p>
+              <div className="text-xs font-bold">
                 {renderStatusBadge(data?.user_transaction.status ?? 2)}
               </div>
             </div>
           </div>
-
-          {/* Date */}
-          <div className="flex justify-between py-3 border-b border-gray-200">
+          <div className="flex justify-between border-b border-gray-200 py-3">
             <div>
-              <p className="text-gray-400 text-xs">Date</p>
-              <p className="font-bold text-xs">
-                {data?.user_transaction.created_at 
-                  ? new Date(data.user_transaction.created_at).toLocaleDateString('en-US', {
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric',
-                      hour: '2-digit',
-                      minute: '2-digit'
-                    })
-                  : 'N/A'
-                }
+              <p className="text-xs text-gray-400">Date</p>
+              <p className="text-xs font-bold">
+                {data?.user_transaction.created_at
+                  ? new Date(data.user_transaction.created_at).toLocaleDateString(
+                      "en-US",
+                      {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      }
+                    )
+                  : "N/A"}
               </p>
             </div>
           </div>
         </div>
       </div>
 
-      {/* ---- BUTTONS (NOT INCLUDED IN PDF) ---- */}
-      <div className="flex justify-between px-4">
+      <div
+        aria-hidden="true"
+        style={{ position: "fixed", left: "-10000px", top: 0 }}
+      >
+        <div ref={printref}>
+          <DownloadReceipt
+            title={
+              data?.user_transaction.purpose === "property"
+                ? "Property Payment Receipt"
+                : "Transaction Receipt"
+            }
+            amount={
+              data?.user_transaction.amount_paid ||
+              data?.user_transaction.amount ||
+              0
+            }
+            status={data?.user_transaction.status ?? 2}
+            reference={data?.user_transaction.reference}
+            rows={[
+              { label: "From", value: data?.user_transaction.beneficiary_name },
+              { label: "Description", value: data?.user_transaction.description },
+              {
+                label: "Payment Method",
+                value: data?.user_transaction.payment_type,
+              },
+              {
+                label: "Transaction Type",
+                value:
+                  data?.user_transaction.transaction_type ||
+                  (data?.user_transaction.purpose === "fund"
+                    ? "Credit"
+                    : "Debit"),
+              },
+              { label: "Reference", value: data?.user_transaction.reference },
+              {
+                label: "Date",
+                value: data?.user_transaction.created_at
+                  ? new Date(
+                      data.user_transaction.created_at
+                    ).toLocaleString("en-NG", {
+                      dateStyle: "medium",
+                      timeStyle: "short",
+                    })
+                  : "N/A",
+              },
+            ]}
+          />
+        </div>
+      </div>
+
+      <div className="grid grid-cols-2 gap-3">
         <ShareButton
           url={receiptData?.download_url}
-          className="text-xs bg-transparent !text-black hover:!bg-transparent border border-gray-300 px-4 py-2 rounded"
+          title="Adron Homes payment receipt"
+          text="View my Adron Homes payment receipt"
+          className="h-11 justify-center border border-gray-300 bg-white !text-gray-800 hover:!bg-gray-50"
         />
 
         <Button
           onClick={handleDownloadPdf}
           label={isDownloading ? "Generating..." : "Download PDF"}
-          className="bg-black !w-fit px-6 text-xs text-white hover:bg-gray-800"
+          icon={<Download className="h-4 w-4" />}
+          className="h-11 bg-gray-950 px-4 text-xs text-white hover:bg-gray-800"
           disabled={isDownloading || gettingReceipt}
         />
       </div>
