@@ -1,21 +1,22 @@
-import { useState, useEffect, useRef } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { Menu, X, ChevronDown, RefreshCw, Building2 } from "lucide-react";
-import NavItem from "../NavigationComponents/NavItem";
-import { FaSpinner, FaUserAlt, FaUserCircle } from "react-icons/fa";
+import { Building2, ChevronDown, RefreshCw, X } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { FaSpinner, FaUserAlt } from "react-icons/fa";
 import { FaArrowRightArrowLeft } from "react-icons/fa6";
-import { MdAddHome, MdDashboardCustomize, MdOutlineHelp } from "react-icons/md";
 import { IoSettingsSharp } from "react-icons/io5";
+import { MdAddHome, MdDashboardCustomize, MdOutlineHelp } from "react-icons/md";
 import {
+  RiCommunityFill,
   RiHomeHeartFill,
   RiLogoutBoxRFill,
   RiNotificationBadgeFill,
   RiWallet3Fill,
 } from "react-icons/ri";
+import { Link, useNavigate } from "react-router-dom";
 import { useGetNotifications, useGetUser } from "../../data/hooks";
-import { Navbar } from "./onboardingComponents/Bottomnavigation";
-import { useUserStore } from "../../zustand/UserStore";
 import Auth from "../../utils/Auth";
+import { useUserStore } from "../../zustand/UserStore";
+import NavItem from "../NavigationComponents/NavItem";
+import { Navbar } from "./onboardingComponents/Bottomnavigation";
 // import AccountSwitcher from "../AccountSwitcher";
 
 const CopyButton = ({ text }: { text: any }) => {
@@ -143,140 +144,146 @@ const Sidebar = ({
             />
           </div>
 
-      {/* Navigation */}
-<div className="flex-grow overflow-y-auto scrollbar-hide py-1.5 bg-white rounded-2xl mt-4">
-  <nav className="space-y-2 p-2">
-    <NavItem
-      onSlideBack={(mobileOpen) => !mobileOpen && onClose()}
-      label="Dashboard"
-      icon={<MdDashboardCustomize className="w-4 h-4" />}
-      path="/dashboard/home"
-    />
-    <NavItem
-      onSlideBack={(mobileOpen) => !mobileOpen && onClose()}
-      label="My Wallet"
-      icon={<RiWallet3Fill className="w-4 h-4" />}
-      path="/dashboard/wallet"
-    />
-    <NavItem
-      onSlideBack={(mobileOpen) => !mobileOpen && onClose()}
-      label="Payments"
-      icon={<FaArrowRightArrowLeft className="w-4 h-4" />}
-      path="/dashboard/payments"
-    />
-    {noNfx ? (
-      <NavItem
-        onSlideBack={(mobileOpen) => !mobileOpen && onClose()}
-        label="Notifications"
-        icon={<RiNotificationBadgeFill className="w-4 h-4" />}
-        path="/dashboard/notifications"
-      />
-    ) : (
-      <NavItem
-        onSlideBack={(mobileOpen) => !mobileOpen && onClose()}
-        label="Notifications"
-        icon={<RiNotificationBadgeFill className="w-4 h-4" />}
-        path="/dashboard/notifications"
-        badge={unReadCount || 0}
-      />
-    )}
-    <h4 className="text-adron-gray-400 font-bold px-7 mt-7 text-[13px]">
-      LISTINGS
-    </h4>
-    <NavItem
-      onSlideBack={(mobileOpen) => !mobileOpen && onClose()}
-      label="My Contracts"
-      icon={<MdAddHome className="w-4 h-4" />}
-      path="/dashboard/my-contracts"
-    />
-    <NavItem
-      onSlideBack={(mobileOpen) => !mobileOpen && onClose()}
-      label="My Properties"
-      icon={<MdAddHome className="w-4 h-4" />}
-      path="/dashboard/my-properties"
-    />
+          {/* Navigation */}
+          <div className="flex-grow overflow-y-auto scrollbar-hide py-1.5 bg-white rounded-2xl mt-4">
+            <nav className="space-y-2 p-2">
+              <NavItem
+                onSlideBack={(mobileOpen) => !mobileOpen && onClose()}
+                label="Dashboard"
+                icon={<MdDashboardCustomize className="w-4 h-4" />}
+                path="/dashboard/home"
+              />
+              <NavItem
+                onSlideBack={(mobileOpen) => !mobileOpen && onClose()}
+                label="My Wallet"
+                icon={<RiWallet3Fill className="w-4 h-4" />}
+                path="/dashboard/wallet"
+              />
+              <NavItem
+                onSlideBack={(mobileOpen) => !mobileOpen && onClose()}
+                label="Payments"
+                icon={<FaArrowRightArrowLeft className="w-4 h-4" />}
+                path="/dashboard/payments"
+              />
+              {noNfx ? (
+                <NavItem
+                  onSlideBack={(mobileOpen) => !mobileOpen && onClose()}
+                  label="Notifications"
+                  icon={<RiNotificationBadgeFill className="w-4 h-4" />}
+                  path="/dashboard/notifications"
+                />
+              ) : (
+                <NavItem
+                  onSlideBack={(mobileOpen) => !mobileOpen && onClose()}
+                  label="Notifications"
+                  icon={<RiNotificationBadgeFill className="w-4 h-4" />}
+                  path="/dashboard/notifications"
+                  badge={unReadCount || 0}
+                />
+              )}
+              <h4 className="text-adron-gray-400 font-bold px-7 mt-7 text-[13px]">
+                LISTINGS
+              </h4>
+              <NavItem
+                onSlideBack={(mobileOpen) => !mobileOpen && onClose()}
+                label="My Contracts"
+                icon={<MdAddHome className="w-4 h-4" />}
+                path="/dashboard/my-contracts"
+              />
+              <NavItem
+                onSlideBack={(mobileOpen) => !mobileOpen && onClose()}
+                label="Estate Communities"
+                icon={<RiCommunityFill className="w-4 h-4" />}
+                path="/dashboard/estate"
+              />
+              <NavItem
+                onSlideBack={(mobileOpen) => !mobileOpen && onClose()}
+                label="My Properties"
+                icon={<MdAddHome className="w-4 h-4" />}
+                path="/dashboard/my-properties"
+              />
 
-    <NavItem
-      onSlideBack={(mobileOpen) => !mobileOpen && onClose()}
-      label="New Properties"
-      icon={<MdAddHome className="w-4 h-4" />}
-      path="/dashboard/new-properties"
-    />
-    <NavItem
-      onSlideBack={(mobileOpen) => !mobileOpen && onClose()}
-      label="Saved Properties"
-      icon={<RiHomeHeartFill className="w-4 h-4" />}
-      path="/dashboard/saved-properties"
-    />
+              <NavItem
+                onSlideBack={(mobileOpen) => !mobileOpen && onClose()}
+                label="New Properties"
+                icon={<MdAddHome className="w-4 h-4" />}
+                path="/dashboard/new-properties"
+              />
+              <NavItem
+                onSlideBack={(mobileOpen) => !mobileOpen && onClose()}
+                label="Saved Properties"
+                icon={<RiHomeHeartFill className="w-4 h-4" />}
+                path="/dashboard/saved-properties"
+              />
 
-    <h4 className="text-adron-gray-400 font-bold px-7 mt-7 text-[13px]">
-      PROFILE
-    </h4>
+              <h4 className="text-adron-gray-400 font-bold px-7 mt-7 text-[13px]">
+                PROFILE
+              </h4>
 
-    <NavItem
-      onSlideBack={(mobileOpen) => !mobileOpen && onClose()}
-      label="My Profile"
-      icon={<FaUserAlt className="w-4 h-4" />}
-      path="/dashboard/my-profile"
-    />
-    
-    {/* Add Accounts Navigation Item */}
-    <NavItem
-      onSlideBack={(mobileOpen) => !mobileOpen && onClose()}
-      label="My Accounts"
-      icon={<Building2 className="w-4 h-4" />}
-      path="/dashboard/accounts"
-    />
-    
-    <NavItem
-      onSlideBack={(mobileOpen) => !mobileOpen && onClose()}
-      label="Account Settings"
-      icon={<IoSettingsSharp className="w-4 h-4" />}
-      path="/dashboard/settings"
-    />
-    <NavItem
-      onSlideBack={(mobileOpen) => !mobileOpen && onClose()}
-      label="Support"
-      icon={<MdOutlineHelp className="w-4 h-4" />}
-      path="/dashboard/support"
-    />
-  </nav>
+              <NavItem
+                onSlideBack={(mobileOpen) => !mobileOpen && onClose()}
+                label="My Profile"
+                icon={<FaUserAlt className="w-4 h-4" />}
+                path="/dashboard/my-profile"
+              />
 
-  {/* Footer actions */}
-  <nav className="space-y-2 p-2 mt-auto">
-    <button
-      onClick={handleLogout}
-      className="flex items-center w-full px-7 py-2 text-[15px] text-red-500 rounded-full bg-[#FFE6E6] hover:bg-red-200 transition-colors duration-200"
-    >
-      <RiLogoutBoxRFill className="mr-2 w-4 h-4" />
-      Logout
-    </button>
-    <button
-      onClick={() =>
-        window.open(
-          "https://adronhomes.com/",
-          "_blank",
-          "noopener,noreferrer",
-        )
-      }
-      className="text-green-500 text-[15px] w-full block font-bold px-7 py-2 text-center mx-auto hover:text-green-600 transition-colors"
-    >
-      Go to Website
-    </button>
-  </nav>
-</div>
+              {/* Add Accounts Navigation Item */}
+              <NavItem
+                onSlideBack={(mobileOpen) => !mobileOpen && onClose()}
+                label="My Accounts"
+                icon={<Building2 className="w-4 h-4" />}
+                path="/dashboard/accounts"
+              />
+
+              <NavItem
+                onSlideBack={(mobileOpen) => !mobileOpen && onClose()}
+                label="Account Settings"
+                icon={<IoSettingsSharp className="w-4 h-4" />}
+                path="/dashboard/settings"
+              />
+              <NavItem
+                onSlideBack={(mobileOpen) => !mobileOpen && onClose()}
+                label="Support"
+                icon={<MdOutlineHelp className="w-4 h-4" />}
+                path="/dashboard/support"
+              />
+            </nav>
+
+            {/* Footer actions */}
+            <nav className="space-y-2 p-2 mt-auto">
+              <button
+                onClick={handleLogout}
+                className="flex items-center w-full px-7 py-2 text-[15px] text-red-500 rounded-full bg-[#FFE6E6] hover:bg-red-200 transition-colors duration-200"
+              >
+                <RiLogoutBoxRFill className="mr-2 w-4 h-4" />
+                Logout
+              </button>
+              <button
+                onClick={() =>
+                  window.open(
+                    "https://adronhomes.com/",
+                    "_blank",
+                    "noopener,noreferrer"
+                  )
+                }
+                className="text-green-500 text-[15px] w-full block font-bold px-7 py-2 text-center mx-auto hover:text-green-600 transition-colors"
+              >
+                Go to Website
+              </button>
+            </nav>
+          </div>
         </div>
       </div>
     </>
   );
 };
 
-import { Formik, Form } from "formik";
-import { FaSearch, FaTimes } from "react-icons/fa";
 import { useQueryClient } from "@tanstack/react-query";
+import { Form, Formik } from "formik";
+import { FaSearch, FaTimes } from "react-icons/fa";
 import { searchProperties } from "../../data/api";
-import InputField from "../InputField";
 import { useSearchStore } from "../../zustand/SearchStore";
+import InputField from "../InputField";
 import AccountSwitcher from "./AccountSwitcher";
 
 export const Layout = ({ children }: { children: any }) => {
@@ -286,20 +293,20 @@ export const Layout = ({ children }: { children: any }) => {
   const [isAccountSwitcherOpen, setIsAccountSwitcherOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  
+
   const userData = data?.user;
   const {
     setSearchResults,
     setLoading,
     isLoading: loadingSearch,
   } = useSearchStore();
-  
+
   const userHasProfilePicture = userData?.profile_picture;
   const initials =
     (userData?.first_name?.[0] || "") + (userData?.last_name?.[0] || "");
 
   const [screenWidth, setScreenWidth] = useState(
-    typeof window !== "undefined" ? window.innerWidth : 0,
+    typeof window !== "undefined" ? window.innerWidth : 0
   );
   const [showBoundary, setShowBoundary] = useState(false);
   const navigate = useNavigate();
@@ -436,7 +443,7 @@ export const Layout = ({ children }: { children: any }) => {
                 >
                   <FaSearch size={16} />
                 </button>
-                
+
                 {/* User Profile Dropdown with Account Switching */}
                 <div className="relative" ref={dropdownRef}>
                   <button
@@ -470,7 +477,7 @@ export const Layout = ({ children }: { children: any }) => {
                           {userData?.email}
                         </p>
                       </div>
-                      
+
                       <div className="py-1">
                         <button
                           onClick={() => {
@@ -482,7 +489,7 @@ export const Layout = ({ children }: { children: any }) => {
                           <FaUserAlt className="h-4 w-4 text-gray-400" />
                           My Profile
                         </button>
-                        
+
                         <button
                           onClick={() => {
                             setIsDropdownOpen(false);
@@ -493,7 +500,7 @@ export const Layout = ({ children }: { children: any }) => {
                           <RefreshCw className="h-4 w-4 text-gray-400" />
                           Switch Account
                         </button>
-                        
+
                         <button
                           onClick={() => {
                             setIsDropdownOpen(false);
@@ -505,7 +512,7 @@ export const Layout = ({ children }: { children: any }) => {
                           Settings
                         </button>
                       </div>
-                      
+
                       <div className="border-t border-gray-100 py-1">
                         <button
                           onClick={() => {
@@ -528,9 +535,8 @@ export const Layout = ({ children }: { children: any }) => {
       </header>
 
       <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
-      
-      {/* Account Switcher Modal */}
 
+      {/* Account Switcher Modal */}
 
       <main
         className={`flex-1 overflow-auto pt-[70px] ${
@@ -539,12 +545,12 @@ export const Layout = ({ children }: { children: any }) => {
       >
         {children}
       </main>
-  <div className="w-full">
-        <AccountSwitcher 
-        isOpen={isAccountSwitcherOpen} 
-        onClose={() => setIsAccountSwitcherOpen(false)} 
-      />
-  </div>
+      <div className="w-full">
+        <AccountSwitcher
+          isOpen={isAccountSwitcherOpen}
+          onClose={() => setIsAccountSwitcherOpen(false)}
+        />
+      </div>
       <Navbar />
     </div>
   );
