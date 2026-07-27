@@ -8,13 +8,12 @@ import ApiErrorBlock from "../ApiErrorBlock";
 import { formatPrice } from "../../data/utils";
 import { TransactionStatus } from "../../data/types/userTransactionsTypes";
 import SmallLoader from "../SmallLoader";
-import LinkButton from "../LinkButton";
 import ShareButton from "../onboardingMobileScreen/onboardingComponents/ShareButton";
 import React, { useState } from "react";
 import jsPDF from "jspdf";
 import domtoimage from 'dom-to-image';
-
-
+import { Download } from "lucide-react";
+import DownloadReceipt from "../receipt/DownloadReceipt";
 
 interface PDFMessage {
   type: "DOWNLOAD_PDF";
@@ -38,15 +37,9 @@ const WalletTransactionDetail = ({ id }: { id: number }) => {
       TransactionStatus,
       { label: string; style: string }
     > = {
-      1: {
-        label: "Completed",
-        style: "bg-adron-green",
-      },
+      1: { label: "Completed", style: "bg-adron-green" },
       2: { label: "Failed", style: "bg-red-600" },
-      0: {
-        label: "Pending",
-        style: "bg-gray-600",
-      },
+      0: { label: "Pending", style: "bg-gray-600" },
     };
 
     const { label, style } = statusMap[status];
@@ -152,99 +145,110 @@ const handleDownloadPdf = async (): Promise<void> => {
 
   return (
     <div className="space-y-5">
-            <div ref={printref} >
-                 <div className="w-full justify-center flex ">
-         {/* <div className=""> */}
-           <img
+      <div>
+        <div className="flex w-full justify-center">
+          <img
             src="/logo.png"
             alt="Company Logo"
-            className="h-10 md:h-10 mr-1 md:mr-2 flex-shrink-0"
+            className="mr-1 h-10 flex-shrink-0 md:mr-2 md:h-10"
           />
-       
-         {/* </div> */}
-
-        
-      </div>
-         <h3 className="  pt-4 font-[500] text-2xl w-full text-center">
-        Transaction Details
+        </div>
+        <h3 className="w-full pt-4 text-center text-2xl font-[500]">
+          Transaction Details
         </h3>
-      <div className="flex flex-col divide-y divide-gray-200 mt-5">
-        <div className="flex justify-between items-center py-3">
-          <div className="flex flex-col">
-            <p className="text-gray-400 text-xs">From</p>
-            <p className="font-bold text-xs">
-              {data?.data.beneficiary_name}
-              {/* {data?.user_transaction.payment_type === "Bank Transfer"
-                ? data.user_transaction.bank_name
-                : data?.user_transaction.payment_type} */}
-            </p>
-            {/* <p className="font-bold text-xs">(Polaris Bank)</p> */}
+        <div className="mt-5 flex flex-col divide-y divide-gray-200">
+          <div className="flex items-center justify-between py-3">
+            <div className="flex flex-col">
+              <p className="text-xs text-gray-400">From</p>
+              <p className="text-xs font-bold">{data?.data.beneficiary_name}</p>
+            </div>
           </div>
-          {/* <img src="/mika.png" alt="" className="h-7 w-7" /> */}
-        </div>
-        <div className="flex justify-between items-start py-3">
-          <div className="flex flex-col">
-            <p className="text-gray-400 text-xs">Description</p>
-            <p className="font-bold text-xs">{data?.data.description}</p>
+          <div className="flex items-start justify-between py-3">
+            <div className="flex flex-col">
+              <p className="text-xs text-gray-400">Description</p>
+              <p className="text-xs font-bold">{data?.data.description}</p>
+            </div>
           </div>
-        </div>
-        {/* <div className="flex justify-between items-start py-3">
-          <div className="flex flex-col">
-            <p className="text-gray-400 text-xs">Payment Method</p>
-            <p className="font-bold text-xs">
-              {data?.data.payment_type}
-            </p>
+          <div className="flex items-start justify-between py-3">
+            <div className="flex flex-col">
+              <p className="text-xs text-gray-400">Payment Type</p>
+              <p className="text-xs font-bold">
+                {data?.data.transaction_type ||
+                  (data?.data.purpose === "fund" ? "Credit" : "Debit")}
+              </p>
+            </div>
+            <div className="flex flex-col text-left">
+              <p className="text-xs text-gray-400">Amount Paid</p>
+              <p className="text-xs font-bold">
+                {formatPrice(data?.data.amount ?? 0)}
+              </p>
+            </div>
           </div>
-        </div> */}
-        <div className="flex justify-between items-start py-3">
-          <div className="flex flex-col">
-            <p className="text-gray-400 text-xs">Payment Type</p>
-            <p className="font-bold text-xs">
-              {data?.data.transaction_type
-                ? data.data.transaction_type
-                : data?.data.purpose === "fund"
-                ? "Credit"
-                : "Debit"}
-            </p>
+          <div className="flex items-center justify-between py-3">
+            <div className="flex flex-col">
+              <p className="text-xs text-gray-400">Transaction Reference</p>
+              <p className="text-xs font-bold">{data?.data.reference}</p>
+            </div>
+            <CopyButton text={data?.data.reference} />
           </div>
-          <div className="flex flex-col text-left">
-            <p className="text-gray-400 text-xs">Amount Paid</p>
-            <p className="font-bold text-xs">
-              {formatPrice(data?.data.amount ?? 0)}
-            </p>
-          </div>
-        </div>
-        <div className="flex justify-between items-center py-3">
-          <div className="flex flex-col">
-            <p className="text-gray-400 text-xs">Transaction Reference</p>
-            <p className="font-bold text-xs">{data?.data.reference}</p>
-          </div>
-          <CopyButton text={data?.data.reference} />
-        </div>
-        <div className="flex justify-between items-center py-3">
-          <div className="flex flex-col">
-            <p className="text-gray-400 text-xs">Status</p>
-            <div className="font-bold text-xs ">
-              {/* {" "}
-              <span className="bg-adron-green h-2 w-2 rounded-full"></span>{" "}
-              Completed */}
-              {renderStatusBadge(data?.data.status ?? 2)}
+          <div className="flex items-center justify-between py-3">
+            <div className="flex flex-col">
+              <p className="text-xs text-gray-400">Status</p>
+              <div className="text-xs font-bold">
+                {renderStatusBadge(data?.data.status ?? 2)}
+              </div>
             </div>
           </div>
         </div>
       </div>
-            </div>
-       
-      <div className="flex justify-between">
+
+      <div
+        aria-hidden="true"
+        style={{ position: "fixed", left: "-10000px", top: 0 }}
+      >
+        <div ref={printref}>
+          <DownloadReceipt
+            title="Wallet Transaction Receipt"
+            amount={data?.data.amount ?? 0}
+            status={data?.data.status ?? 2}
+            reference={data?.data.reference}
+            rows={[
+              { label: "From", value: data?.data.beneficiary_name },
+              { label: "Description", value: data?.data.description },
+              {
+                label: "Transaction Type",
+                value:
+                  data?.data.transaction_type ||
+                  (data?.data.purpose === "fund" ? "Credit" : "Debit"),
+              },
+              { label: "Payment Method", value: data?.data.payment_type },
+              { label: "Reference", value: data?.data.reference },
+              {
+                label: "Date",
+                value: data?.data.created_at
+                  ? new Date(data.data.created_at).toLocaleString("en-NG", {
+                      dateStyle: "medium",
+                      timeStyle: "short",
+                    })
+                  : "N/A",
+              },
+            ]}
+          />
+        </div>
+      </div>
+
+      <div className="grid grid-cols-2 gap-3">
        <ShareButton
           url={recieptData?.download_url}
-          className="text-xs bg-transparent !text-black hover:!bg-transparent"
+          title="Wallet transaction receipt"
+          text="View my Adron Homes transaction receipt"
+          className="h-11 justify-center border border-gray-300 bg-white !text-gray-800 hover:!bg-gray-50"
         />
-       
         <Button
           onClick={handleDownloadPdf}
-          label={isDownloading ? 'Generating...' : 'Download'}
-          className="bg-[#000000] !w-fit px-6 text-xs text-[#ffffff]"
+          label={isDownloading ? "Generating..." : "Download PDF"}
+          icon={<Download className="h-4 w-4" />}
+          className="h-11 bg-gray-950 px-4 text-xs text-white hover:bg-gray-800"
           disabled={isDownloading}
         />
       </div>
