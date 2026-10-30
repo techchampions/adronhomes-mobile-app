@@ -122,6 +122,7 @@ interface AccessCode {
   created_at: string; // ISO datetime string
   updated_at: string; // ISO datetime string
   user_id: number;
+  status?: "active" | "expiring_soon" | "expired";
 }
 
 // ============ Conversation ============
@@ -164,6 +165,7 @@ interface Message {
 interface Utility {
   id: number;
   name: string;
+  unit_price?: number | string | null;
   created_at: string | null;
   updated_at: string | null;
 }
@@ -187,11 +189,19 @@ interface GroupConversation {
   updated_at: string;
 }
 // ============ Complete Dashboard Data ============
+interface AccessCodeCounts {
+  total: number;
+  active: number;
+  expiring_soon: number;
+  expired: number;
+}
 interface EstateDashboardData {
   estate_info: EstateInfo;
   user_info: UserInfo;
   ownership_and_balances: OwnershipAndBalances;
   recent_payments: PaginatedResponse<EstatePayment>;
+  total_access_codes: number;
+  access_code_counts: AccessCodeCounts;
   active_access_codes: PaginatedResponse<AccessCode>;
   maintenance_requests: PaginatedResponse<MaintenanceRequest>;
   conversations: PaginatedResponse<Conversation>;

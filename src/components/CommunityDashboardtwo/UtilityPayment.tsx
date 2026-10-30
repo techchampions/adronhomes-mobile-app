@@ -1,200 +1,187 @@
-// components/UtilityPayment.tsx
-import { Info, Wallet2 } from "lucide-react";
+import { Wallet2 } from "lucide-react";
 import React, { useState } from "react";
-import { FiDroplet, FiWifi, FiZap } from "react-icons/fi";
+import { FiZap } from "react-icons/fi";
+import { useOutletContext } from "react-router-dom";
 import { useGetUserWalletdata } from "../../data/hooks";
 import { formatPrice } from "../../data/utils";
-import ElectricPaymentForm from "./ElectricPaymentForm";
-import WaterBillForm from "./WaterBillForm";
+import { useElectricityRate, usePayUtitlity } from "../../hooks/estateCommunity/useEstateCommunity";
 
 const UtilityPayment: React.FC = () => {
-  const [paymentMethod, setpaymentMethod] = useState("");
-  const [paymentType, setPaymentType] = useState("electricity");
-  const { data: userWalletData, isLoading } = useGetUserWalletdata();
+  const context: CommunityOutletContext = useOutletContext();
+  const { data: wallet, isLoading } = useGetUserWalletdata();
+  const { data: rate, isLoading: rateLoading } = useElectricityRate();
+  const { mutate, isPending } = usePayUtitlity();
+  const [meter, setMeter] = useState("");
+  const [amount, setAmount] = useState("");
+  const [confirming, setConfirming] = useState(false);
 
-  const utilities = [
-    {
-      id: "electricity",
-      label: "Electricity",
-      icon: FiZap,
-      color: "from-yellow-400 to-orange-500",
-    },
-    {
-      id: "water",
-      label: "Water",
-      icon: FiDroplet,
-      color: "from-blue-400 to-blue-600",
-    },
-    {
-      id: "internet",
-      label: "Internet",
-      icon: FiWifi,
-      color: "from-purple-400 to-purple-600",
-    },
-  ];
-  const paymentMethods = [
-    {
-      label: "Paystack",
-      id: "paystack",
-      image: "/paystack-icon.svg",
-    },
-    {
-      label: "Interswitch",
-      id: "interswitch",
-      image: "/Interswitch.svg",
-    },
-    {
-      label: "Bank Transfer",
-      id: "bank_transfer",
-      image: "/bank-transfer-icon.svg",
-    },
-  ];
+  const unitPrice = Number(rate?.data?.unit_price);
+  const hasPrice = Number.isFinite(unitPrice) && unitPrice > 0;
+  const balance = Number(wallet?.wallet_balance || 0);
+  const value = Number(amount) || 0;
+  const units = hasPrice && value > 0 ? value / unitPrice : 0;
+  const remaining = balance - value;
+  const estateId = context.data?.estate_info.id;
+  const canPay =
+    meter.trim().length > 0 &&
+    value >= 1 &&
+    remaining >= 0 &&
+    hasPrice &&
+    !!estateId &&
+    !isPending;
 
-  const renderContent = () => {
-    if (paymentType === "electricity") {
-      return <ElectricPaymentForm payment_method={paymentMethod} />;
-    }
-    if (paymentType === "water") {
-      return <WaterBillForm payment_method={paymentMethod} />;
-    }
-    if (paymentType === "internet") {
-      return (
-        <div className="border rounded-xl border-gray-200 text-gray-500  flex justify-center flex-col items-center">
-          <Info />
-          <div className="font-adron-mid">Coming Soon</div>
-        </div>
-      );
-    }
+  const pay = () => {
+    if (!estateId || !canPay) return;
+    mutate(
+      {
+        chargeable_id: meter.trim(),
+        amount: value,
+        estate_id: estateId,
+        payment_method: "virtual_wallet",
+        payment_type: "Electricity",
+      },
+      {
+        onSuccess: () => {
+          setConfirming(false);
+          setMeter("");
+          setAmount("");
+        },
+      }
+    );
   };
 
   return (
-    <div className=" mx-auto">
-      <div className="space-y-6">
+    <div className="mx-auto max-w-3xl space-y-6">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h3 className="text-xl font-bold text-gray-800">Utility Payments</h3>
-          <p className="text-sm text-gray-500 mt-1">
-            Pay your utility bills quickly and securely
+          <p className="text-xs font-semibold uppercase tracking-wide text-[#79B833]">
+            Utilities
+          </p>
+          <h3 className="mt-1 text-2xl font-bold text-[#032147]">Buy electricity</h3>
+          <p className="mt-1 text-sm text-gray-500">
+            Purchase units for your meter. Payment is taken from your wallet.
           </p>
         </div>
-
-        {/* Utility Selection Cards */}
-        <div className="grid grid-cols-3 gap-3">
-          {utilities.map((util) => {
-            const Icon = util.icon;
-            const isActive = paymentType === util.id;
-            return (
-              <button
-                key={util.id}
-                onClick={() => setPaymentType(util.id)}
-                className={`p-4 rounded-xl border-2 transition-all duration-200 ${
-                  isActive
-                    ? `border-[#79B833] bg-gradient-to-r ${util.color} text-white shadow-lg`
-                    : "border-gray-200 bg-white hover:border-gray-300"
-                }`}
-              >
-                <Icon
-                  className={`w-6 h-6 mx-auto ${
-                    isActive ? "text-white" : "text-gray-600"
-                  }`}
-                />
-                <p
-                  className={`text-sm font-medium mt-2 ${
-                    isActive ? "text-white" : "text-gray-700"
-                  }`}
-                >
-                  {util.label}
-                </p>
-              </button>
-            );
-          })}
-        </div>
-        <div className="grid sm:grid-cols-2 gap-2">
-          {renderContent()}
-          <div className="order-first sm:order-last">
-            <div className="mb-4">
-              <div className="text-xl font-adron-bold">
-                Select Payment Method
-              </div>
-              <div className="text-sm text-gray-500">
-                Select your preferred payment method below:
-              </div>
-            </div>
-            <div className="space-y-1">
-              {paymentMethods.map((item, i) => (
-                <div
-                  className={`flex items-center gap-4 p-3 rounded-xl cursor-pointer transition-all ${
-                    paymentMethod === item.id
-                      ? "bg-adron-green text-white border-none "
-                      : "bg-transparent border  border-gray-300"
-                  }`}
-                  onClick={() => setpaymentMethod(item.id)}
-                >
-                  <img
-                    src={item.image}
-                    alt={item.label}
-                    className="h-10 w-10 rounded-full border border-green-200 p-2 bg-white"
-                  />
-
-                  <div>
-                    <p className="font-adron-mid text-sm">{item.label}</p>
-                    <p
-                      className={`text-xs ${
-                        paymentMethod === item.id
-                          ? `text-white`
-                          : `text-gray-500`
-                      } `}
-                    >
-                      Pay with {item.label}
-                    </p>
-                  </div>
-                </div>
-              ))}
-              <div
-                className={`flex items-center gap-4 p-3 rounded-xl cursor-pointer transition-all ${
-                  paymentMethod === "virtual wallet"
-                    ? "bg-adron-green text-white border-none "
-                    : "bg-transparent border  border-gray-300"
-                }`}
-                onClick={() => setpaymentMethod("virtual wallet")}
-              >
-                <div className="h-10 w-10 rounded-full border bg-white border-purple-200 text-purple-700 flex justify-center items-center">
-                  <Wallet2 className="h-5 w-5" />
-                </div>
-                <div className="flex-1 flex justify-between gap-2">
-                  <div className="flex-1">
-                    <p className="font-adron-mid text-sm ">Wallet</p>
-                    <p
-                      className={`text-xs ${
-                        paymentMethod == "virtual wallet"
-                          ? `text-white`
-                          : `text-gray-500`
-                      } `}
-                    >
-                      Pay with Virtual Wallet
-                    </p>
-                  </div>
-                  <div className="">
-                    <div className="font-bold text-sm">Balance</div>
-                    <div
-                      className={`text-xs ${isLoading && "animate-pulse"} ${
-                        paymentMethod === "virtual wallet"
-                          ? "text-white"
-                          : "text-green-500"
-                      }`}
-                    >
-                      {isLoading
-                        ? "Loading..."
-                        : formatPrice(userWalletData?.wallet_balance || 0)}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+        <div className="flex items-center gap-3 rounded-2xl bg-[#032147] px-4 py-3 text-white">
+          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10">
+            <Wallet2 className="h-5 w-5" />
+          </div>
+          <div>
+            <p className="text-xs text-white/70">Wallet balance</p>
+            <p className={`text-lg font-bold ${isLoading ? "animate-pulse" : ""}`}>
+              {isLoading ? "Loading..." : formatPrice(balance)}
+            </p>
           </div>
         </div>
       </div>
+
+      <form
+        className="space-y-5 rounded-3xl border border-gray-100 bg-white p-6"
+        onSubmit={(event) => {
+          event.preventDefault();
+          if (canPay) setConfirming(true);
+        }}
+      >
+        <div className="flex items-center gap-3">
+          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#79B833]/15 text-[#79B833]">
+            <FiZap className="h-5 w-5" />
+          </div>
+          <div>
+            <p className="font-semibold text-[#032147]">Electricity</p>
+            <p className="text-sm text-gray-500">
+              {rateLoading
+                ? "Loading unit price..."
+                : hasPrice
+                  ? `${formatPrice(unitPrice)} per unit`
+                  : "Unit price is unavailable"}
+            </p>
+          </div>
+        </div>
+
+        <label className="block">
+          <span className="mb-1.5 block text-sm font-medium text-gray-700">Meter number</span>
+          <input
+            value={meter}
+            onChange={(event) => setMeter(event.target.value)}
+            placeholder="Enter meter number"
+            className="h-12 w-full rounded-xl border border-gray-200 px-4 text-sm outline-none focus:border-[#79B833]"
+          />
+        </label>
+
+        <label className="block">
+          <span className="mb-1.5 block text-sm font-medium text-gray-700">Amount</span>
+          <input
+            value={amount}
+            onChange={(event) => setAmount(event.target.value.replace(/[^\d.]/g, ""))}
+            inputMode="decimal"
+            placeholder="Enter amount"
+            className="h-12 w-full rounded-xl border border-gray-200 px-4 text-sm outline-none focus:border-[#79B833]"
+          />
+        </label>
+
+        <div className="space-y-2 rounded-2xl bg-gray-50 px-4 py-3 text-sm">
+          <Row label="Units" value={units.toFixed(2)} />
+          <Row label="Total" value={formatPrice(value)} />
+          <Row label="Balance after purchase" value={formatPrice(Math.max(remaining, 0))} />
+        </div>
+
+        {value > 0 && remaining < 0 && (
+          <p className="text-sm text-red-600">
+            Your wallet does not have enough for this purchase.
+          </p>
+        )}
+
+        <button
+          type="submit"
+          disabled={!canPay}
+          className="h-12 w-full rounded-full bg-[#032147] text-sm font-semibold text-white disabled:bg-gray-200 disabled:text-gray-400"
+        >
+          {value > 0 ? `Pay ${formatPrice(value)} with wallet` : "Pay with wallet"}
+        </button>
+      </form>
+
+      {confirming && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/60 p-4">
+          <div className="w-full max-w-sm rounded-3xl bg-white p-6">
+            <h4 className="text-lg font-bold text-[#032147]">Confirm wallet payment</h4>
+            <p className="mt-2 text-sm leading-6 text-gray-600">
+              If you continue, your wallet will be debited{" "}
+              <span className="font-semibold text-[#032147]">{formatPrice(value)}</span>{" "}
+              for electricity on meter {meter.trim()}. The amount is taken from your wallet
+              balance as soon as you confirm.
+            </p>
+            <div className="mt-5 flex gap-3">
+              <button
+                type="button"
+                disabled={isPending}
+                onClick={() => setConfirming(false)}
+                className="h-11 flex-1 rounded-full border border-gray-200 text-sm font-semibold text-gray-600"
+              >
+                Go back
+              </button>
+              <button
+                type="button"
+                disabled={isPending}
+                onClick={pay}
+                className="h-11 flex-1 rounded-full bg-[#032147] text-sm font-semibold text-white disabled:bg-gray-300"
+              >
+                {isPending ? "Debiting..." : "Confirm and pay"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
+
+function Row({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="flex items-center justify-between">
+      <span className="text-gray-500">{label}</span>
+      <span className="font-semibold text-[#032147]">{value}</span>
+    </div>
+  );
+}
 
 export default UtilityPayment;

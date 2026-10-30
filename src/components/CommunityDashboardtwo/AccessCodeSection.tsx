@@ -2,13 +2,56 @@
 import React, { useState } from "react";
 import { FiPlus } from "react-icons/fi";
 import { useOutletContext } from "react-router-dom";
+import { AccessCodeStatusFilter } from "../../hooks/estateCommunity/useEstateCommunity";
 import AccessCodeList from "./AccessCodeList";
+import AccessCodesModal from "./AccessCodesModal";
 import GenerateAccessCode from "./GenerateAccessCode";
 
 const AccessCodeSection: React.FC = () => {
   const context: CommunityOutletContext = useOutletContext();
   const codes = context.data?.active_access_codes.data || [];
+  const counts = context.data?.access_code_counts;
   const [showModal, setShowModal] = useState(false);
+  const [viewStatus, setViewStatus] = useState<AccessCodeStatusFilter | null>(
+    null
+  );
+  const stats: Array<{
+    label: string;
+    value: number;
+    valueClass: string;
+    status: AccessCodeStatusFilter;
+    title: string;
+  }> = [
+    {
+      label: "Total Codes",
+      value: counts?.total ?? 0,
+      valueClass: "text-gray-800",
+      status: "all",
+      title: "All Access Codes",
+    },
+    {
+      label: "Active",
+      value: counts?.active ?? 0,
+      valueClass: "text-green-600",
+      status: "active",
+      title: "Active Access Codes",
+    },
+    {
+      label: "Expiring Soon",
+      value: counts?.expiring_soon ?? 0,
+      valueClass: "text-yellow-600",
+      status: "expiring_soon",
+      title: "Codes Expiring Soon",
+    },
+    {
+      label: "Expired",
+      value: counts?.expired ?? 0,
+      valueClass: "text-red-600",
+      status: "expired",
+      title: "Expired Access Codes",
+    },
+  ];
+  const openView = stats.find((stat) => stat.status === viewStatus);
 
   return (
     <div className="space-y-6">
@@ -31,28 +74,36 @@ const AccessCodeSection: React.FC = () => {
 
       {/* Stats */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        <div className="bg-white p-4 rounded-xl border border-gray-100">
-          <p className="text-2xl font-bold text-gray-800">4</p>
-          <p className="text-sm text-gray-500">Total Codes</p>
-        </div>
-        <div className="bg-white p-4 rounded-xl border border-gray-100">
-          <p className="text-2xl font-bold text-green-600">4</p>
-          <p className="text-sm text-gray-500">Active</p>
-        </div>
-        <div className="bg-white p-4 rounded-xl border border-gray-100">
-          <p className="text-2xl font-bold text-yellow-600">4</p>
-          <p className="text-sm text-gray-500">Expiring Soon</p>
-        </div>
-        <div className="bg-white p-4 rounded-xl border border-gray-100">
-          <p className="text-2xl font-bold text-red-600">4</p>
-          <p className="text-sm text-gray-500">Expired</p>
-        </div>
+        {stats.map((stat) => (
+          <div
+            key={stat.label}
+            className="bg-white p-4 rounded-xl border border-gray-100"
+          >
+            <p className={`text-2xl font-bold ${stat.valueClass}`}>{stat.value}</p>
+            <p className="text-sm text-gray-500">{stat.label}</p>
+            <button
+              type="button"
+              onClick={() => setViewStatus(stat.status)}
+              className="mt-3 text-sm font-semibold text-[#79B833] hover:underline"
+            >
+              View codes
+            </button>
+          </div>
+        ))}
       </div>
 
       {/* Code List */}
-      <AccessCodeList accessCodes={codes} />
+      <AccessCodeList accessCodes={codes} title="Active Access Codes" />
       {/* Modal */}
       {showModal && <GenerateAccessCode setShowModal={setShowModal} />}
+      {openView && (
+        <AccessCodesModal
+          estateId={context.data?.estate_info.id}
+          status={openView.status}
+          title={openView.title}
+          onClose={() => setViewStatus(null)}
+        />
+      )}
     </div>
   );
 };

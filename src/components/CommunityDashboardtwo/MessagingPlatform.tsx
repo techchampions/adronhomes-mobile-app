@@ -359,6 +359,7 @@
 
 // components/MessagingPlatform.tsx
 import React, { useEffect, useState } from "react";
+import { baseURL } from "../../utils/AxiosInstance";
 import {
   FiArrowLeft,
   FiCheck,
@@ -469,8 +470,7 @@ const MessagingPlatform: React.FC = () => {
   const [hasMoreMessages, setHasMoreMessages] = useState(true);
   const [sendingMessage, setSendingMessage] = useState(false);
 
-  // API base URL - replace with your actual API base URL
-  const API_BASE = "https://adron.microf10.sg-host.com/api";
+  const API_BASE = baseURL;
 
   // Fetch threads on component mount
   useEffect(() => {
