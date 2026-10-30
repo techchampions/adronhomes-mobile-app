@@ -1,7 +1,8 @@
-import axios, { AxiosInstance, AxiosResponse, AxiosError } from "axios";
+import axios, { AxiosInstance } from "axios";
 import { useUserStore } from "../zustand/UserStore";
 import { ApiError } from "./api";
 import Auth from "../utils/Auth";
+import { baseURL, identifier } from "../utils/AxiosInstance";
 
 type ApiResponse<T = any> = {
   success: boolean;
@@ -11,10 +12,10 @@ type ApiResponse<T = any> = {
 };
 
 const apiClient: AxiosInstance = axios.create({
-  baseURL: "https://adron.microf10.sg-host.com/api/",
+  baseURL,
   headers: {
     "Content-Type": "application/json",
-    identifier: "dMNOcdMNOPefFGHIlefFGHIJKLmno",
+    identifier,
     device_id: 1234567,
   },
 });

@@ -22,7 +22,7 @@ const EstateInfoSection: React.FC<Prop> = ({ estate }) => {
           <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600">
             {estate?.estate_info.name} portal for estate groups, land owner
             groups, building chats, access codes, utility bills, service
-            charges, documents, and maintenance requests.
+            charges, family and staff, and maintenance requests.
           </p>
         </div>
 

@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import Button from "../components/Button";
 import LinkButton from "../components/LinkButton";
+import SupportTickets from "../components/SupportTickets";
 import { useGetClientInfo } from "../data/hooks";
 
 const SupportScreen = () => {
@@ -55,6 +56,7 @@ const SupportScreen = () => {
           onClick={() => navigate("/dashboard/faqs")}
         />
       </div>
+      <SupportTickets />
     </div>
   );
 };

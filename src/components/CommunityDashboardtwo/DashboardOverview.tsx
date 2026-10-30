@@ -2,11 +2,10 @@
 import { MessageCircle, MessagesSquare } from "lucide-react";
 import React from "react";
 import {
-  FiCreditCard,
-  FiFileText,
   FiHome,
   FiKey,
   FiMessageCircle,
+  FiShoppingBag,
   FiTool,
   FiUsers,
   FiZap,
@@ -15,7 +14,6 @@ import { Link, useOutletContext } from "react-router-dom";
 import { useUserStore } from "../../zustand/UserStore";
 import AccessCodeList from "./AccessCodeList";
 import type { CommunitySection } from "./CommunityDashboard";
-import PaymentList from "./PaymentList";
 
 const DashboardOverview = () => {
   const context: CommunityOutletContext = useOutletContext();
@@ -23,9 +21,9 @@ const DashboardOverview = () => {
   const { user } = useUserStore();
   const stats = [
     {
-      label: "Properties",
-      value: "3",
-      icon: FiHome,
+      label: "Gate Entrance Access Codes",
+      value: context.data?.total_access_codes ?? 0,
+      icon: FiKey,
       color: "from-blue-500 to-blue-600",
       bgColor: "bg-blue-50",
       iconColor: "text-blue-600",
@@ -63,14 +61,14 @@ const DashboardOverview = () => {
     icon: React.ComponentType<{ className?: string }>;
   }> = [
     {
-      label: "Pay outstanding bill",
-      description: "Property installment, dues, or utility bill",
-      section: "payments",
-      icon: FiCreditCard,
+      label: "Shop the marketplace",
+      description: "Buy estate products with your wallet",
+      section: "marketplace",
+      icon: FiShoppingBag,
     },
     {
       label: "Buy electricity units",
-      description: "Enter meter number and token amount",
+      description: "Pay for units with your wallet",
       section: "utilities",
       icon: FiZap,
     },
@@ -93,15 +91,33 @@ const DashboardOverview = () => {
       icon: FiMessageCircle,
     },
     {
-      label: "View documents",
-      description: "Receipts, allocation letters, meeting minutes",
-      section: "documents",
-      icon: FiFileText,
+      label: "Family and staff",
+      description: "Add household members and house staff",
+      section: "household",
+      icon: FiHome,
     },
   ];
 
   return (
     <div className="space-y-6">
+      {/* Welcome Section */}
+      {/* <div className="rounded-2xl bg-gradient-to-r from-[#79B833] to-[#8FD14F] p-6 text-white">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
+          <div>
+            <h2 className="text-2xl font-bold">
+              Welcome back, {user?.first_name}
+            </h2>
+            <p className="text-white/80 mt-1">
+              You're managing <strong>{context.data?.estate_info.name}</strong>{" "}
+              and 2 other properties
+            </p>
+          </div>
+          <button className="mt-4 md:mt-0 px-6 py-2 bg-white/20 backdrop-blur-sm rounded-xl hover:bg-white/30 transition-colors">
+            View All Properties
+          </button>
+        </div>
+      </div> */}
+
       {/* Stats Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {stats.map((stat, index) => {
@@ -157,15 +173,10 @@ const DashboardOverview = () => {
         </div>
       </div>
 
-      {/* Recent Activity */}
-      {context.data?.recent_payments.data && (
-        <div className="grid sm:grid-cols-2 gap-2">
-          <PaymentList payments={context.data?.recent_payments.data} />
-          <AccessCodeList
-            accessCodes={context.data?.active_access_codes.data}
-          />
-        </div>
-      )}
+      <AccessCodeList
+        accessCodes={context.data?.active_access_codes.data}
+        title="Active Access Codes"
+      />
     </div>
   );
 };

@@ -1,11 +1,19 @@
 import axios from "axios";
 import { useUserStore } from "../zustand/UserStore";
-export const baseURL = import.meta.env.VITE_BASE_URL;
+
+const configuredBase = (
+  import.meta.env.VITE_API_BASE_URL ||
+  import.meta.env.VITE_BASE_URL ||
+  ""
+).replace(/\/+$/, "");
+
+export const baseURL = configuredBase.endsWith("/api")
+  ? configuredBase
+  : `${configuredBase}/api`;
 export const identifier = import.meta.env.VITE_IDENTIFIER;
 
 const apiClient = axios.create({
-  // baseURL: "https://adron.microf10.sg-host.com/api", // Replace with your actual API URL
-  baseURL: baseURL,
+  baseURL,
   headers: {
     "Content-Type": "application/json",
     identifier: identifier,

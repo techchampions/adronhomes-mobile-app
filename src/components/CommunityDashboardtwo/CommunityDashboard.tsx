@@ -1,11 +1,11 @@
 import { AlertTriangle } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 import {
-  FiCreditCard,
-  FiFileText,
   FiGrid,
+  FiHome,
   FiKey,
   FiMessageCircle,
+  FiShoppingBag,
   FiTool,
   FiUsers,
   FiZap,
@@ -26,9 +26,9 @@ export type CommunitySection =
   | "utilities"
   | "access"
   | "messages"
-  | "payments"
+  | "marketplace"
   | "maintenance"
-  | "documents";
+  | "household";
 
 interface CommunityDashboardProps {
   initialSection?: CommunitySection;
@@ -63,16 +63,16 @@ const sectionRoutes: Array<{
     icon: FiMessageCircle,
   },
   {
-    id: "payments",
-    label: "Payments",
-    helper: "Property and dues",
-    path: "/dashboard/estate/payments",
-    icon: FiCreditCard,
+    id: "marketplace",
+    label: "Marketplace",
+    helper: "Shop and pay with wallet",
+    path: "/dashboard/estate/marketplace",
+    icon: FiShoppingBag,
   },
   {
     id: "utilities",
     label: "Utilities",
-    helper: "Electricity, water, internet",
+    helper: "Buy electricity with wallet",
     path: "/dashboard/estate/utilities",
     icon: FiZap,
   },
@@ -91,11 +91,11 @@ const sectionRoutes: Array<{
     icon: FiTool,
   },
   {
-    id: "documents",
-    label: "Documents",
-    helper: "Receipts, deeds, minutes",
-    path: "/dashboard/estate/documents",
-    icon: FiFileText,
+    id: "household",
+    label: "Family and Staff",
+    helper: "Household members and staff",
+    path: "/dashboard/estate/household",
+    icon: FiHome,
   },
 ];
 

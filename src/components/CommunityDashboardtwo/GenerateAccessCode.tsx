@@ -22,7 +22,7 @@ const GenerateAccessCode: React.FC<Prop> = ({ setShowModal }) => {
     mutate(values);
   };
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-[80] p-4">
       <Formik initialValues={initialValues} validateOnMount onSubmit={submit}>
         {() => (
           <Form className="bg-white rounded-2xl max-w-md w-full p-6 animate-in slide-in-from-bottom-4 duration-300">
