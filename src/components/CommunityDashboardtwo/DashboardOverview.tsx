@@ -2,6 +2,7 @@
 import { MessageCircle, MessagesSquare } from "lucide-react";
 import React from "react";
 import {
+  FiClock,
   FiHome,
   FiKey,
   FiMessageCircle,
@@ -71,6 +72,12 @@ const DashboardOverview = () => {
       description: "Pay for units with your wallet",
       section: "utilities",
       icon: FiZap,
+    },
+    {
+      label: "Utility payment history",
+      description: "See past electricity and estate charges",
+      section: "utility-history",
+      icon: FiClock,
     },
     {
       label: "Create visitor code",

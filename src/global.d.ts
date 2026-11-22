@@ -76,11 +76,14 @@ interface EstatePayment {
   payment_method: string;
   payment_type: string;
   reference: string;
+  amount?: number | string;
   status: number; // 0 = pending, 1 = success, etc.
   purpose: string;
   created_at: string; // ISO datetime string
   updated_at: string; // ISO datetime string
   chargeable_id: number;
+  bank_name?: string | null;
+  proof_of_payment?: string | null;
   user_first_name: string;
   user_last_name: string;
   user_profile_picture: string | null;
@@ -276,7 +279,9 @@ interface UtitlityPayload {
   amount: number;
   payment_type: string;
   payment_method: string;
-  chargeable_id: string;
+  chargeable_id?: string;
+  bank_name?: string;
+  proof_of_payment?: File;
 }
 interface AccessCodePayload {
   estate_id: number;

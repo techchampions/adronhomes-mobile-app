@@ -65,6 +65,17 @@ export interface ElectricityRate {
   id: number;
   name: string;
   unit_price: number;
+  code?: string;
+}
+
+export interface EstateUtility {
+  id: number;
+  name: string;
+  code: string;
+  unit_price: number | null;
+  amount_due?: number | null;
+  balance_due?: number | null;
+  amount_paid?: number | null;
 }
 
 const getElectricityRate = async (): Promise<ApiResponse<ElectricityRate>> => {
@@ -79,10 +90,42 @@ export const useElectricityRate = () => {
   });
 };
 
+const getEstateUtilities = async (
+  estateId: number,
+): Promise<ApiResponse<EstateUtility[]>> => {
+  const res = await apiClient.get(`/user/estates/utilities`, {
+    params: { estate_id: estateId },
+  });
+  return res.data;
+};
+
+export const useEstateUtilities = (estateId?: number) => {
+  return useQuery({
+    queryKey: ["estate-utilities", estateId],
+    queryFn: () => getEstateUtilities(estateId as number),
+    enabled: !!estateId,
+  });
+};
+
 const payForUtility = async (
   payload: UtitlityPayload
 ): Promise<UtilityPaymentResponse> => {
-  const res = await apiClient.post(`/user/estates/utilities/pay`, payload, {
+  const formData = new FormData();
+  formData.append("estate_id", String(payload.estate_id));
+  formData.append("amount", String(payload.amount));
+  formData.append("payment_type", payload.payment_type);
+  formData.append("payment_method", payload.payment_method);
+  if (payload.chargeable_id) {
+    formData.append("chargeable_id", payload.chargeable_id);
+  }
+  if (payload.bank_name) {
+    formData.append("bank_name", payload.bank_name);
+  }
+  if (payload.proof_of_payment) {
+    formData.append("proof_of_payment", payload.proof_of_payment);
+  }
+
+  const res = await apiClient.post(`/user/estates/utilities/pay`, formData, {
     headers: { "Content-Type": "multipart/form-data" },
   });
   return res.data;
@@ -99,6 +142,12 @@ export const usePayUtitlity = () => {
       queryClient.invalidateQueries({
         queryKey: ["user-wallet"],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["utility-payment-history"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["estate-utilities"],
+      });
       if (data.success && data.message) {
         toast.showToast(data.message, "success");
       }
@@ -108,6 +157,24 @@ export const usePayUtitlity = () => {
         toast.showToast(error.response?.data.message, "error");
       }
     },
+  });
+};
+
+const getUtilityPaymentHistory = async (
+  estateId: number,
+  page: number,
+): Promise<ApiResponse<PaginatedResponse<EstatePayment>>> => {
+  const res = await apiClient.get(`/user/estates/utilities/payments`, {
+    params: { estate_id: estateId, page, per_page: 15 },
+  });
+  return res.data;
+};
+
+export const useUtilityPaymentHistory = (estateId?: number, page = 1) => {
+  return useQuery({
+    queryKey: ["utility-payment-history", estateId, page],
+    queryFn: () => getUtilityPaymentHistory(estateId as number, page),
+    enabled: !!estateId,
   });
 };
 // ACCESS CODES
@@ -307,6 +374,7 @@ export interface MarketOrder {
   unit_price: string | number;
   total_price: string | number;
   status: MarketOrderStatus;
+  delivery_address?: string | null;
   created_at: string;
   product?: { picture: string | null; category: string } | null;
 }
@@ -350,10 +418,15 @@ export const useMarketplaceOrders = (enabled: boolean) => {
   });
 };
 
-const placeMarketplaceOrder = async (productId: number, quantity: number) => {
+const placeMarketplaceOrder = async (
+  productId: number,
+  quantity: number,
+  deliveryAddress: string,
+) => {
   const res = await apiClient.post("/user/marketplace/orders", {
     product_id: productId,
     quantity,
+    delivery_address: deliveryAddress,
   });
   return res.data;
 };
@@ -362,8 +435,15 @@ export const usePlaceMarketplaceOrder = () => {
   const toast = useToastStore();
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ productId, quantity }: { productId: number; quantity: number }) =>
-      placeMarketplaceOrder(productId, quantity),
+    mutationFn: ({
+      productId,
+      quantity,
+      deliveryAddress,
+    }: {
+      productId: number;
+      quantity: number;
+      deliveryAddress: string;
+    }) => placeMarketplaceOrder(productId, quantity, deliveryAddress),
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["marketplace-products"] });
       queryClient.invalidateQueries({ queryKey: ["marketplace-orders"] });

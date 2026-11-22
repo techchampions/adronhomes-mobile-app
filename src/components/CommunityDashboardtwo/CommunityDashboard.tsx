@@ -1,6 +1,7 @@
 import { AlertTriangle } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 import {
+  FiClock,
   FiGrid,
   FiHome,
   FiKey,
@@ -24,6 +25,7 @@ export type CommunitySection =
   | "overview"
   | "community"
   | "utilities"
+  | "utility-history"
   | "access"
   | "messages"
   | "marketplace"
@@ -75,6 +77,13 @@ const sectionRoutes: Array<{
     helper: "Buy electricity with wallet",
     path: "/dashboard/estate/utilities",
     icon: FiZap,
+  },
+  {
+    id: "utility-history",
+    label: "Utility History",
+    helper: "Past utility payments",
+    path: "/dashboard/estate/utility-history",
+    icon: FiClock,
   },
   {
     id: "access",
