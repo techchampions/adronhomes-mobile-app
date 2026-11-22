@@ -1,91 +1,53 @@
 import { Wallet2 } from "lucide-react";
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 import { FiZap } from "react-icons/fi";
-import { RiUpload2Line } from "react-icons/ri";
-import { Link, useOutletContext } from "react-router-dom";
-import { useGetAccounts, useGetUserWalletdata } from "../../data/hooks";
+import { useOutletContext } from "react-router-dom";
+import { useGetUserWalletdata } from "../../data/hooks";
 import { formatPrice } from "../../data/utils";
-import {
-  EstateUtility,
-  useEstateUtilities,
-  usePayUtitlity,
-} from "../../hooks/estateCommunity/useEstateCommunity";
-import { useUserStore } from "../../zustand/UserStore";
-import CopyButton from "../CopyButton";
-
-type PaymentMethod = "virtual_wallet" | "bank_transfer";
+import { useElectricityRate, usePayUtitlity } from "../../hooks/estateCommunity/useEstateCommunity";
 
 const UtilityPayment: React.FC = () => {
   const context: CommunityOutletContext = useOutletContext();
-  const estateId = context.data?.estate_info.id;
   const { data: wallet, isLoading } = useGetUserWalletdata();
-  const { data: utilitiesResponse, isLoading: utilitiesLoading } =
-    useEstateUtilities(estateId);
-  useGetAccounts();
-  const { accounts } = useUserStore();
+  const { data: rate, isLoading: rateLoading } = useElectricityRate();
   const { mutate, isPending } = usePayUtitlity();
-
-  const utilities = utilitiesResponse?.data || [];
-  const [selectedCode, setSelectedCode] = useState("electricity");
   const [meter, setMeter] = useState("");
   const [amount, setAmount] = useState("");
-  const [method, setMethod] = useState<PaymentMethod>("virtual_wallet");
-  const [bankName, setBankName] = useState("");
-  const [proof, setProof] = useState<File | null>(null);
   const [confirming, setConfirming] = useState(false);
 
-  const selectedUtility = useMemo(
-    () => utilities.find((item) => item.code === selectedCode) || null,
-    [utilities, selectedCode],
-  );
-
-  const isElectricity = selectedCode === "electricity";
-  const unitPrice = Number(selectedUtility?.unit_price);
-  const balanceDue = Number(selectedUtility?.balance_due ?? 0);
-  const amountDue = Number(selectedUtility?.amount_due ?? 0);
-  const amountPaid = Number(selectedUtility?.amount_paid ?? 0);
-  const hasElectricityPrice = Number.isFinite(unitPrice) && unitPrice > 0;
-  const hasChargeConfigured = amountDue > 0 || balanceDue > 0;
+  const unitPrice = Number(rate?.data?.unit_price);
+  const hasPrice = Number.isFinite(unitPrice) && unitPrice > 0;
   const balance = Number(wallet?.wallet_balance || 0);
   const value = Number(amount) || 0;
-  const units =
-    isElectricity && hasElectricityPrice && value > 0 ? value / unitPrice : 0;
-  const remainingWallet = balance - value;
-  const utilityAccount = accounts.find((item) => item.type === "estate_utility");
-
-  const canPayWallet =
-    method === "virtual_wallet" &&
+  const units = hasPrice && value > 0 ? value / unitPrice : 0;
+  const remaining = balance - value;
+  const estateId = context.data?.estate_info.id;
+  const canPay =
+    meter.trim().length > 0 &&
     value >= 1 &&
-    remainingWallet >= 0 &&
+    remaining >= 0 &&
+    hasPrice &&
     !!estateId &&
-    !isPending &&
-    (isElectricity
-      ? hasElectricityPrice && meter.trim().length > 0
-      : hasChargeConfigured && value <= balanceDue);
-
-  const canPayBank =
-    method === "bank_transfer" &&
-    !isElectricity &&
-    value >= 1 &&
-    value <= balanceDue &&
-    hasChargeConfigured &&
-    !!estateId &&
-    bankName.trim().length > 1 &&
-    !!proof &&
-    !!utilityAccount &&
     !isPending;
 
-  const canPay = method === "virtual_wallet" ? canPayWallet : canPayBank;
-
-  const selectUtility = (utility: EstateUtility) => {
-    setSelectedCode(utility.code);
-    setConfirming(false);
-    setProof(null);
-    setBankName("");
-    setAmount("");
-    if (utility.code === "electricity") {
-      setMethod("virtual_wallet");
-    }
+  const pay = () => {
+    if (!estateId || !canPay) return;
+    mutate(
+      {
+        chargeable_id: meter.trim(),
+        amount: value,
+        estate_id: estateId,
+        payment_method: "virtual_wallet",
+        payment_type: "Electricity",
+      },
+      {
+        onSuccess: () => {
+          setConfirming(false);
+          setMeter("");
+          setAmount("");
+        },
+      }
+    );
   };
 
   const pay = () => {
@@ -122,6 +84,10 @@ const UtilityPayment: React.FC = () => {
           <p className="text-xs font-semibold uppercase tracking-wide text-[#79B833]">
             Utilities
           </p>
+          <h3 className="mt-1 text-2xl font-bold text-[#032147]">Buy electricity</h3>
+          <p className="mt-1 text-sm text-gray-500">
+            Purchase units for your meter. Payment is taken from your wallet.
+          </p>
           <h3 className="mt-1 text-2xl font-bold text-[#032147]">
             Estate utility payments
           </h3>
@@ -148,30 +114,17 @@ const UtilityPayment: React.FC = () => {
             </p>
           </div>
         </div>
-      </div>
-
-      <div className="grid gap-3 sm:grid-cols-3">
-        {(utilitiesLoading ? [] : utilities).map((utility) => (
-          <button
-            key={utility.code}
-            type="button"
-            onClick={() => selectUtility(utility)}
-            className={`rounded-2xl border px-4 py-4 text-left transition ${
-              selectedCode === utility.code
-                ? "border-[#79B833] bg-[#79B833]/10"
-                : "border-gray-100 bg-white hover:border-gray-200"
-            }`}
-          >
-            <p className="font-semibold text-[#032147]">{utility.name}</p>
-            <p className="mt-1 text-sm text-gray-500">
-              {utility.code === "electricity"
-                ? utility.unit_price != null
-                  ? `${formatPrice(Number(utility.unit_price))} / unit`
-                  : "Price unavailable"
-                : `Due ${formatPrice(Number(utility.balance_due || 0))}`}
+        <div className="flex items-center gap-3 rounded-2xl bg-[#032147] px-4 py-3 text-white">
+          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10">
+            <Wallet2 className="h-5 w-5" />
+          </div>
+          <div>
+            <p className="text-xs text-white/70">Wallet balance</p>
+            <p className={`text-lg font-bold ${isLoading ? "animate-pulse" : ""}`}>
+              {isLoading ? "Loading..." : formatPrice(balance)}
             </p>
-          </button>
-        ))}
+          </div>
+        </div>
       </div>
 
       <form
@@ -186,201 +139,47 @@ const UtilityPayment: React.FC = () => {
             <FiZap className="h-5 w-5" />
           </div>
           <div>
-            <p className="font-semibold text-[#032147]">
-              {selectedUtility?.name || "Select a utility"}
-            </p>
+            <p className="font-semibold text-[#032147]">Electricity</p>
             <p className="text-sm text-gray-500">
-              {utilitiesLoading
-                ? "Loading rates..."
-                : isElectricity
-                  ? hasElectricityPrice
-                    ? `${formatPrice(unitPrice)} per unit`
-                    : "Unit price unavailable"
-                  : hasChargeConfigured
-                    ? `Outstanding balance ${formatPrice(balanceDue)}`
-                    : "No amount due has been set for this estate yet"}
+              {rateLoading
+                ? "Loading unit price..."
+                : hasPrice
+                  ? `${formatPrice(unitPrice)} per unit`
+                  : "Unit price is unavailable"}
             </p>
           </div>
         </div>
-
-        {isElectricity ? (
-          <label className="block">
-            <span className="mb-1.5 block text-sm font-medium text-gray-700">
-              Meter number
-            </span>
-            <input
-              value={meter}
-              onChange={(event) => setMeter(event.target.value)}
-              placeholder="Enter meter number"
-              className="h-12 w-full rounded-xl border border-gray-200 px-4 text-sm outline-none focus:border-[#79B833]"
-            />
-          </label>
-        ) : (
-          <div className="grid gap-3 rounded-2xl bg-gray-50 px-4 py-3 text-sm text-gray-600 sm:grid-cols-3">
-            <div>
-              <p className="text-xs text-gray-400">Total due</p>
-              <p className="font-semibold text-[#032147]">
-                {formatPrice(amountDue)}
-              </p>
-            </div>
-            <div>
-              <p className="text-xs text-gray-400">Paid</p>
-              <p className="font-semibold text-[#032147]">
-                {formatPrice(amountPaid)}
-              </p>
-            </div>
-            <div>
-              <p className="text-xs text-gray-400">Outstanding</p>
-              <p className="font-semibold text-[#032147]">
-                {formatPrice(balanceDue)}
-              </p>
-            </div>
-          </div>
-        )}
 
         <label className="block">
-          <span className="mb-1.5 block text-sm font-medium text-gray-700">
-            {isElectricity ? "Amount" : "Amount to pay"}
-          </span>
+          <span className="mb-1.5 block text-sm font-medium text-gray-700">Meter number</span>
           <input
-            value={amount}
-            onChange={(event) =>
-              setAmount(event.target.value.replace(/[^\d.]/g, ""))
-            }
-            inputMode="decimal"
-            placeholder={
-              isElectricity
-                ? "Enter amount"
-                : `Enter amount up to ${formatPrice(balanceDue)}`
-            }
+            value={meter}
+            onChange={(event) => setMeter(event.target.value)}
+            placeholder="Enter meter number"
             className="h-12 w-full rounded-xl border border-gray-200 px-4 text-sm outline-none focus:border-[#79B833]"
           />
-          {!isElectricity && value > balanceDue && (
-            <p className="mt-1 text-xs text-red-600">
-              Amount cannot exceed your outstanding balance.
-            </p>
-          )}
         </label>
 
-        {!isElectricity && (
-          <div className="grid grid-cols-2 gap-3">
-            {(
-              [
-                ["virtual_wallet", "Wallet"],
-                ["bank_transfer", "Bank Transfer"],
-              ] as const
-            ).map(([option, label]) => (
-              <button
-                key={option}
-                type="button"
-                onClick={() => setMethod(option)}
-                className={`h-11 rounded-full text-sm font-semibold ${
-                  method === option
-                    ? "bg-[#032147] text-white"
-                    : "bg-gray-100 text-gray-600"
-                }`}
-              >
-                {label}
-              </button>
-            ))}
-          </div>
-        )}
-
-        {method === "bank_transfer" && !isElectricity && (
-          <div className="space-y-4 rounded-2xl border border-dashed border-gray-200 p-4">
-            {!utilityAccount ? (
-              <p className="text-sm text-red-600">
-                Estate Utility Account has not been configured yet.
-              </p>
-            ) : (
-              <>
-                <p className="text-sm text-gray-500">
-                  Transfer{" "}
-                  <span className="font-semibold text-[#032147]">
-                    {formatPrice(value)}
-                  </span>{" "}
-                  to the Estate Utility Account below, then upload your receipt.
-                </p>
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-semibold text-[#032147]">
-                        {utilityAccount.account_number}
-                      </p>
-                      <p className="text-xs text-gray-400">Account Number</p>
-                    </div>
-                    <CopyButton text={utilityAccount.account_number} />
-                  </div>
-                  <div>
-                    <p className="text-sm font-semibold text-[#032147]">
-                      {utilityAccount.bank_name}
-                    </p>
-                    <p className="text-xs text-gray-400">Bank Name</p>
-                  </div>
-                  <div>
-                    <p className="text-sm font-semibold text-[#032147]">
-                      {utilityAccount.account_name}
-                    </p>
-                    <p className="text-xs text-gray-400">Account Name</p>
-                  </div>
-                </div>
-              </>
-            )}
-
-            <label className="block">
-              <span className="mb-1.5 block text-sm font-medium text-gray-700">
-                Your account name
-              </span>
-              <input
-                value={bankName}
-                onChange={(event) => setBankName(event.target.value)}
-                placeholder="Name on the account you paid from"
-                className="h-12 w-full rounded-xl border border-gray-200 px-4 text-sm outline-none focus:border-[#79B833]"
-              />
-            </label>
-
-            <label className="block">
-              <span className="mb-1.5 block text-sm font-medium text-gray-700">
-                Bank transfer receipt
-              </span>
-              <div className="flex items-center justify-between rounded-xl border border-gray-200 px-4 py-3">
-                <input
-                  type="file"
-                  accept="image/*,.pdf"
-                  className="w-[70%] text-xs"
-                  onChange={(event) =>
-                    setProof(event.target.files?.[0] || null)
-                  }
-                />
-                <RiUpload2Line className="h-5 w-5 text-gray-400" />
-              </div>
-              {proof && (
-                <p className="mt-1 text-xs text-gray-500">{proof.name}</p>
-              )}
-            </label>
-          </div>
-        )}
+        <label className="block">
+          <span className="mb-1.5 block text-sm font-medium text-gray-700">Amount</span>
+          <input
+            value={amount}
+            onChange={(event) => setAmount(event.target.value.replace(/[^\d.]/g, ""))}
+            inputMode="decimal"
+            placeholder="Enter amount"
+            className="h-12 w-full rounded-xl border border-gray-200 px-4 text-sm outline-none focus:border-[#79B833]"
+          />
+        </label>
 
         <div className="space-y-2 rounded-2xl bg-gray-50 px-4 py-3 text-sm">
-          {isElectricity && <Row label="Units" value={units.toFixed(2)} />}
+          <Row label="Units" value={units.toFixed(2)} />
           <Row label="Total" value={formatPrice(value)} />
-          {method === "virtual_wallet" && (
-            <Row
-              label="Wallet after purchase"
-              value={formatPrice(Math.max(remainingWallet, 0))}
-            />
-          )}
-          {!isElectricity && (
-            <Row
-              label="Outstanding after payment"
-              value={formatPrice(Math.max(balanceDue - value, 0))}
-            />
-          )}
+          <Row label="Balance after purchase" value={formatPrice(Math.max(remaining, 0))} />
         </div>
 
-        {method === "virtual_wallet" && value > 0 && remainingWallet < 0 && (
+        {value > 0 && remaining < 0 && (
           <p className="text-sm text-red-600">
-            Your wallet does not have enough for this payment.
+            Your wallet does not have enough for this purchase.
           </p>
         )}
 
@@ -389,44 +188,19 @@ const UtilityPayment: React.FC = () => {
           disabled={!canPay}
           className="h-12 w-full rounded-full bg-[#032147] text-sm font-semibold text-white disabled:bg-gray-200 disabled:text-gray-400"
         >
-          {method === "bank_transfer"
-            ? `Submit ${formatPrice(value)} bank transfer`
-            : value > 0
-              ? `Pay ${formatPrice(value)} with wallet`
-              : "Pay with wallet"}
+          {value > 0 ? `Pay ${formatPrice(value)} with wallet` : "Pay with wallet"}
         </button>
       </form>
 
       {confirming && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/60 p-4">
           <div className="w-full max-w-sm rounded-3xl bg-white p-6">
-            <h4 className="text-lg font-bold text-[#032147]">
-              {method === "bank_transfer"
-                ? "Confirm bank transfer"
-                : "Confirm wallet payment"}
-            </h4>
+            <h4 className="text-lg font-bold text-[#032147]">Confirm wallet payment</h4>
             <p className="mt-2 text-sm leading-6 text-gray-600">
-              {method === "bank_transfer" ? (
-                <>
-                  Submit{" "}
-                  <span className="font-semibold text-[#032147]">
-                    {formatPrice(value)}
-                  </span>{" "}
-                  for {selectedUtility?.name}. Your outstanding balance will be
-                  reduced after an admin validates the receipt.
-                </>
-              ) : (
-                <>
-                  Your wallet will be debited{" "}
-                  <span className="font-semibold text-[#032147]">
-                    {formatPrice(value)}
-                  </span>{" "}
-                  for {selectedUtility?.name}
-                  {isElectricity ? ` on meter ${meter.trim()}` : ""}.
-                  {!isElectricity &&
-                    " Your outstanding balance will be reduced immediately."}
-                </>
-              )}
+              If you continue, your wallet will be debited{" "}
+              <span className="font-semibold text-[#032147]">{formatPrice(value)}</span>{" "}
+              for electricity on meter {meter.trim()}. The amount is taken from your wallet
+              balance as soon as you confirm.
             </p>
             <div className="mt-5 flex gap-3">
               <button
@@ -443,11 +217,7 @@ const UtilityPayment: React.FC = () => {
                 onClick={pay}
                 className="h-11 flex-1 rounded-full bg-[#032147] text-sm font-semibold text-white disabled:bg-gray-300"
               >
-                {isPending
-                  ? "Submitting..."
-                  : method === "bank_transfer"
-                    ? "Submit receipt"
-                    : "Confirm and pay"}
+                {isPending ? "Debiting..." : "Confirm and pay"}
               </button>
             </div>
           </div>

@@ -2,7 +2,7 @@ import { ShoppingBag, Wallet } from "lucide-react";
 import React, { useMemo, useState } from "react";
 import { FiMinus, FiPlus, FiSearch, FiX } from "react-icons/fi";
 import { useOutletContext } from "react-router-dom";
-import { useGetUser, useGetUserWalletdata } from "../../data/hooks";
+import { useGetUserWalletdata } from "../../data/hooks";
 import { formatDate } from "../../data/utils";
 import {
   MarketOrderStatus,
@@ -246,7 +246,6 @@ function OrdersPanel({
     quantity: number;
     total_price: string | number;
     status: MarketOrderStatus;
-    delivery_address?: string | null;
     created_at: string;
   }[];
 }) {
@@ -272,11 +271,6 @@ function OrdersPanel({
               {order.quantity} × {money.format(Number(order.total_price) / order.quantity)} ·{" "}
               {formatDate(order.created_at)}
             </p>
-            {order.delivery_address && (
-              <p className="mt-1 text-sm text-gray-600">
-                Deliver to: {order.delivery_address}
-              </p>
-            )}
           </div>
           <div className="flex items-center gap-3">
             <span className={`rounded-full px-3 py-1 text-xs font-semibold ${statusClass[order.status]}`}>
@@ -299,37 +293,18 @@ function CheckoutModal({
   balance: number;
   onClose: () => void;
 }) {
-  const userQuery = useGetUser();
-  const profileAddress = userQuery.data?.user?.address || "";
   const [quantity, setQuantity] = useState(1);
-  const [deliveryAddress, setDeliveryAddress] = useState(profileAddress);
   const [confirming, setConfirming] = useState(false);
   const { mutate, isPending } = usePlaceMarketplaceOrder();
   const price = Number(product.price) || 0;
   const total = price * quantity;
   const remaining = balance - total;
-  const trimmedAddress = deliveryAddress.trim();
-  const canBuy =
-    quantity > 0 &&
-    quantity <= product.stock &&
-    remaining >= 0 &&
-    trimmedAddress.length >= 5 &&
-    !isPending;
-
-  React.useEffect(() => {
-    if (profileAddress && !deliveryAddress) {
-      setDeliveryAddress(profileAddress);
-    }
-  }, [profileAddress, deliveryAddress]);
+  const canBuy = quantity > 0 && quantity <= product.stock && remaining >= 0 && !isPending;
 
   const buy = () => {
     mutate(
-      {
-        productId: product.id,
-        quantity,
-        deliveryAddress: trimmedAddress,
-      },
-      { onSuccess: () => onClose() },
+      { productId: product.id, quantity },
+      { onSuccess: () => onClose() }
     );
   };
 
@@ -371,24 +346,6 @@ function CheckoutModal({
             </div>
           </div>
 
-          <div>
-            <label className="mb-2 block text-sm font-medium text-[#032147]">
-              Delivery address
-            </label>
-            <textarea
-              value={deliveryAddress}
-              onChange={(event) => setDeliveryAddress(event.target.value)}
-              rows={3}
-              placeholder="House number, street, estate block or landmark"
-              className="w-full rounded-2xl border border-gray-200 px-4 py-3 text-sm text-[#032147] outline-none focus:border-[#79B833]"
-            />
-            {trimmedAddress.length > 0 && trimmedAddress.length < 5 && (
-              <p className="mt-1 text-xs text-red-600">
-                Enter a fuller delivery address.
-              </p>
-            )}
-          </div>
-
           <div className="space-y-2 text-sm">
             <Row label="Total" value={money.format(total)} />
             <Row label="Wallet balance" value={money.format(balance)} />
@@ -413,14 +370,13 @@ function CheckoutModal({
         </div>
       </div>
       {confirming && (
-        <div className="fixed inset-0 z-[90] flex items-center justify-center bg-black/60 p-4">
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/60 p-4">
           <div className="w-full max-w-sm rounded-3xl bg-white p-6">
             <h4 className="text-lg font-bold text-[#032147]">Confirm wallet payment</h4>
             <p className="mt-2 text-sm leading-6 text-gray-600">
               If you continue, your wallet will be debited{" "}
               <span className="font-semibold text-[#032147]">{money.format(total)}</span>{" "}
-              for {quantity} × {product.name}. Delivery to{" "}
-              <span className="font-semibold text-[#032147]">{trimmedAddress}</span>.
+              for {quantity} × {product.name}. The amount is taken from your wallet balance as soon as you confirm.
             </p>
             <div className="mt-5 flex gap-3">
               <button

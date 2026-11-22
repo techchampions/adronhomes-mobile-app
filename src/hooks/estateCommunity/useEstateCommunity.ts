@@ -65,17 +65,6 @@ export interface ElectricityRate {
   id: number;
   name: string;
   unit_price: number;
-  code?: string;
-}
-
-export interface EstateUtility {
-  id: number;
-  name: string;
-  code: string;
-  unit_price: number | null;
-  amount_due?: number | null;
-  balance_due?: number | null;
-  amount_paid?: number | null;
 }
 
 const getElectricityRate = async (): Promise<ApiResponse<ElectricityRate>> => {
@@ -87,23 +76,6 @@ export const useElectricityRate = () => {
   return useQuery({
     queryKey: ["electricity-rate"],
     queryFn: getElectricityRate,
-  });
-};
-
-const getEstateUtilities = async (
-  estateId: number,
-): Promise<ApiResponse<EstateUtility[]>> => {
-  const res = await apiClient.get(`/user/estates/utilities`, {
-    params: { estate_id: estateId },
-  });
-  return res.data;
-};
-
-export const useEstateUtilities = (estateId?: number) => {
-  return useQuery({
-    queryKey: ["estate-utilities", estateId],
-    queryFn: () => getEstateUtilities(estateId as number),
-    enabled: !!estateId,
   });
 };
 
@@ -141,12 +113,6 @@ export const usePayUtitlity = () => {
       });
       queryClient.invalidateQueries({
         queryKey: ["user-wallet"],
-      });
-      queryClient.invalidateQueries({
-        queryKey: ["utility-payment-history"],
-      });
-      queryClient.invalidateQueries({
-        queryKey: ["estate-utilities"],
       });
       if (data.success && data.message) {
         toast.showToast(data.message, "success");
@@ -374,7 +340,6 @@ export interface MarketOrder {
   unit_price: string | number;
   total_price: string | number;
   status: MarketOrderStatus;
-  delivery_address?: string | null;
   created_at: string;
   product?: { picture: string | null; category: string } | null;
 }
@@ -418,15 +383,10 @@ export const useMarketplaceOrders = (enabled: boolean) => {
   });
 };
 
-const placeMarketplaceOrder = async (
-  productId: number,
-  quantity: number,
-  deliveryAddress: string,
-) => {
+const placeMarketplaceOrder = async (productId: number, quantity: number) => {
   const res = await apiClient.post("/user/marketplace/orders", {
     product_id: productId,
     quantity,
-    delivery_address: deliveryAddress,
   });
   return res.data;
 };
@@ -435,15 +395,8 @@ export const usePlaceMarketplaceOrder = () => {
   const toast = useToastStore();
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({
-      productId,
-      quantity,
-      deliveryAddress,
-    }: {
-      productId: number;
-      quantity: number;
-      deliveryAddress: string;
-    }) => placeMarketplaceOrder(productId, quantity, deliveryAddress),
+    mutationFn: ({ productId, quantity }: { productId: number; quantity: number }) =>
+      placeMarketplaceOrder(productId, quantity),
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["marketplace-products"] });
       queryClient.invalidateQueries({ queryKey: ["marketplace-orders"] });

@@ -2,7 +2,6 @@
 import { MessageCircle, MessagesSquare } from "lucide-react";
 import React from "react";
 import {
-  FiClock,
   FiHome,
   FiKey,
   FiMessageCircle,
