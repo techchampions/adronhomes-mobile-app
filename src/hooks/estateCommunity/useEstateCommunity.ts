@@ -82,7 +82,22 @@ export const useElectricityRate = () => {
 const payForUtility = async (
   payload: UtitlityPayload
 ): Promise<UtilityPaymentResponse> => {
-  const res = await apiClient.post(`/user/estates/utilities/pay`, payload, {
+  const formData = new FormData();
+  formData.append("estate_id", String(payload.estate_id));
+  formData.append("amount", String(payload.amount));
+  formData.append("payment_type", payload.payment_type);
+  formData.append("payment_method", payload.payment_method);
+  if (payload.chargeable_id) {
+    formData.append("chargeable_id", payload.chargeable_id);
+  }
+  if (payload.bank_name) {
+    formData.append("bank_name", payload.bank_name);
+  }
+  if (payload.proof_of_payment) {
+    formData.append("proof_of_payment", payload.proof_of_payment);
+  }
+
+  const res = await apiClient.post(`/user/estates/utilities/pay`, formData, {
     headers: { "Content-Type": "multipart/form-data" },
   });
   return res.data;
@@ -108,6 +123,24 @@ export const usePayUtitlity = () => {
         toast.showToast(error.response?.data.message, "error");
       }
     },
+  });
+};
+
+const getUtilityPaymentHistory = async (
+  estateId: number,
+  page: number,
+): Promise<ApiResponse<PaginatedResponse<EstatePayment>>> => {
+  const res = await apiClient.get(`/user/estates/utilities/payments`, {
+    params: { estate_id: estateId, page, per_page: 15 },
+  });
+  return res.data;
+};
+
+export const useUtilityPaymentHistory = (estateId?: number, page = 1) => {
+  return useQuery({
+    queryKey: ["utility-payment-history", estateId, page],
+    queryFn: () => getUtilityPaymentHistory(estateId as number, page),
+    enabled: !!estateId,
   });
 };
 // ACCESS CODES

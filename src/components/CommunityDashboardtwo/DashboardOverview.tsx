@@ -73,6 +73,12 @@ const DashboardOverview = () => {
       icon: FiZap,
     },
     {
+      label: "Utility payment history",
+      description: "See past electricity and estate charges",
+      section: "utility-history",
+      icon: FiClock,
+    },
+    {
       label: "Create visitor code",
       description: "One-time, scheduled, or recurring access",
       section: "access",

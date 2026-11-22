@@ -50,6 +50,33 @@ const UtilityPayment: React.FC = () => {
     );
   };
 
+  const pay = () => {
+    if (!estateId || !canPay) return;
+    mutate(
+      {
+        estate_id: estateId,
+        amount: value,
+        payment_type: selectedCode,
+        payment_method: method,
+        chargeable_id: isElectricity
+          ? meter.trim()
+          : String(new Date().getFullYear()),
+        bank_name: method === "bank_transfer" ? bankName.trim() : undefined,
+        proof_of_payment:
+          method === "bank_transfer" ? proof || undefined : undefined,
+      },
+      {
+        onSuccess: () => {
+          setConfirming(false);
+          setMeter("");
+          setAmount("");
+          setBankName("");
+          setProof(null);
+        },
+      },
+    );
+  };
+
   return (
     <div className="mx-auto max-w-3xl space-y-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
@@ -61,6 +88,31 @@ const UtilityPayment: React.FC = () => {
           <p className="mt-1 text-sm text-gray-500">
             Purchase units for your meter. Payment is taken from your wallet.
           </p>
+          <h3 className="mt-1 text-2xl font-bold text-[#032147]">
+            Estate utility payments
+          </h3>
+          <p className="mt-1 text-sm text-gray-500">
+            Pay any amount toward your outstanding estate service or capital
+            charge. Wallet payments deduct immediately; bank transfers deduct
+            after admin confirmation.
+          </p>
+          <Link
+            to="/dashboard/estate/utility-history"
+            className="mt-3 inline-flex text-sm font-semibold text-[#209dd7] hover:underline"
+          >
+            View payment history
+          </Link>
+        </div>
+        <div className="flex items-center gap-3 rounded-2xl bg-[#032147] px-4 py-3 text-white">
+          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10">
+            <Wallet2 className="h-5 w-5" />
+          </div>
+          <div>
+            <p className="text-xs text-white/70">Wallet balance</p>
+            <p className={`text-lg font-bold ${isLoading ? "animate-pulse" : ""}`}>
+              {isLoading ? "Loading..." : formatPrice(balance)}
+            </p>
+          </div>
         </div>
         <div className="flex items-center gap-3 rounded-2xl bg-[#032147] px-4 py-3 text-white">
           <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10">
