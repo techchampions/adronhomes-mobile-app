@@ -115,33 +115,6 @@ const UtilityPayment: React.FC = () => {
     );
   };
 
-  const pay = () => {
-    if (!estateId || !canPay) return;
-    mutate(
-      {
-        estate_id: estateId,
-        amount: value,
-        payment_type: selectedCode,
-        payment_method: method,
-        chargeable_id: isElectricity
-          ? meter.trim()
-          : String(new Date().getFullYear()),
-        bank_name: method === "bank_transfer" ? bankName.trim() : undefined,
-        proof_of_payment:
-          method === "bank_transfer" ? proof || undefined : undefined,
-      },
-      {
-        onSuccess: () => {
-          setConfirming(false);
-          setMeter("");
-          setAmount("");
-          setBankName("");
-          setProof(null);
-        },
-      },
-    );
-  };
-
   return (
     <div className="mx-auto max-w-3xl space-y-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
