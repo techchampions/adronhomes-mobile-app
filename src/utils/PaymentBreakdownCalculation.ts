@@ -33,9 +33,7 @@ export const calculatePaymentDetails = (
   otherFees = otherFees * units;
   infrastructureFees = infrastructureFees * units;
 
-  const installmentPrice = property?.initial_deposit || 0;
-  const installmentPriceTotal = installmentPrice * units;
-  const subscriptionForm = installmentPriceTotal;
+  const subscriptionForm = property?.initial_deposit || 0;
 
   const remPrice = (property?.price || 0) - (property?.initial_deposit || 0);
 

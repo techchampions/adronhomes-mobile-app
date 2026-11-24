@@ -50,7 +50,7 @@ const PaymentSummary: React.FC<Props> = ({ property }) => {
       : 0;
   const totalAmount =
     payment_plan === "Installment"
-      ? (property?.initial_deposit || 0) * units + +Number(payable_amount)
+      ? (property?.initial_deposit || 0) + Number(payable_amount)
       : Number(payable_amount) * units;
   const goBack = () => {
     modal.openModal(<PropertySpecifications property={property} />);
@@ -110,10 +110,7 @@ const PaymentSummary: React.FC<Props> = ({ property }) => {
           <div className="grid grid-cols-2 ">
             <div className="text-gray-700">Subscription form:</div>
             <div className="text-right">
-              {formatPrice(property?.initial_deposit || 0)} x{" "}
-              <span className="text-xs bg-gray-200 text-gray-700 px-2 rounded-sm">
-                {units} units
-              </span>
+              {formatPrice(property?.initial_deposit || 0)}
             </div>
           </div>
           <div className="grid grid-cols-2 ">

@@ -1,5 +1,5 @@
 import { ErrorMessage, Field, useField } from "formik";
-import React from "react";
+import React, { useRef } from "react";
 import { FaChevronDown, FaExclamationCircle } from "react-icons/fa";
 
 interface SelectInputProps {
@@ -25,6 +25,21 @@ const SelectInput: React.FC<SelectInputProps> = ({
 }) => {
   const [field, meta] = useField(name);
   const hasError = meta.touched && meta.error;
+  const selectRef = useRef<HTMLSelectElement>(null);
+
+  const openSelect = () => {
+    const element = selectRef.current;
+    if (!element || disabled) return;
+    element.focus();
+    if (typeof element.showPicker === "function") {
+      try {
+        element.showPicker();
+        return;
+      } catch {
+        element.click();
+      }
+    }
+  };
 
   return (
     <div className="w-full text-left">
@@ -33,7 +48,7 @@ const SelectInput: React.FC<SelectInputProps> = ({
       )}
 
       <div
-        className={`w-full relative flex flex-row items-center rounded-xl py-2 ${
+        className={`relative w-full rounded-xl ${
           hasError
             ? "border border-red-500"
             : theme === "dark"
@@ -41,19 +56,22 @@ const SelectInput: React.FC<SelectInputProps> = ({
             : "border border-gray-200 focus-within:border-gray-200"
         } ${disabled ? "bg-gray-100" : ""} ${className}`}
       >
-        {/* Left Icon */}
-        {icon && <div className="flex items-center px-3">{icon}</div>}
+        {icon && (
+          <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center px-3">
+            {icon}
+          </div>
+        )}
 
-        {/* Select Field */}
         <Field
           as="select"
+          innerRef={selectRef}
           {...field}
           disabled={disabled}
           className={`appearance-none ${
             theme === "dark" ? "text-gray-300" : "text-gray-900"
-          } text-sm rounded-lg focus:ring-0 block w-full pl-5 outline-none bg-transparent ${
-            !field.value ? "text-gray-400" : ""
-          }`}
+          } text-sm rounded-xl focus:ring-0 block w-full py-2 outline-none bg-transparent ${
+            icon ? "pl-10" : "pl-5"
+          } ${hasError ? "pr-16" : "pr-10"} ${!field.value ? "text-gray-400" : ""}`}
         >
           <option value="" disabled>
             {placeholder}
@@ -69,17 +87,17 @@ const SelectInput: React.FC<SelectInputProps> = ({
           ))}
         </Field>
 
-        {/* Chevron Icon */}
-        <div className="flex items-center pr-3 pointer-events-none">
-          <FaChevronDown className="w-4 h-4 text-gray-400" />
-        </div>
-
-        {/* Error Icon */}
-        {hasError && (
-          <div className="flex items-center px-3">
-            <FaExclamationCircle className="w-5 h-5 text-red-500" />
-          </div>
-        )}
+        <button
+          type="button"
+          aria-label="Open options"
+          disabled={disabled}
+          onMouseDown={(event) => event.preventDefault()}
+          onClick={openSelect}
+          className="absolute inset-y-0 right-0 flex items-center gap-2 pr-3"
+        >
+          {hasError && <FaExclamationCircle className="h-5 w-5 text-red-500" />}
+          <FaChevronDown className="h-4 w-4 text-gray-400" />
+        </button>
       </div>
 
       {/* Error Message */}
